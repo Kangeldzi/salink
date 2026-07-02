@@ -18,7 +18,7 @@
             --dark: #1a1008;
             --darker: #0d0805;
             --card-bg: rgba(255, 248, 240, 0.08);
-            --sidebar-width: 280px;
+            --sidebar-width: 290px;
             --neumorph-shadow: 8px 8px 16px #0a0604, -8px -8px 16px #2a1a0e;
             --header-height: 60px;
             --footer-height: 65px;
@@ -35,6 +35,14 @@
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-12px); }
+        }
+
+        @keyframes shiver {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(8deg); }
+            60% { transform: rotate(-6deg); }
+            80% { transform: rotate(6deg); }
         }
 
         @keyframes zoomOut {
@@ -82,6 +90,11 @@
             0%, 100% { transform: rotate(0deg); }
             25% { transform: rotate(5deg); }
             75% { transform: rotate(-5deg); }
+        }
+
+        @keyframes notifPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
         }
 
         body {
@@ -149,7 +162,7 @@
             font-size: 1.4rem;
             color: var(--gold);
             -webkit-text-fill-color: var(--gold);
-            animation: float 2s ease-in-out infinite;
+            animation: shiver 2s ease-in-out infinite;
         }
 
         .user-btn img {
@@ -157,6 +170,34 @@
             height: 32px;
             border-radius: 50%;
             object-fit: cover;
+        }
+
+        /* Search Icon in Header */
+        .search-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(61, 35, 20, 0.3);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+
+        .search-btn:active {
+            box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
+            transform: scale(0.95);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* Bottom Navigation */
@@ -174,7 +215,7 @@
             align-items: center;
             border-top: 2px solid var(--gold);
             z-index: 1000;
-            padding: 0 8px;
+            padding: 0 4px;
             box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
         }
 
@@ -184,7 +225,7 @@
             align-items: center;
             justify-content: center;
             gap: 2px;
-            padding: 6px 12px;
+            padding: 4px 8px;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
@@ -193,17 +234,17 @@
             border: none;
             background: transparent;
             position: relative;
-            min-width: 60px;
-            font-size: 10px;
+            min-width: 50px;
+            font-size: 11px;
         }
 
         .nav-item-bottom i {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             transition: all 0.3s;
         }
 
         .nav-item-bottom span {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 500;
             transition: all 0.3s;
         }
@@ -223,19 +264,30 @@
 
         .nav-item-bottom .badge {
             position: absolute;
-            top: 2px;
-            right: 5px;
-            background: #ff6b35;
+            top: -2px;
+            right: -2px;
+            background: #ff4444;
             color: white;
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            display: flex;
+            min-width: 18px;
+            height: 18px;
+            display: none;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 107, 53, 0.4);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+            padding: 0 4px;
+            animation: notifPulse 1s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        .nav-item-bottom .badge.show {
+            display: flex;
+        }
+
+        .nav-item-bottom .badge-number {
+            font-size: 0.5rem;
         }
 
         /* Sidebar - More Compact */
@@ -334,14 +386,14 @@
         }
 
         .sidebar-user-name {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--gold-light);
             text-align: center;
         }
 
         .sidebar-user-email {
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             color: rgba(245, 240, 232, 0.5);
             text-align: center;
         }
@@ -360,12 +412,12 @@
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 12px;
+            padding: 10px 14px;
             color: var(--cream);
             text-decoration: none;
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             background: rgba(61, 35, 20, 0.3);
             box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
             border: 1px solid transparent;
@@ -386,9 +438,9 @@
         }
 
         .nav-link i {
-            width: 18px;
+            width: 22px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: var(--gold);
         }
 
@@ -400,11 +452,11 @@
         .dropdown-toggle {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 12px;
+            padding: 10px 14px;
             color: var(--cream);
             border-radius: 8px;
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             background: rgba(61, 35, 20, 0.3);
             box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
             border: 1px solid transparent;
@@ -418,16 +470,16 @@
         }
 
         .dropdown-toggle i {
-            width: 18px;
+            width: 22px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: var(--gold);
         }
 
         .dropdown-toggle .arrow {
             margin-left: auto;
             transition: transform 0.3s;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
         }
 
         .dropdown-toggle.open .arrow {
@@ -453,12 +505,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 14px;
+            padding: 8px 16px;
             color: var(--cream);
             text-decoration: none;
             border-left: 3px solid transparent;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             transition: all 0.3s;
         }
 
@@ -468,8 +520,8 @@
         }
 
         .dropdown-item i {
-            margin-right: 8px;
-            width: 16px;
+            margin-right: 10px;
+            width: 18px;
             text-align: center;
             color: var(--gold);
         }
@@ -478,7 +530,7 @@
             background: var(--gold-dark);
             padding: 1px 8px;
             border-radius: 10px;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: bold;
             color: var(--cream);
         }
@@ -565,7 +617,7 @@
         /* Hologram Display */
         .hologram-display {
             width: 100%;
-            min-height: 150px;
+            min-height: 160px;
             margin: 0 auto 16px;
             background: rgba(150, 150, 150, 0.5);
             border: 1px solid var(--gold);
@@ -577,6 +629,13 @@
             animation: hologram-pulse 3s infinite;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hologram-display:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 40px rgba(212, 168, 73, 0.25);
         }
 
         .hologram-display::before {
@@ -631,6 +690,13 @@
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hologram-profile:hover {
+            transform: scale(1.05);
+            border-color: var(--gold-light);
         }
 
         .hologram-profile img {
@@ -663,6 +729,18 @@
             font-size: 0.7rem;
             margin-bottom: 3px;
             color: var(--gold);
+        }
+
+        .alert-sender .profile-link {
+            color: var(--gold-light);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .alert-sender .profile-link:hover {
+            text-decoration: underline;
+            color: var(--cream);
         }
 
         .alert-location {
@@ -762,6 +840,15 @@
             animation: alarmRing 0.3s ease-in-out infinite;
         }
 
+        .emergency-btn.has-notification {
+            border-color: #ff4444;
+            animation: alarmPulse 0.5s ease-in-out infinite;
+        }
+
+        .emergency-btn.has-notification .btn-content {
+            animation: alarmRing 0.3s ease-in-out infinite;
+        }
+
         .btn-content {
             position: relative;
             z-index: 2;
@@ -843,6 +930,21 @@
             padding: 16px;
             border: 1px solid var(--gold);
             box-shadow: var(--neumorph-shadow);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .post-section::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .post-section::-webkit-scrollbar-track {
+            background: rgba(61, 35, 20, 0.3);
+        }
+
+        .post-section::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 3px;
         }
 
         .post-header {
@@ -863,6 +965,12 @@
             overflow: hidden;
             flex-shrink: 0;
             border: 2px solid var(--gold);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .post-profile-pic:hover {
+            transform: scale(1.05);
         }
 
         .post-profile-pic img {
@@ -877,13 +985,32 @@
         }
 
         .post-user-info h4 {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--gold-light);
+        }
+
+        .post-user-info h4 .profile-link {
+            color: var(--gold-light);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .post-user-info h4 .profile-link:hover {
+            text-decoration: underline;
+            color: var(--cream);
         }
 
         .post-user-info small {
             font-size: 0.55rem;
             color: rgba(245, 240, 232, 0.4);
+        }
+
+        .post-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .post-input {
@@ -907,7 +1034,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 8px;
         }
 
         .media-upload-btn {
@@ -1064,6 +1190,14 @@
         .post-action .like-count {
             font-size: 0.6rem;
             font-weight: 600;
+        }
+
+        .post-action.share {
+            color: rgba(76, 201, 240, 0.6);
+        }
+
+        .post-action.share:hover {
+            color: #4cc9f0;
         }
 
         .comments-section {
@@ -1843,6 +1977,123 @@
             }
         }
 
+        /* Search Modal */
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 8, 5, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1500;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .search-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: rgba(255, 248, 240, 0.06);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 10px;
+            color: var(--cream);
+            font-size: 0.85rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .search-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(212, 168, 73, 0.05);
+        }
+
+        .search-result-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .search-result-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+            flex-shrink: 0;
+        }
+
+        .search-result-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .search-result-avatar i {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--brown-dark);
+        }
+
+        .search-result-info {
+            flex: 1;
+        }
+
+        .search-result-name {
+            font-size: 0.85rem;
+            color: var(--cream);
+            font-weight: 500;
+        }
+
+        .search-result-desc {
+            font-size: 0.65rem;
+            color: rgba(245, 240, 232, 0.5);
+        }
+
         /* Auth Pages */
         .auth-container {
             position: fixed;
@@ -2259,23 +2510,23 @@
 
             .nav-item-bottom {
                 min-width: 45px;
-                padding: 3px 6px;
+                padding: 3px 4px;
             }
 
             .nav-item-bottom i {
-                font-size: 0.9rem;
+                font-size: 1.1rem;
             }
 
             .nav-item-bottom span {
-                font-size: 0.45rem;
+                font-size: 0.55rem;
             }
 
             .nav-item-bottom .badge {
-                width: 12px;
-                height: 12px;
-                font-size: 0.4rem;
-                right: 1px;
-                top: 0;
+                min-width: 14px;
+                height: 14px;
+                font-size: 0.45rem;
+                right: -4px;
+                top: -4px;
             }
 
             .gender-options {
@@ -2312,7 +2563,7 @@
             }
 
             .sidebar-user-name {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
 
             .post-actions {
@@ -2335,6 +2586,10 @@
 
             .bar-chart {
                 height: 120px;
+            }
+
+            .search-modal {
+                padding: 12px;
             }
         }
 
@@ -2379,8 +2634,16 @@
             }
 
             .nav-item-bottom {
-                min-width: 40px;
-                padding: 2px 4px;
+                min-width: 38px;
+                padding: 2px 3px;
+            }
+
+            .nav-item-bottom i {
+                font-size: 0.95rem;
+            }
+
+            .nav-item-bottom span {
+                font-size: 0.45rem;
             }
         }
     </style>
@@ -2410,9 +2673,14 @@
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
         </div>
-        <button class="user-btn" id="userBtn">
-            <i class="fas fa-user"></i>
-        </button>
+        <div class="header-right">
+            <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="user-btn" id="userBtn">
+                <i class="fas fa-user"></i>
+            </button>
+        </div>
     </header>
 
     <!-- Sidebar -->
@@ -2495,6 +2763,19 @@
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-header">
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari pengguna, postingan, atau laporan...">
+            <button class="search-close" id="searchClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults">
+            <!-- Search results will be rendered here -->
+        </div>
+    </div>
+
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
         <h1 class="page-title">
@@ -2527,8 +2808,8 @@
         </div>
         
         <!-- Hologram Display -->
-        <div class="hologram-display">
-            <div class="hologram-content">
+        <div class="hologram-display" id="hologramDisplay">
+            <div class="hologram-content" id="hologramContent">
                 <div class="hologram-top">
                     <div class="hologram-profile" id="hologramProfile">
                         <i class="fas fa-user"></i>
@@ -2538,7 +2819,7 @@
                         <span>KEBAKARAN</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong>Bpk. Ahmad</strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); alert('Profil pengguna akan dibuka');">Bpk. Ahmad</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
@@ -2593,7 +2874,7 @@
         </div>
         
         <!-- Post Section -->
-        <div class="post-section">
+        <div class="post-section" id="postSection">
             <div class="post-header">
                 <div class="post-profile-pic" id="postProfilePic">
                     <i class="fas fa-user"></i>
@@ -2603,19 +2884,21 @@
                     <small>Bagikan informasi penting</small>
                 </div>
             </div>
-            <textarea class="post-input" id="postInput" placeholder="Apa yang terjadi di lokasi Anda?"></textarea>
-            <div class="media-preview" id="mediaPreview">
-                <span class="remove-media" id="removeMedia">&times;</span>
-            </div>
-            <div class="post-actions-bottom">
-                <div>
-                    <label for="mediaUpload" class="media-upload-btn">
-                        <i class="fas fa-camera"></i>
-                        <span>Foto/Video</span>
-                    </label>
-                    <input type="file" id="mediaUpload" class="file-input" accept="image/*, video/*">
+            <div class="post-input-area">
+                <textarea class="post-input" id="postInput" placeholder="Apa yang terjadi di lokasi Anda?"></textarea>
+                <div class="media-preview" id="mediaPreview">
+                    <span class="remove-media" id="removeMedia">&times;</span>
                 </div>
-                <button class="post-submit-btn" id="postSubmit" disabled>Posting</button>
+                <div class="post-actions-bottom">
+                    <div>
+                        <label for="mediaUpload" class="media-upload-btn">
+                            <i class="fas fa-camera"></i>
+                            <span>Foto/Video</span>
+                        </label>
+                        <input type="file" id="mediaUpload" class="file-input" accept="image/*, video/*">
+                    </div>
+                    <button class="post-submit-btn" id="postSubmit" disabled>Posting</button>
+                </div>
             </div>
             <div class="post-feed" id="postFeed">
                 <!-- Posts will be rendered here -->
@@ -2725,14 +3008,18 @@
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomNewsNav">
-            <i class="fas fa-newspaper"></i>
-            <span>News</span>
+        <a href="#" class="nav-item-bottom" id="bottomTokoNav">
+            <i class="fas fa-store"></i>
+            <span>Toko</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomHistoryNav">
-            <i class="fas fa-clock"></i>
-            <span>Riwayat</span>
-            <span class="badge">3</span>
+        <a href="#" class="nav-item-bottom" id="bottomInviteNav">
+            <i class="fas fa-user-plus"></i>
+            <span>Invite</span>
+        </a>
+        <a href="#" class="nav-item-bottom" id="bottomNotifNav">
+            <i class="fas fa-bell"></i>
+            <span>Notif</span>
+            <span class="badge" id="notifBadge">0</span>
         </a>
         <a href="#" class="nav-item-bottom" id="bottomProfileNav">
             <i class="fas fa-user"></i>
@@ -2825,6 +3112,43 @@
                 </button>
             </div>
             <div class="modal-body" id="settingsModalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div class="modal-overlay" id="inviteModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Undang Pengguna</span>
+                </div>
+                <button class="modal-close" id="inviteModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="inviteModalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div class="modal-overlay" id="notifModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifikasi</span>
+                    <span class="badge" id="notifModalBadge" style="background:#ff4444;color:white;padding:2px 8px;border-radius:12px;font-size:0.7rem;margin-left:8px;">0</span>
+                </div>
+                <button class="modal-close" id="notifModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="notifModalBody">
                 <!-- Dynamic content -->
             </div>
         </div>
@@ -3014,7 +3338,8 @@
             "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/Kebakaran.mp3",
             "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/kematian.mp3",
             "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/pencurian.mp3",
-            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/bencana_tsunami.mp3"
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/bencana_tsunami.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/notif-aurora.mp3"
         ];
 
         // Map button to playlist index
@@ -3022,7 +3347,8 @@
             'kebakaran': 0,
             'kematian': 1,
             'pencurian': 2,
-            'bencana': 3
+            'bencana': 3,
+            'notifikasi': 4
         };
 
         // ============================================
@@ -3143,12 +3469,24 @@
         ];
 
         // ============================================
+        // NOTIFICATION DATA
+        // ============================================
+        let notifications = [];
+        let notificationIdCounter = 0;
+        let notifBadgeCount = 0;
+
+        // ============================================
         // DOM ELEMENTS
         // ============================================
         
         const menuBtn = document.getElementById('menuBtn');
         const sidebarClose = document.getElementById('sidebarClose');
         const userBtn = document.getElementById('userBtn');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchClose = document.getElementById('searchClose');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchModal = document.getElementById('searchModal');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
         const viewAllBtn = document.getElementById('viewAllBtn');
@@ -3158,11 +3496,16 @@
         const homeNavLink = document.getElementById('homeNavLink');
         const historyNavLink = document.getElementById('historyNavLink');
         const bottomHomeNav = document.getElementById('bottomHomeNav');
-        const bottomHistoryNav = document.getElementById('bottomHistoryNav');
+        const bottomTokoNav = document.getElementById('bottomTokoNav');
+        const bottomInviteNav = document.getElementById('bottomInviteNav');
+        const bottomNotifNav = document.getElementById('bottomNotifNav');
         const bottomProfileNav = document.getElementById('bottomProfileNav');
         const dropdownToggle = document.getElementById('dropdownToggle');
         const dropdownMenu = document.getElementById('dropdownMenu');
         const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const notifBadge = document.getElementById('notifBadge');
+        const notifModalBadge = document.getElementById('notifModalBadge');
+        const hologramDisplay = document.getElementById('hologramDisplay');
         
         // Profile Elements
         const sidebarUserAvatar = document.getElementById('sidebarUserAvatar');
@@ -3193,6 +3536,14 @@
         const settingsModal = document.getElementById('settingsModal');
         const settingsModalClose = document.getElementById('settingsModalClose');
         const settingsModalBody = document.getElementById('settingsModalBody');
+        
+        const inviteModal = document.getElementById('inviteModal');
+        const inviteModalClose = document.getElementById('inviteModalClose');
+        const inviteModalBody = document.getElementById('inviteModalBody');
+        
+        const notifModal = document.getElementById('notifModal');
+        const notifModalClose = document.getElementById('notifModalClose');
+        const notifModalBody = document.getElementById('notifModalBody');
         
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmationModalClose = document.getElementById('confirmationModalClose');
@@ -3228,6 +3579,7 @@
         const removeMedia = document.getElementById('removeMedia');
         const postSubmit = document.getElementById('postSubmit');
         const postFeed = document.getElementById('postFeed');
+        const postSection = document.getElementById('postSection');
         
         // Signup Profile Picture
         const signupProfilePicture = document.getElementById('signupProfilePicture');
@@ -3256,6 +3608,8 @@
         let currentlyPlaying = null;
         let posts = [];
         let postIdCounter = 0;
+        let isHologramPost = false;
+        let hologramPostData = null;
 
         // ============================================
         // AUDIO FUNCTIONS
@@ -3271,14 +3625,12 @@
                 audio.volume = 1.0;
                 audioObjects[key] = audio;
                 
-                // Log when audio is loaded
                 audio.addEventListener('canplaythrough', () => {
                     console.log(`✅ Audio "${key}" loaded successfully`);
                 });
                 
                 audio.addEventListener('error', (e) => {
                     console.warn(`❌ Audio "${key}" load error:`, e);
-                    // Try alternative URL if needed
                 });
             });
             return audioObjects;
@@ -3300,10 +3652,6 @@
             const audio = audioObjects[soundKey];
             if (!audio) {
                 console.warn('Audio not found for key:', soundKey);
-                button.querySelector('.play-status').textContent = '❌ Audio tidak ditemukan';
-                setTimeout(() => {
-                    button.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                }, 2000);
                 return;
             }
             
@@ -3355,7 +3703,6 @@
                     console.warn('Audio play failed:', error);
                     button.querySelector('.play-status').textContent = '🔄 Memuat audio...';
                     
-                    // Try to reload and play again
                     audio.load();
                     setTimeout(() => {
                         audio.play().then(() => {
@@ -3385,11 +3732,155 @@
             }
         }
 
+        // Play notification sound
+        function playNotificationSound() {
+            const audio = audioObjects['notifikasi'];
+            if (audio) {
+                audio.currentTime = 0;
+                audio.volume = 0.7;
+                audio.play().catch(e => console.warn('Notif sound failed:', e));
+            }
+        }
+
+        // ============================================
+        // NOTIFICATION FUNCTIONS
+        // ============================================
+        
+        function addNotification(type, title, message, sender, link) {
+            const notification = {
+                id: ++notificationIdCounter,
+                type: type,
+                title: title,
+                message: message,
+                sender: sender || 'Sistem',
+                link: link || '#',
+                timestamp: Date.now(),
+                read: false
+            };
+            notifications.unshift(notification);
+            updateNotifBadge();
+            playNotificationSound();
+            return notification;
+        }
+
+        function updateNotifBadge() {
+            const unread = notifications.filter(n => !n.read).length;
+            notifBadgeCount = unread;
+            notifBadge.textContent = unread > 0 ? unread : '0';
+            notifBadge.classList.toggle('show', unread > 0);
+            if (notifModalBadge) {
+                notifModalBadge.textContent = unread > 0 ? unread : '0';
+            }
+        }
+
+        function renderNotifications() {
+            notifModalBody.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                notifModalBody.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum ada notifikasi</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            notifications.forEach(notif => {
+                const item = document.createElement('div');
+                item.style.cssText = `
+                    background: ${notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)'};
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    margin-bottom: 8px;
+                    border-left: 3px solid ${notif.read ? 'rgba(212,168,73,0.2)' : 'var(--gold)'};
+                    cursor: pointer;
+                    transition: all 0.3s;
+                `;
+                item.onmouseover = () => {
+                    item.style.background = 'rgba(61,35,20,0.5)';
+                };
+                item.onmouseout = () => {
+                    item.style.background = notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)';
+                };
+                
+                const iconMap = {
+                    'inbox': 'fa-inbox',
+                    'invite': 'fa-user-plus',
+                    'report': 'fa-exclamation-triangle',
+                    'comment': 'fa-comment',
+                    'profile': 'fa-eye',
+                    'chart': 'fa-chart-line'
+                };
+                
+                item.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);">
+                            <i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i>
+                        </div>
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:0.8rem;font-weight:500;color:var(--cream);">
+                                ${notif.title}
+                            </div>
+                            <div style="font-size:0.7rem;color:rgba(245,240,232,0.6);">
+                                ${notif.message}
+                            </div>
+                            <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);margin-top:3px;">
+                                ${getTimeAgo(notif.timestamp)} • ${notif.sender}
+                            </div>
+                        </div>
+                        ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>` : ''}
+                    </div>
+                `;
+                
+                item.addEventListener('click', () => {
+                    notif.read = true;
+                    updateNotifBadge();
+                    renderNotifications();
+                    if (notif.link && notif.link !== '#') {
+                        window.open(notif.link, '_blank');
+                    }
+                });
+                
+                notifModalBody.appendChild(item);
+            });
+        }
+
+        // ============================================
+        // SAMPLE NOTIFICATIONS (for demo)
+        // ============================================
+        function generateSampleNotifications() {
+            const now = Date.now();
+            const notifTypes = [
+                { type: 'inbox', title: 'Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat' },
+                { type: 'invite', title: 'Undangan', msg: 'Sdri. Rina mengundang Anda berteman' },
+                { type: 'report', title: 'Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan' },
+                { type: 'comment', title: 'Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda' },
+                { type: 'profile', title: 'Pengunjung Profil', msg: 'Sdri. Dewi mengunjungi profil Anda' },
+                { type: 'chart', title: 'Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%' }
+            ];
+            
+            notifTypes.forEach((nt, index) => {
+                const timeOffset = index * 5 * 60000;
+                const notif = {
+                    id: ++notificationIdCounter,
+                    type: nt.type,
+                    title: nt.title,
+                    message: nt.msg,
+                    sender: 'Sistem',
+                    link: '#',
+                    timestamp: now - timeOffset,
+                    read: index > 2
+                };
+                notifications.push(notif);
+            });
+            updateNotifBadge();
+        }
+
         // ============================================
         // FUNCTIONS
         // ============================================
         
-        // Get current date/time for posts
         function getCurrentDateTime() {
             const now = new Date();
             const options = { 
@@ -3537,7 +4028,7 @@
             document.body.style.overflow = '';
         }
 
-        // Open History Modal - Show user's own posts
+        // Open History Modal
         function openHistoryModal() {
             historyModalBody.innerHTML = '';
             
@@ -3556,7 +4047,6 @@
                     </div>
                 `;
             } else {
-                // Filter posts by current user
                 const userPosts = posts.filter(p => p.userId === currentUser.username);
                 if (userPosts.length === 0) {
                     historyModalBody.innerHTML = `
@@ -3612,7 +4102,7 @@
             
             profileModalBody.innerHTML = `
                 <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;">
-                    <div style="width:70px;height:70px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin-bottom:8px;">
+                    <div style="width:70px;height:70px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin-bottom:8px;cursor:pointer;">
                         ${currentUser.profilePicture ? 
                             `<img src="${currentUser.profilePicture}" style="width:100%;height:100%;object-fit:cover;">` : 
                             `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));font-size:2rem;color:var(--brown-dark);">
@@ -3621,7 +4111,10 @@
                         }
                     </div>
                     <h3 style="color:var(--gold-light);font-size:1rem;">${currentUser.fullName}</h3>
-                    <p style="color:rgba(245,240,232,0.5);font-size:0.7rem;">${currentUser.username}</p>
+                    <p style="color:rgba(245,240,232,0.5);font-size:0.7rem;">@${currentUser.username}</p>
+                    <p style="color:rgba(245,240,232,0.3);font-size:0.6rem;margin-top:4px;">
+                        <i class="fas fa-map-marker-alt"></i> ${currentUser.address || 'Alamat tidak tersedia'}
+                    </p>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Email</span>
@@ -3649,7 +4142,15 @@
                     <span class="info-label">Bergabung</span>
                     <span class="info-value">${new Date(currentUser.joined || Date.now()).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })}</span>
                 </div>
+                <div style="margin-top:12px;text-align:center;border-top:1px solid rgba(212,168,73,0.1);padding-top:12px;">
+                    <button onclick="addNotification('profile','Pengunjung Profil','${currentUser.fullName} mengunjungi profil Anda','Sistem','#')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:6px 16px;border-radius:20px;cursor:pointer;font-size:0.7rem;">
+                        <i class="fas fa-eye"></i> Lihat Pengunjung
+                    </button>
+                </div>
             `;
+            
+            // Add profile view notification
+            addNotification('profile', 'Tayangan Profil', `Profil Anda dilihat oleh ${currentUser.fullName}`, currentUser.fullName, '#');
             
             profileModal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -3660,7 +4161,7 @@
             document.body.style.overflow = '';
         }
 
-        // Settings Modal with password toggle
+        // Settings Modal
         function openSettingsModal() {
             if (!currentUser) {
                 welcomeModal.classList.add('active');
@@ -3749,7 +4250,7 @@
                 }
             });
             
-            // Setup password toggles for settings
+            // Setup password toggles
             setupPasswordToggle('toggleSettingsOldPassword', 'settingsOldPassword');
             setupPasswordToggle('toggleSettingsNewPassword', 'settingsNewPassword');
             
@@ -3764,7 +4265,6 @@
                 const newPassword = document.getElementById('settingsNewPassword').value;
                 const profileImage = settingsProfilePicture.dataset.image || currentUser.profilePicture;
                 
-                // Update profile
                 currentUser.fullName = fullName;
                 currentUser.email = email;
                 currentUser.phone = phone;
@@ -3772,7 +4272,6 @@
                 currentUser.mapLink = mapLink;
                 currentUser.profilePicture = profileImage;
                 
-                // Update password if provided
                 if (oldPassword && newPassword) {
                     if (oldPassword === currentUser.password) {
                         currentUser.password = newPassword;
@@ -3782,10 +4281,8 @@
                     }
                 }
                 
-                // Save to localStorage
                 localStorage.setItem('salink_user', JSON.stringify(currentUser));
                 
-                // Update users list
                 const users = JSON.parse(localStorage.getItem('salink_users')) || [];
                 const userIndex = users.findIndex(u => u.username === currentUser.username);
                 if (userIndex !== -1) {
@@ -3840,11 +4337,81 @@
             pendingContact = null;
         }
 
+        // Invite Modal
+        function openInviteModal() {
+            if (!currentUser) {
+                welcomeModal.classList.add('active');
+                return;
+            }
+            
+            inviteModalBody.innerHTML = `
+                <div style="margin-bottom:12px;">
+                    <p style="font-size:0.75rem;color:rgba(245,240,232,0.6);">Undang pengguna lain untuk bergabung di SALINK</p>
+                </div>
+                <div id="inviteUserList">
+                    ${renderInviteUsers()}
+                </div>
+            `;
+            
+            inviteModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function renderInviteUsers() {
+            // Sample users from different regions
+            const users = [
+                { name: 'Bpk. Ahmad', region: 'Jakarta Pusat', avatar: null, gender: 'male' },
+                { name: 'Sdri. Rina', region: 'Jakarta Selatan', avatar: null, gender: 'female' },
+                { name: 'Bpk. Joko', region: 'Jakarta Timur', avatar: null, gender: 'male' },
+                { name: 'Sdri. Dewi', region: 'Jakarta Barat', avatar: null, gender: 'female' },
+                { name: 'Bpk. Budi', region: 'Jakarta Utara', avatar: null, gender: 'male' },
+                { name: 'Sdri. Siti', region: 'Bandung', avatar: null, gender: 'female' },
+                { name: 'Bpk. Andi', region: 'Surabaya', avatar: null, gender: 'male' },
+                { name: 'Sdri. Maya', region: 'Yogyakarta', avatar: null, gender: 'female' }
+            ];
+            
+            let html = '';
+            users.forEach((user, index) => {
+                const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+                html += `
+                    <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;background:rgba(61,35,20,0.3);margin-bottom:8px;border:1px solid rgba(212,168,73,0.1);">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--brown-dark);font-size:1rem;overflow:hidden;">
+                            ${user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="fas ${avatarIcon}"></i>`}
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.8rem;color:var(--cream);">${user.name}</div>
+                            <div style="font-size:0.6rem;color:rgba(245,240,232,0.4);"><i class="fas fa-map-marker-alt"></i> ${user.region}</div>
+                        </div>
+                        <button onclick="inviteUser('${user.name}')" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--dark);border:none;padding:4px 14px;border-radius:16px;cursor:pointer;font-size:0.65rem;font-weight:600;">
+                            <i class="fas fa-user-plus"></i> Invite
+                        </button>
+                    </div>
+                `;
+            });
+            return html;
+        }
+
+        function inviteUser(userName) {
+            if (!currentUser) return;
+            
+            addNotification('invite', 'Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, '#');
+            alert(`✅ Undangan telah dikirim ke ${userName}!`);
+            
+            // Close invite modal
+            inviteModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function closeInviteModal() {
+            inviteModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
         // ============================================
         // POST FUNCTIONS
         // ============================================
         
-        function createPost(text, mediaFile) {
+        function createPost(text, mediaFile, isHologram, hologramData) {
             if (!currentUser) {
                 welcomeModal.classList.add('active');
                 return;
@@ -3873,7 +4440,9 @@
                         mediaData: mediaData,
                         timestamp: now,
                         likes: [],
-                        comments: []
+                        comments: [],
+                        isHologram: isHologram || false,
+                        hologramData: hologramData || null
                     };
                     posts.push(postData);
                     renderPosts();
@@ -3883,6 +4452,11 @@
                     mediaPreview.innerHTML = '<span class="remove-media" id="removeMedia">&times;</span>';
                     postSubmit.disabled = true;
                     updateBadge();
+                    
+                    // Add notification for new post
+                    if (!isHologram) {
+                        addNotification('report', 'Laporan Baru', `${currentUser.fullName} memposting laporan baru`, currentUser.fullName, '#');
+                    }
                 };
                 reader.readAsDataURL(mediaFile);
             } else {
@@ -3897,22 +4471,30 @@
                     mediaData: null,
                     timestamp: now,
                     likes: [],
-                    comments: []
+                    comments: [],
+                    isHologram: isHologram || false,
+                    hologramData: hologramData || null
                 };
                 posts.push(postData);
                 renderPosts();
                 postInput.value = '';
                 postSubmit.disabled = true;
                 updateBadge();
+                
+                // Add notification for new post
+                if (!isHologram) {
+                    addNotification('report', 'Laporan Baru', `${currentUser.fullName} memposting laporan baru`, currentUser.fullName, '#');
+                }
             }
         }
 
         function renderPosts() {
             postFeed.innerHTML = '';
-            // Sort posts by timestamp descending (newest first)
+            // Sort posts by timestamp descending (newest first) - show 20 latest
             const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
+            const displayPosts = sortedPosts.slice(0, 20);
             
-            sortedPosts.forEach(post => {
+            displayPosts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.className = 'post';
                 postElement.id = post.id;
@@ -3920,6 +4502,9 @@
                 const profilePic = post.userProfilePic 
                     ? `<img src="${post.userProfilePic}" alt="Profile">` 
                     : (post.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                
+                // Profile link
+                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
                 
                 let mediaHTML = '';
                 if (post.mediaType === 'image') {
@@ -3984,15 +4569,16 @@
                 });
                 
                 const isLiked = currentUser && post.likes.includes(currentUser.username);
+                const isHologramBadge = post.isHologram ? '<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">📡 Hologram</span>' : '';
                 
                 postElement.innerHTML = `
                     <div class="post-header">
-                        <div class="post-profile-pic">
+                        <div class="post-profile-pic" onclick="event.preventDefault(); openProfileModal();">
                             ${profilePic}
                         </div>
                         <div class="post-user-info">
-                            <h4>${post.userFullName}</h4>
-                            <small>${getTimeAgo(post.timestamp)} • ${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
+                            <h4>${profileLink} ${isHologramBadge}</h4>
+                            <small>${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })} • ${getTimeAgo(post.timestamp)}</small>
                         </div>
                     </div>
                     <div class="post-content">
@@ -4009,6 +4595,10 @@
                             <i class="far fa-comment"></i>
                             <span>Komentar</span>
                             <span>(${post.comments.length})</span>
+                        </div>
+                        <div class="post-action share" data-post-id="${post.id}">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Bagikan</span>
                         </div>
                         ${post.userId === currentUser?.username ? `
                             <div class="post-action delete" data-post-id="${post.id}">
@@ -4031,7 +4621,6 @@
                 postFeed.appendChild(postElement);
             });
             
-            // Attach event listeners to new post elements
             attachPostEventListeners();
         }
 
@@ -4078,6 +4667,12 @@
             document.querySelectorAll('.delete-comment[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleDeleteComment);
                 btn.addEventListener('click', handleDeleteComment);
+            });
+            
+            // Share
+            document.querySelectorAll('.post-action.share[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleShare);
+                btn.addEventListener('click', handleShare);
             });
         }
 
@@ -4144,7 +4739,6 @@
                 replies: []
             };
             
-            // Check if replying to a comment
             const replyToCommentId = input.dataset.replyToCommentId;
             if (replyToCommentId) {
                 const parentComment = post.comments.find(c => c.id === replyToCommentId);
@@ -4156,11 +4750,14 @@
                 }
             } else {
                 post.comments.push(comment);
+                // Add notification for comment
+                if (post.userId !== currentUser.username) {
+                    addNotification('comment', 'Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#');
+                }
             }
             
             input.value = '';
             renderPosts();
-            // Auto-expand comments
             const commentsSection = document.getElementById(`comments-${postId}`);
             if (commentsSection) {
                 commentsSection.style.display = 'block';
@@ -4206,7 +4803,6 @@
             if (!post) return;
             
             if (replyId) {
-                // Delete a reply
                 for (const comment of post.comments) {
                     if (comment.replies) {
                         const replyIndex = comment.replies.findIndex(r => r.id === replyId);
@@ -4217,7 +4813,6 @@
                     }
                 }
             } else {
-                // Delete a main comment
                 const commentIndex = post.comments.findIndex(c => c.id === commentId);
                 if (commentIndex > -1) {
                     post.comments.splice(commentIndex, 1);
@@ -4226,12 +4821,39 @@
             renderPosts();
         }
 
+        function handleShare(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SALINK - Postingan',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('📋 Link postingan telah disalin ke clipboard!');
+                }).catch(() => {
+                    prompt('Salin teks ini:', shareText);
+                });
+            }
+            
+            // Add notification for share
+            addNotification('inbox', 'Postingan Dibagikan', `${currentUser?.fullName || 'Seseorang'} membagikan postingan Anda`, currentUser?.fullName || 'Sistem', '#');
+        }
+
         // ============================================
         // CHART FUNCTIONS
         // ============================================
         
         function renderPieChart() {
-            // Static pie chart with CSS - already rendered
+            // Static pie chart with CSS
         }
 
         function renderBarChart() {
@@ -4265,6 +4887,9 @@
             });
             
             chartPeriodInfo.textContent = '📊 Data: Minggu Ini (1-7 Juni 2026)';
+            
+            // Add notification for chart increase
+            addNotification('chart', 'Peningkatan Grafik Statistik', 'Statistik laporan meningkat 15% minggu ini', 'Sistem', '#');
         }
 
         function renderLineChart() {
@@ -4289,7 +4914,6 @@
             const chartWrapper = document.createElement('div');
             chartWrapper.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:20px;position:relative;';
             
-            // Create y-axis labels
             const yAxis = document.createElement('div');
             yAxis.style.cssText = 'display:flex;justify-content:space-between;position:absolute;top:0;left:0;right:0;height:100%;flex-direction:column;padding:0 5px;pointer-events:none;';
             for (let i = 5; i >= 0; i--) {
@@ -4300,7 +4924,6 @@
             }
             chartWrapper.appendChild(yAxis);
             
-            // Create data points
             const pointsContainer = document.createElement('div');
             pointsContainer.style.cssText = 'display:flex;justify-content:space-around;align-items:flex-end;height:100%;position:relative;padding:0 5px;';
             
@@ -4348,17 +4971,14 @@
         }
 
         function switchChart(type) {
-            // Update active button
             chartNavBtns.forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.chart === type);
             });
             
-            // Show/hide chart containers
             pieChartContainer.style.display = type === 'pie' ? 'flex' : 'none';
             barChartContainer.classList.toggle('active', type === 'bar');
             lineChartContainer.classList.toggle('active', type === 'line');
             
-            // Render selected chart
             if (type === 'pie') {
                 renderPieChart();
             } else if (type === 'bar') {
@@ -4375,25 +4995,21 @@
         function updateUserUI() {
             if (!currentUser) return;
             
-            // Update sidebar
             sidebarUserName.textContent = currentUser.fullName;
             sidebarUserEmail.textContent = currentUser.email;
             
-            // Update sidebar avatar
             if (currentUser.profilePicture) {
                 sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
             } else {
                 sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
             }
             
-            // Update hologram profile
             if (currentUser.profilePicture) {
                 hologramProfile.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
                 hologramProfile.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
             }
             
-            // Update post profile
             if (currentUser.profilePicture) {
                 postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
@@ -4401,7 +5017,6 @@
             }
             postUserName.textContent = currentUser.fullName;
             
-            // Update user button
             const userBtnIcon = userBtn.querySelector('i');
             const userBtnImg = userBtn.querySelector('img');
             if (!userBtnImg) {
@@ -4428,9 +5043,335 @@
             const badges = document.querySelectorAll('.badge');
             const count = posts.length;
             badges.forEach(badge => {
+                if (badge.id === 'notifBadge' || badge.id === 'notifModalBadge') return;
                 badge.textContent = count > 99 ? '99+' : count;
                 badge.style.display = count > 0 ? 'flex' : 'none';
             });
+        }
+
+        // ============================================
+        // SEARCH FUNCTIONS
+        // ============================================
+        
+        function performSearch(query) {
+            searchResults.innerHTML = '';
+            
+            if (!query || query.length < 2) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Cari pengguna, postingan, atau laporan...</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const results = [];
+            
+            // Search users (sample users)
+            const sampleUsers = [
+                { name: 'Bpk. Ahmad', username: 'ahmad', region: 'Jakarta Pusat', gender: 'male' },
+                { name: 'Sdri. Rina', username: 'rina', region: 'Jakarta Selatan', gender: 'female' },
+                { name: 'Bpk. Joko', username: 'joko', region: 'Jakarta Timur', gender: 'male' },
+                { name: 'Sdri. Dewi', username: 'dewi', region: 'Jakarta Barat', gender: 'female' },
+                { name: 'Bpk. Budi', username: 'budi', region: 'Jakarta Utara', gender: 'male' }
+            ];
+            
+            sampleUsers.forEach(user => {
+                if (user.name.toLowerCase().includes(query.toLowerCase()) || 
+                    user.username.toLowerCase().includes(query.toLowerCase()) ||
+                    user.region.toLowerCase().includes(query.toLowerCase())) {
+                    results.push({ type: 'user', data: user });
+                }
+            });
+            
+            // Search posts
+            posts.forEach(post => {
+                if (post.text && post.text.toLowerCase().includes(query.toLowerCase())) {
+                    results.push({ type: 'post', data: post });
+                }
+            });
+            
+            // Search reports
+            reports.forEach(report => {
+                if (report.title.toLowerCase().includes(query.toLowerCase()) || 
+                    report.desc.toLowerCase().includes(query.toLowerCase())) {
+                    results.push({ type: 'report', data: report });
+                }
+            });
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Tidak ditemukan hasil untuk "${query}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                
+                if (result.type === 'user') {
+                    const user = result.data;
+                    const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+                    item.innerHTML = `
+                        <div class="search-result-avatar">
+                            <i class="fas ${avatarIcon}"></i>
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${user.name}</div>
+                            <div class="search-result-desc"><i class="fas fa-map-marker-alt"></i> ${user.region} • @${user.username}</div>
+                        </div>
+                        <button onclick="addNotification('inbox','Pencarian Pengguna','Anda menemukan ${user.name} melalui pencarian','Sistem','#')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                            <i class="fas fa-eye"></i> Lihat
+                        </button>
+                    `;
+                } else if (result.type === 'post') {
+                    const post = result.data;
+                    const profileLink = `<a href="#" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;">${post.userFullName}</a>`;
+                    item.innerHTML = `
+                        <div class="search-result-avatar" style="background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.8rem;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${profileLink}</div>
+                            <div class="search-result-desc">${post.text ? post.text.substring(0, 60) + (post.text.length > 60 ? '...' : '') : 'Postingan media'}</div>
+                        </div>
+                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${getTimeAgo(post.timestamp)}</div>
+                    `;
+                } else if (result.type === 'report') {
+                    const report = result.data;
+                    const iconClass = `icon-${report.type}`;
+                    item.innerHTML = `
+                        <div class="search-result-avatar">
+                            <div class="alert-icon ${iconClass}" style="width:36px;height:36px;border-radius:50%;font-size:0.8rem;border:none;">
+                                <i class="fas ${report.icon}"></i>
+                            </div>
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${report.title}</div>
+                            <div class="search-result-desc">${report.desc}</div>
+                        </div>
+                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${report.time}</div>
+                    `;
+                    item.addEventListener('click', () => {
+                        searchModal.classList.remove('active');
+                        openDetailModal(report);
+                    });
+                }
+                
+                searchResults.appendChild(item);
+            });
+        }
+
+        // ============================================
+        // HOLOGRAM FUNCTIONS
+        // ============================================
+        
+        function convertHologramToPost() {
+            if (!currentUser) {
+                welcomeModal.classList.add('active');
+                return;
+            }
+            
+            const hologramContent = document.getElementById('hologramContent');
+            const alertType = hologramContent.querySelector('.alert-type');
+            const alertSender = hologramContent.querySelector('.alert-sender');
+            const alertLocation = hologramContent.querySelector('.alert-location');
+            const alertTime = hologramContent.querySelector('.alert-time');
+            
+            if (!alertType || !alertSender) return;
+            
+            const typeText = alertType.textContent.trim();
+            const senderText = alertSender.textContent.replace('Dilaporkan oleh:', '').trim();
+            const locationText = alertLocation ? alertLocation.textContent.trim() : '';
+            const timeText = alertTime ? alertTime.textContent.trim() : '';
+            
+            const postText = `🚨 ${typeText}\n📍 ${locationText}\n👤 ${senderText}\n🕐 ${timeText}`;
+            
+            // Create post from hologram
+            createPost(postText, null, true, {
+                type: typeText,
+                sender: senderText,
+                location: locationText,
+                time: timeText
+            });
+            
+            // Clear hologram notification
+            emergencyBtns.forEach(btn => {
+                btn.classList.remove('has-notification');
+                btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+            });
+            
+            isHologramPost = true;
+            hologramPostData = { type: typeText, sender: senderText, location: locationText, time: timeText };
+            
+            addNotification('inbox', 'Hologram Berubah Jadi Postingan', `Laporan ${typeText} dari ${senderText} telah menjadi postingan`, senderText, '#');
+            
+            // Reset hologram display to default after a moment
+            setTimeout(() => {
+                resetHologramDisplay();
+            }, 5000);
+        }
+
+        function resetHologramDisplay() {
+            const hologramContent = document.getElementById('hologramContent');
+            hologramContent.innerHTML = `
+                <div class="hologram-top">
+                    <div class="hologram-profile" id="hologramProfile">
+                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                    </div>
+                    <div class="alert-type fire">
+                        <i class="fas fa-fire"></i>
+                        <span>KEBAKARAN</span>
+                    </div>
+                </div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">Bpk. Ahmad</a></strong></div>
+                <div class="alert-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
+                </div>
+                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
+                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                    <i class="fas fa-map"></i>
+                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
+                </a>
+                <div class="alert-time">10 menit yang lalu</div>
+            `;
+            
+            // Re-attach profile link
+            const profileLink = hologramContent.querySelector('.profile-link');
+            if (profileLink) {
+                profileLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openProfileModal();
+                });
+            }
+            
+            isHologramPost = false;
+            hologramPostData = null;
+        }
+
+        // ============================================
+        // SIMULATE NOTIFICATIONS
+        // ============================================
+        
+        function simulateEmergencyNotification(type) {
+            const typeNames = {
+                fire: 'KEBAKARAN',
+                death: 'KEMATIAN',
+                theft: 'PENCURIAN',
+                disaster: 'BENCANA ALAM'
+            };
+            const icons = {
+                fire: 'fa-fire',
+                death: 'fa-skull',
+                theft: 'fa-gem',
+                disaster: 'fa-house-damage'
+            };
+            
+            const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
+            const locations = [
+                'Jl. Sudirman No. 45, Jakarta Selatan',
+                'Jl. Thamrin No. 12, Jakarta Pusat',
+                'Jl. Gatot Subroto No. 23, Jakarta Selatan',
+                'Jl. MH Thamrin No. 1, Jakarta Pusat',
+                'Jl. Pangeran Antasari No. 7, Jakarta Selatan'
+            ];
+            
+            const randomSender = senders[Math.floor(Math.random() * senders.length)];
+            const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+            const now = new Date();
+            const timeString = now.toLocaleString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            // Update hologram
+            const hologramContent = document.getElementById('hologramContent');
+            hologramContent.innerHTML = `
+                <div class="hologram-top">
+                    <div class="hologram-profile" id="hologramProfile">
+                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                    </div>
+                    <div class="alert-type ${type}">
+                        <i class="fas ${icons[type]}"></i>
+                        <span>${typeNames[type]}</span>
+                    </div>
+                </div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
+                <div class="alert-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${randomLocation}</span>
+                </div>
+                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
+                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                    <i class="fas fa-map"></i>
+                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
+                </a>
+                <div class="alert-time">${timeString}</div>
+            `;
+            
+            // Add notification badge to corresponding button
+            const btnMap = {
+                fire: fireBtn,
+                death: deathBtn,
+                theft: theftBtn,
+                disaster: disasterBtn
+            };
+            
+            const btn = btnMap[type];
+            if (btn) {
+                btn.classList.add('has-notification');
+                btn.querySelector('.play-status').textContent = '🔔 Ada Notifikasi!';
+            }
+            
+            // Add to notifications
+            addNotification('inbox', `Laporan ${typeNames[type]}`, `${randomSender} melaporkan ${typeNames[type].toLowerCase()} di ${randomLocation}`, randomSender, '#');
+            
+            // Play notification sound
+            playNotificationSound();
+            
+            // Add to recent reports
+            reports.unshift({
+                id: reports.length + 1,
+                type: type,
+                icon: icons[type],
+                title: `${typeNames[type]} ${Math.floor(Math.random() * 100)}`,
+                desc: randomLocation,
+                time: 'Baru saja',
+                detail: {
+                    type: typeNames[type],
+                    sender: randomSender,
+                    location: randomLocation,
+                    address: randomLocation,
+                    image: `https://picsum.photos/seed/${type}${Date.now()}/400/200`,
+                    time: timeString
+                }
+            });
+            
+            renderAlerts(reports);
+            
+            // Show hologram click hint
+            hologramDisplay.style.cursor = 'pointer';
+            hologramDisplay.title = 'Klik untuk mengubah menjadi postingan';
+            
+            // Automatically convert after 3 seconds (demo)
+            setTimeout(() => {
+                if (btn) {
+                    btn.classList.remove('has-notification');
+                    btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                }
+                convertHologramToPost();
+            }, 5000);
         }
 
         // ============================================
@@ -4438,19 +5379,16 @@
         // ============================================
         
         function showHomePage() {
-            // Show main content, hide other pages
             document.querySelectorAll('.settings-page, .full-history-page').forEach(el => {
                 if (el) el.style.display = 'none';
             });
             document.getElementById('mainContent').style.display = 'block';
             
-            // Update active states
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             homeNavLink.classList.add('active');
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomHomeNav.classList.add('active');
             
-            // Close sidebar
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
         }
@@ -4504,6 +5442,28 @@
             }
         });
         
+        // Search
+        searchBtn.addEventListener('click', () => {
+            searchModal.classList.add('active');
+            searchInput.value = '';
+            searchInput.focus();
+            performSearch('');
+        });
+        
+        searchClose.addEventListener('click', () => {
+            searchModal.classList.remove('active');
+        });
+        
+        searchModal.addEventListener('click', (e) => {
+            if (e.target === searchModal) {
+                searchModal.classList.remove('active');
+            }
+        });
+        
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+        
         // Dropdown toggle
         dropdownToggle.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -4511,7 +5471,6 @@
             dropdownMenu.classList.toggle('open');
         });
         
-        // Dropdown items with confirmation
         dropdownItems.forEach(item => {
             item.addEventListener('click', () => {
                 const contactName = item.dataset.name;
@@ -4530,7 +5489,6 @@
             });
         });
         
-        // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.dropdown-container')) {
                 dropdownToggle.classList.remove('open');
@@ -4552,7 +5510,7 @@
             if (e.target === confirmationModal) closeConfirmationModal();
         });
         
-        // View All button - Open All Reports Modal
+        // View All button
         viewAllBtn.addEventListener('click', () => {
             renderAllReports();
             allReportsModal.classList.add('active');
@@ -4585,18 +5543,46 @@
             if (e.target === settingsModal) closeSettingsModal();
         });
         
+        inviteModalClose.addEventListener('click', closeInviteModal);
+        inviteModal.addEventListener('click', (e) => {
+            if (e.target === inviteModal) closeInviteModal();
+        });
+        
+        notifModalClose.addEventListener('click', () => {
+            notifModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        notifModal.addEventListener('click', (e) => {
+            if (e.target === notifModal) {
+                notifModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+        
         // History navigation
         historyNavLink.addEventListener('click', (e) => {
             e.preventDefault();
             openHistoryModal();
         });
         
-        bottomHistoryNav.addEventListener('click', (e) => {
+        // Bottom navigation
+        bottomTokoNav.addEventListener('click', (e) => {
             e.preventDefault();
-            openHistoryModal();
+            alert('🛒 Halaman Toko akan segera hadir!');
         });
         
-        // Profile navigation
+        bottomInviteNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            openInviteModal();
+        });
+        
+        bottomNotifNav.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderNotifications();
+            notifModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
         bottomProfileNav.addEventListener('click', (e) => {
             e.preventDefault();
             openProfileModal();
@@ -4608,10 +5594,37 @@
             openSettingsModal();
         });
         
+        // Hologram click - convert to post
+        hologramDisplay.addEventListener('click', () => {
+            if (isHologramPost) return;
+            // Check if there's a notification in hologram
+            const hasNotification = hologramDisplay.querySelector('.has-notification') || 
+                                   hologramDisplay.querySelector('.alert-type');
+            if (hasNotification) {
+                convertHologramToPost();
+            } else {
+                // Simulate emergency notification for demo
+                const types = ['fire', 'death', 'theft', 'disaster'];
+                const randomType = types[Math.floor(Math.random() * types.length)];
+                simulateEmergencyNotification(randomType);
+            }
+        });
+        
         // Emergency Alarm Buttons
         emergencyBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
+                
+                // If button has notification, clear it and show post
+                if (this.classList.contains('has-notification')) {
+                    this.classList.remove('has-notification');
+                    this.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                    
+                    // Convert hologram to post
+                    convertHologramToPost();
+                    return;
+                }
+                
                 const soundKey = this.dataset.sound;
                 playAlarm(this, soundKey);
             });
@@ -4664,7 +5677,7 @@
             
             if (text === '' && !file) return;
             
-            createPost(text, file);
+            createPost(text, file, false, null);
         });
         
         // Password toggle for login and signup
@@ -4841,6 +5854,9 @@
         // Preload all audio
         preloadAllAudio();
         
+        // Generate sample notifications
+        generateSampleNotifications();
+        
         // Check if user is logged in
         const savedUser = localStorage.getItem('salink_user');
         if (savedUser) {
@@ -4898,7 +5914,9 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    isHologram: false,
+                    hologramData: null
                 },
                 {
                     id: 'post-sample2',
@@ -4911,7 +5929,9 @@
                     mediaData: null,
                     timestamp: now - 360000,
                     likes: ['ahmad'],
-                    comments: []
+                    comments: [],
+                    isHologram: false,
+                    hologramData: null
                 },
                 {
                     id: 'post-sample3',
@@ -4935,12 +5955,23 @@
                             timestamp: now - 120000,
                             replies: []
                         }
-                    ]
+                    ],
+                    isHologram: false,
+                    hologramData: null
                 }
             ];
             postIdCounter = 3;
             renderPosts();
         }
+        
+        // Simulate an emergency notification after 5 seconds for demo
+        setTimeout(() => {
+            if (currentUser) {
+                const types = ['fire', 'theft', 'disaster'];
+                const randomType = types[Math.floor(Math.random() * types.length)];
+                simulateEmergencyNotification(randomType);
+            }
+        }, 5000);
     </script>
 </body>
 </html>
