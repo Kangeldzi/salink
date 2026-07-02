@@ -3008,14 +3008,13 @@
 
     <script>
         // ============================================
-        // PLAYLIST - Audio URLs (MP3 format) - FIXED
+        // PLAYLIST - Audio URLs (MP3 format)
         // ============================================
-        // Gunakan raw.githubusercontent.com untuk akses file langsung
         const playlist = [
-            'https://raw.githubusercontent.com/Kangeldzi/Apps-Salink/main/Music/Kebakaran.mp3',
-            'https://raw.githubusercontent.com/Kangeldzi/Apps-Salink/main/Music/kematian.mp3',
-            'https://raw.githubusercontent.com/Kangeldzi/Apps-Salink/main/Music/pencurian.mp3',
-            'https://raw.githubusercontent.com/Kangeldzi/Apps-Salink/main/Music/bencana_tsunami.mp3'
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/Kebakaran.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/kematian.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/pencurian.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/bencana_tsunami.mp3"
         ];
 
         // Map button to playlist index
@@ -3269,26 +3268,31 @@
                 const audio = new Audio();
                 audio.src = playlist[index];
                 audio.preload = 'auto';
-                audio.crossOrigin = 'anonymous';
+                audio.volume = 1.0;
                 audioObjects[key] = audio;
+                
+                // Log when audio is loaded
+                audio.addEventListener('canplaythrough', () => {
+                    console.log(`✅ Audio "${key}" loaded successfully`);
+                });
+                
+                audio.addEventListener('error', (e) => {
+                    console.warn(`❌ Audio "${key}" load error:`, e);
+                    // Try alternative URL if needed
+                });
             });
             return audioObjects;
         }
 
         const audioObjects = createAudioElements();
 
-        // Test audio loading
+        // Preload all audio
         function preloadAllAudio() {
             Object.keys(audioObjects).forEach(key => {
                 const audio = audioObjects[key];
                 audio.load();
-                audio.addEventListener('canplaythrough', () => {
-                    console.log(`✅ Audio ${key} loaded successfully`);
-                });
-                audio.addEventListener('error', (e) => {
-                    console.warn(`⚠️ Audio ${key} load error:`, e);
-                });
             });
+            console.log('🔄 Preloading all audio files...');
         }
 
         // Play alarm with proper error handling
@@ -3327,10 +3331,7 @@
             
             // Reset audio and try to play
             audio.currentTime = 0;
-            audio.volume = 0.8;
-            
-            // Show loading status
-            button.querySelector('.play-status').textContent = '⏳ Memuat...';
+            audio.volume = 1.0;
             
             const playPromise = audio.play();
             if (playPromise !== undefined) {
@@ -3352,52 +3353,34 @@
                     }, 15000);
                 }).catch(error => {
                     console.warn('Audio play failed:', error);
-                    button.querySelector('.play-status').textContent = '⚠️ Gagal putar audio';
+                    button.querySelector('.play-status').textContent = '🔄 Memuat audio...';
                     
-                    // Try alternative: use jsDelivr CDN
-                    const cdnUrls = [
-                        `https://cdn.jsdelivr.net/gh/Kangeldzi/Apps-Salink@main/Music/${soundKey === 'kebakaran' ? 'Kebakaran' : soundKey === 'kematian' ? 'kematian' : soundKey === 'pencurian' ? 'pencurian' : 'bencana_tsunami'}.mp3`
-                    ];
-                    
-                    // Try loading from alternative source
-                    const altAudio = new Audio();
-                    altAudio.src = cdnUrls[0];
-                    altAudio.crossOrigin = 'anonymous';
-                    altAudio.load();
-                    
-                    altAudio.addEventListener('canplaythrough', () => {
-                        altAudio.play().then(() => {
+                    // Try to reload and play again
+                    audio.load();
+                    setTimeout(() => {
+                        audio.play().then(() => {
                             button.classList.add('playing');
                             button.querySelector('.play-status').textContent = '🔊 Alarm Berbunyi...';
                             currentlyPlaying = button;
-                            // Replace audio object with working one
-                            audioObjects[soundKey] = altAudio;
                             
-                            setTimeout(() => {
+                            clearTimeout(button._autoStopTimeout);
+                            button._autoStopTimeout = setTimeout(() => {
                                 if (currentlyPlaying === button) {
-                                    altAudio.pause();
-                                    altAudio.currentTime = 0;
+                                    audio.pause();
+                                    audio.currentTime = 0;
                                     button.classList.remove('playing');
                                     button.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
                                     currentlyPlaying = null;
                                 }
                             }, 15000);
                         }).catch(e => {
-                            console.warn('Alt audio failed:', e);
-                            button.querySelector('.play-status').textContent = '▶ Coba lagi';
+                            console.warn('Audio retry failed:', e);
+                            button.querySelector('.play-status').textContent = '⚠️ Gagal putar';
                             setTimeout(() => {
                                 button.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
                             }, 2000);
                         });
-                    });
-                    
-                    altAudio.addEventListener('error', () => {
-                        console.warn('Alt audio not available');
-                        button.querySelector('.play-status').textContent = '▶ Coba lagi';
-                        setTimeout(() => {
-                            button.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                        }, 2000);
-                    });
+                    }, 1500);
                 });
             }
         }
