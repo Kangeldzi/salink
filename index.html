@@ -32,6 +32,7 @@
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        /* Animations */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-12px); }
@@ -108,6 +109,11 @@
             40% { transform: scale(0.85); }
             70% { transform: scale(0.95); }
             100% { transform: scale(1); }
+        }
+
+        @keyframes viewCountPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         body {
@@ -296,250 +302,6 @@
 
         .nav-item-bottom .badge.show {
             display: flex;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -100%;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: linear-gradient(180deg, var(--brown-dark), var(--dark));
-            padding: 0;
-            z-index: 1100;
-            overflow-y: auto;
-            box-shadow: 15px 0 30px rgba(0, 0, 0, 0.6);
-            border-right: 2px solid var(--gold);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: rgba(61, 35, 20, 0.3);
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 3px;
-        }
-
-        .sidebar.active {
-            left: 0;
-            animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-
-        .sidebar-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            z-index: 10;
-            transition: all 0.3s;
-        }
-
-        .sidebar-close:hover {
-            background: rgba(255, 107, 53, 0.2);
-            transform: rotate(90deg);
-        }
-
-        .sidebar-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 14px 16px 12px;
-            margin-bottom: 2px;
-            border-bottom: 2px solid var(--gold);
-            background: rgba(13, 8, 5, 0.3);
-            flex-shrink: 0;
-        }
-
-        .sidebar-user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--brown-dark);
-            font-weight: bold;
-            font-size: 1.3rem;
-            box-shadow: 0 0 20px rgba(212, 168, 73, 0.4);
-            overflow: hidden;
-            position: relative;
-            border: 3px solid var(--gold);
-            flex-shrink: 0;
-        }
-
-        .sidebar-user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .sidebar-user-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--gold-light);
-            text-align: center;
-        }
-
-        .sidebar-user-email {
-            font-size: 0.65rem;
-            color: rgba(245, 240, 232, 0.5);
-            text-align: center;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 8px 14px 8px;
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            margin-bottom: 3px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            color: var(--cream);
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            background: rgba(61, 35, 20, 0.3);
-            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover {
-            border-color: var(--gold);
-            transform: translateX(5px);
-        }
-
-        .nav-link.active {
-            background: linear-gradient(135deg, rgba(212, 168, 73, 0.25), rgba(245, 240, 232, 0.1));
-            color: var(--gold-light);
-            border: 1px solid var(--gold);
-            box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
-        }
-
-        .nav-link i {
-            width: 22px;
-            text-align: center;
-            font-size: 1rem;
-            color: var(--gold);
-        }
-
-        .dropdown-container {
-            position: relative;
-        }
-
-        .dropdown-toggle {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            color: var(--cream);
-            border-radius: 8px;
-            font-size: 0.85rem;
-            background: rgba(61, 35, 20, 0.3);
-            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
-            border: 1px solid transparent;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s;
-        }
-
-        .dropdown-toggle:hover {
-            border-color: var(--gold);
-        }
-
-        .dropdown-toggle i {
-            width: 22px;
-            text-align: center;
-            font-size: 1rem;
-            color: var(--gold);
-        }
-
-        .dropdown-toggle .arrow {
-            margin-left: auto;
-            transition: transform 0.3s;
-            font-size: 0.7rem;
-        }
-
-        .dropdown-toggle.open .arrow {
-            transform: rotate(180deg);
-        }
-
-        .dropdown-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            padding-left: 0;
-            list-style: none;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0 0 8px 8px;
-            margin: 0 0 0 8px;
-        }
-
-        .dropdown-menu.open {
-            max-height: 200px;
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 16px;
-            color: var(--cream);
-            text-decoration: none;
-            border-left: 3px solid transparent;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-left-color: var(--gold);
-        }
-
-        .dropdown-item i {
-            margin-right: 10px;
-            width: 18px;
-            text-align: center;
-            color: var(--gold);
-        }
-
-        .dropdown-item .contact-number {
-            background: var(--gold-dark);
-            padding: 1px 8px;
-            border-radius: 10px;
-            font-size: 0.65rem;
-            font-weight: bold;
-            color: var(--cream);
         }
 
         /* Main Content */
@@ -1208,6 +970,20 @@
             color: #4cc9f0;
         }
 
+        .post-action.viewers {
+            color: rgba(255, 255, 255, 0.4);
+            cursor: default;
+        }
+
+        .post-action.viewers:hover {
+            color: rgba(255, 255, 255, 0.4);
+            background: none;
+        }
+
+        .post-action .viewer-count {
+            animation: viewCountPulse 0.5s ease;
+        }
+
         .comments-section {
             max-height: 200px;
             overflow-y: auto;
@@ -1261,6 +1037,11 @@
             font-weight: 600;
             font-size: 0.65rem;
             color: var(--gold-light);
+            cursor: pointer;
+        }
+
+        .comment-user:hover {
+            text-decoration: underline;
         }
 
         .comment-text {
@@ -1821,6 +1602,195 @@
             color: var(--gold-light);
         }
 
+        /* Profile Page */
+        .profile-page {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .profile-page.active {
+            display: block;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar-large {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            border: 3px solid var(--gold);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            font-size: 2.5rem;
+            color: var(--brown-dark);
+            cursor: default;
+        }
+
+        .profile-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        .profile-username {
+            font-size: 0.8rem;
+            color: rgba(245, 240, 232, 0.5);
+        }
+
+        .profile-bio {
+            font-size: 0.75rem;
+            color: var(--cream);
+            margin-top: 6px;
+            opacity: 0.8;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin: 12px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .profile-action-btn {
+            padding: 8px 24px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-action-btn.primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
+        }
+
+        .profile-action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
+        }
+
+        .profile-action-btn.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--cream);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+        }
+
+        .profile-action-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-action-btn.message-btn {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .profile-action-btn.message-btn:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 12px 0 16px;
+            background: rgba(61, 35, 20, 0.3);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+        }
+
+        .profile-stat-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .profile-stat-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .profile-stat-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            display: block;
+        }
+
+        .profile-stat-label {
+            font-size: 0.55rem;
+            color: rgba(245, 240, 232, 0.5);
+        }
+
+        /* Sidebar Menu in Profile */
+        .profile-sidebar-menu {
+            background: rgba(61, 35, 20, 0.3);
+            border-radius: 12px;
+            padding: 8px 0;
+            margin: 12px 0 16px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+        }
+
+        .profile-sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: var(--cream);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-size: 0.8rem;
+        }
+
+        .profile-sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--gold);
+        }
+
+        .profile-sidebar-item i {
+            width: 20px;
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        .profile-sidebar-item.logout {
+            color: #ff6b35;
+            border-top: 1px solid rgba(212, 168, 73, 0.1);
+            margin-top: 4px;
+            padding-top: 12px;
+        }
+
+        .profile-sidebar-item.logout i {
+            color: #ff6b35;
+        }
+
+        .profile-sidebar-item.logout:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-left-color: #ff6b35;
+        }
+
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -1876,6 +1846,15 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .modal-title .badge-count {
+            background: #ff4444;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            -webkit-text-fill-color: white;
         }
 
         .modal-close {
@@ -2552,85 +2531,117 @@
             border-radius: 3px;
         }
 
-        /* Profile Page */
-        .profile-page {
+        /* Chat Page */
+        .chat-page {
             display: none;
             padding: 20px 0;
         }
 
-        .profile-page.active {
+        .chat-page.active {
             display: block;
         }
 
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-avatar-large {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            border: 3px solid var(--gold);
-            overflow: hidden;
+        .chat-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            font-size: 2.5rem;
-            color: var(--brown-dark);
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--gold);
         }
 
-        .profile-avatar-large img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-name {
+        .chat-header .back-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
             font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .chat-header .chat-title {
+            font-size: 1rem;
             font-weight: 600;
             color: var(--gold-light);
+            flex: 1;
         }
 
-        .profile-username {
-            font-size: 0.8rem;
-            color: rgba(245, 240, 232, 0.5);
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .profile-bio {
-            font-size: 0.75rem;
-            color: var(--cream);
-            margin-top: 6px;
-            opacity: 0.8;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 16px 0;
-            background: rgba(61, 35, 20, 0.3);
-            padding: 12px;
+        .chat-msg {
+            max-width: 80%;
+            padding: 10px 14px;
             border-radius: 12px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .chat-msg.sent {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--dark);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-msg.received {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--cream);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
             border: 1px solid rgba(212, 168, 73, 0.1);
         }
 
-        .profile-stat-item {
-            text-align: center;
-        }
-
-        .profile-stat-number {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--gold-light);
+        .chat-msg .msg-time {
+            font-size: 0.5rem;
+            opacity: 0.5;
+            margin-top: 4px;
             display: block;
+            text-align: right;
         }
 
-        .profile-stat-label {
-            font-size: 0.55rem;
-            color: rgba(245, 240, 232, 0.5);
+        .chat-input-area {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(212, 168, 73, 0.1);
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 8px 14px;
+            background: rgba(255, 248, 240, 0.05);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 20px;
+            color: var(--cream);
+            font-size: 0.75rem;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .chat-input-area button {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: var(--dark);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        .chat-input-area button:hover {
+            transform: scale(1.05);
         }
 
         /* Responsive */
@@ -2744,20 +2755,6 @@
                 padding: 20px 16px;
             }
 
-            .sidebar {
-                width: 85%;
-            }
-
-            .sidebar-user-avatar {
-                width: 44px;
-                height: 44px;
-                font-size: 1.1rem;
-            }
-
-            .sidebar-user-name {
-                font-size: 0.9rem;
-            }
-
             .post-actions {
                 gap: 8px;
             }
@@ -2799,8 +2796,14 @@
                 padding: 12px 10px;
             }
 
-            .app-footer div {
-                gap: 8px;
+            .profile-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .profile-action-btn {
+                width: 100%;
+                max-width: 200px;
             }
         }
 
@@ -2883,8 +2886,8 @@
 
     <!-- Header -->
     <header class="app-bar">
-        <button class="menu-btn" id="menuBtn">
-            <i class="fas fa-bars"></i>
+        <button class="user-btn" id="userBtn">
+            <i class="fas fa-user"></i>
         </button>
         <div class="app-title">
             <i class="fas fa-bell bell-icon"></i>
@@ -2894,102 +2897,8 @@
             <button class="search-btn" id="searchBtn">
                 <i class="fas fa-search"></i>
             </button>
-            <button class="user-btn" id="userBtn">
-                <i class="fas fa-user"></i>
-            </button>
         </div>
     </header>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <button class="sidebar-close" id="sidebarClose">
-            <i class="fas fa-times"></i>
-        </button>
-        
-        <div class="sidebar-header">
-            <div class="sidebar-user-avatar" id="sidebarUserAvatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="sidebar-user-name" id="sidebarUserName">Guest</div>
-            <div class="sidebar-user-email" id="sidebarUserEmail">guest@salink.id</div>
-        </div>
-        
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="#" class="nav-link active" id="homeNavLink">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="historyNavLink">
-                    <i class="fas fa-history"></i>
-                    <span>Riwayat Laporan</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="mapNavLink">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <span>Peta Darurat</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <div class="dropdown-container">
-                    <div class="dropdown-toggle" id="dropdownToggle">
-                        <i class="fas fa-phone-alt"></i>
-                        <span>Kontak Darurat</span>
-                        <i class="fas fa-chevron-down arrow"></i>
-                    </div>
-                    <ul class="dropdown-menu" id="dropdownMenu">
-                        <li class="dropdown-item" data-contact="police" data-name="Polisi" data-number="110">
-                            <span><i class="fas fa-shield-alt"></i> Polisi</span>
-                            <span class="contact-number">110</span>
-                        </li>
-                        <li class="dropdown-item" data-contact="fire" data-name="Damkar" data-number="113">
-                            <span><i class="fas fa-fire-extinguisher"></i> Damkar</span>
-                            <span class="contact-number">113</span>
-                        </li>
-                        <li class="dropdown-item" data-contact="bnpb" data-name="BNPB" data-number="117">
-                            <span><i class="fas fa-house-damage"></i> BNPB</span>
-                            <span class="contact-number">117</span>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="infoNavLink">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Informasi</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="settingsNavLink">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Keluar</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Overlay -->
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Search Modal -->
-    <div class="search-modal" id="searchModal">
-        <div class="search-header">
-            <input type="text" class="search-input" id="searchInput" placeholder="Cari pengguna, postingan, atau laporan...">
-            <button class="search-close" id="searchClose">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="search-results" id="searchResults"></div>
-    </div>
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
@@ -3026,7 +2935,7 @@
         <div class="hologram-display" id="hologramDisplay">
             <div class="hologram-content" id="hologramContent">
                 <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
+                    <div class="hologram-profile" id="hologramProfile" onclick="event.stopPropagation(); openProfilePage();">
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="alert-type fire">
@@ -3034,13 +2943,13 @@
                         <span>KEBAKARAN</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfilePage();">Bpk. Ahmad</a></strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); event.stopPropagation(); openProfilePage();">Bpk. Ahmad</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
                 </div>
                 <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map" onclick="event.stopPropagation();">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
                     <div class="map-marker" style="top: 50%; left: 30%;"></div>
@@ -3091,7 +3000,7 @@
         <!-- Post Section -->
         <div class="post-section" id="postSection">
             <div class="post-header">
-                <div class="post-profile-pic" id="postProfilePic">
+                <div class="post-profile-pic" id="postProfilePic" onclick="openProfilePage()">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="post-user-info">
@@ -3250,6 +3159,13 @@
 
     <!-- Profile Page -->
     <div class="main-content profile-page" id="profilePage" style="display:none;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <button onclick="showHomePage()" style="background:none;border:none;color:var(--gold);font-size:1.2rem;cursor:pointer;">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 style="font-size:1.1rem;color:var(--gold-light);flex:1;">Profil Pengguna</h2>
+        </div>
+
         <div class="profile-header">
             <div class="profile-avatar-large" id="profileAvatarLarge">
                 <i class="fas fa-user"></i>
@@ -3258,30 +3174,91 @@
             <div class="profile-username" id="profileUsername">@username</div>
             <div class="profile-bio" id="profileBio">Bergabung di SALINK untuk keamanan bersama</div>
         </div>
-        
+
+        <div class="profile-actions">
+            <button class="profile-action-btn message-btn" id="chatBtn">
+                <i class="fas fa-comment"></i> PESAN
+            </button>
+            <button class="profile-action-btn secondary" id="settingsBtn">
+                <i class="fas fa-cog"></i> Pengaturan
+            </button>
+        </div>
+
         <div class="profile-stats">
-            <div class="profile-stat-item">
+            <div class="profile-stat-item" onclick="openStatDetail('postingan')">
                 <span class="profile-stat-number" id="profileStatPosts">0</span>
                 <span class="profile-stat-label">Postingan</span>
             </div>
-            <div class="profile-stat-item">
+            <div class="profile-stat-item" onclick="openStatDetail('pengikut')">
                 <span class="profile-stat-number" id="profileStatFollowers">0</span>
                 <span class="profile-stat-label">Pengikut</span>
             </div>
-            <div class="profile-stat-item">
+            <div class="profile-stat-item" onclick="openStatDetail('mengikuti')">
                 <span class="profile-stat-number" id="profileStatFollowing">0</span>
                 <span class="profile-stat-label">Mengikuti</span>
             </div>
         </div>
-        
+
+        <!-- Sidebar Menu inside Profile -->
+        <div class="profile-sidebar-menu">
+            <div class="profile-sidebar-item" onclick="showHomePage()">
+                <i class="fas fa-home"></i>
+                <span>Beranda</span>
+            </div>
+            <div class="profile-sidebar-item" onclick="document.getElementById('bottomNotifNav').click()">
+                <i class="fas fa-bell"></i>
+                <span>Notifikasi</span>
+            </div>
+            <div class="profile-sidebar-item" onclick="openHistoryModal()">
+                <i class="fas fa-history"></i>
+                <span>Riwayat Laporan</span>
+            </div>
+            <div class="profile-sidebar-item" onclick="openInviteModal()">
+                <i class="fas fa-user-plus"></i>
+                <span>Undang Pengguna</span>
+            </div>
+            <div class="profile-sidebar-item" onclick="alert('📍 Fitur Peta Darurat akan segera hadir!')">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Peta Darurat</span>
+            </div>
+            <div class="profile-sidebar-item" onclick="alert('ℹ️ Informasi aplikasi SALINK versi 1.0')">
+                <i class="fas fa-info-circle"></i>
+                <span>Informasi</span>
+            </div>
+            <div class="profile-sidebar-item logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Keluar</span>
+            </div>
+        </div>
+
         <div class="post-section" style="margin-top:0;">
             <h4 style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;">Postingan Saya</h4>
             <div id="profilePosts"></div>
         </div>
-        
-        <button onclick="showHomePage()" style="width:100%;padding:10px;background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);border-radius:10px;cursor:pointer;margin-top:12px;font-size:0.8rem;">
-            <i class="fas fa-arrow-left"></i> Kembali ke Home
-        </button>
+    </div>
+
+    <!-- Chat Page -->
+    <div class="main-content chat-page" id="chatPage" style="display:none;">
+        <div class="chat-header">
+            <button class="back-btn" onclick="closeChat()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <span class="chat-title">💬 Pesan</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg received">
+                Halo! Selamat datang di SALINK. Ada yang bisa kami bantu?
+                <span class="msg-time">10:30</span>
+            </div>
+            <div class="chat-msg received">
+                Sistem darurat kami siap membantu Anda 24 jam.
+                <span class="msg-time">10:31</span>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Tulis pesan...">
+            <button onclick="sendChatMessage()">Kirim</button>
+        </div>
     </div>
 
     <!-- Bottom Navigation -->
@@ -3357,6 +3334,22 @@
         </div>
     </div>
 
+    <!-- Stat Detail Modal -->
+    <div class="modal-overlay" id="statModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="statModalTitle">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Detail Statistik</span>
+                </div>
+                <button class="modal-close" id="statModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="statModalBody"></div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content" style="max-width:480px;">
@@ -3396,7 +3389,7 @@
                 <div class="modal-title">
                     <i class="fas fa-bell"></i>
                     <span>Notifikasi</span>
-                    <span class="badge" id="notifModalBadge" style="background:#ff4444;color:white;padding:2px 8px;border-radius:12px;font-size:0.7rem;margin-left:8px;">0</span>
+                    <span class="badge-count" id="notifModalBadge">0</span>
                 </div>
                 <button class="modal-close" id="notifModalClose">
                     <i class="fas fa-times"></i>
@@ -3426,6 +3419,17 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-header">
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari pengguna, postingan, atau laporan...">
+            <button class="search-close" id="searchClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
     </div>
 
     <!-- Auth Containers -->
@@ -3525,9 +3529,35 @@
                     <input type="tel" id="signupPhone" class="form-control" placeholder="Masukkan nomor WhatsApp" required>
                 </div>
                 
+                <!-- Alamat Lengkap sesuai E-KTP -->
                 <div class="form-group">
-                    <label for="signupAddress">Alamat Lengkap</label>
-                    <input type="text" id="signupAddress" class="form-control" placeholder="Masukkan alamat lengkap" required>
+                    <label for="signupNegara">Negara</label>
+                    <input type="text" id="signupNegara" class="form-control" placeholder="Masukkan negara" value="Indonesia" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupProvinsi">Provinsi</label>
+                    <input type="text" id="signupProvinsi" class="form-control" placeholder="Masukkan provinsi" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupKabupaten">Kabupaten/Kota</label>
+                    <input type="text" id="signupKabupaten" class="form-control" placeholder="Masukkan kabupaten/kota" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupKecamatan">Kecamatan</label>
+                    <input type="text" id="signupKecamatan" class="form-control" placeholder="Masukkan kecamatan" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupKelurahan">Kelurahan/Desa</label>
+                    <input type="text" id="signupKelurahan" class="form-control" placeholder="Masukkan kelurahan/desa" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupAddress">Alamat Lengkap (Detail)</label>
+                    <input type="text" id="signupAddress" class="form-control" placeholder="Masukkan alamat lengkap (jalan, nomor, RT/RW)" required>
                 </div>
                 
                 <div class="form-group">
@@ -3601,6 +3631,7 @@
                 title: 'Kebakaran Rumah Tinggal',
                 desc: 'Jl. Sudirman No. 45, Jakarta Selatan',
                 time: '15m',
+                sender: 'Bpk. Budi Santoso',
                 detail: {
                     type: 'KEBAKARAN',
                     sender: 'Bpk. Budi Santoso',
@@ -3623,6 +3654,7 @@
                 title: 'Pencurian Motor',
                 desc: 'Jl. Thamrin No. 12, Jakarta Pusat',
                 time: '32m',
+                sender: 'Sdri. Rina Wati',
                 detail: {
                     type: 'PENCURIAN',
                     sender: 'Sdri. Rina Wati',
@@ -3645,6 +3677,7 @@
                 title: 'Tanah Longsor',
                 desc: 'Jl. Bukit Duri, Tebet, Jakarta Selatan',
                 time: '1h',
+                sender: 'Bpk. Agus Priyono',
                 detail: {
                     type: 'BENCANA ALAM',
                     sender: 'Bpk. Agus Priyono',
@@ -3667,6 +3700,7 @@
                 title: 'Kecelakaan Lalu Lintas',
                 desc: 'Jl. Gatot Subroto, Jakarta Selatan',
                 time: '2h',
+                sender: 'Bpk. Dedi Mulyadi',
                 detail: {
                     type: 'KEMATIAN',
                     sender: 'Bpk. Dedi Mulyadi',
@@ -3689,6 +3723,7 @@
                 title: 'Kebakaran Pabrik',
                 desc: 'Kawasan Industri Pulogadung, Jakarta Timur',
                 time: '3h',
+                sender: 'Bpk. Hendra Gunawan',
                 detail: {
                     type: 'KEBAKARAN',
                     sender: 'Bpk. Hendra Gunawan',
@@ -3718,24 +3753,20 @@
         let isHologramPost = false;
         let hologramPostData = null;
         let alertTimeout = null;
+        let viewerCounts = {};
 
         // ============================================
         // DOM ELEMENTS
         // ============================================
         
-        const menuBtn = document.getElementById('menuBtn');
-        const sidebarClose = document.getElementById('sidebarClose');
         const userBtn = document.getElementById('userBtn');
         const searchBtn = document.getElementById('searchBtn');
         const searchClose = document.getElementById('searchClose');
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         const searchModal = document.getElementById('searchModal');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
         const viewAllBtn = document.getElementById('viewAllBtn');
         const alertList = document.getElementById('alertList');
-        const settingsBtn = document.getElementById('settingsNavLink');
         const logoutBtn = document.getElementById('logoutBtn');
         const homeNavLink = document.getElementById('homeNavLink');
         const historyNavLink = document.getElementById('historyNavLink');
@@ -3744,9 +3775,6 @@
         const bottomInviteNav = document.getElementById('bottomInviteNav');
         const bottomNotifNav = document.getElementById('bottomNotifNav');
         const bottomProfileNav = document.getElementById('bottomProfileNav');
-        const dropdownToggle = document.getElementById('dropdownToggle');
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        const dropdownItems = document.querySelectorAll('.dropdown-item');
         const notifBadge = document.getElementById('notifBadge');
         const notifModalBadge = document.getElementById('notifModalBadge');
         const hologramDisplay = document.getElementById('hologramDisplay');
@@ -3841,6 +3869,10 @@
         const profileStatFollowers = document.getElementById('profileStatFollowers');
         const profileStatFollowing = document.getElementById('profileStatFollowing');
         const profilePosts = document.getElementById('profilePosts');
+        const chatPage = document.getElementById('chatPage');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const settingsBtn = document.getElementById('settingsBtn');
 
         // ============================================
         // AUDIO FUNCTIONS
@@ -3968,8 +4000,8 @@
         // NOTIFICATION FUNCTIONS
         // ============================================
         
-        function addNotification(type, title, message, sender, link) {
-            // Check if this is a self-notification (pengguna sendiri)
+        function addNotification(type, title, message, sender, link, targetUser) {
+            // Check if this is a self-notification
             if (sender && currentUser && sender === currentUser.fullName) {
                 return null;
             }
@@ -3981,6 +4013,7 @@
                 message: message,
                 sender: sender || 'Sistem',
                 link: link || '#',
+                targetUser: targetUser || null,
                 timestamp: Date.now(),
                 read: false
             };
@@ -4070,10 +4103,11 @@
                     updateNotifBadge();
                     renderNotifications();
                     
-                    if (notif.type === 'post' || notif.type === 'report' || notif.type === 'inbox') {
+                    // Navigate to profile page of the sender
+                    if (notif.sender && notif.sender !== 'Sistem') {
+                        openProfilePage(notif.sender);
+                    } else if (notif.type === 'post' || notif.type === 'report' || notif.type === 'inbox') {
                         document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
-                    } else if (notif.type === 'profile') {
-                        openProfilePage();
                     } else if (notif.type === 'invite') {
                         openInviteModal();
                     } else if (notif.type === 'comment') {
@@ -4088,11 +4122,11 @@
         function generateSampleNotifications() {
             const now = Date.now();
             const notifTypes = [
-                { type: 'inbox', title: 'Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat' },
-                { type: 'invite', title: 'Undangan', msg: 'Sdri. Rina mengundang Anda berteman' },
-                { type: 'report', title: 'Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan' },
-                { type: 'comment', title: 'Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda' },
-                { type: 'chart', title: 'Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%' }
+                { type: 'inbox', title: 'Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat', sender: 'Bpk. Ahmad' },
+                { type: 'invite', title: 'Undangan', msg: 'Sdri. Rina mengundang Anda berteman', sender: 'Sdri. Rina' },
+                { type: 'report', title: 'Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan', sender: 'Bpk. Budi' },
+                { type: 'comment', title: 'Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda', sender: 'Bpk. Joko' },
+                { type: 'chart', title: 'Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%', sender: 'Sistem' }
             ];
             
             notifTypes.forEach((nt, index) => {
@@ -4102,7 +4136,7 @@
                     type: nt.type,
                     title: nt.title,
                     message: nt.msg,
-                    sender: 'Sistem',
+                    sender: nt.sender,
                     link: '#',
                     timestamp: now - timeOffset,
                     read: index > 2
@@ -4157,7 +4191,12 @@
                 `;
                 
                 card.addEventListener('click', () => {
-                    openDetailModal(alert);
+                    // Open profile of sender
+                    if (alert.sender) {
+                        openProfilePage(alert.sender);
+                    } else {
+                        openDetailModal(alert);
+                    }
                 });
                 
                 alertList.appendChild(card);
@@ -4187,7 +4226,11 @@
                 item.addEventListener('click', () => {
                     allReportsModal.classList.remove('active');
                     document.body.style.overflow = '';
-                    openDetailModal(alert);
+                    if (alert.sender) {
+                        openProfilePage(alert.sender);
+                    } else {
+                        openDetailModal(alert);
+                    }
                 });
                 
                 allReportsModalBody.appendChild(item);
@@ -4211,7 +4254,7 @@
             detailModalBody.innerHTML = `
                 <div class="info-row">
                     <span class="info-label">Pengirim</span>
-                    <span class="info-value"><strong>${detail.sender}</strong></span>
+                    <span class="info-value"><strong style="cursor:pointer;color:var(--gold-light);" onclick="closeDetailModal(); openProfilePage('${detail.sender}');">${detail.sender}</strong></span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Lokasi</span>
@@ -4279,7 +4322,7 @@
                     userPosts.forEach(post => {
                         const item = document.createElement('div');
                         item.className = 'report-list-item';
-                        item.style.cursor = 'default';
+                        item.style.cursor = 'pointer';
                         
                         const iconClass = post.type ? `icon-${post.type}` : 'icon-fire';
                         const icon = post.type ? 
@@ -4299,6 +4342,12 @@
                             <div class="report-time">${post.timestamp ? new Date(post.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : 'Sekarang'}</div>
                         `;
                         
+                        item.addEventListener('click', () => {
+                            historyModal.classList.remove('active');
+                            document.body.style.overflow = '';
+                            openProfilePage(post.userFullName);
+                        });
+                        
                         historyModalBody.appendChild(item);
                     });
                 }
@@ -4314,29 +4363,110 @@
         }
 
         // ============================================
+        // STAT DETAIL MODAL
+        // ============================================
+        
+        function openStatDetail(type) {
+            const statModalTitle = document.getElementById('statModalTitle');
+            const statModalBody = document.getElementById('statModalBody');
+            
+            const userPosts = posts.filter(p => p.userId === currentUser?.username);
+            
+            let title = '';
+            let content = '';
+            
+            if (type === 'postingan') {
+                title = '📝 Detail Postingan';
+                content = `
+                    <div style="text-align:center;padding:10px 0;">
+                        <div style="font-size:2.5rem;color:var(--gold-light);">${userPosts.length}</div>
+                        <div style="font-size:0.9rem;color:var(--cream);">Total Postingan</div>
+                        <div style="margin-top:12px;border-top:1px solid rgba(212,168,73,0.1);padding-top:12px;">
+                            ${userPosts.length > 0 ? 
+                                userPosts.map(p => `<div style="padding:4px 0;font-size:0.7rem;color:rgba(245,240,232,0.6);border-bottom:1px solid rgba(212,168,73,0.05);">${p.text.substring(0, 40)}${p.text.length > 40 ? '...' : ''}</div>`).join('') :
+                                '<div style="color:rgba(245,240,232,0.4);">Belum ada postingan</div>'
+                            }
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'pengikut') {
+                title = '👥 Daftar Pengikut';
+                content = `
+                    <div style="text-align:center;padding:10px 0;">
+                        <div style="font-size:2.5rem;color:var(--gold-light);">${profileStatFollowers.textContent}</div>
+                        <div style="font-size:0.9rem;color:var(--cream);">Total Pengikut</div>
+                        <div style="margin-top:12px;border-top:1px solid rgba(212,168,73,0.1);padding-top:12px;font-size:0.7rem;color:rgba(245,240,232,0.4);">
+                            <i class="fas fa-users"></i> Daftar pengikut akan ditampilkan di sini
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'mengikuti') {
+                title = '👤 Mengikuti';
+                content = `
+                    <div style="text-align:center;padding:10px 0;">
+                        <div style="font-size:2.5rem;color:var(--gold-light);">${profileStatFollowing.textContent}</div>
+                        <div style="font-size:0.9rem;color:var(--cream);">Total Mengikuti</div>
+                        <div style="margin-top:12px;border-top:1px solid rgba(212,168,73,0.1);padding-top:12px;font-size:0.7rem;color:rgba(245,240,232,0.4);">
+                            <i class="fas fa-user-plus"></i> Daftar yang diikuti akan ditampilkan di sini
+                        </div>
+                    </div>
+                `;
+            }
+            
+            statModalTitle.innerHTML = `<i class="fas fa-info-circle"></i> ${title}`;
+            statModalBody.innerHTML = content;
+            
+            document.getElementById('statModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.getElementById('statModalClose').addEventListener('click', () => {
+            document.getElementById('statModal').classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        document.getElementById('statModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('statModal')) {
+                document.getElementById('statModal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ============================================
         // PROFILE PAGE FUNCTIONS
         // ============================================
         
-        function openProfilePage() {
+        function openProfilePage(userName) {
             if (!currentUser) {
                 welcomeModal.classList.add('active');
                 return;
             }
             
-            document.getElementById('mainContent').style.display = 'none';
-            profilePage.style.display = 'block';
-            
-            if (currentUser.profilePicture) {
-                profileAvatarLarge.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
-            } else {
-                profileAvatarLarge.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            // If a specific user name is passed, find that user
+            let targetUser = currentUser;
+            if (userName) {
+                const users = JSON.parse(localStorage.getItem('salink_users')) || [];
+                const found = users.find(u => u.fullName === userName);
+                if (found) {
+                    targetUser = found;
+                }
             }
             
-            profileName.textContent = currentUser.fullName || 'Nama Pengguna';
-            profileUsername.textContent = `@${currentUser.username || 'username'}`;
-            profileBio.textContent = currentUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
+            document.getElementById('mainContent').style.display = 'none';
+            profilePage.style.display = 'block';
+            chatPage.style.display = 'none';
             
-            const userPosts = posts.filter(p => p.userId === currentUser.username);
+            if (targetUser.profilePicture) {
+                profileAvatarLarge.innerHTML = `<img src="${targetUser.profilePicture}" alt="Profile">`;
+            } else {
+                profileAvatarLarge.innerHTML = targetUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            }
+            
+            profileName.textContent = targetUser.fullName || 'Nama Pengguna';
+            profileUsername.textContent = `@${targetUser.username || 'username'}`;
+            profileBio.textContent = targetUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
+            
+            const userPosts = posts.filter(p => p.userId === targetUser.username);
             profileStatPosts.textContent = userPosts.length;
             profileStatFollowers.textContent = Math.floor(Math.random() * 20) + 5;
             profileStatFollowing.textContent = Math.floor(Math.random() * 15) + 3;
@@ -4366,13 +4496,15 @@
                         mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
                     }
                     
+                    const viewers = viewerCounts[post.id] || 0;
+                    
                     postEl.innerHTML = `
                         <div class="post-header">
-                            <div class="post-profile-pic">
+                            <div class="post-profile-pic" onclick="openProfilePage('${post.userFullName}')">
                                 ${profilePic}
                             </div>
                             <div class="post-user-info">
-                                <h4>${post.userFullName}</h4>
+                                <h4><span style="color:var(--gold-light);cursor:pointer;" onclick="openProfilePage('${post.userFullName}')">${post.userFullName}</span></h4>
                                 <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
                             </div>
                         </div>
@@ -4380,35 +4512,427 @@
                             ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
                             ${mediaHTML}
                         </div>
-                        <div style="font-size:0.6rem;color:rgba(245,240,232,0.3);margin-top:6px;display:flex;gap:12px;">
-                            <span><i class="fas fa-heart" style="color:#ff6b35;"></i> ${post.likes.length}</span>
-                            <span><i class="fas fa-comment" style="color:var(--gold);"></i> ${post.comments.length}</span>
+                        <div class="post-actions">
+                            <div class="post-action ${post.likes && post.likes.includes(currentUser?.username) ? 'liked' : ''}" data-post-id="${post.id}">
+                                <i class="${post.likes && post.likes.includes(currentUser?.username) ? 'fas' : 'far'} fa-heart"></i>
+                                <span>Suka</span>
+                                <span class="like-count">${post.likes ? post.likes.length : 0}</span>
+                            </div>
+                            <div class="post-action comment-toggle" data-post-id="${post.id}">
+                                <i class="far fa-comment"></i>
+                                <span>Komentar</span>
+                                <span>(${post.comments ? post.comments.length : 0})</span>
+                            </div>
+                            <div class="post-action share" data-post-id="${post.id}">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Bagikan</span>
+                            </div>
+                            <div class="post-action viewers">
+                                <i class="fas fa-eye"></i>
+                                <span>Viewer</span>
+                                <span class="viewer-count" id="viewer-${post.id}">${viewers}</span>
+                            </div>
+                            ${post.userId === currentUser?.username ? `
+                                <div class="post-action delete" data-post-id="${post.id}">
+                                    <i class="fas fa-trash"></i>
+                                    <span>Hapus</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="comments-section" id="comments-${post.id}">
+                            ${post.comments ? post.comments.map(comment => {
+                                const commentProfilePic = comment.userProfilePic 
+                                    ? `<img src="${comment.userProfilePic}" alt="Profile">` 
+                                    : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                return `
+                                    <div class="comment" id="comment-${comment.id}">
+                                        <div class="comment-main">
+                                            <div class="comment-profile-pic" onclick="openProfilePage('${comment.userFullName}')">
+                                                ${commentProfilePic}
+                                            </div>
+                                            <div class="comment-content">
+                                                <div class="comment-user" onclick="openProfilePage('${comment.userFullName}')">${comment.userFullName}</div>
+                                                <div class="comment-text">${comment.text}</div>
+                                                <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                                                <div class="comment-actions">
+                                                    <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
+                                                    ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        ${comment.replies && comment.replies.length > 0 ? `
+                                            <div class="comment-replies">
+                                                ${comment.replies.map(reply => {
+                                                    const replyProfilePic = reply.userProfilePic 
+                                                        ? `<img src="${reply.userProfilePic}" alt="Profile">` 
+                                                        : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                                    return `
+                                                        <div class="reply-comment">
+                                                            <div class="comment-main">
+                                                                <div class="comment-profile-pic" onclick="openProfilePage('${reply.userFullName}')">
+                                                                    ${replyProfilePic}
+                                                                </div>
+                                                                <div class="comment-content">
+                                                                    <div class="comment-user" onclick="openProfilePage('${reply.userFullName}')">${reply.userFullName}</div>
+                                                                    <div class="comment-text">${reply.text}</div>
+                                                                    <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
+                                                                    ${reply.userId === currentUser?.username ? `
+                                                                        <div class="comment-actions">
+                                                                            <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
+                                                                        </div>
+                                                                    ` : ''}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                }).join('')}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `;
+                            }).join('') : ''}
+                        </div>
+                        <div class="add-comment">
+                            <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}">
+                            <button class="send-comment" data-post-id="${post.id}">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     `;
                     
                     profilePosts.appendChild(postEl);
                 });
+                
+                // Attach event listeners for profile posts
+                attachProfilePostListeners();
             }
             
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomProfileNav.classList.add('active');
             
-            // Only add notification if viewed by other user
-            // This is handled when profile is opened from other user's click
+            // Add viewer count for profile view
+            if (targetUser.username !== currentUser.username) {
+                addNotification('profile', 'Pengunjung Profil', `${currentUser.fullName} mengunjungi profil Anda`, currentUser.fullName, '#', targetUser.username);
+            }
+        }
+
+        function attachProfilePostListeners() {
+            document.querySelectorAll('#profilePage .post-action[data-post-id]').forEach(btn => {
+                if (btn.querySelector('.fa-heart')) {
+                    btn.removeEventListener('click', handleProfileLike);
+                    btn.addEventListener('click', handleProfileLike);
+                }
+            });
+            
+            document.querySelectorAll('#profilePage .post-action.delete[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileDeletePost);
+                btn.addEventListener('click', handleProfileDeletePost);
+            });
+            
+            document.querySelectorAll('#profilePage .comment-toggle[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileCommentToggle);
+                btn.addEventListener('click', handleProfileCommentToggle);
+            });
+            
+            document.querySelectorAll('#profilePage .send-comment[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileSendComment);
+                btn.addEventListener('click', handleProfileSendComment);
+            });
+            
+            document.querySelectorAll('#profilePage .comment-input[data-post-id]').forEach(input => {
+                input.removeEventListener('keypress', handleProfileCommentKeyPress);
+                input.addEventListener('keypress', handleProfileCommentKeyPress);
+            });
+            
+            document.querySelectorAll('#profilePage .reply-comment-action[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileReplyComment);
+                btn.addEventListener('click', handleProfileReplyComment);
+            });
+            
+            document.querySelectorAll('#profilePage .delete-comment[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileDeleteComment);
+                btn.addEventListener('click', handleProfileDeleteComment);
+            });
+            
+            document.querySelectorAll('#profilePage .post-action.share[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileShare);
+                btn.addEventListener('click', handleProfileShare);
+            });
+        }
+
+        function handleProfileLike(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) welcomeModal.classList.add('active');
+                return;
+            }
+            
+            const index = post.likes.indexOf(currentUser.username);
+            if (index > -1) {
+                post.likes.splice(index, 1);
+            } else {
+                post.likes.push(currentUser.username);
+                if (post.userId !== currentUser.username) {
+                    addNotification('inbox', 'Suka Postingan', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, '#', post.userId);
+                }
+            }
+            openProfilePage(post.userFullName);
+        }
+
+        function handleProfileDeletePost(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+                posts = posts.filter(p => p.id !== postId);
+                openProfilePage(currentUser.fullName);
+                updateBadge();
+            }
+        }
+
+        function handleProfileCommentToggle(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (commentsSection) {
+                commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function handleProfileSendComment(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) welcomeModal.classList.add('active');
+                return;
+            }
+            
+            const input = document.querySelector(`#profilePage .comment-input[data-post-id="${postId}"]`);
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const comment = {
+                id: 'comment-' + Date.now(),
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
+                text: text,
+                timestamp: Date.now(),
+                replies: []
+            };
+            
+            const replyToCommentId = input.dataset.replyToCommentId;
+            if (replyToCommentId) {
+                const parentComment = post.comments.find(c => c.id === replyToCommentId);
+                if (parentComment) {
+                    if (!parentComment.replies) parentComment.replies = [];
+                    parentComment.replies.push(comment);
+                    delete input.dataset.replyToCommentId;
+                    input.placeholder = 'Tulis komentar...';
+                }
+            } else {
+                post.comments.push(comment);
+                if (post.userId !== currentUser.username) {
+                    addNotification('comment', 'Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#', post.userId);
+                }
+            }
+            
+            input.value = '';
+            openProfilePage(post.userFullName);
+        }
+
+        function handleProfileCommentKeyPress(e) {
+            if (e.key === 'Enter') {
+                const input = e.currentTarget;
+                const postId = input.dataset.postId;
+                const sendBtn = document.querySelector(`#profilePage .send-comment[data-post-id="${postId}"]`);
+                if (sendBtn) sendBtn.click();
+            }
+        }
+
+        function handleProfileReplyComment(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentId = btn.dataset.commentId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) welcomeModal.classList.add('active');
+                return;
+            }
+            
+            const comment = post.comments.find(c => c.id === commentId);
+            if (!comment) return;
+            
+            const input = document.querySelector(`#profilePage .comment-input[data-post-id="${postId}"]`);
+            if (input) {
+                input.dataset.replyToCommentId = commentId;
+                input.placeholder = `Membalas @${comment.userFullName}...`;
+                input.focus();
+            }
+        }
+
+        function handleProfileDeleteComment(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentId = btn.dataset.commentId;
+            const replyId = btn.dataset.replyId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            if (replyId) {
+                for (const comment of post.comments) {
+                    if (comment.replies) {
+                        const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                        if (replyIndex > -1) {
+                            comment.replies.splice(replyIndex, 1);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                const commentIndex = post.comments.findIndex(c => c.id === commentId);
+                if (commentIndex > -1) {
+                    post.comments.splice(commentIndex, 1);
+                }
+            }
+            openProfilePage(currentUser.fullName);
+        }
+
+        function handleProfileShare(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SALINK - Postingan',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('📋 Link postingan telah disalin ke clipboard!');
+                }).catch(() => {
+                    prompt('Salin teks ini:', shareText);
+                });
+            }
+            
+            if (currentUser && post.userId !== currentUser.username) {
+                addNotification('inbox', 'Postingan Dibagikan', `${currentUser.fullName} membagikan postingan Anda`, currentUser.fullName, '#', post.userId);
+            }
+            
+            // Increment viewer count
+            if (!viewerCounts[postId]) viewerCounts[postId] = 0;
+            viewerCounts[postId]++;
+            updateViewerCount(postId);
+        }
+
+        function updateViewerCount(postId) {
+            const viewerEl = document.getElementById(`viewer-${postId}`);
+            if (viewerEl) {
+                viewerEl.textContent = viewerCounts[postId] || 0;
+                viewerEl.classList.remove('viewer-count');
+                void viewerEl.offsetWidth;
+                viewerEl.classList.add('viewer-count');
+            }
         }
 
         function showHomePage() {
             profilePage.style.display = 'none';
+            chatPage.style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            homeNavLink.classList.add('active');
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomHomeNav.classList.add('active');
-            
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
         }
+
+        // ============================================
+        // CHAT FUNCTIONS
+        // ============================================
+        
+        function openChat() {
+            if (!currentUser) {
+                welcomeModal.classList.add('active');
+                return;
+            }
+            
+            document.getElementById('mainContent').style.display = 'none';
+            profilePage.style.display = 'none';
+            chatPage.style.display = 'block';
+            
+            // Add welcome message if empty
+            if (chatMessages.children.length === 0) {
+                chatMessages.innerHTML = `
+                    <div class="chat-msg received">
+                        Halo! Selamat datang di SALINK. Ada yang bisa kami bantu?
+                        <span class="msg-time">${new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</span>
+                    </div>
+                    <div class="chat-msg received">
+                        Sistem darurat kami siap membantu Anda 24 jam.
+                        <span class="msg-time">${new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</span>
+                    </div>
+                `;
+            }
+        }
+
+        function closeChat() {
+            chatPage.style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
+            bottomHomeNav.classList.add('active');
+        }
+
+        function sendChatMessage() {
+            const input = chatInput;
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-msg sent';
+            msgDiv.innerHTML = `${text}<span class="msg-time">${timeStr}</span>`;
+            chatMessages.appendChild(msgDiv);
+            
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Auto-reply after 1-2 seconds
+            setTimeout(() => {
+                const replyTime = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+                const replies = [
+                    'Terima kasih atas pesannya. Tim kami akan segera merespon.',
+                    'Informasi Anda telah kami terima. Kami akan segera tindak lanjuti.',
+                    'Baik, kami catat pesan Anda. Ada hal lain yang bisa kami bantu?',
+                    'Terima kasih. SALINK siap membantu Anda 24 jam.'
+                ];
+                const reply = replies[Math.floor(Math.random() * replies.length)];
+                
+                const replyDiv = document.createElement('div');
+                replyDiv.className = 'chat-msg received';
+                replyDiv.innerHTML = `${reply}<span class="msg-time">${replyTime}</span>`;
+                chatMessages.appendChild(replyDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000 + Math.random() * 1000);
+        }
+
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        document.getElementById('chatBtn').addEventListener('click', openChat);
 
         // ============================================
         // SETTINGS FUNCTIONS
@@ -4450,16 +4974,8 @@
                     <input type="tel" id="settingsPhone" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.phone || ''}">
                 </div>
                 <div class="form-group" style="margin-bottom:10px;">
-                    <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Alamat</label>
-                    <input type="text" id="settingsAddress" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.address || ''}">
-                </div>
-                <div class="form-group" style="margin-bottom:10px;">
                     <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Bio</label>
                     <input type="text" id="settingsBio" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.bio || ''}">
-                </div>
-                <div class="form-group" style="margin-bottom:10px;">
-                    <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Link Google Maps</label>
-                    <input type="url" id="settingsMapLink" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.mapLink || ''}">
                 </div>
                 <div class="form-group" style="margin-bottom:10px;">
                     <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Password Lama</label>
@@ -4512,9 +5028,7 @@
                 const fullName = document.getElementById('settingsFullName').value;
                 const email = document.getElementById('settingsEmail').value;
                 const phone = document.getElementById('settingsPhone').value;
-                const address = document.getElementById('settingsAddress').value;
                 const bio = document.getElementById('settingsBio').value;
-                const mapLink = document.getElementById('settingsMapLink').value;
                 const oldPassword = document.getElementById('settingsOldPassword').value;
                 const newPassword = document.getElementById('settingsNewPassword').value;
                 const profileImage = settingsProfilePicture.dataset.image || currentUser.profilePicture;
@@ -4522,9 +5036,7 @@
                 currentUser.fullName = fullName;
                 currentUser.email = email;
                 currentUser.phone = phone;
-                currentUser.address = address;
                 currentUser.bio = bio;
-                currentUser.mapLink = mapLink;
                 currentUser.profilePicture = profileImage;
                 
                 if (oldPassword && newPassword) {
@@ -4549,6 +5061,7 @@
                 settingsModal.classList.remove('active');
                 document.body.style.overflow = '';
                 alert('Profil berhasil diperbarui!');
+                openProfilePage(currentUser.fullName);
             });
         }
 
@@ -4575,6 +5088,8 @@
                 });
             }
         }
+
+        settingsBtn.addEventListener('click', openSettingsModal);
 
         // ============================================
         // INVITE FUNCTIONS
@@ -4640,10 +5155,10 @@
                 const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
                 html += `
                     <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;background:rgba(61,35,20,0.3);margin-bottom:8px;border:1px solid rgba(212,168,73,0.1);">
-                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--brown-dark);font-size:1rem;overflow:hidden;">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--brown-dark);font-size:1rem;overflow:hidden;" onclick="openProfilePage('${user.name}')">
                             ${user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="fas ${avatarIcon}"></i>`}
                         </div>
-                        <div style="flex:1;">
+                        <div style="flex:1;cursor:pointer;" onclick="openProfilePage('${user.name}')">
                             <div style="font-size:0.8rem;color:var(--cream);">${user.name}</div>
                             <div style="font-size:0.6rem;color:rgba(245,240,232,0.4);"><i class="fas fa-map-marker-alt"></i> ${user.region}</div>
                         </div>
@@ -4660,7 +5175,7 @@
             if (!currentUser) return;
             
             if (userName !== currentUser.fullName) {
-                addNotification('invite', 'Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, '#');
+                addNotification('invite', 'Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, '#', userName);
                 alert(`✅ Undangan telah dikirim ke ${userName}!`);
             } else {
                 alert('Anda tidak dapat mengundang diri sendiri!');
@@ -4774,6 +5289,11 @@
                 
                 updateProfileStats();
             }
+            
+            // Initialize viewer count
+            if (!viewerCounts[postId]) {
+                viewerCounts[postId] = 0;
+            }
         }
 
         function renderPosts() {
@@ -4790,7 +5310,7 @@
                     ? `<img src="${post.userProfilePic}" alt="Profile">` 
                     : (post.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
                 
-                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); openProfilePage();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
+                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); openProfilePage('${post.userFullName}');" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
                 
                 let mediaHTML = '';
                 if (post.mediaType === 'image') {
@@ -4800,65 +5320,68 @@
                 }
                 
                 let commentsHTML = '';
-                post.comments.forEach(comment => {
-                    const commentProfilePic = comment.userProfilePic 
-                        ? `<img src="${comment.userProfilePic}" alt="Profile">` 
-                        : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                    
-                    commentsHTML += `
-                        <div class="comment" id="comment-${comment.id}">
-                            <div class="comment-main">
-                                <div class="comment-profile-pic">
-                                    ${commentProfilePic}
-                                </div>
-                                <div class="comment-content">
-                                    <div class="comment-user">${comment.userFullName}</div>
-                                    <div class="comment-text">${comment.text}</div>
-                                    <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
-                                    <div class="comment-actions">
-                                        <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
-                                        ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
+                if (post.comments) {
+                    post.comments.forEach(comment => {
+                        const commentProfilePic = comment.userProfilePic 
+                            ? `<img src="${comment.userProfilePic}" alt="Profile">` 
+                            : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                        
+                        commentsHTML += `
+                            <div class="comment" id="comment-${comment.id}">
+                                <div class="comment-main">
+                                    <div class="comment-profile-pic" onclick="openProfilePage('${comment.userFullName}')">
+                                        ${commentProfilePic}
+                                    </div>
+                                    <div class="comment-content">
+                                        <div class="comment-user" onclick="openProfilePage('${comment.userFullName}')">${comment.userFullName}</div>
+                                        <div class="comment-text">${comment.text}</div>
+                                        <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                                        <div class="comment-actions">
+                                            <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
+                                            ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            ${comment.replies && comment.replies.length > 0 ? `
-                                <div class="comment-replies">
-                                    ${comment.replies.map(reply => {
-                                        const replyProfilePic = reply.userProfilePic 
-                                            ? `<img src="${reply.userProfilePic}" alt="Profile">` 
-                                            : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                                        return `
-                                            <div class="reply-comment">
-                                                <div class="comment-main">
-                                                    <div class="comment-profile-pic">
-                                                        ${replyProfilePic}
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        <div class="comment-user">${reply.userFullName}</div>
-                                                        <div class="comment-text">${reply.text}</div>
-                                                        <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                        ${reply.userId === currentUser?.username ? `
-                                                            <div class="comment-actions">
-                                                                <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
-                                                            </div>
-                                                        ` : ''}
+                                ${comment.replies && comment.replies.length > 0 ? `
+                                    <div class="comment-replies">
+                                        ${comment.replies.map(reply => {
+                                            const replyProfilePic = reply.userProfilePic 
+                                                ? `<img src="${reply.userProfilePic}" alt="Profile">` 
+                                                : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                            return `
+                                                <div class="reply-comment">
+                                                    <div class="comment-main">
+                                                        <div class="comment-profile-pic" onclick="openProfilePage('${reply.userFullName}')">
+                                                            ${replyProfilePic}
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            <div class="comment-user" onclick="openProfilePage('${reply.userFullName}')">${reply.userFullName}</div>
+                                                            <div class="comment-text">${reply.text}</div>
+                                                            <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
+                                                            ${reply.userId === currentUser?.username ? `
+                                                                <div class="comment-actions">
+                                                                    <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
+                                                                </div>
+                                                            ` : ''}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                }
                 
-                const isLiked = currentUser && post.likes.includes(currentUser.username);
+                const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
                 const isHologramBadge = post.isHologram ? '<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">📡 Hologram</span>' : '';
+                const viewers = viewerCounts[post.id] || 0;
                 
                 postElement.innerHTML = `
                     <div class="post-header">
-                        <div class="post-profile-pic" onclick="event.preventDefault(); openProfilePage();">
+                        <div class="post-profile-pic" onclick="openProfilePage('${post.userFullName}')">
                             ${profilePic}
                         </div>
                         <div class="post-user-info">
@@ -4874,16 +5397,21 @@
                         <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
                             <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
                             <span>Suka</span>
-                            <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
+                            <span class="like-count">${post.likes ? post.likes.length : 0}</span>
                         </div>
                         <div class="post-action comment-toggle" data-post-id="${post.id}">
                             <i class="far fa-comment"></i>
                             <span>Komentar</span>
-                            <span>(${post.comments.length})</span>
+                            <span>(${post.comments ? post.comments.length : 0})</span>
                         </div>
                         <div class="post-action share" data-post-id="${post.id}">
                             <i class="fas fa-share-alt"></i>
                             <span>Bagikan</span>
+                        </div>
+                        <div class="post-action viewers">
+                            <i class="fas fa-eye"></i>
+                            <span>Viewer</span>
+                            <span class="viewer-count" id="viewer-${post.id}">${viewers}</span>
                         </div>
                         ${post.userId === currentUser?.username ? `
                             <div class="post-action delete" data-post-id="${post.id}">
@@ -4962,11 +5490,15 @@
                 return;
             }
             
+            if (!post.likes) post.likes = [];
             const index = post.likes.indexOf(currentUser.username);
             if (index > -1) {
                 post.likes.splice(index, 1);
             } else {
                 post.likes.push(currentUser.username);
+                if (post.userId !== currentUser.username) {
+                    addNotification('inbox', 'Suka Postingan', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, '#', post.userId);
+                }
             }
             renderPosts();
             updateProfileStats();
@@ -5007,6 +5539,7 @@
             const text = input.value.trim();
             if (!text) return;
             
+            if (!post.comments) post.comments = [];
             const comment = {
                 id: 'comment-' + Date.now(),
                 userId: currentUser.username,
@@ -5030,7 +5563,7 @@
             } else {
                 post.comments.push(comment);
                 if (post.userId !== currentUser.username) {
-                    addNotification('comment', 'Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#');
+                    addNotification('comment', 'Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#', post.userId);
                 }
             }
             
@@ -5124,8 +5657,13 @@
             }
             
             if (currentUser && post.userId !== currentUser.username) {
-                addNotification('inbox', 'Postingan Dibagikan', `${currentUser.fullName} membagikan postingan Anda`, currentUser.fullName, '#');
+                addNotification('inbox', 'Postingan Dibagikan', `${currentUser.fullName} membagikan postingan Anda`, currentUser.fullName, '#', post.userId);
             }
+            
+            // Increment viewer count
+            if (!viewerCounts[postId]) viewerCounts[postId] = 0;
+            viewerCounts[postId]++;
+            updateViewerCount(postId);
         }
 
         function updateProfileStats() {
@@ -5276,13 +5814,22 @@
         function updateUserUI() {
             if (!currentUser) return;
             
-            sidebarUserName.textContent = currentUser.fullName;
-            sidebarUserEmail.textContent = currentUser.email;
-            
             if (currentUser.profilePicture) {
-                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
-            } else {
-                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+                const userBtnIcon = userBtn.querySelector('i');
+                const userBtnImg = userBtn.querySelector('img');
+                if (!userBtnImg) {
+                    const img = document.createElement('img');
+                    img.style.width = '32px';
+                    img.style.height = '32px';
+                    img.style.borderRadius = '50%';
+                    img.style.objectFit = 'cover';
+                    img.style.display = 'none';
+                    userBtn.appendChild(img);
+                }
+                const userImg = userBtn.querySelector('img');
+                userBtnIcon.style.display = 'none';
+                userImg.src = currentUser.profilePicture;
+                userImg.style.display = 'block';
             }
             
             if (currentUser.profilePicture) {
@@ -5297,31 +5844,6 @@
                 postProfilePic.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
             }
             postUserName.textContent = currentUser.fullName;
-            
-            const userBtnIcon = userBtn.querySelector('i');
-            const userBtnImg = userBtn.querySelector('img');
-            if (!userBtnImg) {
-                const img = document.createElement('img');
-                img.style.width = '32px';
-                img.style.height = '32px';
-                img.style.borderRadius = '50%';
-                img.style.objectFit = 'cover';
-                img.style.display = 'none';
-                userBtn.appendChild(img);
-            }
-            const userImg = userBtn.querySelector('img');
-            if (currentUser.profilePicture) {
-                userBtnIcon.style.display = 'none';
-                userImg.src = currentUser.profilePicture;
-                userImg.style.display = 'block';
-            } else {
-                userBtnIcon.style.display = 'block';
-                userImg.style.display = 'none';
-            }
-            
-            if (profilePage.style.display !== 'none') {
-                openProfilePage();
-            }
         }
 
         function updateBadge() {
@@ -5407,19 +5929,18 @@
                             <div class="search-result-name">${user.name}</div>
                             <div class="search-result-desc"><i class="fas fa-map-marker-alt"></i> ${user.region} • @${user.username}</div>
                         </div>
-                        <button onclick="window.location.href='#'; openProfilePage();" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                        <button onclick="openProfilePage('${user.name}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
                             <i class="fas fa-eye"></i> Lihat
                         </button>
                     `;
                 } else if (result.type === 'post') {
                     const post = result.data;
-                    const profileLink = `<a href="#" onclick="event.preventDefault(); openProfilePage();" style="color:var(--gold-light);text-decoration:none;">${post.userFullName}</a>`;
                     item.innerHTML = `
                         <div class="search-result-avatar" style="background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.8rem;">
                             <i class="fas fa-file-alt"></i>
                         </div>
                         <div class="search-result-info">
-                            <div class="search-result-name">${profileLink}</div>
+                            <div class="search-result-name" style="cursor:pointer;" onclick="openProfilePage('${post.userFullName}')">${post.userFullName}</div>
                             <div class="search-result-desc">${post.text ? post.text.substring(0, 60) + (post.text.length > 60 ? '...' : '') : 'Postingan media'}</div>
                         </div>
                         <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${getTimeAgo(post.timestamp)}</div>
@@ -5445,7 +5966,11 @@
                     `;
                     item.addEventListener('click', () => {
                         searchModal.classList.remove('active');
-                        openDetailModal(report);
+                        if (report.sender) {
+                            openProfilePage(report.sender);
+                        } else {
+                            openDetailModal(report);
+                        }
                     });
                 }
                 
@@ -5506,7 +6031,7 @@
             const hologramContent = document.getElementById('hologramContent');
             hologramContent.innerHTML = `
                 <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
+                    <div class="hologram-profile" id="hologramProfile" onclick="event.stopPropagation(); openProfilePage();">
                         ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
                     </div>
                     <div class="alert-type fire">
@@ -5514,13 +6039,13 @@
                         <span>KEBAKARAN</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfilePage();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">Bpk. Ahmad</a></strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); event.stopPropagation(); openProfilePage('Bpk. Ahmad');" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">Bpk. Ahmad</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
                 </div>
                 <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map" onclick="event.stopPropagation();">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
                     <div class="map-marker" style="top: 50%; left: 30%;"></div>
@@ -5532,7 +6057,8 @@
             if (profileLink) {
                 profileLink.addEventListener('click', function(e) {
                     e.preventDefault();
-                    openProfilePage();
+                    e.stopPropagation();
+                    openProfilePage('Bpk. Ahmad');
                 });
             }
             
@@ -5577,7 +6103,7 @@
             const hologramContent = document.getElementById('hologramContent');
             hologramContent.innerHTML = `
                 <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
+                    <div class="hologram-profile" id="hologramProfile" onclick="event.stopPropagation(); openProfilePage();">
                         ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
                     </div>
                     <div class="alert-type ${type}">
@@ -5585,13 +6111,13 @@
                         <span>${typeNames[type]}</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfilePage();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); event.stopPropagation(); openProfilePage('${randomSender}');" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>${randomLocation}</span>
                 </div>
                 <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map" onclick="event.stopPropagation();">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
                     <div class="map-marker" style="top: 50%; left: 30%;"></div>
@@ -5623,6 +6149,7 @@
                 title: `${typeNames[type]} ${Math.floor(Math.random() * 100)}`,
                 desc: randomLocation,
                 time: 'Baru saja',
+                sender: randomSender,
                 detail: {
                     type: typeNames[type],
                     sender: randomSender,
@@ -5654,51 +6181,28 @@
         
         function showHomePage() {
             profilePage.style.display = 'none';
+            chatPage.style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            homeNavLink.classList.add('active');
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomHomeNav.classList.add('active');
-            
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
         }
 
         // ============================================
         // EVENT LISTENERS
         // ============================================
         
-        homeNavLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showHomePage();
-        });
-        
         bottomHomeNav.addEventListener('click', (e) => {
             e.preventDefault();
             showHomePage();
-        });
-        
-        menuBtn.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-        });
-        
-        sidebarClose.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-        
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
         });
         
         userBtn.addEventListener('click', () => {
             if (!currentUser) {
                 welcomeModal.classList.add('active');
             } else {
-                openProfilePage();
+                openProfilePage(currentUser.fullName);
             }
         });
         
@@ -5730,37 +6234,6 @@
         
         searchInput.addEventListener('input', (e) => {
             performSearch(e.target.value);
-        });
-        
-        dropdownToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownToggle.classList.toggle('open');
-            dropdownMenu.classList.toggle('open');
-        });
-        
-        dropdownItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const contactName = item.dataset.name;
-                const contactNumber = item.dataset.number;
-                
-                if (!currentUser) {
-                    welcomeModal.classList.add('active');
-                    dropdownToggle.classList.remove('open');
-                    dropdownMenu.classList.remove('open');
-                    return;
-                }
-                
-                showConfirmation(contactName, contactNumber);
-                dropdownToggle.classList.remove('open');
-                dropdownMenu.classList.remove('open');
-            });
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.dropdown-container')) {
-                dropdownToggle.classList.remove('open');
-                dropdownMenu.classList.remove('open');
-            }
         });
         
         confirmYes.addEventListener('click', () => {
@@ -5845,13 +6318,8 @@
             if (!currentUser) {
                 welcomeModal.classList.add('active');
             } else {
-                openProfilePage();
+                openProfilePage(currentUser.fullName);
             }
-        });
-        
-        settingsBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openSettingsModal();
         });
         
         hologramDisplay.addEventListener('click', () => {
@@ -6012,6 +6480,11 @@
             const gender = document.querySelector('input[name="gender"]:checked').value;
             const email = document.getElementById('signupEmail').value;
             const phone = document.getElementById('signupPhone').value;
+            const negara = document.getElementById('signupNegara').value;
+            const provinsi = document.getElementById('signupProvinsi').value;
+            const kabupaten = document.getElementById('signupKabupaten').value;
+            const kecamatan = document.getElementById('signupKecamatan').value;
+            const kelurahan = document.getElementById('signupKelurahan').value;
             const address = document.getElementById('signupAddress').value;
             const mapLink = document.getElementById('signupMapLink').value;
             const username = document.getElementById('signupUsername').value;
@@ -6023,16 +6496,24 @@
                 return;
             }
             
+            const fullAddress = `${address}, ${kelurahan}, ${kecamatan}, ${kabupaten}, ${provinsi}, ${negara}`;
+            
             const newUser = {
                 fullName,
                 gender,
                 email,
                 phone,
-                address,
+                address: fullAddress,
+                negara,
+                provinsi,
+                kabupaten,
+                kecamatan,
+                kelurahan,
+                detailAddress: address,
                 mapLink,
                 username,
                 password,
-                bio: '',
+                bio: `Halo! Saya ${fullName}`,
                 profilePicture: signupProfileImage || null,
                 joined: Date.now()
             };
@@ -6198,6 +6679,10 @@
                 }
             ];
             postIdCounter = 3;
+            // Initialize viewer counts for sample posts
+            posts.forEach(p => {
+                viewerCounts[p.id] = Math.floor(Math.random() * 10) + 1;
+            });
             renderPosts();
         }
         
