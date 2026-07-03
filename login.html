@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SALINK - Login & Daftar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap" async defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --brown-dark: #3d2314;
+            --brown: #6b3a2a;
+            --gold: #d4a849;
+            --gold-light: #f0d080;
+            --gold-dark: #b8860b;
+            --cream: #f5f0e8;
+            --dark: #1a1008;
+            --darker: #0d0805;
+            --danger: #ff6b35;
+            --success: #4CAF50;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--darker), var(--brown-dark));
+            color: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: linear-gradient(145deg, rgba(61, 35, 20, 0.95), rgba(13, 8, 5, 0.95));
+            border-radius: 20px;
+            padding: 30px 24px;
+            border: 1px solid var(--gold);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 168, 73, 0.05);
+            max-height: 98vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .container::-webkit-scrollbar-track {
+            background: rgba(61, 35, 20, 0.3);
+        }
+        .container::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 4px;
+        }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            background: rgba(255, 248, 240, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid rgba(212, 168, 73, 0.15);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: rgba(245, 240, 232, 0.5);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--cream);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn i {
+            margin-right: 6px;
+        }
+
+        /* ========== PANELS ========== */
+        .panel {
+            display: none;
+            animation: fadeSlide 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            box-shadow: 0 0 25px rgba(212, 168, 73, 0.4);
+        }
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--dark);
+        }
+
+        .title {
+            font-size: 1.3rem;
+            margin-bottom: 2px;
+            background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 0.75rem;
+            color: rgba(245, 240, 232, 0.5);
+        }
+
+        /* ========== FORM ========== */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.7rem;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            background: rgba(255, 248, 240, 0.06);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 8px;
+            color: var(--cream);
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 73, 0.15);
+            background: rgba(255, 248, 240, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: rgba(245, 240, 232, 0.25);
+        }
+
+        .form-control.error {
+            border-color: var(--danger);
+        }
+
+        .form-control.success {
+            border-color: var(--success);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .gender-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .gender-option {
+            flex: 1;
+        }
+
+        .gender-option input {
+            display: none;
+        }
+
+        .gender-option label {
+            display: block;
+            padding: 8px;
+            background: rgba(255, 248, 240, 0.06);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            border: 1px solid transparent;
+            color: var(--cream);
+        }
+
+        .gender-option input:checked+label {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--dark);
+            border-color: var(--gold);
+            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper .form-control {
+            padding-right: 40px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(245, 240, 232, 0.4);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 4px;
+        }
+
+        .password-toggle:hover {
+            color: var(--gold-light);
+        }
+
+        /* ========== GOOGLE MAPS ========== */
+        .map-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(212, 168, 73, 0.15);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            color: var(--cream);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .map-btn:hover {
+            background: rgba(212, 168, 73, 0.25);
+        }
+
+        .map-btn.confirmed {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.15);
+        }
+
+        .map-container {
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            border: 2px solid var(--gold);
+            margin-top: 8px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .map-container.active {
+            display: block;
+        }
+
+        .map-confirm {
+            display: none;
+            background: rgba(212, 168, 73, 0.1);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 1px solid var(--gold);
+        }
+
+        .map-confirm.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .location-detail {
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            margin-bottom: 3px;
+        }
+
+        .location-detail i {
+            color: var(--success);
+            margin-right: 4px;
+        }
+
+        .coordinates-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.65rem;
+            color: var(--cream);
+            margin-top: 3px;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-confirm {
+            padding: 6px 18px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+        }
+
+        .btn-confirm.yes {
+            background: linear-gradient(135deg, var(--success), #45a049);
+            color: white;
+        }
+
+        .btn-confirm.no {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--cream);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
+            margin-top: 4px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ========== FORGOT PASSWORD ========== */
+        .forgot-link {
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .forgot-link a {
+            color: rgba(245, 240, 232, 0.4);
+            text-decoration: none;
+            font-size: 0.65rem;
+            transition: color 0.3s;
+        }
+
+        .forgot-link a:hover {
+            color: var(--gold-light);
+        }
+
+        /* ========== ADDRESS SECTION ========== */
+        .address-section {
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+            margin-top: 4px;
+        }
+
+        .address-section .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .address-label {
+            font-size: 0.7rem;
+            color: var(--gold-light);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .address-label i {
+            color: var(--gold);
+        }
+
+        /* ========== PROFILE UPLOAD ========== */
+        .profile-upload {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            margin: 0 auto 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-preview:hover {
+            transform: scale(1.05);
+            border-color: var(--gold-light);
+        }
+
+        .profile-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-preview i {
+            font-size: 2rem;
+            color: var(--brown-dark);
+        }
+
+        .upload-hint {
+            font-size: 0.55rem;
+            color: rgba(245, 240, 232, 0.35);
+        }
+
+        /* ========== ERRORS ========== */
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.65rem;
+            margin-top: 3px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-msg {
+            color: var(--success);
+            font-size: 0.65rem;
+            margin-top: 3px;
+            display: none;
+        }
+
+        .success-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ========== LOGIN OPTIONS ========== */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 6px 0 10px 0;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: rgba(245, 240, 232, 0.5);
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 14px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .form-row-3 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .gender-options {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .map-container {
+                height: 200px;
+            }
+            .title {
+                font-size: 1.1rem;
+            }
+            .tabs .tab-btn {
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+            .login-options {
+                flex-direction: column;
+                gap: 6px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 14px 10px;
+            }
+            .confirm-actions {
+                flex-direction: column;
+            }
+            .btn-confirm {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="appContainer">
+
+        <!-- ============================================================ -->
+        <!-- TABS -->
+        <!-- ============================================================ -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="login" id="tabLogin">
+                <i class="fas fa-sign-in-alt"></i> Masuk
+            </button>
+            <button class="tab-btn" data-tab="register" id="tabRegister">
+                <i class="fas fa-user-plus"></i> Daftar
+            </button>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PANEL LOGIN -->
+        <!-- ============================================================ -->
+        <div class="panel active" id="panelLogin">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h1 class="title">Selamat Datang Kembali</h1>
+                <p class="subtitle">Masuk ke akun SALINK Anda</p>
+            </div>
+
+            <form id="loginForm" novalidate>
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="loginUsername">Username <span class="required">*</span></label>
+                    <input type="text" id="loginUsername" class="form-control" placeholder="Masukkan username" required>
+                    <div id="loginUsernameError" class="error-msg">Username tidak ditemukan!</div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="loginPassword">Password <span class="required">*</span></label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password" required>
+                        <button type="button" class="password-toggle" id="toggleLoginPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div id="loginPasswordError" class="error-msg">Password salah!</div>
+                </div>
+
+                <!-- Options -->
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Ingat saya</span>
+                    </label>
+                    <div class="forgot-link">
+                        <a href="#" id="forgotPassword">Lupa password?</a>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn-submit" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+
+                <div style="text-align:center;margin-top:12px;font-size:0.7rem;color:rgba(245,240,232,0.3);">
+                    <p>Belum punya akun? <a href="#" id="switchToRegister" style="color:var(--gold-light);text-decoration:none;font-weight:500;">Daftar sekarang</a></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- PANEL REGISTER -->
+        <!-- ============================================================ -->
+        <div class="panel" id="panelRegister">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h1 class="title">Buat Akun Baru</h1>
+                <p class="subtitle">Isi data berikut untuk mendaftar</p>
+            </div>
+
+            <form id="registerForm" novalidate>
+
+                <!-- ========== FOTO PROFIL ========== -->
+                <div class="profile-upload">
+                    <div class="profile-preview" id="profilePreview" onclick="document.getElementById('profileInput').click()">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <input type="file" id="profileInput" accept="image/*" style="display:none;">
+                    <p class="upload-hint">Klik untuk upload foto profil</p>
+                </div>
+
+                <!-- ========== DATA DIRI ========== -->
+                <div class="form-group">
+                    <label for="regFullName">Nama Lengkap <span class="required">*</span></label>
+                    <input type="text" id="regFullName" class="form-control" placeholder="Sesuai dengan E-KTP" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Jenis Kelamin <span class="required">*</span></label>
+                    <div class="gender-options">
+                        <div class="gender-option">
+                            <input type="radio" name="gender" id="regMale" value="male" checked>
+                            <label for="regMale"><i class="fas fa-male"></i> Laki-laki</label>
+                        </div>
+                        <div class="gender-option">
+                            <input type="radio" name="gender" id="regFemale" value="female">
+                            <label for="regFemale"><i class="fas fa-female"></i> Perempuan</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regEmail">Alamat Email <span class="required">*</span></label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="email@anda.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPhone">Nomor WhatsApp <span class="required">*</span></label>
+                        <input type="tel" id="regPhone" class="form-control" placeholder="08xxxxxxxxxx" required>
+                    </div>
+                </div>
+
+                <!-- ========== ALAMAT E-KTP ========== -->
+                <div class="address-section">
+                    <div class="address-label">
+                        <i class="fas fa-id-card"></i>
+                        <span>Alamat Sesuai E-KTP</span>
+                        <span style="color:rgba(245,240,232,0.3);font-size:0.6rem;">(Harus sesuai dengan data KTP)</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regCountry">Negara <span class="required">*</span></label>
+                        <select id="regCountry" class="form-control" required>
+                            <option value="">Pilih Negara</option>
+                            <option value="Indonesia" selected>Indonesia</option>
+                            <option value="Malaysia">Malaysia</option>
+                            <option value="Singapore">Singapore</option>
+                            <option value="Brunei">Brunei</option>
+                            <option value="Timor Leste">Timor Leste</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="regProvince">Provinsi <span class="required">*</span></label>
+                            <select id="regProvince" class="form-control" required>
+                                <option value="">Pilih Provinsi</option>
+                                <option value="Aceh">Aceh</option>
+                                <option value="Sumatera Utara">Sumatera Utara</option>
+                                <option value="Sumatera Barat">Sumatera Barat</option>
+                                <option value="Riau">Riau</option>
+                                <option value="Kepulauan Riau">Kepulauan Riau</option>
+                                <option value="Jambi">Jambi</option>
+                                <option value="Sumatera Selatan">Sumatera Selatan</option>
+                                <option value="Bengkulu">Bengkulu</option>
+                                <option value="Lampung">Lampung</option>
+                                <option value="Bangka Belitung">Bangka Belitung</option>
+                                <option value="DKI Jakarta">DKI Jakarta</option>
+                                <option value="Jawa Barat">Jawa Barat</option>
+                                <option value="Jawa Tengah">Jawa Tengah</option>
+                                <option value="DI Yogyakarta">DI Yogyakarta</option>
+                                <option value="Jawa Timur">Jawa Timur</option>
+                                <option value="Banten">Banten</option>
+                                <option value="Bali">Bali</option>
+                                <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                                <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                                <option value="Kalimantan Barat">Kalimantan Barat</option>
+                                <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                                <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                                <option value="Kalimantan Timur">Kalimantan Timur</option>
+                                <option value="Kalimantan Utara">Kalimantan Utara</option>
+                                <option value="Sulawesi Utara">Sulawesi Utara</option>
+                                <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                                <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                                <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                                <option value="Sulawesi Barat">Sulawesi Barat</option>
+                                <option value="Gorontalo">Gorontalo</option>
+                                <option value="Maluku">Maluku</option>
+                                <option value="Maluku Utara">Maluku Utara</option>
+                                <option value="Papua">Papua</option>
+                                <option value="Papua Barat">Papua Barat</option>
+                                <option value="Papua Selatan">Papua Selatan</option>
+                                <option value="Papua Tengah">Papua Tengah</option>
+                                <option value="Papua Pegunungan">Papua Pegunungan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="regCity">Kabupaten/Kota <span class="required">*</span></label>
+                            <input type="text" id="regCity" class="form-control" placeholder="Kabupaten/Kota" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label for="regDistrict">Kecamatan <span class="required">*</span></label>
+                            <input type="text" id="regDistrict" class="form-control" placeholder="Kecamatan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regVillage">Kelurahan/Desa <span class="required">*</span></label>
+                            <input type="text" id="regVillage" class="form-control" placeholder="Kelurahan/Desa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPostalCode">Kode Pos</label>
+                            <input type="text" id="regPostalCode" class="form-control" placeholder="Kode Pos">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:4px;">
+                        <label for="regDetailAddress">Detail Alamat <span class="required">*</span></label>
+                        <input type="text" id="regDetailAddress" class="form-control" placeholder="Nomor rumah, RT/RW, blok, dll" required>
+                    </div>
+                </div>
+
+                <!-- ========== GOOGLE MAPS ========== -->
+                <div class="form-group" style="margin-top:12px;">
+                    <label>📍 Konfirmasi Lokasi</label>
+                    <p style="font-size:0.6rem;color:rgba(245,240,232,0.35);margin-bottom:4px;">
+                        <i class="fas fa-info-circle"></i> Klik tombol untuk menentukan lokasi tempat tinggal Anda
+                    </p>
+
+                    <button type="button" class="map-btn" id="mapToggleBtn">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Klik untuk pilih lokasi Anda</span>
+                    </button>
+
+                    <div class="map-container" id="mapContainer"></div>
+
+                    <div class="map-confirm" id="mapConfirm">
+                        <div class="location-detail">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="locationText">Lokasi dipilih</span>
+                        </div>
+                        <div class="coordinates-display" id="coordText">
+                            Latitude: -, Longitude: -
+                        </div>
+                        <div class="confirm-actions">
+                            <button type="button" class="btn-confirm yes" id="confirmLocation">
+                                <i class="fas fa-check"></i> Konfirmasi Lokasi
+                            </button>
+                            <button type="button" class="btn-confirm no" id="cancelLocation">
+                                <i class="fas fa-times"></i> Batal
+                            </button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="regMapLink" value="">
+                    <input type="hidden" id="regMapLat" value="">
+                    <input type="hidden" id="regMapLng" value="">
+
+                    <div id="regMapError" class="error-msg">⚠️ Silakan pilih lokasi Anda di Google Maps!</div>
+                </div>
+
+                <!-- ========== USERNAME & PASSWORD ========== -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="regUsername">Username <span class="required">*</span></label>
+                        <input type="text" id="regUsername" class="form-control" placeholder="Buat username unik" required>
+                        <div id="regUsernameError" class="error-msg">Username sudah digunakan!</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password <span class="required">*</span></label>
+                        <div class="password-wrapper">
+                            <input type="password" id="regPassword" class="form-control" placeholder="Buat password" required>
+                            <button type="button" class="password-toggle" id="toggleRegPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.35);margin-top:3px;">
+                            <i class="fas fa-info-circle"></i> Minimal 6 karakter, diawali huruf kapital dan diakhiri angka
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========== BIO ========== -->
+                <div class="form-group">
+                    <label for="regBio">Bio (Opsional)</label>
+                    <input type="text" id="regBio" class="form-control" placeholder="Ceritakan tentang Anda...">
+                </div>
+
+                <button type="submit" class="btn-submit" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Daftar
+                </button>
+
+                <div style="text-align:center;margin-top:12px;font-size:0.7rem;color:rgba(245,240,232,0.3);">
+                    <p>Sudah punya akun? <a href="#" id="switchToLogin" style="color:var(--gold-light);text-decoration:none;font-weight:500;">Masuk disini</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // KONFIGURASI
+        // ================================================================
+
+        // Ganti dengan URL Web App Anda
+        const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+
+        // ================================================================
+        // TAB NAVIGATION
+        // ================================================================
+
+        const tabLogin = document.getElementById('tabLogin');
+        const tabRegister = document.getElementById('tabRegister');
+        const panelLogin = document.getElementById('panelLogin');
+        const panelRegister = document.getElementById('panelRegister');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+
+        function showTab(tab) {
+            // Update tabs
+            tabLogin.classList.toggle('active', tab === 'login');
+            tabRegister.classList.toggle('active', tab === 'register');
+
+            // Update panels
+            panelLogin.classList.toggle('active', tab === 'login');
+            panelRegister.classList.toggle('active', tab === 'register');
+
+            // Reset container scroll
+            document.getElementById('appContainer').scrollTop = 0;
+        }
+
+        tabLogin.addEventListener('click', () => showTab('login'));
+        tabRegister.addEventListener('click', () => showTab('register'));
+        switchToRegister.addEventListener('click', (e) => { e.preventDefault();
+            showTab('register'); });
+        switchToLogin.addEventListener('click', (e) => { e.preventDefault();
+            showTab('login'); });
+
+        // ================================================================
+        // GOOGLE MAPS
+        // ================================================================
+
+        let map;
+        let marker;
+        let selectedLocation = null;
+        let geocoder;
+        let mapOpen = false;
+        let isLocationConfirmed = false;
+
+        function initMap() {
+            const defaultLocation = { lat: -6.1823399, lng: 106.8325873 };
+
+            map = new google.maps.Map(document.getElementById('mapContainer'), {
+                center: defaultLocation,
+                zoom: 15,
+                styles: [
+                    { featureType: 'all', elementType: 'labels.text.fill', stylers: [{ color: '#f5f0e8' }] },
+                    { featureType: 'all', elementType: 'labels.text.stroke', stylers: [{ color: '#1a1008' }] },
+                    { featureType: 'all', elementType: 'all', stylers: [{ saturation: -70 }] }
+                ]
+            });
+
+            geocoder = new google.maps.Geocoder();
+
+            map.addListener('click', function(event) {
+                placeMarker(event.latLng);
+            });
+        }
+
+        function placeMarker(latLng) {
+            if (marker) {
+                marker.setMap(null);
+            }
+
+            marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                icon: {
+                    url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                    scaledSize: new google.maps.Size(40, 40)
+                }
+            });
+
+            selectedLocation = {
+                lat: latLng.lat(),
+                lng: latLng.lng()
+            };
+
+            isLocationConfirmed = false;
+            getAddressFromLocation(latLng);
+        }
+
+        function getAddressFromLocation(latLng) {
+            geocoder.geocode({ location: latLng }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    const address = results[0].formatted_address;
+                    document.getElementById('locationText').textContent = address;
+                    document.getElementById('coordText').textContent =
+                        `Latitude: ${latLng.lat().toFixed(7)}, Longitude: ${latLng.lng().toFixed(7)}`;
+
+                    document.getElementById('regMapLink').value = `https://www.google.com/maps?q=${latLng.lat()},${latLng.lng()}`;
+                    document.getElementById('regMapLat').value = latLng.lat();
+                    document.getElementById('regMapLng').value = latLng.lng();
+
+                    // Isi alamat otomatis dari Google Maps
+                    fillAddressFromMaps(results[0].address_components);
+
+                    document.getElementById('mapConfirm').classList.add('active');
+                    document.getElementById('regMapError').classList.remove('show');
+                }
+            });
+        }
+
+        function fillAddressFromMaps(addressComponents) {
+            let country = '',
+                province = '',
+                city = '',
+                district = '',
+                village = '',
+                postalCode = '';
+
+            addressComponents.forEach(component => {
+                const types = component.types;
+
+                if (types.includes('country')) {
+                    country = component.long_name;
+                }
+                if (types.includes('administrative_area_level_1')) {
+                    province = component.long_name;
+                }
+                if (types.includes('administrative_area_level_2')) {
+                    city = component.long_name;
+                }
+                if (types.includes('administrative_area_level_3')) {
+                    district = component.long_name;
+                }
+                if (types.includes('locality') || types.includes('sublocality')) {
+                    if (!district) district = component.long_name;
+                }
+                if (types.includes('neighborhood') || types.includes('sublocality_level_1')) {
+                    village = component.long_name;
+                }
+                if (types.includes('postal_code')) {
+                    postalCode = component.long_name;
+                }
+            });
+
+            if (country) document.getElementById('regCountry').value = country;
+            if (province) document.getElementById('regProvince').value = province;
+            if (city) document.getElementById('regCity').value = city;
+            if (district) document.getElementById('regDistrict').value = district;
+            if (village) document.getElementById('regVillage').value = village;
+            if (postalCode) document.getElementById('regPostalCode').value = postalCode;
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const latLng = new google.maps.LatLng(
+                            position.coords.latitude,
+                            position.coords.longitude
+                        );
+                        map.setCenter(latLng);
+                        placeMarker(latLng);
+                    },
+                    function(error) {
+                        console.warn('Geolocation error:', error);
+                    }, { enableHighAccuracy: true }
+                );
+            }
+        }
+
+        // ================================================================
+        // MAP EVENT LISTENERS
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const mapToggleBtn = document.getElementById('mapToggleBtn');
+            const mapContainer = document.getElementById('mapContainer');
+
+            mapToggleBtn.addEventListener('click', function() {
+                if (!mapOpen) {
+                    mapContainer.classList.add('active');
+                    mapOpen = true;
+
+                    if (!map) {
+                        initMap();
+                    }
+
+                    setTimeout(getCurrentLocation, 500);
+
+                    this.innerHTML = `
+                            <i class="fas fa-chevron-up"></i>
+                            <span>Tutup Peta</span>
+                        `;
+                } else {
+                    mapContainer.classList.remove('active');
+                    mapOpen = false;
+                    this.innerHTML = `
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Klik untuk pilih lokasi Anda</span>
+                        `;
+                }
+            });
+
+            document.getElementById('confirmLocation').addEventListener('click', function() {
+                if (selectedLocation) {
+                    const address = document.getElementById('locationText').textContent;
+                    const coords = document.getElementById('coordText').textContent;
+
+                    if (confirm(`Konfirmasi lokasi Anda:\n\n📍 ${address}\n\n${coords}\n\nApakah lokasi ini benar?`)) {
+                        isLocationConfirmed = true;
+
+                        mapContainer.classList.remove('active');
+                        mapOpen = false;
+                        document.getElementById('mapToggleBtn').innerHTML = `
+                                <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
+                                <span>✅ Lokasi sudah dipilih</span>
+                            `;
+                        document.getElementById('mapToggleBtn').classList.add('confirmed');
+                        document.getElementById('mapConfirm').classList.remove('active');
+
+                        if (marker) {
+                            marker.setIcon({
+                                url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                                scaledSize: new google.maps.Size(40, 40)
+                            });
+                        }
+
+                        document.getElementById('regMapError').classList.remove('show');
+                    }
+                } else {
+                    alert('Silakan pilih lokasi terlebih dahulu di peta.');
+                }
+            });
+
+            document.getElementById('cancelLocation').addEventListener('click', function() {
+                document.getElementById('mapConfirm').classList.remove('active');
+                if (marker) {
+                    marker.setMap(null);
+                    marker = null;
+                }
+                selectedLocation = null;
+                isLocationConfirmed = false;
+                document.getElementById('regMapLink').value = '';
+                document.getElementById('regMapLat').value = '';
+                document.getElementById('regMapLng').value = '';
+                document.getElementById('locationText').textContent = 'Lokasi dibatalkan';
+                document.getElementById('coordText').textContent = 'Latitude: -, Longitude: -';
+                document.getElementById('regMapError').classList.add('show');
+
+                document.getElementById('mapToggleBtn').innerHTML = `
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Klik untuk pilih lokasi Anda</span>
+                    `;
+                document.getElementById('mapToggleBtn').classList.remove('confirmed');
+            });
+        });
+
+        // ================================================================
+        // PASSWORD TOGGLES
+        // ================================================================
+
+        document.getElementById('toggleLoginPassword').addEventListener('click', function() {
+            const input = document.getElementById('loginPassword');
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        document.getElementById('toggleRegPassword').addEventListener('click', function() {
+            const input = document.getElementById('regPassword');
+            const icon = this.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // ================================================================
+        // PROFILE PICTURE UPLOAD
+        // ================================================================
+
+        document.getElementById('profileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const preview = document.getElementById('profilePreview');
+                    preview.innerHTML = `<img src="${ev.target.result}" alt="Profile">`;
+                    preview.dataset.image = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ================================================================
+        // LOGIN FORM
+        // ================================================================
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Reset errors
+            document.getElementById('loginUsernameError').classList.remove('show');
+            document.getElementById('loginPasswordError').classList.remove('show');
+            document.getElementById('loginUsername').classList.remove('error');
+            document.getElementById('loginPassword').classList.remove('error');
+
+            // Validasi
+            if (!username) {
+                document.getElementById('loginUsernameError').textContent = 'Username harus diisi!';
+                document.getElementById('loginUsernameError').classList.add('show');
+                document.getElementById('loginUsername').classList.add('error');
+                return;
+            }
+
+            if (!password) {
+                document.getElementById('loginPasswordError').textContent = 'Password harus diisi!';
+                document.getElementById('loginPasswordError').classList.add('show');
+                document.getElementById('loginPassword').classList.add('error');
+                return;
+            }
+
+            // Login
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+
+            fetch(`${SCRIPT_URL}?action=login&data=${encodeURIComponent(JSON.stringify({ username, password }))}`)
+                .then(response => response.json())
+                .then(result => {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
+
+                    if (result.success) {
+                        // Simpan data user
+                        localStorage.setItem('salink_user', JSON.stringify(result.data));
+                        if (rememberMe) {
+                            localStorage.setItem('salink_remember', 'true');
+                        }
+
+                        alert('✅ Login berhasil! Selamat datang ' + result.data.fullName);
+                        // Redirect ke halaman utama
+                        window.location.href = 'index.html';
+                    } else {
+                        if (result.message.includes('Username')) {
+                            document.getElementById('loginUsernameError').textContent = result.message;
+                            document.getElementById('loginUsernameError').classList.add('show');
+                            document.getElementById('loginUsername').classList.add('error');
+                        } else if (result.message.includes('Password')) {
+                            document.getElementById('loginPasswordError').textContent = result.message;
+                            document.getElementById('loginPasswordError').classList.add('show');
+                            document.getElementById('loginPassword').classList.add('error');
+                        } else {
+                            alert('❌ ' + result.message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
+                    alert('❌ Error: ' + error.message);
+                });
+        });
+
+        // ================================================================
+        // REGISTER FORM
+        // ================================================================
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Reset semua error
+            document.querySelectorAll('#registerForm .error-msg').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('#registerForm .form-control').forEach(el => el.classList.remove('error'));
+
+            let isValid = true;
+
+            // Validasi Nama Lengkap
+            const fullName = document.getElementById('regFullName');
+            if (!fullName.value.trim()) { fullName.classList.add('error');
+                isValid = false; }
+
+            // Validasi Email
+            const email = document.getElementById('regEmail');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim() || !emailRegex.test(email.value)) { email.classList.add('error');
+                isValid = false; }
+
+            // Validasi Phone
+            const phone = document.getElementById('regPhone');
+            if (!phone.value.trim() || phone.value.length < 10) { phone.classList.add('error');
+                isValid = false; }
+
+            // Validasi Alamat
+            const country = document.getElementById('regCountry');
+            const province = document.getElementById('regProvince');
+            const city = document.getElementById('regCity');
+            const district = document.getElementById('regDistrict');
+            const village = document.getElementById('regVillage');
+            const detailAddress = document.getElementById('regDetailAddress');
+
+            if (!country.value) { country.classList.add('error');
+                isValid = false; }
+            if (!province.value) { province.classList.add('error');
+                isValid = false; }
+            if (!city.value.trim()) { city.classList.add('error');
+                isValid = false; }
+            if (!district.value.trim()) { district.classList.add('error');
+                isValid = false; }
+            if (!village.value.trim()) { village.classList.add('error');
+                isValid = false; }
+            if (!detailAddress.value.trim()) { detailAddress.classList.add('error');
+                isValid = false; }
+
+            // Validasi Username
+            const username = document.getElementById('regUsername');
+            if (!username.value.trim() || username.value.length < 3) { username.classList.add('error');
+                isValid = false; }
+
+            // Validasi Password
+            const password = document.getElementById('regPassword');
+            const passRegex = /^[A-Z].*\d$/;
+            if (!password.value || password.value.length < 6 || !passRegex.test(password.value)) {
+                password.classList.add('error');
+                isValid = false;
+            }
+
+            // Validasi Google Maps
+            if (!document.getElementById('regMapLink').value) {
+                document.getElementById('regMapError').textContent = '⚠️ Silakan pilih lokasi Anda di Google Maps!';
+                document.getElementById('regMapError').classList.add('show');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                const firstError = document.querySelector('#registerForm .form-control.error');
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+
+            // Cek username availability
+            checkUsernameAvailability(username.value);
+        });
+
+        function checkUsernameAvailability(username) {
+            fetch(`${SCRIPT_URL}?action=getUser&data=${encodeURIComponent(JSON.stringify({ username: username }))}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success && result.data) {
+                        document.getElementById('regUsernameError').classList.add('show');
+                        document.getElementById('regUsername').classList.add('error');
+                        document.getElementById('regUsername').focus();
+                    } else {
+                        document.getElementById('regUsernameError').classList.remove('show');
+                        document.getElementById('regUsername').classList.remove('error');
+                        submitRegistration();
+                    }
+                })
+                .catch(() => {
+                    submitRegistration();
+                });
+        }
+
+        function submitRegistration() {
+            const userData = {
+                username: document.getElementById('regUsername').value,
+                fullName: document.getElementById('regFullName').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                email: document.getElementById('regEmail').value,
+                phone: document.getElementById('regPhone').value,
+                password: document.getElementById('regPassword').value,
+                bio: document.getElementById('regBio').value || `Halo! Saya ${document.getElementById('regFullName').value}`,
+                profilePicture: document.getElementById('profilePreview').dataset.image || '',
+
+                // Alamat E-KTP
+                country: document.getElementById('regCountry').value,
+                province: document.getElementById('regProvince').value,
+                city: document.getElementById('regCity').value,
+                district: document.getElementById('regDistrict').value,
+                village: document.getElementById('regVillage').value,
+                postalCode: document.getElementById('regPostalCode').value,
+                detailAddress: document.getElementById('regDetailAddress').value,
+
+                address: [
+                    document.getElementById('regDetailAddress').value,
+                    document.getElementById('regVillage').value,
+                    document.getElementById('regDistrict').value,
+                    document.getElementById('regCity').value,
+                    document.getElementById('regProvince').value,
+                    document.getElementById('regCountry').value
+                ].filter(Boolean).join(', '),
+
+                mapLink: document.getElementById('regMapLink').value,
+                mapLat: document.getElementById('regMapLat').value,
+                mapLng: document.getElementById('regMapLng').value
+            };
+
+            const registerBtn = document.getElementById('registerBtn');
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendaftar...';
+
+            fetch(`${SCRIPT_URL}?action=register&data=${encodeURIComponent(JSON.stringify(userData))}`)
+                .then(response => response.json())
+                .then(result => {
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
+
+                    if (result.success) {
+                        alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.\n\nSilakan login untuk melanjutkan.');
+                        // Reset form dan pindah ke login
+                        document.getElementById('registerForm').reset();
+                        showTab('login');
+                        // Isi username di login
+                        document.getElementById('loginUsername').value = userData.username;
+                    } else {
+                        alert('❌ Gagal mendaftar: ' + result.message);
+                        if (result.message.includes('Username')) {
+                            document.getElementById('regUsernameError').classList.add('show');
+                            document.getElementById('regUsername').classList.add('error');
+                        }
+                    }
+                })
+                .catch(error => {
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
+                    alert('❌ Error: ' + error.message);
+                });
+        }
+
+        // ================================================================
+        // REAL-TIME VALIDASI
+        // ================================================================
+
+        document.querySelectorAll('#registerForm .form-control').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                if (this.id === 'regUsername') {
+                    document.getElementById('regUsernameError').classList.remove('show');
+                }
+                if (this.id === 'regMapLink') {
+                    document.getElementById('regMapError').classList.remove('show');
+                }
+            });
+        });
+
+        document.querySelectorAll('#loginForm .form-control').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                const errorId = this.id === 'loginUsername' ? 'loginUsernameError' : 'loginPasswordError';
+                document.getElementById(errorId).classList.remove('show');
+            });
+        });
+
+        // ================================================================
+        // FORGOT PASSWORD
+        // ================================================================
+
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🔄 Fitur reset password akan segera hadir!\n\nSilakan hubungi admin untuk bantuan.');
+        });
+
+        // ================================================================
+        // AUTO-FILL LOGIN (Remember Me)
+        // ================================================================
+
+        window.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('salink_remember') === 'true') {
+                const user = localStorage.getItem('salink_user');
+                if (user) {
+                    try {
+                        const userData = JSON.parse(user);
+                        document.getElementById('loginUsername').value = userData.username || '';
+                        document.getElementById('rememberMe').checked = true;
+                    } catch (e) {}
+                }
+            }
+        });
+
+        console.log('🔐 SALINK - Login & Register Page Loaded');
+        console.log('📡 Script URL:', SCRIPT_URL);
+    </script>
+</body>
+</html>
