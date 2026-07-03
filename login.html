@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SALINK - Login & Daftar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Maps API -->
+    <!-- Google Maps API - GANTI YOUR_GOOGLE_MAPS_API_KEY dengan API Key asli Anda -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap" async defer></script>
     <style>
+        /* ================================================================
+           ALL STYLES
+           ================================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -45,7 +48,7 @@
             border-radius: 20px;
             padding: 30px 24px;
             border: 1px solid var(--gold);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 168, 73, 0.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
             max-height: 98vh;
             overflow-y: auto;
             position: relative;
@@ -106,7 +109,6 @@
             display: none;
             animation: fadeSlide 0.3s ease;
         }
-
         .panel.active {
             display: block;
         }
@@ -161,7 +163,6 @@
         .form-group {
             margin-bottom: 12px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 3px;
@@ -169,7 +170,6 @@
             color: var(--gold-light);
             font-weight: 500;
         }
-
         .form-group label .required {
             color: var(--danger);
             margin-left: 2px;
@@ -185,24 +185,17 @@
             font-size: 0.8rem;
             transition: all 0.3s;
         }
-
         .form-control:focus {
             outline: none;
             border-color: var(--gold);
             box-shadow: 0 0 0 3px rgba(212, 168, 73, 0.15);
             background: rgba(255, 248, 240, 0.1);
         }
-
         .form-control::placeholder {
             color: rgba(245, 240, 232, 0.25);
         }
-
         .form-control.error {
             border-color: var(--danger);
-        }
-
-        .form-control.success {
-            border-color: var(--success);
         }
 
         .form-row {
@@ -210,26 +203,23 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-
         .form-row-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
         }
 
+        /* ========== GENDER ========== */
         .gender-options {
             display: flex;
             gap: 10px;
         }
-
         .gender-option {
             flex: 1;
         }
-
         .gender-option input {
             display: none;
         }
-
         .gender-option label {
             display: block;
             padding: 8px;
@@ -242,7 +232,6 @@
             border: 1px solid transparent;
             color: var(--cream);
         }
-
         .gender-option input:checked+label {
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: var(--dark);
@@ -250,14 +239,13 @@
             box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
         }
 
+        /* ========== PASSWORD ========== */
         .password-wrapper {
             position: relative;
         }
-
         .password-wrapper .form-control {
             padding-right: 40px;
         }
-
         .password-toggle {
             position: absolute;
             right: 12px;
@@ -270,7 +258,6 @@
             font-size: 0.85rem;
             padding: 4px;
         }
-
         .password-toggle:hover {
             color: var(--gold-light);
         }
@@ -291,11 +278,9 @@
             transition: all 0.3s;
             font-size: 0.8rem;
         }
-
         .map-btn:hover {
             background: rgba(212, 168, 73, 0.25);
         }
-
         .map-btn.confirmed {
             border-color: var(--success);
             background: rgba(76, 175, 80, 0.15);
@@ -310,7 +295,6 @@
             display: none;
             overflow: hidden;
         }
-
         .map-container.active {
             display: block;
         }
@@ -323,7 +307,6 @@
             margin-top: 8px;
             border: 1px solid var(--gold);
         }
-
         .map-confirm.active {
             display: block;
             animation: fadeIn 0.3s ease;
@@ -345,7 +328,6 @@
             color: var(--gold-light);
             margin-bottom: 3px;
         }
-
         .location-detail i {
             color: var(--success);
             margin-right: 4px;
@@ -366,7 +348,6 @@
             gap: 8px;
             margin-top: 8px;
         }
-
         .btn-confirm {
             padding: 6px 18px;
             border-radius: 6px;
@@ -376,18 +357,15 @@
             transition: all 0.3s;
             font-size: 0.75rem;
         }
-
         .btn-confirm.yes {
             background: linear-gradient(135deg, var(--success), #45a049);
             color: white;
         }
-
         .btn-confirm.no {
             background: rgba(255, 255, 255, 0.1);
             color: var(--cream);
             border: 1px solid rgba(212, 168, 73, 0.2);
         }
-
         .btn-confirm:hover {
             transform: translateY(-2px);
         }
@@ -407,12 +385,10 @@
             box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
             margin-top: 4px;
         }
-
         .btn-submit:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
         }
-
         .btn-submit:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -424,16 +400,35 @@
             text-align: right;
             margin-top: 4px;
         }
-
         .forgot-link a {
             color: rgba(245, 240, 232, 0.4);
             text-decoration: none;
             font-size: 0.65rem;
             transition: color 0.3s;
         }
-
         .forgot-link a:hover {
             color: var(--gold-light);
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 6px 0 10px 0;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: rgba(245, 240, 232, 0.5);
+            cursor: pointer;
+        }
+        .remember-me input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--gold);
+            cursor: pointer;
         }
 
         /* ========== ADDRESS SECTION ========== */
@@ -444,11 +439,9 @@
             border: 1px solid rgba(212, 168, 73, 0.1);
             margin-top: 4px;
         }
-
         .address-section .form-group:last-child {
             margin-bottom: 0;
         }
-
         .address-label {
             font-size: 0.7rem;
             color: var(--gold-light);
@@ -457,7 +450,6 @@
             align-items: center;
             gap: 6px;
         }
-
         .address-label i {
             color: var(--gold);
         }
@@ -467,7 +459,6 @@
             text-align: center;
             margin-bottom: 12px;
         }
-
         .profile-preview {
             width: 70px;
             height: 70px;
@@ -482,23 +473,19 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
         .profile-preview:hover {
             transform: scale(1.05);
             border-color: var(--gold-light);
         }
-
         .profile-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .profile-preview i {
             font-size: 2rem;
             color: var(--brown-dark);
         }
-
         .upload-hint {
             font-size: 0.55rem;
             color: rgba(245, 240, 232, 0.35);
@@ -511,46 +498,9 @@
             margin-top: 3px;
             display: none;
         }
-
         .error-msg.show {
             display: block;
             animation: fadeIn 0.3s ease;
-        }
-
-        .success-msg {
-            color: var(--success);
-            font-size: 0.65rem;
-            margin-top: 3px;
-            display: none;
-        }
-
-        .success-msg.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* ========== LOGIN OPTIONS ========== */
-        .login-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 6px 0 10px 0;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            color: rgba(245, 240, 232, 0.5);
-            cursor: pointer;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: 14px;
-            height: 14px;
-            accent-color: var(--gold);
-            cursor: pointer;
         }
 
         /* ========== RESPONSIVE ========== */
@@ -602,11 +552,10 @@
     </style>
 </head>
 <body>
+
     <div class="container" id="appContainer">
 
-        <!-- ============================================================ -->
-        <!-- TABS -->
-        <!-- ============================================================ -->
+        <!-- ========== TABS ========== -->
         <div class="tabs">
             <button class="tab-btn active" data-tab="login" id="tabLogin">
                 <i class="fas fa-sign-in-alt"></i> Masuk
@@ -616,9 +565,7 @@
             </button>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- PANEL LOGIN -->
-        <!-- ============================================================ -->
+        <!-- ========== PANEL LOGIN ========== -->
         <div class="panel active" id="panelLogin">
             <div class="header">
                 <div class="logo">
@@ -629,14 +576,12 @@
             </div>
 
             <form id="loginForm" novalidate>
-                <!-- Username -->
                 <div class="form-group">
                     <label for="loginUsername">Username <span class="required">*</span></label>
                     <input type="text" id="loginUsername" class="form-control" placeholder="Masukkan username" required>
                     <div id="loginUsernameError" class="error-msg">Username tidak ditemukan!</div>
                 </div>
 
-                <!-- Password -->
                 <div class="form-group">
                     <label for="loginPassword">Password <span class="required">*</span></label>
                     <div class="password-wrapper">
@@ -648,7 +593,6 @@
                     <div id="loginPasswordError" class="error-msg">Password salah!</div>
                 </div>
 
-                <!-- Options -->
                 <div class="login-options">
                     <label class="remember-me">
                         <input type="checkbox" id="rememberMe">
@@ -659,7 +603,6 @@
                     </div>
                 </div>
 
-                <!-- Submit -->
                 <button type="submit" class="btn-submit" id="loginBtn">
                     <i class="fas fa-sign-in-alt"></i> Masuk
                 </button>
@@ -670,9 +613,7 @@
             </form>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- PANEL REGISTER -->
-        <!-- ============================================================ -->
+        <!-- ========== PANEL REGISTER ========== -->
         <div class="panel" id="panelRegister">
             <div class="header">
                 <div class="logo">
@@ -684,7 +625,7 @@
 
             <form id="registerForm" novalidate>
 
-                <!-- ========== FOTO PROFIL ========== -->
+                <!-- Foto Profil -->
                 <div class="profile-upload">
                     <div class="profile-preview" id="profilePreview" onclick="document.getElementById('profileInput').click()">
                         <i class="fas fa-user"></i>
@@ -693,7 +634,7 @@
                     <p class="upload-hint">Klik untuk upload foto profil</p>
                 </div>
 
-                <!-- ========== DATA DIRI ========== -->
+                <!-- Data Diri -->
                 <div class="form-group">
                     <label for="regFullName">Nama Lengkap <span class="required">*</span></label>
                     <input type="text" id="regFullName" class="form-control" placeholder="Sesuai dengan E-KTP" required>
@@ -724,7 +665,7 @@
                     </div>
                 </div>
 
-                <!-- ========== ALAMAT E-KTP ========== -->
+                <!-- Alamat E-KTP -->
                 <div class="address-section">
                     <div class="address-label">
                         <i class="fas fa-id-card"></i>
@@ -815,19 +756,21 @@
                     </div>
                 </div>
 
-                <!-- ========== GOOGLE MAPS ========== -->
+                <!-- ========== GOOGLE MAPS (FIXED) ========== -->
                 <div class="form-group" style="margin-top:12px;">
-                    <label>📍 Konfirmasi Lokasi</label>
+                    <label>📍 Konfirmasi Lokasi <span class="required">*</span></label>
                     <p style="font-size:0.6rem;color:rgba(245,240,232,0.35);margin-bottom:4px;">
                         <i class="fas fa-info-circle"></i> Klik tombol untuk menentukan lokasi tempat tinggal Anda
                     </p>
 
                     <button type="button" class="map-btn" id="mapToggleBtn">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Klik untuk pilih lokasi Anda</span>
+                        <span id="mapBtnText">Klik untuk pilih lokasi Anda</span>
                     </button>
 
-                    <div class="map-container" id="mapContainer"></div>
+                    <div class="map-container" id="mapContainer">
+                        <!-- Map akan dirender di sini -->
+                    </div>
 
                     <div class="map-confirm" id="mapConfirm">
                         <div class="location-detail">
@@ -852,9 +795,10 @@
                     <input type="hidden" id="regMapLng" value="">
 
                     <div id="regMapError" class="error-msg">⚠️ Silakan pilih lokasi Anda di Google Maps!</div>
+                    <div id="regMapLoading" class="error-msg" style="color:var(--gold-light);">⏳ Memuat peta...</div>
                 </div>
 
-                <!-- ========== USERNAME & PASSWORD ========== -->
+                <!-- Username & Password -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="regUsername">Username <span class="required">*</span></label>
@@ -875,7 +819,7 @@
                     </div>
                 </div>
 
-                <!-- ========== BIO ========== -->
+                <!-- Bio -->
                 <div class="form-group">
                     <label for="regBio">Bio (Opsional)</label>
                     <input type="text" id="regBio" class="form-control" placeholder="Ceritakan tentang Anda...">
@@ -899,6 +843,7 @@
 
         // Ganti dengan URL Web App Anda
         const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        const DASHBOARD_URL = 'dashboard.html';
 
         // ================================================================
         // TAB NAVIGATION
@@ -912,15 +857,10 @@
         const switchToLogin = document.getElementById('switchToLogin');
 
         function showTab(tab) {
-            // Update tabs
             tabLogin.classList.toggle('active', tab === 'login');
             tabRegister.classList.toggle('active', tab === 'register');
-
-            // Update panels
             panelLogin.classList.toggle('active', tab === 'login');
             panelRegister.classList.toggle('active', tab === 'register');
-
-            // Reset container scroll
             document.getElementById('appContainer').scrollTop = 0;
         }
 
@@ -932,7 +872,7 @@
             showTab('login'); });
 
         // ================================================================
-        // GOOGLE MAPS
+        // GOOGLE MAPS - FIXED VERSION
         // ================================================================
 
         let map;
@@ -940,26 +880,101 @@
         let selectedLocation = null;
         let geocoder;
         let mapOpen = false;
-        let isLocationConfirmed = false;
+        let isMapReady = false;
+        let mapInitialized = false;
 
+        // Fungsi initMap dipanggil oleh Google Maps API
         function initMap() {
-            const defaultLocation = { lat: -6.1823399, lng: 106.8325873 };
+            try {
+                const defaultLocation = { lat: -6.1823399, lng: 106.8325873 };
 
-            map = new google.maps.Map(document.getElementById('mapContainer'), {
-                center: defaultLocation,
-                zoom: 15,
-                styles: [
-                    { featureType: 'all', elementType: 'labels.text.fill', stylers: [{ color: '#f5f0e8' }] },
-                    { featureType: 'all', elementType: 'labels.text.stroke', stylers: [{ color: '#1a1008' }] },
-                    { featureType: 'all', elementType: 'all', stylers: [{ saturation: -70 }] }
-                ]
-            });
+                map = new google.maps.Map(document.getElementById('mapContainer'), {
+                    center: defaultLocation,
+                    zoom: 15,
+                    styles: [
+                        { featureType: 'all', elementType: 'labels.text.fill', stylers: [{ color: '#f5f0e8' }] },
+                        { featureType: 'all', elementType: 'labels.text.stroke', stylers: [{ color: '#1a1008' }] },
+                        { featureType: 'all', elementType: 'all', stylers: [{ saturation: -70 }] }
+                    ]
+                });
 
-            geocoder = new google.maps.Geocoder();
+                geocoder = new google.maps.Geocoder();
+                isMapReady = true;
+                mapInitialized = true;
 
-            map.addListener('click', function(event) {
-                placeMarker(event.latLng);
-            });
+                // Sembunyikan loading
+                document.getElementById('regMapLoading').classList.remove('show');
+
+                map.addListener('click', function(event) {
+                    placeMarker(event.latLng);
+                });
+
+                console.log('✅ Google Maps berhasil diinisialisasi');
+
+                // Jika map terbuka, auto-get location
+                if (mapOpen) {
+                    setTimeout(getCurrentLocation, 500);
+                }
+
+            } catch (error) {
+                console.error('❌ Error initMap:', error);
+                document.getElementById('regMapLoading').textContent = '❌ Gagal memuat peta. Periksa API Key.';
+                document.getElementById('regMapLoading').classList.add('show');
+            }
+        }
+
+        // Fallback jika Google Maps tidak bisa di-load
+        function fallbackMap() {
+            console.warn('⚠️ Menggunakan fallback map (manual input)');
+            document.getElementById('regMapLoading').textContent = '⚠️ Peta tidak tersedia. Silakan isi alamat manual.';
+            document.getElementById('regMapLoading').classList.add('show');
+
+            // Tambahkan input manual untuk koordinat
+            const mapContainer = document.getElementById('mapContainer');
+            mapContainer.innerHTML = `
+                    <div style="padding:20px;text-align:center;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);">
+                        <i class="fas fa-map-marked-alt" style="font-size:2rem;color:var(--gold);margin-bottom:10px;"></i>
+                        <p style="font-size:0.8rem;color:var(--cream);margin-bottom:10px;">Masukkan koordinat lokasi Anda</p>
+                        <div style="display:flex;gap:10px;width:100%;max-width:300px;">
+                            <input type="text" id="manualLat" placeholder="Latitude" style="flex:1;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:6px;color:var(--cream);font-size:0.7rem;">
+                            <input type="text" id="manualLng" placeholder="Longitude" style="flex:1;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:6px;color:var(--cream);font-size:0.7rem;">
+                        </div>
+                        <button onclick="confirmManualLocation()" style="margin-top:10px;padding:6px 20px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--dark);border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.7rem;">
+                            <i class="fas fa-check"></i> Konfirmasi Lokasi
+                        </button>
+                    </div>
+                `;
+        }
+
+        // Fungsi untuk konfirmasi lokasi manual (fallback)
+        function confirmManualLocation() {
+            const lat = document.getElementById('manualLat')?.value;
+            const lng = document.getElementById('manualLng')?.value;
+
+            if (!lat || !lng) {
+                alert('⚠️ Mohon isi Latitude dan Longitude!');
+                return;
+            }
+
+            const latNum = parseFloat(lat);
+            const lngNum = parseFloat(lng);
+
+            if (isNaN(latNum) || isNaN(lngNum)) {
+                alert('⚠️ Mohon isi dengan angka yang valid!');
+                return;
+            }
+
+            selectedLocation = { lat: latNum, lng: lngNum };
+            isLocationConfirmed = false;
+
+            document.getElementById('regMapLink').value = `https://www.google.com/maps?q=${latNum},${lngNum}`;
+            document.getElementById('regMapLat').value = latNum;
+            document.getElementById('regMapLng').value = lngNum;
+
+            document.getElementById('locationText').textContent = `Lokasi manual: ${latNum}, ${lngNum}`;
+            document.getElementById('coordText').textContent = `Latitude: ${latNum}, Longitude: ${lngNum}`;
+            document.getElementById('mapConfirm').classList.add('active');
+            document.getElementById('regMapError').classList.remove('show');
         }
 
         function placeMarker(latLng) {
@@ -987,14 +1002,20 @@
         }
 
         function getAddressFromLocation(latLng) {
+            if (!geocoder) {
+                console.warn('Geocoder not ready');
+                return;
+            }
+
             geocoder.geocode({ location: latLng }, function(results, status) {
-                if (status === 'OK' && results[0]) {
+                if (status === 'OK' && results && results[0]) {
                     const address = results[0].formatted_address;
                     document.getElementById('locationText').textContent = address;
                     document.getElementById('coordText').textContent =
                         `Latitude: ${latLng.lat().toFixed(7)}, Longitude: ${latLng.lng().toFixed(7)}`;
 
-                    document.getElementById('regMapLink').value = `https://www.google.com/maps?q=${latLng.lat()},${latLng.lng()}`;
+                    document.getElementById('regMapLink').value =
+                    `https://www.google.com/maps?q=${latLng.lat()},${latLng.lng()}`;
                     document.getElementById('regMapLat').value = latLng.lat();
                     document.getElementById('regMapLng').value = latLng.lng();
 
@@ -1003,44 +1024,41 @@
 
                     document.getElementById('mapConfirm').classList.add('active');
                     document.getElementById('regMapError').classList.remove('show');
+                } else {
+                    console.warn('Geocoding failed:', status);
+                    // Tetap simpan koordinat meskipun geocoding gagal
+                    document.getElementById('regMapLink').value =
+                    `https://www.google.com/maps?q=${latLng.lat()},${latLng.lng()}`;
+                    document.getElementById('regMapLat').value = latLng.lat();
+                    document.getElementById('regMapLng').value = latLng.lng();
+                    document.getElementById('coordText').textContent =
+                        `Latitude: ${latLng.lat().toFixed(7)}, Longitude: ${latLng.lng().toFixed(7)}`;
+                    document.getElementById('locationText').textContent =
+                        `📍 ${latLng.lat().toFixed(7)}, ${latLng.lng().toFixed(7)}`;
+                    document.getElementById('mapConfirm').classList.add('active');
+                    document.getElementById('regMapError').classList.remove('show');
                 }
             });
         }
 
-        function fillAddressFromMaps(addressComponents) {
+        function fillAddressFromMaps(components) {
             let country = '',
                 province = '',
                 city = '',
                 district = '',
                 village = '',
                 postalCode = '';
-
-            addressComponents.forEach(component => {
-                const types = component.types;
-
-                if (types.includes('country')) {
-                    country = component.long_name;
-                }
-                if (types.includes('administrative_area_level_1')) {
-                    province = component.long_name;
-                }
-                if (types.includes('administrative_area_level_2')) {
-                    city = component.long_name;
-                }
-                if (types.includes('administrative_area_level_3')) {
-                    district = component.long_name;
-                }
-                if (types.includes('locality') || types.includes('sublocality')) {
-                    if (!district) district = component.long_name;
-                }
-                if (types.includes('neighborhood') || types.includes('sublocality_level_1')) {
-                    village = component.long_name;
-                }
-                if (types.includes('postal_code')) {
-                    postalCode = component.long_name;
-                }
+            components.forEach(c => {
+                const types = c.types;
+                if (types.includes('country')) country = c.long_name;
+                if (types.includes('administrative_area_level_1')) province = c.long_name;
+                if (types.includes('administrative_area_level_2')) city = c.long_name;
+                if (types.includes('administrative_area_level_3')) district = c.long_name;
+                if (types.includes('locality') || types.includes('sublocality')) { if (!district) district = c
+                    .long_name; }
+                if (types.includes('neighborhood') || types.includes('sublocality_level_1')) village = c.long_name;
+                if (types.includes('postal_code')) postalCode = c.long_name;
             });
-
             if (country) document.getElementById('regCountry').value = country;
             if (province) document.getElementById('regProvince').value = province;
             if (city) document.getElementById('regCity').value = city;
@@ -1053,49 +1071,92 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
-                        const latLng = new google.maps.LatLng(
-                            position.coords.latitude,
-                            position.coords.longitude
-                        );
-                        map.setCenter(latLng);
-                        placeMarker(latLng);
+                        if (map && isMapReady) {
+                            const latLng = new google.maps.LatLng(
+                                position.coords.latitude,
+                                position.coords.longitude
+                            );
+                            map.setCenter(latLng);
+                            placeMarker(latLng);
+                        }
                     },
                     function(error) {
-                        console.warn('Geolocation error:', error);
-                    }, { enableHighAccuracy: true }
+                        console.warn('Geolocation error:', error.message);
+                        // Default ke Jakarta jika gagal
+                        if (map && isMapReady) {
+                            const defaultLoc = new google.maps.LatLng(-6.1823399, 106.8325873);
+                            map.setCenter(defaultLoc);
+                        }
+                    }, { enableHighAccuracy: true, timeout: 10000 }
                 );
+            } else {
+                console.warn('Geolocation not supported');
             }
         }
 
         // ================================================================
-        // MAP EVENT LISTENERS
+        // MAP EVENT LISTENERS - FIXED
         // ================================================================
 
         document.addEventListener('DOMContentLoaded', function() {
             const mapToggleBtn = document.getElementById('mapToggleBtn');
             const mapContainer = document.getElementById('mapContainer');
 
+            // Tampilkan loading
+            document.getElementById('regMapLoading').classList.add('show');
+
+            // Cek apakah Google Maps sudah siap
+            setTimeout(function() {
+                if (!mapInitialized) {
+                    console.warn('⚠️ Google Maps belum siap, mencoba fallback...');
+                    // Coba inisialisasi ulang
+                    if (typeof initMap === 'function') {
+                        try {
+                            initMap();
+                        } catch (e) {
+                            console.error('Fallback init failed:', e);
+                            fallbackMap();
+                        }
+                    } else {
+                        fallbackMap();
+                    }
+                } else {
+                    document.getElementById('regMapLoading').classList.remove('show');
+                }
+            }, 3000);
+
             mapToggleBtn.addEventListener('click', function() {
                 if (!mapOpen) {
                     mapContainer.classList.add('active');
                     mapOpen = true;
 
-                    if (!map) {
-                        initMap();
+                    // Jika map belum siap, coba inisialisasi
+                    if (!isMapReady || !map) {
+                        document.getElementById('regMapLoading').classList.add('show');
+                        if (typeof initMap === 'function') {
+                            try {
+                                initMap();
+                            } catch (e) {
+                                console.error('Init map on click failed:', e);
+                                fallbackMap();
+                            }
+                        } else {
+                            fallbackMap();
+                        }
+                    } else {
+                        setTimeout(getCurrentLocation, 300);
                     }
-
-                    setTimeout(getCurrentLocation, 500);
 
                     this.innerHTML = `
                             <i class="fas fa-chevron-up"></i>
-                            <span>Tutup Peta</span>
+                            <span id="mapBtnText">Tutup Peta</span>
                         `;
                 } else {
                     mapContainer.classList.remove('active');
                     mapOpen = false;
                     this.innerHTML = `
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>Klik untuk pilih lokasi Anda</span>
+                            <span id="mapBtnText">Klik untuk pilih lokasi Anda</span>
                         `;
                 }
             });
@@ -1105,19 +1166,21 @@
                     const address = document.getElementById('locationText').textContent;
                     const coords = document.getElementById('coordText').textContent;
 
-                    if (confirm(`Konfirmasi lokasi Anda:\n\n📍 ${address}\n\n${coords}\n\nApakah lokasi ini benar?`)) {
+                    if (confirm(
+                            `Konfirmasi lokasi Anda:\n\n📍 ${address}\n\n${coords}\n\nApakah lokasi ini benar?`
+                            )) {
                         isLocationConfirmed = true;
 
                         mapContainer.classList.remove('active');
                         mapOpen = false;
                         document.getElementById('mapToggleBtn').innerHTML = `
                                 <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
-                                <span>✅ Lokasi sudah dipilih</span>
+                                <span id="mapBtnText">✅ Lokasi sudah dipilih</span>
                             `;
                         document.getElementById('mapToggleBtn').classList.add('confirmed');
                         document.getElementById('mapConfirm').classList.remove('active');
 
-                        if (marker) {
+                        if (marker && map) {
                             marker.setIcon({
                                 url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
                                 scaledSize: new google.maps.Size(40, 40)
@@ -1127,7 +1190,7 @@
                         document.getElementById('regMapError').classList.remove('show');
                     }
                 } else {
-                    alert('Silakan pilih lokasi terlebih dahulu di peta.');
+                    alert('Silakan pilih lokasi terlebih dahulu di peta atau isi koordinat manual.');
                 }
             });
 
@@ -1148,9 +1211,17 @@
 
                 document.getElementById('mapToggleBtn').innerHTML = `
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Klik untuk pilih lokasi Anda</span>
+                        <span id="mapBtnText">Klik untuk pilih lokasi Anda</span>
                     `;
                 document.getElementById('mapToggleBtn').classList.remove('confirmed');
+            });
+
+            // Event untuk manual input (fallback)
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.textContent === 'Konfirmasi Lokasi' && e.target.closest(
+                        '.map-container')) {
+                    // Handled by confirmManualLocation
+                }
             });
         });
 
@@ -1161,29 +1232,21 @@
         document.getElementById('toggleLoginPassword').addEventListener('click', function() {
             const input = document.getElementById('loginPassword');
             const icon = this.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
+            if (input.type === 'password') { input.type = 'text';
                 icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
+                icon.classList.add('fa-eye-slash'); } else { input.type = 'password';
                 icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+                icon.classList.add('fa-eye'); }
         });
 
         document.getElementById('toggleRegPassword').addEventListener('click', function() {
             const input = document.getElementById('regPassword');
             const icon = this.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
+            if (input.type === 'password') { input.type = 'text';
                 icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
+                icon.classList.add('fa-eye-slash'); } else { input.type = 'password';
                 icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
+                icon.classList.add('fa-eye'); }
         });
 
         // ================================================================
@@ -1214,13 +1277,11 @@
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
 
-            // Reset errors
             document.getElementById('loginUsernameError').classList.remove('show');
             document.getElementById('loginPasswordError').classList.remove('show');
             document.getElementById('loginUsername').classList.remove('error');
             document.getElementById('loginPassword').classList.remove('error');
 
-            // Validasi
             if (!username) {
                 document.getElementById('loginUsernameError').textContent = 'Username harus diisi!';
                 document.getElementById('loginUsernameError').classList.add('show');
@@ -1235,7 +1296,6 @@
                 return;
             }
 
-            // Login
             const loginBtn = document.getElementById('loginBtn');
             loginBtn.disabled = true;
             loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
@@ -1247,15 +1307,9 @@
                     loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
 
                     if (result.success) {
-                        // Simpan data user
                         localStorage.setItem('salink_user', JSON.stringify(result.data));
-                        if (rememberMe) {
-                            localStorage.setItem('salink_remember', 'true');
-                        }
-
-                        alert('✅ Login berhasil! Selamat datang ' + result.data.fullName);
-                        // Redirect ke halaman utama
-                        window.location.href = 'index.html';
+                        if (rememberMe) localStorage.setItem('salink_remember', 'true');
+                        window.location.href = DASHBOARD_URL;
                     } else {
                         if (result.message.includes('Username')) {
                             document.getElementById('loginUsernameError').textContent = result.message;
@@ -1278,27 +1332,26 @@
         });
 
         // ================================================================
-        // REGISTER FORM
+        // REGISTER FORM - FIXED
         // ================================================================
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Reset semua error
+            // Reset errors
             document.querySelectorAll('#registerForm .error-msg').forEach(el => el.classList.remove('show'));
             document.querySelectorAll('#registerForm .form-control').forEach(el => el.classList.remove('error'));
 
             let isValid = true;
 
-            // Validasi Nama Lengkap
+            // Validasi Nama
             const fullName = document.getElementById('regFullName');
             if (!fullName.value.trim()) { fullName.classList.add('error');
                 isValid = false; }
 
             // Validasi Email
             const email = document.getElementById('regEmail');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email.value.trim() || !emailRegex.test(email.value)) { email.classList.add('error');
+            if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { email.classList.add('error');
                 isValid = false; }
 
             // Validasi Phone
@@ -1334,25 +1387,23 @@
 
             // Validasi Password
             const password = document.getElementById('regPassword');
-            const passRegex = /^[A-Z].*\d$/;
-            if (!password.value || password.value.length < 6 || !passRegex.test(password.value)) {
+            if (!password.value || password.value.length < 6 || !/^[A-Z].*\d$/.test(password.value)) {
                 password.classList.add('error');
                 isValid = false;
             }
 
-            // Validasi Google Maps
-            if (!document.getElementById('regMapLink').value) {
-                document.getElementById('regMapError').textContent = '⚠️ Silakan pilih lokasi Anda di Google Maps!';
+            // Validasi Google Maps - CEK APAKAH SUDAH DIPILIH
+            const mapLink = document.getElementById('regMapLink').value;
+            if (!mapLink) {
+                document.getElementById('regMapError').textContent = '⚠️ Silakan pilih lokasi Anda di Google Maps atau isi koordinat manual!';
                 document.getElementById('regMapError').classList.add('show');
                 isValid = false;
             }
 
             if (!isValid) {
                 const firstError = document.querySelector('#registerForm .form-control.error');
-                if (firstError) {
-                    firstError.focus();
-                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
+                if (firstError) { firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
                 return;
             }
 
@@ -1389,8 +1440,6 @@
                 password: document.getElementById('regPassword').value,
                 bio: document.getElementById('regBio').value || `Halo! Saya ${document.getElementById('regFullName').value}`,
                 profilePicture: document.getElementById('profilePreview').dataset.image || '',
-
-                // Alamat E-KTP
                 country: document.getElementById('regCountry').value,
                 province: document.getElementById('regProvince').value,
                 city: document.getElementById('regCity').value,
@@ -1398,7 +1447,6 @@
                 village: document.getElementById('regVillage').value,
                 postalCode: document.getElementById('regPostalCode').value,
                 detailAddress: document.getElementById('regDetailAddress').value,
-
                 address: [
                     document.getElementById('regDetailAddress').value,
                     document.getElementById('regVillage').value,
@@ -1407,7 +1455,6 @@
                     document.getElementById('regProvince').value,
                     document.getElementById('regCountry').value
                 ].filter(Boolean).join(', '),
-
                 mapLink: document.getElementById('regMapLink').value,
                 mapLat: document.getElementById('regMapLat').value,
                 mapLng: document.getElementById('regMapLng').value
@@ -1425,10 +1472,9 @@
 
                     if (result.success) {
                         alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.\n\nSilakan login untuk melanjutkan.');
-                        // Reset form dan pindah ke login
                         document.getElementById('registerForm').reset();
+                        document.getElementById('profilePreview').innerHTML = '<i class="fas fa-user"></i>';
                         showTab('login');
-                        // Isi username di login
                         document.getElementById('loginUsername').value = userData.username;
                     } else {
                         alert('❌ Gagal mendaftar: ' + result.message);
@@ -1452,12 +1498,8 @@
         document.querySelectorAll('#registerForm .form-control').forEach(input => {
             input.addEventListener('input', function() {
                 this.classList.remove('error');
-                if (this.id === 'regUsername') {
-                    document.getElementById('regUsernameError').classList.remove('show');
-                }
-                if (this.id === 'regMapLink') {
-                    document.getElementById('regMapError').classList.remove('show');
-                }
+                if (this.id === 'regUsername') document.getElementById('regUsernameError').classList.remove('show');
+                if (this.id === 'regMapLink') document.getElementById('regMapError').classList.remove('show');
             });
         });
 
@@ -1482,21 +1524,36 @@
         // AUTO-FILL LOGIN (Remember Me)
         // ================================================================
 
-        window.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('salink_remember') === 'true') {
-                const user = localStorage.getItem('salink_user');
-                if (user) {
-                    try {
-                        const userData = JSON.parse(user);
-                        document.getElementById('loginUsername').value = userData.username || '';
-                        document.getElementById('rememberMe').checked = true;
-                    } catch (e) {}
-                }
+        if (localStorage.getItem('salink_remember') === 'true') {
+            const user = localStorage.getItem('salink_user');
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    document.getElementById('loginUsername').value = userData.username || '';
+                    document.getElementById('rememberMe').checked = true;
+                } catch (e) {}
             }
-        });
+        }
 
-        console.log('🔐 SALINK - Login & Register Page Loaded');
+        // ================================================================
+        // CEK SESSION - Redirect ke dashboard jika sudah login
+        // ================================================================
+
+        const currentUser = localStorage.getItem('salink_user');
+        if (currentUser) {
+            try {
+                const user = JSON.parse(currentUser);
+                // Redirect ke dashboard
+                window.location.href = DASHBOARD_URL;
+            } catch (e) {
+                localStorage.removeItem('salink_user');
+            }
+        }
+
+        console.log('🔐 SALINK - Halaman Login');
         console.log('📡 Script URL:', SCRIPT_URL);
+        console.log('📱 Dashboard URL:', DASHBOARD_URL);
+        console.log('🗺️ Google Maps status:', typeof google !== 'undefined' ? '✅ Tersedia' : '❌ Tidak tersedia');
     </script>
 </body>
 </html>
