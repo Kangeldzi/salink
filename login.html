@@ -359,6 +359,26 @@
             text-decoration: underline;
         }
 
+        .map-loading {
+            display: none;
+            font-size: 0.7rem;
+            color: var(--gold-light);
+            margin-top: 6px;
+        }
+        .map-loading.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        .map-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -745,7 +765,7 @@
                 </div>
 
                 <!-- ============================================================ -->
-                <!-- ⭐ UPLOAD LINK GOOGLE MAPS (Diganti dari peta interaktif) -->
+                <!-- ⭐ UPLOAD LINK GOOGLE MAPS (Support Short Link) -->
                 <!-- ============================================================ -->
                 <div class="form-group" style="margin-top:12px;">
                     <label for="regMapLink">📍 Upload Link Google Maps <span class="required">*</span></label>
@@ -756,17 +776,21 @@
                     <div class="map-upload-container">
                         <div class="input-group">
                             <span class="map-icon"><i class="fas fa-map-marker-alt"></i></span>
-                            <input type="url" id="regMapLink" class="form-control" placeholder="https://www.google.com/maps?q=...">
+                            <input type="url" id="regMapLink" class="form-control" placeholder="https://maps.app.goo.gl/... atau https://www.google.com/maps?q=..." value="https://maps.app.goo.gl/H5wUTq8ingZxBpkz9?g_st=ac">
                             <button type="button" class="clear-btn" id="clearMapBtn">
                                 <i class="fas fa-times"></i>
                             </button>
+                        </div>
+
+                        <div class="map-loading" id="mapLoading">
+                            <i class="fas fa-spinner"></i> Mendeteksi koordinat dari link...
                         </div>
 
                         <!-- Preview Link -->
                         <div class="map-preview" id="mapPreview">
                             <div class="map-info">
                                 <i class="fas fa-check-circle"></i>
-                                <span id="mapStatusText">Lokasi terkonfirmasi</span>
+                                <span id="mapStatusText">✅ Lokasi terkonfirmasi</span>
                             </div>
                             <div class="map-coords" id="mapCoords">Koordinat akan terdeteksi otomatis</div>
                             <a href="#" target="_blank" class="map-link" id="mapLinkDisplay">Buka di Google Maps</a>
@@ -781,8 +805,8 @@
                         Cara mendapatkan link:
                         <ol style="margin:4px 0 0 16px;font-size:0.6rem;color:rgba(245,240,232,0.4);">
                             <li>Buka <a href="https://maps.google.com" target="_blank">Google Maps</a></li>
-                            <li>Cari lokasi Anda dan klik kanan → "Apa ini?" atau klik marker</li>
-                            <li>Salin link dari URL browser atau klik "Bagikan" → "Salin link"</li>
+                            <li>Cari lokasi Anda → klik "Bagikan" → "Salin link"</li>
+                            <li>Paste link di kolom di atas (format: <strong>maps.app.goo.gl/...</strong>)</li>
                         </ol>
                     </div>
 
@@ -863,7 +887,7 @@
             showTab('login'); });
 
         // ================================================================
-        // ⭐ UPLOAD LINK GOOGLE MAPS
+        // ⭐ UPLOAD LINK GOOGLE MAPS - Support Short Link
         // ================================================================
 
         const mapLinkInput = document.getElementById('regMapLink');
@@ -872,11 +896,15 @@
         const mapCoords = document.getElementById('mapCoords');
         const mapLinkDisplay = document.getElementById('mapLinkDisplay');
         const clearMapBtn = document.getElementById('clearMapBtn');
+        const mapLoading = document.getElementById('mapLoading');
         const regMapLat = document.getElementById('regMapLat');
         const regMapLng = document.getElementById('regMapLng');
         const regMapError = document.getElementById('regMapError');
 
-        // Fungsi untuk mengekstrak koordinat dari link Google Maps
+        // ================================================================
+        // EKSTRAK KOORDINAT DARI LINK GOOGLE MAPS (Support Short Link)
+        // ================================================================
+
         function extractCoordinatesFromLink(url) {
             if (!url || url.trim() === '') return null;
 
@@ -911,26 +939,121 @@
                 lng = parseFloat(match4[2]);
             }
 
+            // Pattern 5: maps.app.goo.gl (Short Link) - perlu fetch untuk redirect
+            // Kita akan gunakan API eksternal atau deteksi dari parameter
+
+            // Jika ada koordinat, return
             if (lat !== null && lng !== null && !isNaN(lat) && !isNaN(lng)) {
                 return { lat, lng };
+            }
+
+            // Jika link adalah short link (maps.app.goo.gl), kita coba cari dari parameter
+            if (url.includes('maps.app.goo.gl')) {
+                // Coba cari koordinat dari query string
+                const match6 = url.match(/[?&]q=([-\d.]+),([-\d.]+)/);
+                if (match6) {
+                    lat = parseFloat(match6[1]);
+                    lng = parseFloat(match6[2]);
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        return { lat, lng };
+                    }
+                }
+
+                // Coba cari dari parameter lain
+                const match7 = url.match(/[?&]destination=([-\d.]+),([-\d.]+)/);
+                if (match7) {
+                    lat = parseFloat(match7[1]);
+                    lng = parseFloat(match7[2]);
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        return { lat, lng };
+                    }
+                }
+
+                // Untuk short link, kita perlu fetch redirect
+                // Tapi untuk keperluan demo, kita beri default Jakarta
+                // User bisa memasukkan link langsung dengan koordinat
+                return null;
             }
 
             return null;
         }
 
-        // Fungsi untuk validasi dan update preview
-        function validateMapLink() {
+        // ================================================================
+        // RESOLVE SHORT LINK MENGGUNAKAN FETCH
+        // ================================================================
+
+        async function resolveShortLink(url) {
+            try {
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    redirect: 'follow'
+                });
+
+                // Dapatkan URL final setelah redirect
+                const finalUrl = response.url;
+
+                // Ekstrak koordinat dari URL final
+                const coords = extractCoordinatesFromLink(finalUrl);
+                if (coords) {
+                    return coords;
+                }
+
+                // Jika masih tidak ada, coba cari di response headers
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    const coordsFromHeader = extractCoordinatesFromLink(locationHeader);
+                    if (coordsFromHeader) {
+                        return coordsFromHeader;
+                    }
+                }
+
+                return null;
+            } catch (error) {
+                console.warn('Gagal resolve short link:', error);
+                return null;
+            }
+        }
+
+        // ================================================================
+        // VALIDASI LINK MAPS
+        // ================================================================
+
+        let validationTimeout = null;
+
+        async function validateMapLink() {
             const url = mapLinkInput.value.trim();
-            const coords = extractCoordinatesFromLink(url);
+
+            // Reset
+            mapPreview.classList.remove('show');
+            mapLoading.classList.remove('show');
+            clearMapBtn.classList.remove('show');
+            regMapLat.value = '';
+            regMapLng.value = '';
+            regMapError.classList.remove('show');
+            mapLinkInput.classList.remove('error', 'success');
 
             if (url === '') {
-                mapPreview.classList.remove('show');
-                clearMapBtn.classList.remove('show');
-                regMapLat.value = '';
-                regMapLng.value = '';
-                regMapError.classList.remove('show');
                 return;
             }
+
+            // Tampilkan loading
+            mapLoading.classList.add('show');
+            mapLinkInput.classList.add('success');
+
+            // Cek apakah ada koordinat langsung
+            let coords = extractCoordinatesFromLink(url);
+
+            if (!coords && url.includes('maps.app.goo.gl')) {
+                // Coba resolve short link
+                try {
+                    coords = await resolveShortLink(url);
+                } catch (e) {
+                    console.warn('Error resolving short link:', e);
+                }
+            }
+
+            // Sembunyikan loading
+            mapLoading.classList.remove('show');
 
             if (coords) {
                 // Valid link dengan koordinat
@@ -947,10 +1070,7 @@
                 mapLinkInput.classList.add('success');
             } else {
                 // Invalid link
-                mapPreview.classList.remove('show');
                 clearMapBtn.classList.add('show');
-                regMapLat.value = '';
-                regMapLng.value = '';
                 regMapError.textContent = '⚠️ Link Google Maps tidak valid! Pastikan link mengandung koordinat.';
                 regMapError.classList.add('show');
                 mapLinkInput.classList.add('error');
@@ -958,11 +1078,16 @@
             }
         }
 
-        // Event listener untuk input link
-        mapLinkInput.addEventListener('input', validateMapLink);
+        // Event listener untuk input link dengan debounce
+        mapLinkInput.addEventListener('input', function() {
+            clearTimeout(validationTimeout);
+            validationTimeout = setTimeout(validateMapLink, 800);
+        });
+
         mapLinkInput.addEventListener('change', validateMapLink);
+
         mapLinkInput.addEventListener('paste', function() {
-            setTimeout(validateMapLink, 100);
+            setTimeout(validateMapLink, 200);
         });
 
         // Clear button
@@ -970,6 +1095,7 @@
             mapLinkInput.value = '';
             mapPreview.classList.remove('show');
             clearMapBtn.classList.remove('show');
+            mapLoading.classList.remove('show');
             regMapLat.value = '';
             regMapLng.value = '';
             regMapError.classList.remove('show');
@@ -1133,14 +1259,17 @@
 
             // Validasi Google Maps Link
             const mapLink = document.getElementById('regMapLink');
-            const coords = extractCoordinatesFromLink(mapLink.value);
-            if (!mapLink.value.trim() || !coords) {
-                document.getElementById('regMapError').textContent = '⚠️ Silakan masukkan link Google Maps yang valid!';
+            // Tunggu validasi selesai
+            if (!mapLink.value.trim()) {
+                document.getElementById('regMapError').textContent = '⚠️ Silakan masukkan link Google Maps!';
                 document.getElementById('regMapError').classList.add('show');
                 mapLink.classList.add('error');
                 isValid = false;
-            } else {
-                mapLink.classList.remove('error');
+            } else if (!regMapLat.value || !regMapLng.value) {
+                document.getElementById('regMapError').textContent = '⚠️ Link Google Maps tidak valid! Pastikan link mengandung koordinat.';
+                document.getElementById('regMapError').classList.add('show');
+                mapLink.classList.add('error');
+                isValid = false;
             }
 
             // Validasi Username
@@ -1180,8 +1309,6 @@
         });
 
         function submitRegistration() {
-            const coords = extractCoordinatesFromLink(document.getElementById('regMapLink').value);
-
             const userData = {
                 username: document.getElementById('regUsername').value,
                 fullName: document.getElementById('regFullName').value,
@@ -1207,8 +1334,8 @@
                     document.getElementById('regCountry').value
                 ].filter(Boolean).join(', '),
                 mapLink: document.getElementById('regMapLink').value,
-                mapLat: coords ? coords.lat : '',
-                mapLng: coords ? coords.lng : ''
+                mapLat: document.getElementById('regMapLat').value,
+                mapLng: document.getElementById('regMapLng').value
             };
 
             const registerBtn = document.getElementById('registerBtn');
@@ -1304,6 +1431,7 @@
         console.log('🔐 SALINK - Halaman Login');
         console.log('📡 Script URL:', SCRIPT_URL);
         console.log('📱 Dashboard URL:', DASHBOARD_URL);
+        console.log('📍 Sample Map Link:', mapLinkInput.value);
     </script>
 
 </body>
