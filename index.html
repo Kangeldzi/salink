@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SALINK - Emergency Alert</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap" async defer></script>
     <style>
         /* ============================================================
            ROOT VARIABLES
@@ -29,6 +27,9 @@
             --footer-height: 65px;
             --danger: #ff6b35;
             --success: #4CAF50;
+            --facebook: #1877f2;
+            --tiktok: #000000;
+            --youtube: #ff0000;
         }
 
         /* ============================================================
@@ -54,16 +55,9 @@
         /* ============================================================
            SCROLLBAR
            ============================================================ */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(61, 35, 20, 0.3);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
 
         /* ============================================================
            ANIMATIONS
@@ -128,6 +122,11 @@
             50% { transform: scale(1.3); }
         }
 
+        @keyframes socialFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         /* ============================================================
            HEADER
            ============================================================ */
@@ -148,9 +147,7 @@
             border-bottom: 2px solid var(--gold);
         }
 
-        .menu-btn,
-        .user-btn,
-        .search-btn {
+        .menu-btn, .user-btn, .search-btn {
             width: 40px;
             height: 40px;
             border-radius: 12px;
@@ -166,9 +163,7 @@
             position: relative;
         }
 
-        .menu-btn:active,
-        .user-btn:active,
-        .search-btn:active {
+        .menu-btn:active, .user-btn:active, .search-btn:active {
             box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
             transform: scale(0.95);
         }
@@ -290,9 +285,7 @@
             z-index: 5;
         }
 
-        .nav-item-bottom .badge.show {
-            display: flex;
-        }
+        .nav-item-bottom .badge.show { display: flex; }
 
         /* ============================================================
            SIDEBAR
@@ -372,24 +365,9 @@
             flex-shrink: 0;
         }
 
-        .sidebar-user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .sidebar-user-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--gold-light);
-            text-align: center;
-        }
-
-        .sidebar-user-email {
-            font-size: 0.65rem;
-            color: rgba(245, 240, 232, 0.5);
-            text-align: center;
-        }
+        .sidebar-user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-user-name { font-size: 0.95rem; font-weight: 600; color: var(--gold-light); text-align: center; }
+        .sidebar-user-email { font-size: 0.65rem; color: rgba(245, 240, 232, 0.5); text-align: center; }
 
         .nav-menu {
             list-style: none;
@@ -398,9 +376,7 @@
             overflow-y: auto;
         }
 
-        .nav-item {
-            margin-bottom: 3px;
-        }
+        .nav-item { margin-bottom: 3px; }
 
         .nav-link {
             display: flex;
@@ -449,9 +425,7 @@
         }
 
         /* Dropdown */
-        .dropdown-container {
-            position: relative;
-        }
+        .dropdown-container { position: relative; }
 
         .dropdown-toggle {
             display: flex;
@@ -469,9 +443,7 @@
             transition: all 0.3s;
         }
 
-        .dropdown-toggle:hover {
-            border-color: var(--gold);
-        }
+        .dropdown-toggle:hover { border-color: var(--gold); }
 
         .dropdown-toggle i {
             width: 22px;
@@ -486,9 +458,7 @@
             font-size: 0.7rem;
         }
 
-        .dropdown-toggle.open .arrow {
-            transform: rotate(180deg);
-        }
+        .dropdown-toggle.open .arrow { transform: rotate(180deg); }
 
         .dropdown-menu {
             max-height: 0;
@@ -501,9 +471,7 @@
             margin: 0 0 0 8px;
         }
 
-        .dropdown-menu.open {
-            max-height: 200px;
-        }
+        .dropdown-menu.open { max-height: 200px; }
 
         .dropdown-item {
             display: flex;
@@ -616,9 +584,7 @@
             animation: float 2s ease-in-out infinite;
         }
 
-        .stat-card:active {
-            animation: zoomOut 0.3s ease;
-        }
+        .stat-card:active { animation: zoomOut 0.3s ease; }
 
         .stat-card .stat-number {
             font-size: 1.4rem;
@@ -658,7 +624,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 0 30px rgba(212, 168, 73, 0.15),
-                inset 0 0 30px rgba(212, 168, 73, 0.05);
+                        inset 0 0 30px rgba(212, 168, 73, 0.05);
             animation: hologram-pulse 3s infinite;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -678,7 +644,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background:
+            background: 
                 linear-gradient(rgba(212, 168, 73, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(212, 168, 73, 0.05) 1px, transparent 1px);
             background-size: 100% 2px, 2px 100%;
@@ -732,16 +698,8 @@
             border-color: var(--gold-light);
         }
 
-        .hologram-profile img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .hologram-profile i {
-            font-size: 1rem;
-            color: var(--brown-dark);
-        }
+        .hologram-profile img { width: 100%; height: 100%; object-fit: cover; }
+        .hologram-profile i { font-size: 1rem; color: var(--brown-dark); }
 
         .alert-type {
             font-size: 0.8rem;
@@ -863,9 +821,7 @@
             border-color: var(--gold-light);
         }
 
-        .emergency-btn:active {
-            animation: zoomOut 0.3s ease;
-        }
+        .emergency-btn:active { animation: zoomOut 0.3s ease; }
 
         .emergency-btn.playing {
             animation: alarmPulse 0.5s ease-in-out infinite;
@@ -971,16 +927,9 @@
             overflow-y: auto;
         }
 
-        .post-section::-webkit-scrollbar {
-            width: 3px;
-        }
-        .post-section::-webkit-scrollbar-track {
-            background: rgba(61, 35, 20, 0.3);
-        }
-        .post-section::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 3px;
-        }
+        .post-section::-webkit-scrollbar { width: 3px; }
+        .post-section::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
+        .post-section::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
         .post-header {
             display: flex;
@@ -1004,20 +953,9 @@
             transition: all 0.3s;
         }
 
-        .post-profile-pic:hover {
-            transform: scale(1.05);
-        }
-
-        .post-profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .post-profile-pic i {
-            color: var(--brown-dark);
-            font-size: 0.85rem;
-        }
+        .post-profile-pic:hover { transform: scale(1.05); }
+        .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .post-profile-pic i { color: var(--brown-dark); font-size: 0.85rem; }
 
         .post-user-info h4 {
             font-size: 0.85rem;
@@ -1082,13 +1020,8 @@
             font-size: 0.7rem;
         }
 
-        .media-upload-btn i {
-            font-size: 0.9rem;
-        }
-
-        .file-input {
-            display: none;
-        }
+        .media-upload-btn i { font-size: 0.9rem; }
+        .file-input { display: none; }
 
         .post-submit-btn {
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -1118,8 +1051,7 @@
             display: none;
         }
 
-        .media-preview img,
-        .media-preview video {
+        .media-preview img, .media-preview video {
             max-width: 100%;
             max-height: 120px;
             border-radius: 8px;
@@ -1155,22 +1087,11 @@
             border: 1px solid rgba(212, 168, 73, 0.1);
         }
 
-        .post-content {
-            margin: 8px 0;
-        }
+        .post-content { margin: 8px 0; }
+        .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--cream); }
 
-        .post-text {
-            font-size: 0.75rem;
-            line-height: 1.5;
-            color: var(--cream);
-        }
-
-        .post-media {
-            margin: 8px 0;
-        }
-
-        .post-media img,
-        .post-media video {
+        .post-media { margin: 8px 0; }
+        .post-media img, .post-media video {
             max-width: 100%;
             max-height: 220px;
             border-radius: 8px;
@@ -1203,26 +1124,16 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .post-action i {
-            font-size: 0.8rem;
-        }
-
-        .post-action.liked {
-            color: #ff6b35;
-        }
-
-        .post-action.liked i {
-            color: #ff6b35;
-        }
+        .post-action i { font-size: 0.8rem; }
+        .post-action.liked { color: #ff6b35; }
+        .post-action.liked i { color: #ff6b35; }
 
         .post-action.delete {
             color: rgba(255, 107, 53, 0.6);
             margin-left: auto;
         }
 
-        .post-action.delete:hover {
-            color: #ff6b35;
-        }
+        .post-action.delete:hover { color: #ff6b35; }
 
         .post-action .like-count {
             font-size: 0.6rem;
@@ -1233,9 +1144,7 @@
             color: rgba(76, 201, 240, 0.6);
         }
 
-        .post-action.share:hover {
-            color: #4cc9f0;
-        }
+        .post-action.share:hover { color: #4cc9f0; }
 
         .comments-section {
             max-height: 200px;
@@ -1271,37 +1180,18 @@
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
         }
 
-        .comment-profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .comment-profile-pic i { font-size: 0.65rem; color: var(--brown-dark); }
 
-        .comment-profile-pic i {
-            font-size: 0.65rem;
-            color: var(--brown-dark);
-        }
-
-        .comment-content {
-            flex: 1;
-        }
-
+        .comment-content { flex: 1; }
         .comment-user {
             font-weight: 600;
             font-size: 0.65rem;
             color: var(--gold-light);
         }
 
-        .comment-text {
-            font-size: 0.7rem;
-            color: var(--cream);
-            margin: 2px 0;
-        }
-
-        .comment-time {
-            font-size: 0.5rem;
-            color: rgba(245, 240, 232, 0.35);
-        }
+        .comment-text { font-size: 0.7rem; color: var(--cream); margin: 2px 0; }
+        .comment-time { font-size: 0.5rem; color: rgba(245, 240, 232, 0.35); }
 
         .comment-actions {
             display: flex;
@@ -1316,17 +1206,13 @@
             transition: all 0.3s;
         }
 
-        .comment-action:hover {
-            color: var(--gold-light);
-        }
+        .comment-action:hover { color: var(--gold-light); }
 
         .comment-action.delete-comment {
             color: rgba(255, 107, 53, 0.4);
         }
 
-        .comment-action.delete-comment:hover {
-            color: #ff6b35;
-        }
+        .comment-action.delete-comment:hover { color: #ff6b35; }
 
         .comment-replies {
             margin-left: 34px;
@@ -1353,17 +1239,9 @@
             height: 20px;
         }
 
-        .reply-comment .comment-user {
-            font-size: 0.6rem;
-        }
-
-        .reply-comment .comment-text {
-            font-size: 0.65rem;
-        }
-
-        .reply-comment .comment-time {
-            font-size: 0.45rem;
-        }
+        .reply-comment .comment-user { font-size: 0.6rem; }
+        .reply-comment .comment-text { font-size: 0.65rem; }
+        .reply-comment .comment-time { font-size: 0.45rem; }
 
         .add-comment {
             display: flex;
@@ -1472,9 +1350,7 @@
             animation: float 2s ease-in-out infinite;
         }
 
-        .alert-card:active {
-            animation: zoomOut 0.3s ease;
-        }
+        .alert-card:active { animation: zoomOut 0.3s ease; }
 
         .alert-icon {
             width: 36px;
@@ -1603,9 +1479,7 @@
             border-color: var(--gold);
         }
 
-        .chart-container {
-            margin-top: 10px;
-        }
+        .chart-container { margin-top: 10px; }
 
         .pie-chart-container {
             display: flex;
@@ -1655,14 +1529,8 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .bar-chart-container {
-            display: none;
-            width: 100%;
-        }
-
-        .bar-chart-container.active {
-            display: block;
-        }
+        .bar-chart-container { display: none; width: 100%; }
+        .bar-chart-container.active { display: block; }
 
         .bar-chart {
             display: flex;
@@ -1743,6 +1611,129 @@
             color: rgba(245, 240, 232, 0.4);
             border-top: 1px solid rgba(212, 168, 73, 0.1);
             padding-top: 8px;
+        }
+
+        /* ============================================================
+           SOCIAL MEDIA ICONS
+           ============================================================ */
+        .social-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(61, 35, 20, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid var(--gold);
+            box-shadow: var(--neumorph-shadow);
+        }
+
+        .social-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--cream);
+            text-decoration: none;
+            border: 2px solid var(--gold);
+            background: rgba(61, 35, 20, 0.3);
+            box-shadow: var(--neumorph-shadow);
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-item:hover {
+            transform: translateY(-8px);
+            animation: socialFloat 2s ease-in-out infinite;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .social-item:active {
+            animation: zoomOut 0.3s ease;
+        }
+
+        .social-item.facebook {
+            border-color: var(--facebook);
+            color: var(--facebook);
+        }
+
+        .social-item.facebook:hover {
+            background: var(--facebook);
+            color: white;
+            box-shadow: 0 0 30px rgba(24, 119, 242, 0.4);
+        }
+
+        .social-item.tiktok {
+            border-color: #000;
+            color: #000;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .social-item.tiktok:hover {
+            background: linear-gradient(135deg, #00f2ea, #ff0050);
+            color: white;
+            border-color: #00f2ea;
+            box-shadow: 0 0 30px rgba(0, 242, 234, 0.3);
+        }
+
+        .social-item.youtube {
+            border-color: var(--youtube);
+            color: var(--youtube);
+        }
+
+        .social-item.youtube:hover {
+            background: var(--youtube);
+            color: white;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+        }
+
+        .social-item.portfolio {
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+        }
+
+        .social-item.portfolio:hover {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--dark);
+            box-shadow: 0 0 30px rgba(212, 168, 73, 0.4);
+        }
+
+        .social-item .social-tooltip {
+            position: absolute;
+            bottom: -30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: var(--cream);
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.55rem;
+            opacity: 0;
+            transition: all 0.3s;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .social-item:hover .social-tooltip {
+            opacity: 1;
+            bottom: -28px;
         }
 
         /* ============================================================
@@ -1836,9 +1827,7 @@
             border-bottom: 1px solid rgba(212, 168, 73, 0.08);
         }
 
-        .modal-body .info-row:last-child {
-            border-bottom: none;
-        }
+        .modal-body .info-row:last-child { border-bottom: none; }
 
         .modal-body .info-label {
             font-weight: 500;
@@ -1853,9 +1842,7 @@
             flex: 1;
         }
 
-        .modal-body .info-value strong {
-            color: var(--gold-light);
-        }
+        .modal-body .info-value strong { color: var(--gold-light); }
 
         .modal-image {
             width: 100%;
@@ -1888,6 +1875,56 @@
             border-top: 1px solid rgba(212, 168, 73, 0.08);
         }
 
+        .report-list-item {
+            background: rgba(61, 35, 20, 0.3);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-list-item:hover {
+            border-color: var(--gold-light);
+            background: rgba(61, 35, 20, 0.5);
+        }
+
+        .report-list-item .alert-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .report-list-item .report-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .report-list-item .report-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--cream);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .report-list-item .report-desc {
+            font-size: 0.65rem;
+            color: rgba(245, 240, 232, 0.6);
+        }
+
+        .report-list-item .report-time {
+            font-size: 0.6rem;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
         /* ============================================================
            AUTH PAGES (Login & Signup)
            ============================================================ */
@@ -1914,16 +1951,9 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .auth-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .auth-container::-webkit-scrollbar-track {
-            background: rgba(61, 35, 20, 0.3);
-        }
-        .auth-container::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 4px;
-        }
+        .auth-container::-webkit-scrollbar { width: 4px; }
+        .auth-container::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
+        .auth-container::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
 
         .auth-card {
             width: 100%;
@@ -1943,16 +1973,9 @@
             overflow-y: auto;
         }
 
-        .auth-card::-webkit-scrollbar {
-            width: 3px;
-        }
-        .auth-card::-webkit-scrollbar-track {
-            background: rgba(61, 35, 20, 0.2);
-        }
-        .auth-card::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 3px;
-        }
+        .auth-card::-webkit-scrollbar { width: 3px; }
+        .auth-card::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.2); }
+        .auth-card::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
         .auth-header {
             text-align: center;
@@ -2153,153 +2176,6 @@
             animation: fadeIn 0.3s ease;
         }
 
-        /* Google Maps for Auth */
-        .auth-form .map-btn {
-            width: 100%;
-            padding: 10px;
-            background: rgba(212, 168, 73, 0.15);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            color: var(--cream);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.3s;
-            font-size: 0.8rem;
-        }
-
-        .auth-form .map-btn:hover {
-            background: rgba(212, 168, 73, 0.25);
-        }
-
-        .auth-form .map-btn.confirmed {
-            border-color: var(--success);
-            background: rgba(76, 175, 80, 0.15);
-        }
-
-        .auth-form .map-container {
-            width: 100%;
-            height: 220px;
-            border-radius: 10px;
-            border: 2px solid var(--gold);
-            margin-top: 8px;
-            display: none;
-            overflow: hidden;
-        }
-
-        .auth-form .map-container.active {
-            display: block;
-        }
-
-        .auth-form .map-confirm {
-            display: none;
-            background: rgba(212, 168, 73, 0.1);
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-            border: 1px solid var(--gold);
-        }
-
-        .auth-form .map-confirm.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .auth-form .location-detail {
-            font-size: 0.75rem;
-            color: var(--gold-light);
-            margin-bottom: 3px;
-        }
-
-        .auth-form .location-detail i {
-            color: var(--success);
-            margin-right: 4px;
-        }
-
-        .auth-form .coordinates-display {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.65rem;
-            color: var(--cream);
-            margin-top: 3px;
-        }
-
-        .auth-form .confirm-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .auth-form .btn-confirm {
-            padding: 6px 18px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.75rem;
-        }
-
-        .auth-form .btn-confirm.yes {
-            background: linear-gradient(135deg, var(--success), #45a049);
-            color: white;
-        }
-
-        .auth-form .btn-confirm.no {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--cream);
-            border: 1px solid rgba(212, 168, 73, 0.2);
-        }
-
-        .auth-form .btn-confirm:hover {
-            transform: translateY(-2px);
-        }
-
-        .auth-form .profile-upload {
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .auth-form .profile-preview {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 3px solid var(--gold);
-            margin: 0 auto 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .auth-form .profile-preview:hover {
-            transform: scale(1.05);
-            border-color: var(--gold-light);
-        }
-
-        .auth-form .profile-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .auth-form .profile-preview i {
-            font-size: 2rem;
-            color: var(--brown-dark);
-        }
-
-        .auth-form .upload-hint {
-            font-size: 0.55rem;
-            color: rgba(245, 240, 232, 0.35);
-        }
-
         .btn-auth {
             width: 100%;
             padding: 12px;
@@ -2395,10 +2271,7 @@
         }
 
         @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
+            to { transform: scale(4); opacity: 0; }
         }
 
         /* ============================================================
@@ -2420,91 +2293,38 @@
                 gap: 6px;
             }
 
-            .auth-form .map-container {
-                height: 180px;
-            }
-
             .auth-card {
                 padding: 20px 14px;
             }
 
-            .auth-title {
-                font-size: 1rem;
-            }
+            .auth-title { font-size: 1rem; }
 
-            .post-actions {
-                gap: 8px;
-            }
+            .post-actions { gap: 8px; }
+            .post-action { font-size: 0.6rem; padding: 2px 4px; }
 
-            .post-action {
-                font-size: 0.6rem;
-                padding: 2px 4px;
-            }
+            .stats-grid { gap: 8px; }
+            .stat-card .stat-number { font-size: 1.2rem; }
+            .stat-card .stat-label { font-size: 0.6rem; }
 
-            .stats-grid {
-                gap: 8px;
-            }
+            .emergency-grid { gap: 10px; }
+            .emergency-btn i { font-size: 1.6rem; }
+            .emergency-btn span { font-size: 0.6rem; }
 
-            .stat-card .stat-number {
-                font-size: 1.2rem;
-            }
+            .pie-chart { width: 140px; height: 140px; }
+            .pie-chart-center { width: 55px; height: 55px; }
+            .pie-chart-center .total-number { font-size: 0.9rem; }
 
-            .stat-card .stat-label {
-                font-size: 0.6rem;
-            }
-
-            .emergency-grid {
-                gap: 10px;
-            }
-
-            .emergency-btn i {
-                font-size: 1.6rem;
-            }
-
-            .emergency-btn span {
-                font-size: 0.6rem;
-            }
-
-            .pie-chart {
-                width: 140px;
-                height: 140px;
-            }
-
-            .pie-chart-center {
-                width: 55px;
-                height: 55px;
-            }
-
-            .pie-chart-center .total-number {
-                font-size: 0.9rem;
-            }
-
-            .sidebar {
-                width: 85%;
-            }
-
-            .sidebar-user-avatar {
-                width: 44px;
-                height: 44px;
-                font-size: 1.1rem;
-            }
-
-            .sidebar-user-name {
-                font-size: 0.9rem;
-            }
+            .sidebar { width: 85%; }
+            .sidebar-user-avatar { width: 44px; height: 44px; font-size: 1.1rem; }
+            .sidebar-user-name { font-size: 0.9rem; }
 
             .nav-item-bottom {
                 min-width: 45px;
                 padding: 3px 4px;
             }
 
-            .nav-item-bottom i {
-                font-size: 1.1rem;
-            }
-
-            .nav-item-bottom span {
-                font-size: 0.55rem;
-            }
+            .nav-item-bottom i { font-size: 1.1rem; }
+            .nav-item-bottom span { font-size: 0.55rem; }
 
             .nav-item-bottom .badge {
                 min-width: 14px;
@@ -2514,46 +2334,24 @@
                 top: -4px;
             }
 
-            .auth-form .confirm-actions {
-                flex-direction: column;
+            .hologram-display { min-height: 130px; }
+            .hologram-content { padding: 8px 10px; }
+            .alert-type { font-size: 0.7rem; }
+
+            .modal-content { padding: 16px 14px; }
+            .modal-title { font-size: 0.9rem; }
+            .modal-image { height: 100px; }
+
+            .app-title { font-size: 0.95rem; }
+            .app-title .bell-icon { font-size: 1rem; }
+
+            .social-item {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
             }
 
-            .auth-form .btn-confirm {
-                width: 100%;
-                text-align: center;
-            }
-
-            .hologram-display {
-                min-height: 130px;
-            }
-
-            .hologram-content {
-                padding: 8px 10px;
-            }
-
-            .alert-type {
-                font-size: 0.7rem;
-            }
-
-            .modal-content {
-                padding: 16px 14px;
-            }
-
-            .modal-title {
-                font-size: 0.9rem;
-            }
-
-            .modal-image {
-                height: 100px;
-            }
-
-            .app-title {
-                font-size: 0.95rem;
-            }
-
-            .app-title .bell-icon {
-                font-size: 1rem;
-            }
+            .social-grid { gap: 12px; }
         }
 
         @media (max-width: 400px) {
@@ -2562,56 +2360,34 @@
                 gap: 6px;
             }
 
-            .stat-card {
-                padding: 8px 10px;
-            }
+            .stat-card { padding: 8px 10px; }
+            .stat-card .stat-number { font-size: 1rem; }
 
-            .stat-card .stat-number {
-                font-size: 1rem;
-            }
+            .emergency-grid { gap: 8px; }
+            .emergency-btn i { font-size: 1.3rem; }
+            .emergency-btn span { font-size: 0.55rem; }
 
-            .emergency-grid {
-                gap: 8px;
-            }
-
-            .emergency-btn i {
-                font-size: 1.3rem;
-            }
-
-            .emergency-btn span {
-                font-size: 0.55rem;
-            }
-
-            .pie-chart {
-                width: 120px;
-                height: 120px;
-            }
-
-            .pie-chart-center {
-                width: 48px;
-                height: 48px;
-            }
-
-            .pie-chart-center .total-number {
-                font-size: 0.8rem;
-            }
+            .pie-chart { width: 120px; height: 120px; }
+            .pie-chart-center { width: 48px; height: 48px; }
+            .pie-chart-center .total-number { font-size: 0.8rem; }
 
             .nav-item-bottom {
                 min-width: 38px;
                 padding: 2px 3px;
             }
 
-            .nav-item-bottom i {
-                font-size: 0.95rem;
+            .nav-item-bottom i { font-size: 0.95rem; }
+            .nav-item-bottom span { font-size: 0.45rem; }
+
+            .auth-card { padding: 14px 10px; }
+
+            .social-item {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
             }
 
-            .nav-item-bottom span {
-                font-size: 0.45rem;
-            }
-
-            .auth-card {
-                padding: 14px 10px;
-            }
+            .social-grid { gap: 8px; }
         }
     </style>
 </head>
@@ -2638,20 +2414,14 @@
     HEADER
     ============================================================ -->
     <header class="app-bar">
-        <button class="menu-btn" id="menuBtn">
-            <i class="fas fa-bars"></i>
-        </button>
+        <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
         <div class="app-title">
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
         </div>
         <div class="header-right">
-            <button class="search-btn" id="searchBtn">
-                <i class="fas fa-search"></i>
-            </button>
-            <button class="user-btn" id="userBtn">
-                <i class="fas fa-user"></i>
-            </button>
+            <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+            <button class="user-btn" id="userBtn"><i class="fas fa-user"></i></button>
         </div>
     </header>
 
@@ -2659,37 +2429,18 @@
     SIDEBAR
     ============================================================ -->
     <div class="sidebar" id="sidebar">
-        <button class="sidebar-close" id="sidebarClose">
-            <i class="fas fa-times"></i>
-        </button>
+        <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
 
         <div class="sidebar-header">
-            <div class="sidebar-user-avatar" id="sidebarUserAvatar">
-                <i class="fas fa-user"></i>
-            </div>
+            <div class="sidebar-user-avatar" id="sidebarUserAvatar"><i class="fas fa-user"></i></div>
             <div class="sidebar-user-name" id="sidebarUserName">Guest</div>
             <div class="sidebar-user-email" id="sidebarUserEmail">guest@salink.id</div>
         </div>
 
         <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="#" class="nav-link active" id="homeNavLink">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="historyNavLink">
-                    <i class="fas fa-history"></i>
-                    <span>Riwayat Laporan</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="mapNavLink">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <span>Peta Darurat</span>
-                </a>
-            </li>
+            <li class="nav-item"><a href="#" class="nav-link active" id="homeNavLink"><i class="fas fa-home"></i><span>Home</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" id="historyNavLink"><i class="fas fa-history"></i><span>Riwayat Laporan</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" id="mapNavLink"><i class="fas fa-map-marked-alt"></i><span>Peta Darurat</span></a></li>
             <li class="nav-item">
                 <div class="dropdown-container">
                     <div class="dropdown-toggle" id="dropdownToggle">
@@ -2713,24 +2464,9 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="infoNavLink">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Informasi</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="settingsNavLink">
-                    <i class="fas fa-cog"></i>
-                    <span>Pengaturan</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Keluar</span>
-                </a>
-            </li>
+            <li class="nav-item"><a href="#" class="nav-link" id="infoNavLink"><i class="fas fa-info-circle"></i><span>Informasi</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" id="settingsNavLink"><i class="fas fa-cog"></i><span>Pengaturan</span></a></li>
+            <li class="nav-item"><a href="#" class="nav-link" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Keluar</span></a></li>
         </ul>
     </div>
 
@@ -2743,13 +2479,10 @@
     MAIN CONTENT (DASHBOARD)
     ============================================================ -->
     <main class="main-content" id="mainContent">
-        <h1 class="page-title">
-            <i class="fas fa-bell"></i>
-            <span>Emergency Alert</span>
-        </h1>
+        <h1 class="page-title"><i class="fas fa-bell"></i><span>Emergency Alert</span></h1>
 
         <!-- Stats Cards -->
-        <div class="stats-grid">
+        <div class="stats-grid" id="statsGrid">
             <div class="stat-card">
                 <span class="stat-number" id="statActive">12</span>
                 <span class="stat-label">Laporan Aktif</span>
@@ -2776,23 +2509,14 @@
         <div class="hologram-display" id="hologramDisplay">
             <div class="hologram-content" id="hologramContent">
                 <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="alert-type fire">
-                        <i class="fas fa-fire"></i>
-                        <span>KEBAKARAN</span>
-                    </div>
+                    <div class="hologram-profile" id="hologramProfile"><i class="fas fa-user"></i></div>
+                    <div class="alert-type fire"><i class="fas fa-fire"></i><span>KEBAKARAN</span></div>
                 </div>
                 <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();">Bpk. Ahmad</a></strong></div>
-                <div class="alert-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
-                </div>
+                <div class="alert-location"><i class="fas fa-map-marker-alt"></i><span>Jl. Merdeka No. 123, Jakarta Pusat</span></div>
                 <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
                 <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
-                    <i class="fas fa-map"></i>
-                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                    <i class="fas fa-map"></i><span style="margin-left:6px;">Lihat Lokasi</span>
                     <div class="map-marker" style="top:50%;left:30%;"></div>
                 </a>
                 <div class="alert-time">10 menit yang lalu</div>
@@ -2803,63 +2527,34 @@
         <div class="emergency-grid">
             <button class="emergency-btn btn-fire" id="fireBtn" data-sound="kebakaran">
                 <div class="btn-glow"></div>
-                <div class="btn-content">
-                    <i class="fas fa-fire"></i>
-                    <span>KEBAKARAN</span>
-                    <span class="play-status">▶ Tap untuk Alarm</span>
-                </div>
+                <div class="btn-content"><i class="fas fa-fire"></i><span>KEBAKARAN</span><span class="play-status">▶ Tap untuk Alarm</span></div>
             </button>
-
             <button class="emergency-btn btn-death" id="deathBtn" data-sound="kematian">
                 <div class="btn-glow"></div>
-                <div class="btn-content">
-                    <i class="fas fa-skull"></i>
-                    <span>KEMATIAN</span>
-                    <span class="play-status">▶ Tap untuk Alarm</span>
-                </div>
+                <div class="btn-content"><i class="fas fa-skull"></i><span>KEMATIAN</span><span class="play-status">▶ Tap untuk Alarm</span></div>
             </button>
-
             <button class="emergency-btn btn-theft" id="theftBtn" data-sound="pencurian">
                 <div class="btn-glow"></div>
-                <div class="btn-content">
-                    <i class="fas fa-gem"></i>
-                    <span>PENCURIAN</span>
-                    <span class="play-status">▶ Tap untuk Alarm</span>
-                </div>
+                <div class="btn-content"><i class="fas fa-gem"></i><span>PENCURIAN</span><span class="play-status">▶ Tap untuk Alarm</span></div>
             </button>
-
             <button class="emergency-btn btn-disaster" id="disasterBtn" data-sound="bencana">
                 <div class="btn-glow"></div>
-                <div class="btn-content">
-                    <i class="fas fa-house-damage"></i>
-                    <span>BENCANA</span>
-                    <span class="play-status">▶ Tap untuk Alarm</span>
-                </div>
+                <div class="btn-content"><i class="fas fa-house-damage"></i><span>BENCANA</span><span class="play-status">▶ Tap untuk Alarm</span></div>
             </button>
         </div>
 
         <!-- Post Section -->
         <div class="post-section" id="postSection">
             <div class="post-header">
-                <div class="post-profile-pic" id="postProfilePic">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="post-user-info">
-                    <h4 id="postUserName">Buat Postingan</h4>
-                    <small>Bagikan informasi penting</small>
-                </div>
+                <div class="post-profile-pic" id="postProfilePic"><i class="fas fa-user"></i></div>
+                <div class="post-user-info"><h4 id="postUserName">Buat Postingan</h4><small>Bagikan informasi penting</small></div>
             </div>
             <div class="post-input-area">
                 <textarea class="post-input" id="postInput" placeholder="Apa yang terjadi di lokasi Anda?"></textarea>
-                <div class="media-preview" id="mediaPreview">
-                    <span class="remove-media" id="removeMedia">&times;</span>
-                </div>
+                <div class="media-preview" id="mediaPreview"><span class="remove-media" id="removeMedia">&times;</span></div>
                 <div class="post-actions-bottom">
                     <div>
-                        <label for="mediaUpload" class="media-upload-btn">
-                            <i class="fas fa-camera"></i>
-                            <span>Foto/Video</span>
-                        </label>
+                        <label for="mediaUpload" class="media-upload-btn"><i class="fas fa-camera"></i><span>Foto/Video</span></label>
                         <input type="file" id="mediaUpload" class="file-input" accept="image/*, video/*">
                     </div>
                     <button class="post-submit-btn" id="postSubmit" disabled>Posting</button>
@@ -2872,10 +2567,7 @@
         <div class="recent-section">
             <div class="section-header">
                 <h2 class="section-title">Laporan Terkini</h2>
-                <button class="view-all" id="viewAllBtn">
-                    <span>Lihat Semua</span>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                <button class="view-all" id="viewAllBtn"><span>Lihat Semua</span><i class="fas fa-chevron-right"></i></button>
             </div>
             <div class="alert-list" id="alertList"></div>
         </div>
@@ -2890,68 +2582,53 @@
                     <button class="chart-nav-btn" data-chart="line">Line</button>
                 </div>
             </div>
-
             <div class="chart-container pie-chart-container" id="pieChartContainer">
-                <div class="pie-chart">
-                    <div class="pie-chart-center">
-                        <span class="total-label">Total</span>
-                        <span class="total-number" id="totalReports">156</span>
-                    </div>
-                </div>
+                <div class="pie-chart"><div class="pie-chart-center"><span class="total-label">Total</span><span class="total-number" id="totalReports">156</span></div></div>
                 <div class="chart-legend">
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color fire"></div>
-                        <span>Kebakaran (45%)</span>
-                    </div>
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color theft"></div>
-                        <span>Pencurian (30%)</span>
-                    </div>
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color disaster"></div>
-                        <span>Bencana (25%)</span>
-                    </div>
+                    <div class="pie-legend-item"><div class="pie-legend-color fire"></div><span>Kebakaran (45%)</span></div>
+                    <div class="pie-legend-item"><div class="pie-legend-color theft"></div><span>Pencurian (30%)</span></div>
+                    <div class="pie-legend-item"><div class="pie-legend-color disaster"></div><span>Bencana (25%)</span></div>
                 </div>
             </div>
-
             <div class="chart-container bar-chart-container" id="barChartContainer">
                 <div class="bar-chart" id="barChart"></div>
                 <div class="chart-legend">
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color fire"></div>
-                        <span>Kebakaran</span>
-                    </div>
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color theft"></div>
-                        <span>Pencurian</span>
-                    </div>
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color disaster"></div>
-                        <span>Bencana</span>
-                    </div>
+                    <div class="pie-legend-item"><div class="pie-legend-color fire"></div><span>Kebakaran</span></div>
+                    <div class="pie-legend-item"><div class="pie-legend-color theft"></div><span>Pencurian</span></div>
+                    <div class="pie-legend-item"><div class="pie-legend-color disaster"></div><span>Bencana</span></div>
                 </div>
             </div>
-
             <div class="chart-container bar-chart-container" id="lineChartContainer">
                 <div class="bar-chart" id="lineChart" style="position:relative;"></div>
                 <div class="chart-legend">
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color fire"></div>
-                        <span>Kebakaran</span>
-                    </div>
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color theft"></div>
-                        <span>Pencurian</span>
-                    </div>
-                    <div class="pie-legend-item">
-                        <div class="pie-legend-color disaster"></div>
-                        <span>Bencana</span>
-                    </div>
+                    <div class="pie-legend-item"><div class="pie-legend-color fire"></div><span>Kebakaran</span></div>
+                    <div class="pie-legend-item"><div class="pie-legend-color theft"></div><span>Pencurian</span></div>
+                    <div class="pie-legend-item"><div class="pie-legend-color disaster"></div><span>Bencana</span></div>
                 </div>
             </div>
+            <div class="chart-period-info"><span id="chartPeriodInfo">📊 Data: Minggu Ini (1-7 Juni 2026)</span></div>
+        </div>
 
-            <div class="chart-period-info">
-                <span id="chartPeriodInfo">📊 Data: Minggu Ini (1-7 Juni 2026)</span>
+        <!-- Social Media Section -->
+        <div class="social-section">
+            <div class="social-title"><i class="fas fa-share-alt"></i> Ikuti Kami di Media Sosial</div>
+            <div class="social-grid">
+                <a href="#" class="social-item facebook" onclick="window.open('https://facebook.com/salink', '_blank'); return false;">
+                    <i class="fab fa-facebook-f"></i>
+                    <span class="social-tooltip">Facebook</span>
+                </a>
+                <a href="#" class="social-item tiktok" onclick="window.open('https://tiktok.com/@salink', '_blank'); return false;">
+                    <i class="fab fa-tiktok"></i>
+                    <span class="social-tooltip">TikTok</span>
+                </a>
+                <a href="#" class="social-item youtube" onclick="window.open('https://youtube.com/@salink', '_blank'); return false;">
+                    <i class="fab fa-youtube"></i>
+                    <span class="social-tooltip">YouTube</span>
+                </a>
+                <a href="#" class="social-item portfolio" onclick="window.open('https://salink.id', '_blank'); return false;">
+                    <i class="fas fa-globe"></i>
+                    <span class="social-tooltip">Portofolio</span>
+                </a>
             </div>
         </div>
     </main>
@@ -2960,27 +2637,11 @@
     BOTTOM NAVIGATION
     ============================================================ -->
     <nav class="bottom-nav">
-        <a href="#" class="nav-item-bottom active" id="bottomHomeNav">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-item-bottom" id="bottomTokoNav">
-            <i class="fas fa-store"></i>
-            <span>Toko</span>
-        </a>
-        <a href="#" class="nav-item-bottom" id="bottomInviteNav">
-            <i class="fas fa-user-plus"></i>
-            <span>Invite</span>
-        </a>
-        <a href="#" class="nav-item-bottom" id="bottomNotifNav">
-            <i class="fas fa-bell"></i>
-            <span>Notif</span>
-            <span class="badge" id="notifBadge">0</span>
-        </a>
-        <a href="#" class="nav-item-bottom" id="bottomProfileNav">
-            <i class="fas fa-user"></i>
-            <span>Profil</span>
-        </a>
+        <a href="#" class="nav-item-bottom active" id="bottomHomeNav"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="#" class="nav-item-bottom" id="bottomTokoNav"><i class="fas fa-store"></i><span>Toko</span></a>
+        <a href="#" class="nav-item-bottom" id="bottomInviteNav"><i class="fas fa-user-plus"></i><span>Invite</span></a>
+        <a href="#" class="nav-item-bottom" id="bottomNotifNav"><i class="fas fa-bell"></i><span>Notif</span><span class="badge" id="notifBadge">0</span></a>
+        <a href="#" class="nav-item-bottom" id="bottomProfileNav"><i class="fas fa-user"></i><span>Profil</span></a>
     </nav>
 
     <!-- ============================================================
@@ -2989,13 +2650,7 @@
     <!-- Detail Modal -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title" id="detailModalTitle">
-                    <i class="fas fa-fire"></i>
-                    <span>Kebakaran</span>
-                </div>
-                <button class="modal-close" id="detailModalClose"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="modal-header"><div class="modal-title" id="detailModalTitle"><i class="fas fa-fire"></i><span>Kebakaran</span></div><button class="modal-close" id="detailModalClose"><i class="fas fa-times"></i></button></div>
             <div class="modal-body" id="detailModalBody"></div>
         </div>
     </div>
@@ -3003,21 +2658,23 @@
     <!-- All Reports Modal -->
     <div class="modal-overlay" id="allReportsModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-list"></i> Semua Laporan Terkini</div>
-                <button class="modal-close" id="allReportsModalClose"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-list"></i> Semua Laporan Terkini</div><button class="modal-close" id="allReportsModalClose"><i class="fas fa-times"></i></button></div>
             <div class="modal-body" id="allReportsModalBody"></div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-history"></i> Riwayat Laporan</div><button class="modal-close" id="historyModalClose"><i class="fas fa-times"></i></button></div>
+            <div class="modal-body" id="historyModalBody"></div>
         </div>
     </div>
 
     <!-- Profile Modal -->
     <div class="modal-overlay" id="profileModal">
         <div class="modal-content" style="max-width:480px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-user"></i> Profil Pengguna</div>
-                <button class="modal-close" id="profileModalClose"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-user"></i> Profil Pengguna</div><button class="modal-close" id="profileModalClose"><i class="fas fa-times"></i></button></div>
             <div class="modal-body" id="profileModalBody"></div>
         </div>
     </div>
@@ -3025,21 +2682,30 @@
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content" style="max-width:480px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-cog"></i> Pengaturan Profil</div>
-                <button class="modal-close" id="settingsModalClose"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-cog"></i> Pengaturan Profil</div><button class="modal-close" id="settingsModalClose"><i class="fas fa-times"></i></button></div>
             <div class="modal-body" id="settingsModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-search"></i> Pencarian</div><button class="modal-close" id="searchModalClose"><i class="fas fa-times"></i></button></div>
+            <div class="modal-body" id="searchModalBody">
+                <div class="form-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Cari pengguna, postingan, atau laporan..." style="width:100%;padding:10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.85rem;">
+                </div>
+                <div id="searchResults" style="margin-top:12px;">
+                    <p style="color:rgba(245,240,232,0.4);font-size:0.75rem;text-align:center;">Mulai ketik untuk mencari...</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Notifications Modal -->
     <div class="modal-overlay" id="notifModal">
         <div class="modal-content" style="max-width:480px;">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-bell"></i> Notifikasi</div>
-                <button class="modal-close" id="notifModalClose"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-bell"></i> Notifikasi</div><button class="modal-close" id="notifModalClose"><i class="fas fa-times"></i></button></div>
             <div class="modal-body" id="notifModalBody"></div>
         </div>
     </div>
@@ -3047,10 +2713,7 @@
     <!-- Confirmation Modal -->
     <div class="modal-overlay" id="confirmationModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title"><i class="fas fa-phone-alt"></i> <span id="confirmationTitle">Konfirmasi Panggilan</span></div>
-                <button class="modal-close" id="confirmationModalClose"><i class="fas fa-times"></i></button>
-            </div>
+            <div class="modal-header"><div class="modal-title"><i class="fas fa-phone-alt"></i> <span id="confirmationTitle">Konfirmasi Panggilan</span></div><button class="modal-close" id="confirmationModalClose"><i class="fas fa-times"></i></button></div>
             <div class="modal-body">
                 <p id="confirmationMessage">Apakah Anda yakin ingin menghubungi Polisi (110)?</p>
                 <div class="confirmation-actions" style="display:flex;gap:12px;margin-top:16px;justify-content:center;">
@@ -3073,28 +2736,20 @@
                 <h1 class="auth-title">Masuk Ke Akun Anda</h1>
                 <p class="auth-subtitle">Silakan masuk untuk mengakses layanan darurat</p>
             </div>
-
             <form class="auth-form" id="loginForm">
                 <div class="form-group">
                     <label for="loginUsername">Username <span class="required">*</span></label>
                     <input type="text" id="loginUsername" class="form-control" placeholder="Masukkan username" required>
                 </div>
-
                 <div class="form-group">
                     <label for="loginPassword">Password <span class="required">*</span></label>
                     <div class="password-wrapper">
                         <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password" required>
-                        <button type="button" class="password-toggle" id="toggleLoginPassword">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <button type="button" class="password-toggle" id="toggleLoginPassword"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
-
                 <button type="submit" class="btn-auth">Masuk</button>
-
-                <div class="auth-footer">
-                    <p>Belum punya akun? <a id="showSignupFromLogin">Daftar sekarang</a></p>
-                </div>
+                <div class="auth-footer"><p>Belum punya akun? <a id="showSignupFromLogin">Daftar sekarang</a></p></div>
             </form>
         </div>
     </div>
@@ -3107,15 +2762,14 @@
                 <h1 class="auth-title">Buat Akun Baru</h1>
                 <p class="auth-subtitle">Isi data berikut untuk mendaftar</p>
             </div>
-
             <form class="auth-form" id="signupForm">
                 <!-- Foto Profil -->
-                <div class="profile-upload">
-                    <div class="profile-preview" id="signupProfilePreview" onclick="document.getElementById('signupProfileInput').click()">
-                        <i class="fas fa-user"></i>
+                <div class="profile-upload" style="text-align:center;margin-bottom:12px;">
+                    <div class="profile-preview" id="signupProfilePreview" onclick="document.getElementById('signupProfileInput').click()" style="width:70px;height:70px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin:0 auto 6px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-user" style="font-size:2rem;color:var(--brown-dark);"></i>
                     </div>
                     <input type="file" id="signupProfileInput" accept="image/*" style="display:none;">
-                    <p class="upload-hint">Klik untuk upload foto profil</p>
+                    <p class="upload-hint" style="font-size:0.55rem;color:rgba(245,240,232,0.35);">Klik untuk upload foto profil</p>
                 </div>
 
                 <!-- Nama Lengkap -->
@@ -3128,39 +2782,21 @@
                 <div class="form-group">
                     <label>Jenis Kelamin <span class="required">*</span></label>
                     <div class="gender-options">
-                        <div class="gender-option">
-                            <input type="radio" name="signupGender" id="signupMale" value="male" checked>
-                            <label for="signupMale"><i class="fas fa-male"></i> Laki-laki</label>
-                        </div>
-                        <div class="gender-option">
-                            <input type="radio" name="signupGender" id="signupFemale" value="female">
-                            <label for="signupFemale"><i class="fas fa-female"></i> Perempuan</label>
-                        </div>
+                        <div class="gender-option"><input type="radio" name="signupGender" id="signupMale" value="male" checked><label for="signupMale"><i class="fas fa-male"></i> Laki-laki</label></div>
+                        <div class="gender-option"><input type="radio" name="signupGender" id="signupFemale" value="female"><label for="signupFemale"><i class="fas fa-female"></i> Perempuan</label></div>
                     </div>
                 </div>
 
                 <!-- Email & Phone -->
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="signupEmail">Alamat Email <span class="required">*</span></label>
-                        <input type="email" id="signupEmail" class="form-control" placeholder="email@anda.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupPhone">Nomor WhatsApp <span class="required">*</span></label>
-                        <input type="tel" id="signupPhone" class="form-control" placeholder="08xxxxxxxxxx" required>
-                    </div>
+                    <div class="form-group"><label for="signupEmail">Alamat Email <span class="required">*</span></label><input type="email" id="signupEmail" class="form-control" placeholder="email@anda.com" required></div>
+                    <div class="form-group"><label for="signupPhone">Nomor WhatsApp <span class="required">*</span></label><input type="tel" id="signupPhone" class="form-control" placeholder="08xxxxxxxxxx" required></div>
                 </div>
 
                 <!-- Alamat E-KTP -->
                 <div class="address-section">
-                    <div class="address-label">
-                        <i class="fas fa-id-card"></i>
-                        <span>Alamat Sesuai E-KTP</span>
-                        <span style="color:rgba(245,240,232,0.3);font-size:0.6rem;">(Harus sesuai dengan data KTP)</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="signupCountry">Negara <span class="required">*</span></label>
+                    <div class="address-label"><i class="fas fa-id-card"></i><span>Alamat Sesuai E-KTP</span><span style="color:rgba(245,240,232,0.3);font-size:0.6rem;">(Harus sesuai dengan data KTP)</span></div>
+                    <div class="form-group"><label for="signupCountry">Negara <span class="required">*</span></label>
                         <select id="signupCountry" class="form-control" required>
                             <option value="">Pilih Negara</option>
                             <option value="Indonesia" selected>Indonesia</option>
@@ -3170,10 +2806,8 @@
                             <option value="Timor Leste">Timor Leste</option>
                         </select>
                     </div>
-
                     <div class="form-row">
-                        <div class="form-group">
-                            <label for="signupProvince">Provinsi <span class="required">*</span></label>
+                        <div class="form-group"><label for="signupProvince">Provinsi <span class="required">*</span></label>
                             <select id="signupProvince" class="form-control" required>
                                 <option value="">Pilih Provinsi</option>
                                 <option value="Aceh">Aceh</option>
@@ -3215,103 +2849,30 @@
                                 <option value="Papua Pegunungan">Papua Pegunungan</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="signupCity">Kabupaten/Kota <span class="required">*</span></label>
-                            <input type="text" id="signupCity" class="form-control" placeholder="Kabupaten/Kota" required>
-                        </div>
+                        <div class="form-group"><label for="signupCity">Kabupaten/Kota <span class="required">*</span></label><input type="text" id="signupCity" class="form-control" placeholder="Kabupaten/Kota" required></div>
                     </div>
-
                     <div class="form-row-3">
-                        <div class="form-group">
-                            <label for="signupDistrict">Kecamatan <span class="required">*</span></label>
-                            <input type="text" id="signupDistrict" class="form-control" placeholder="Kecamatan" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="signupVillage">Kelurahan/Desa <span class="required">*</span></label>
-                            <input type="text" id="signupVillage" class="form-control" placeholder="Kelurahan/Desa" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="signupPostalCode">Kode Pos</label>
-                            <input type="text" id="signupPostalCode" class="form-control" placeholder="Kode Pos">
-                        </div>
+                        <div class="form-group"><label for="signupDistrict">Kecamatan <span class="required">*</span></label><input type="text" id="signupDistrict" class="form-control" placeholder="Kecamatan" required></div>
+                        <div class="form-group"><label for="signupVillage">Kelurahan/Desa <span class="required">*</span></label><input type="text" id="signupVillage" class="form-control" placeholder="Kelurahan/Desa" required></div>
+                        <div class="form-group"><label for="signupPostalCode">Kode Pos</label><input type="text" id="signupPostalCode" class="form-control" placeholder="Kode Pos"></div>
                     </div>
-
-                    <div class="form-group" style="margin-top:4px;">
-                        <label for="signupDetailAddress">Detail Alamat <span class="required">*</span></label>
-                        <input type="text" id="signupDetailAddress" class="form-control" placeholder="Nomor rumah, RT/RW, blok, dll" required>
-                    </div>
-                </div>
-
-                <!-- Google Maps -->
-                <div class="form-group" style="margin-top:12px;">
-                    <label>📍 Konfirmasi Lokasi</label>
-                    <p style="font-size:0.6rem;color:rgba(245,240,232,0.35);margin-bottom:4px;">
-                        <i class="fas fa-info-circle"></i> Klik tombol untuk menentukan lokasi tempat tinggal Anda
-                    </p>
-
-                    <button type="button" class="map-btn" id="signupMapToggleBtn">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Klik untuk pilih lokasi Anda</span>
-                    </button>
-
-                    <div class="map-container" id="signupMapContainer"></div>
-
-                    <div class="map-confirm" id="signupMapConfirm">
-                        <div class="location-detail">
-                            <i class="fas fa-check-circle"></i>
-                            <span id="signupLocationText">Lokasi dipilih</span>
-                        </div>
-                        <div class="coordinates-display" id="signupCoordText">
-                            Latitude: -, Longitude: -
-                        </div>
-                        <div class="confirm-actions">
-                            <button type="button" class="btn-confirm yes" id="signupConfirmLocation">
-                                <i class="fas fa-check"></i> Konfirmasi Lokasi
-                            </button>
-                            <button type="button" class="btn-confirm no" id="signupCancelLocation">
-                                <i class="fas fa-times"></i> Batal
-                            </button>
-                        </div>
-                    </div>
-
-                    <input type="hidden" id="signupMapLink" value="">
-                    <input type="hidden" id="signupMapLat" value="">
-                    <input type="hidden" id="signupMapLng" value="">
-                    <div id="signupMapError" class="error-msg">⚠️ Silakan pilih lokasi Anda di Google Maps!</div>
+                    <div class="form-group" style="margin-top:4px;"><label for="signupDetailAddress">Detail Alamat <span class="required">*</span></label><input type="text" id="signupDetailAddress" class="form-control" placeholder="Nomor rumah, RT/RW, blok, dll" required></div>
                 </div>
 
                 <!-- Username & Password -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="signupUsername">Username <span class="required">*</span></label>
-                        <input type="text" id="signupUsername" class="form-control" placeholder="Buat username unik" required>
-                        <div id="signupUsernameError" class="error-msg">Username sudah digunakan!</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="signupPassword">Password <span class="required">*</span></label>
-                        <div class="password-wrapper">
-                            <input type="password" id="signupPassword" class="form-control" placeholder="Buat password" required>
-                            <button type="button" class="password-toggle" id="toggleSignupPassword">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="password-requirements">
-                            <i class="fas fa-info-circle"></i> Minimal 6 karakter, diawali huruf kapital dan diakhiri angka
-                        </div>
+                <div class="form-row" style="margin-top:10px;">
+                    <div class="form-group"><label for="signupUsername">Username <span class="required">*</span></label><input type="text" id="signupUsername" class="form-control" placeholder="Buat username unik" required><div id="signupUsernameError" class="error-msg">Username sudah digunakan!</div></div>
+                    <div class="form-group"><label for="signupPassword">Password <span class="required">*</span></label>
+                        <div class="password-wrapper"><input type="password" id="signupPassword" class="form-control" placeholder="Buat password" required><button type="button" class="password-toggle" id="toggleSignupPassword"><i class="fas fa-eye"></i></button></div>
+                        <div class="password-requirements"><i class="fas fa-info-circle"></i> Minimal 6 karakter, diawali huruf kapital dan diakhiri angka</div>
                     </div>
                 </div>
 
                 <!-- Bio -->
-                <div class="form-group">
-                    <label for="signupBio">Bio (Opsional)</label>
-                    <input type="text" id="signupBio" class="form-control" placeholder="Ceritakan tentang Anda...">
-                </div>
+                <div class="form-group"><label for="signupBio">Bio (Opsional)</label><input type="text" id="signupBio" class="form-control" placeholder="Ceritakan tentang Anda..."></div>
 
                 <button type="submit" class="btn-auth" id="signupSubmitBtn">Daftar</button>
-
-                <div class="auth-footer">
-                    <p>Sudah punya akun? <a id="showLoginFromSignup">Masuk disini</a></p>
-                </div>
+                <div class="auth-footer"><p>Sudah punya akun? <a id="showLoginFromSignup">Masuk disini</a></p></div>
             </form>
         </div>
     </div>
@@ -3454,14 +3015,6 @@
         let currentlyPlaying = null;
         let isHologramPost = false;
 
-        // Google Maps variables
-        let signupMap = null;
-        let signupMarker = null;
-        let signupSelectedLocation = null;
-        let signupGeocoder = null;
-        let signupMapOpen = false;
-        let signupIsLocationConfirmed = false;
-
         // ============================================================
         // AUDIO FUNCTIONS
         // ============================================================
@@ -3596,11 +3149,11 @@
             if (notifications.length === 0) {
                 body.innerHTML =
                     `
-                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
-                        <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada notifikasi</p>
-                    </div>
-                `;
+                        <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                            <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                            <p>Belum ada notifikasi</p>
+                        </div>
+                    `;
                 return;
             }
 
@@ -3608,14 +3161,14 @@
             notifications.forEach(notif => {
                 const item = document.createElement('div');
                 item.style.cssText = `
-                        background: ${notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)'};
-                        border-radius: 10px;
-                        padding: 12px 14px;
-                        margin-bottom: 8px;
-                        border-left: 3px solid ${notif.read ? 'rgba(212,168,73,0.2)' : 'var(--gold)'};
-                        cursor: pointer;
-                        transition: all 0.3s;
-                    `;
+                            background: ${notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)'};
+                            border-radius: 10px;
+                            padding: 12px 14px;
+                            margin-bottom: 8px;
+                            border-left: 3px solid ${notif.read ? 'rgba(212,168,73,0.2)' : 'var(--gold)'};
+                            cursor: pointer;
+                            transition: all 0.3s;
+                        `;
                 item.onmouseover = () => { item.style.background = 'rgba(61,35,20,0.5)'; };
                 item.onmouseout = () => {
                     item.style.background = notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)';
@@ -3631,18 +3184,18 @@
                 };
 
                 item.innerHTML = `
-                        <div style="display:flex;align-items:center;gap:10px;">
-                            <div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);">
-                                <i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);">
+                                    <i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i>
+                                </div>
+                                <div style="flex:1;min-width:0;">
+                                    <div style="font-size:0.8rem;font-weight:500;color:var(--cream);">${notif.title}</div>
+                                    <div style="font-size:0.7rem;color:rgba(245,240,232,0.6);">${notif.message}</div>
+                                    <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);margin-top:3px;">${getTimeAgo(notif.timestamp)} • ${notif.sender}</div>
+                                </div>
+                                ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>` : ''}
                             </div>
-                            <div style="flex:1;min-width:0;">
-                                <div style="font-size:0.8rem;font-weight:500;color:var(--cream);">${notif.title}</div>
-                                <div style="font-size:0.7rem;color:rgba(245,240,232,0.6);">${notif.message}</div>
-                                <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);margin-top:3px;">${getTimeAgo(notif.timestamp)} • ${notif.sender}</div>
-                            </div>
-                            ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>` : ''}
-                        </div>
-                    `;
+                        `;
 
                 item.addEventListener('click', () => {
                     notif.read = true;
@@ -3703,15 +3256,15 @@
                 card.className = 'alert-card';
                 const iconClass = `icon-${alert.type}`;
                 card.innerHTML = `
-                        <div class="alert-icon ${iconClass}">
-                            <i class="fas ${alert.icon}"></i>
-                        </div>
-                        <div class="alert-content">
-                            <h3 class="alert-title">${alert.title}</h3>
-                            <p class="alert-desc">${alert.desc}</p>
-                        </div>
-                        <div class="alert-time">${alert.time}</div>
-                    `;
+                            <div class="alert-icon ${iconClass}">
+                                <i class="fas ${alert.icon}"></i>
+                            </div>
+                            <div class="alert-content">
+                                <h3 class="alert-title">${alert.title}</h3>
+                                <p class="alert-desc">${alert.desc}</p>
+                            </div>
+                            <div class="alert-time">${alert.time}</div>
+                        `;
                 card.addEventListener('click', () => openDetailModal(alert));
                 list.appendChild(card);
             });
@@ -3727,15 +3280,15 @@
                 item.className = 'report-list-item';
                 const iconClass = `icon-${alert.type}`;
                 item.innerHTML = `
-                        <div class="alert-icon ${iconClass}" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;">
-                            <i class="fas ${alert.icon}"></i>
-                        </div>
-                        <div class="report-info">
-                            <div class="report-title">${alert.title}</div>
-                            <div class="report-desc">${alert.desc}</div>
-                        </div>
-                        <div class="report-time">${alert.time}</div>
-                    `;
+                            <div class="alert-icon ${iconClass}" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;">
+                                <i class="fas ${alert.icon}"></i>
+                            </div>
+                            <div class="report-info">
+                                <div class="report-title">${alert.title}</div>
+                                <div class="report-desc">${alert.desc}</div>
+                            </div>
+                            <div class="report-time">${alert.time}</div>
+                        `;
                 item.addEventListener('click', () => {
                     document.getElementById('allReportsModal').classList.remove('active');
                     document.body.style.overflow = '';
@@ -3750,39 +3303,146 @@
             const typeColors = { fire: '#ff6b35', theft: '#f0d080', disaster: '#4fc3f7', death: '#c792ea' };
 
             document.getElementById('detailModalTitle').innerHTML = `
-                    <i class="fas ${alert.icon}" style="color:${typeColors[alert.type]};"></i>
-                    <span>${detail.type}</span>
-                `;
+                        <i class="fas ${alert.icon}" style="color:${typeColors[alert.type]};"></i>
+                        <span>${detail.type}</span>
+                    `;
 
             document.getElementById('detailModalBody').innerHTML = `
-                    <div class="info-row">
-                        <span class="info-label">Pengirim</span>
-                        <span class="info-value"><strong>${detail.sender}</strong></span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Lokasi</span>
-                        <span class="info-value">${detail.location}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Alamat</span>
-                        <span class="info-value">${detail.address}</span>
-                    </div>
-                    <div class="info-row" style="flex-direction:column;align-items:stretch;gap:6px;">
-                        <span class="info-label">Foto Kejadian</span>
-                        <div class="modal-image">
-                            <img src="${detail.image}" alt="Foto Kejadian" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);border-radius:10px;">
-                                <i class="fas fa-image" style="font-size:1.8rem;opacity:0.3;"></i>
+                        <div class="info-row">
+                            <span class="info-label">Pengirim</span>
+                            <span class="info-value"><strong>${detail.sender}</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Lokasi</span>
+                            <span class="info-value">${detail.location}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Alamat</span>
+                            <span class="info-value">${detail.address}</span>
+                        </div>
+                        <div class="info-row" style="flex-direction:column;align-items:stretch;gap:6px;">
+                            <span class="info-label">Foto Kejadian</span>
+                            <div class="modal-image">
+                                <img src="${detail.image}" alt="Foto Kejadian" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);border-radius:10px;">
+                                    <i class="fas fa-image" style="font-size:1.8rem;opacity:0.3;"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-time">
-                        <i class="far fa-clock"></i> ${detail.time}
-                    </div>
-                `;
+                        <div class="modal-time">
+                            <i class="far fa-clock"></i> ${detail.time}
+                        </div>
+                    `;
 
             document.getElementById('detailModal').classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        // ============================================================
+        // HOLOGRAM TO POST
+        // ============================================================
+        function convertHologramToPost() {
+            if (!currentUser) {
+                document.getElementById('welcomeModal').style.display = 'flex';
+                return;
+            }
+
+            const hologramContent = document.getElementById('hologramContent');
+            const alertType = hologramContent.querySelector('.alert-type');
+            const alertSender = hologramContent.querySelector('.alert-sender');
+            const alertLocation = hologramContent.querySelector('.alert-location');
+            const alertTime = hologramContent.querySelector('.alert-time');
+
+            if (!alertType || !alertSender) return;
+
+            const typeText = alertType.textContent.trim();
+            const senderText = alertSender.textContent.replace('Dilaporkan oleh:', '').trim();
+            const locationText = alertLocation ? alertLocation.textContent.trim() : '';
+            const timeText = alertTime ? alertTime.textContent.trim() : '';
+
+            const postText =
+                `🚨 ${typeText}\n📍 ${locationText}\n👤 ${senderText}\n🕐 ${timeText}\n\n📅 ${getCurrentDateTime()}`;
+
+            // Create post from hologram
+            const now = Date.now();
+            const postId = 'post-' + (++postIdCounter);
+
+            const postData = {
+                id: postId,
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
+                text: postText,
+                mediaType: null,
+                mediaData: null,
+                timestamp: now,
+                likes: [],
+                comments: [],
+                isHologram: true,
+                hologramData: {
+                    type: typeText,
+                    sender: senderText,
+                    location: locationText,
+                    time: timeText
+                }
+            };
+            posts.push(postData);
+            renderPosts();
+
+            // Clear hologram notification
+            document.querySelectorAll('.emergency-btn').forEach(btn => {
+                btn.classList.remove('has-notification');
+                btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+            });
+
+            isHologramPost = true;
+
+            addNotification('inbox', 'Hologram Berubah Jadi Postingan',
+                `Laporan ${typeText} dari ${senderText} telah menjadi postingan`, senderText);
+
+            // Reset hologram display after 3 seconds
+            setTimeout(() => {
+                resetHologramDisplay();
+            }, 3000);
+        }
+
+        function resetHologramDisplay() {
+            const hologramContent = document.getElementById('hologramContent');
+            hologramContent.innerHTML = `
+                        <div class="hologram-top">
+                            <div class="hologram-profile" id="hologramProfile">
+                                ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                            </div>
+                            <div class="alert-type fire">
+                                <i class="fas fa-fire"></i>
+                                <span>KEBAKARAN</span>
+                            </div>
+                        </div>
+                        <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">Bpk. Ahmad</a></strong></div>
+                        <div class="alert-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
+                        </div>
+                        <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
+                        <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                            <i class="fas fa-map"></i>
+                            <span style="margin-left:6px;">Lihat Lokasi</span>
+                            <div class="map-marker" style="top:50%;left:30%;"></div>
+                        </a>
+                        <div class="alert-time">10 menit yang lalu</div>
+                    `;
+
+            // Re-attach profile link
+            const profileLink = hologramContent.querySelector('.profile-link');
+            if (profileLink) {
+                profileLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openProfileModal();
+                });
+            }
+
+            isHologramPost = false;
         }
 
         // ============================================================
@@ -3818,7 +3478,7 @@
                     renderPosts();
                     clearPostInput();
                     addNotification('report', 'Laporan Baru', `${currentUser.fullName} memposting laporan baru`,
-                    currentUser.fullName);
+                        currentUser.fullName);
                 };
                 reader.readAsDataURL(mediaFile);
             } else {
@@ -3840,7 +3500,7 @@
                 renderPosts();
                 clearPostInput();
                 addNotification('report', 'Laporan Baru', `${currentUser.fullName} memposting laporan baru`, currentUser
-                .fullName);
+                    .fullName);
             }
         }
 
@@ -3848,7 +3508,8 @@
             document.getElementById('postInput').value = '';
             document.getElementById('mediaUpload').value = '';
             document.getElementById('mediaPreview').style.display = 'none';
-            document.getElementById('mediaPreview').innerHTML = '<span class="remove-media" id="removeMedia">&times;</span>';
+            document.getElementById('mediaPreview').innerHTML =
+            '<span class="remove-media" id="removeMedia">&times;</span>';
             document.getElementById('postSubmit').disabled = true;
         }
 
@@ -3884,93 +3545,96 @@
                         '<i class="fas fa-male"></i>');
 
                     commentsHTML += `
-                            <div class="comment" id="comment-${comment.id}">
-                                <div class="comment-main">
-                                    <div class="comment-profile-pic">${commentProfilePic}</div>
-                                    <div class="comment-content">
-                                        <div class="comment-user">${comment.userFullName}</div>
-                                        <div class="comment-text">${comment.text}</div>
-                                        <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
-                                        <div class="comment-actions">
-                                            <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
-                                            ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
+                                <div class="comment" id="comment-${comment.id}">
+                                    <div class="comment-main">
+                                        <div class="comment-profile-pic">${commentProfilePic}</div>
+                                        <div class="comment-content">
+                                            <div class="comment-user">${comment.userFullName}</div>
+                                            <div class="comment-text">${comment.text}</div>
+                                            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                                            <div class="comment-actions">
+                                                <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
+                                                ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                ${comment.replies && comment.replies.length > 0 ? `
-                                    <div class="comment-replies">
-                                        ${comment.replies.map(reply => {
-                                            const replyProfilePic = reply.userProfilePic ?
-                                                `<img src="${reply.userProfilePic}" alt="Profile">` :
-                                                (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                                            return `
-                                                <div class="reply-comment">
-                                                    <div class="comment-main">
-                                                        <div class="comment-profile-pic">${replyProfilePic}</div>
-                                                        <div class="comment-content">
-                                                            <div class="comment-user">${reply.userFullName}</div>
-                                                            <div class="comment-text">${reply.text}</div>
-                                                            <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                            ${reply.userId === currentUser?.username ? `
-                                                                <div class="comment-actions">
-                                                                    <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
-                                                                </div>
-                                                            ` : ''}
+                                    ${comment.replies && comment.replies.length > 0 ? `
+                                        <div class="comment-replies">
+                                            ${comment.replies.map(reply => {
+                                                const replyProfilePic = reply.userProfilePic ?
+                                                    `<img src="${reply.userProfilePic}" alt="Profile">` :
+                                                    (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                                return `
+                                                    <div class="reply-comment">
+                                                        <div class="comment-main">
+                                                            <div class="comment-profile-pic">${replyProfilePic}</div>
+                                                            <div class="comment-content">
+                                                                <div class="comment-user">${reply.userFullName}</div>
+                                                                <div class="comment-text">${reply.text}</div>
+                                                                <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
+                                                                ${reply.userId === currentUser?.username ? `
+                                                                    <div class="comment-actions">
+                                                                        <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
+                                                                    </div>
+                                                                ` : ''}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
                 });
 
                 const isLiked = currentUser && post.likes.includes(currentUser.username);
+                const isHologramBadge = post.isHologram ?
+                    '<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">📡 Hologram</span>' :
+                    '';
 
                 postElement.innerHTML = `
-                        <div class="post-header">
-                            <div class="post-profile-pic" onclick="openProfileModal();">${profilePic}</div>
-                            <div class="post-user-info">
-                                <h4><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();">${post.userFullName}</a></h4>
-                                <small>${getTimeAgo(post.timestamp)} • ${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
-                            </div>
-                        </div>
-                        <div class="post-content">
-                            ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
-                            ${mediaHTML}
-                        </div>
-                        <div class="post-actions">
-                            <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
-                                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
-                                <span>Suka</span>
-                                <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
-                            </div>
-                            <div class="post-action comment-toggle" data-post-id="${post.id}">
-                                <i class="far fa-comment"></i>
-                                <span>Komentar</span>
-                                <span>(${post.comments.length})</span>
-                            </div>
-                            <div class="post-action share" data-post-id="${post.id}">
-                                <i class="fas fa-share-alt"></i>
-                                <span>Bagikan</span>
-                            </div>
-                            ${post.userId === currentUser?.username ? `
-                                <div class="post-action delete" data-post-id="${post.id}">
-                                    <i class="fas fa-trash"></i>
-                                    <span>Hapus</span>
+                            <div class="post-header">
+                                <div class="post-profile-pic" onclick="openProfileModal();">${profilePic}</div>
+                                <div class="post-user-info">
+                                    <h4><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();">${post.userFullName}</a> ${isHologramBadge}</h4>
+                                    <small>${getTimeAgo(post.timestamp)} • ${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
                                 </div>
-                            ` : ''}
-                        </div>
-                        <div class="comments-section" id="comments-${post.id}">${commentsHTML}</div>
-                        <div class="add-comment">
-                            <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}">
-                            <button class="send-comment" data-post-id="${post.id}">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    `;
+                            </div>
+                            <div class="post-content">
+                                ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
+                                ${mediaHTML}
+                            </div>
+                            <div class="post-actions">
+                                <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
+                                    <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                                    <span>Suka</span>
+                                    <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
+                                </div>
+                                <div class="post-action comment-toggle" data-post-id="${post.id}">
+                                    <i class="far fa-comment"></i>
+                                    <span>Komentar</span>
+                                    <span>(${post.comments.length})</span>
+                                </div>
+                                <div class="post-action share" data-post-id="${post.id}">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span>Bagikan</span>
+                                </div>
+                                ${post.userId === currentUser?.username ? `
+                                    <div class="post-action delete" data-post-id="${post.id}">
+                                        <i class="fas fa-trash"></i>
+                                        <span>Hapus</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="comments-section" id="comments-${post.id}">${commentsHTML}</div>
+                            <div class="add-comment">
+                                <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}">
+                                <button class="send-comment" data-post-id="${post.id}">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        `;
 
                 feed.appendChild(postElement);
             });
@@ -4224,14 +3888,14 @@
                 const item = document.createElement('div');
                 item.className = 'bar-item';
                 item.innerHTML = `
-                        <div class="bar-value">${data.fire[index]}</div>
-                        <div class="bar fire" style="height:${fireHeight}%;"></div>
-                        <div class="bar-value">${data.theft[index]}</div>
-                        <div class="bar theft" style="height:${theftHeight}%;"></div>
-                        <div class="bar-value">${data.disaster[index]}</div>
-                        <div class="bar disaster" style="height:${disasterHeight}%;"></div>
-                        <div class="bar-label">${label}</div>
-                    `;
+                            <div class="bar-value">${data.fire[index]}</div>
+                            <div class="bar fire" style="height:${fireHeight}%;"></div>
+                            <div class="bar-value">${data.theft[index]}</div>
+                            <div class="bar theft" style="height:${theftHeight}%;"></div>
+                            <div class="bar-value">${data.disaster[index]}</div>
+                            <div class="bar disaster" style="height:${disasterHeight}%;"></div>
+                            <div class="bar-label">${label}</div>
+                        `;
                 chart.appendChild(item);
             });
             document.getElementById('chartPeriodInfo').textContent = '📊 Data: Minggu Ini (1-7 Juni 2026)';
@@ -4275,13 +3939,13 @@
 
                     const dot = document.createElement('div');
                     dot.style.cssText = `
-                            width:6px;height:6px;border-radius:50%;
-                            background:${dataset.color};
-                            margin-bottom:2px;
-                            box-shadow:0 0 8px ${dataset.color}40;
-                            cursor:pointer;
-                            transition:all 0.3s;
-                        `;
+                                width:6px;height:6px;border-radius:50%;
+                                background:${dataset.color};
+                                margin-bottom:2px;
+                                box-shadow:0 0 8px ${dataset.color}40;
+                                cursor:pointer;
+                                transition:all 0.3s;
+                            `;
                     dot.title = `${dataset.name}: ${value}`;
                     dot.addEventListener('mouseenter', function() {
                         this.style.transform = 'scale(1.5)';
@@ -4317,51 +3981,51 @@
 
             const body = document.getElementById('profileModalBody');
             body.innerHTML = `
-                    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;">
-                        <div style="width:70px;height:70px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin-bottom:8px;cursor:pointer;">
-                            ${currentUser.profilePicture ? 
-                                `<img src="${currentUser.profilePicture}" style="width:100%;height:100%;object-fit:cover;">` : 
-                                `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));font-size:2rem;color:var(--brown-dark);">
-                                    <i class="fas ${currentUser.gender === 'female' ? 'fa-female' : 'fa-male'}"></i>
-                                </div>`
-                            }
+                        <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;">
+                            <div style="width:70px;height:70px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);margin-bottom:8px;cursor:pointer;">
+                                ${currentUser.profilePicture ? 
+                                    `<img src="${currentUser.profilePicture}" style="width:100%;height:100%;object-fit:cover;">` : 
+                                    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));font-size:2rem;color:var(--brown-dark);">
+                                        <i class="fas ${currentUser.gender === 'female' ? 'fa-female' : 'fa-male'}"></i>
+                                    </div>`
+                                }
+                            </div>
+                            <h3 style="color:var(--gold-light);font-size:1rem;">${currentUser.fullName}</h3>
+                            <p style="color:rgba(245,240,232,0.5);font-size:0.7rem;">@${currentUser.username}</p>
+                            <p style="color:rgba(245,240,232,0.3);font-size:0.6rem;margin-top:4px;">
+                                <i class="fas fa-map-marker-alt"></i> ${currentUser.address || 'Alamat tidak tersedia'}
+                            </p>
                         </div>
-                        <h3 style="color:var(--gold-light);font-size:1rem;">${currentUser.fullName}</h3>
-                        <p style="color:rgba(245,240,232,0.5);font-size:0.7rem;">@${currentUser.username}</p>
-                        <p style="color:rgba(245,240,232,0.3);font-size:0.6rem;margin-top:4px;">
-                            <i class="fas fa-map-marker-alt"></i> ${currentUser.address || 'Alamat tidak tersedia'}
-                        </p>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Email</span>
-                        <span class="info-value">${currentUser.email}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Jenis Kelamin</span>
-                        <span class="info-value">${currentUser.gender === 'male' ? 'Laki-laki' : 'Perempuan'}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">WhatsApp</span>
-                        <span class="info-value">${currentUser.phone || '-'}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Alamat</span>
-                        <span class="info-value">${currentUser.address || '-'}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Bio</span>
-                        <span class="info-value">${currentUser.bio || '-'}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Bergabung</span>
-                        <span class="info-value">${new Date(currentUser.joined || Date.now()).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })}</span>
-                    </div>
-                    <div style="margin-top:12px;text-align:center;border-top:1px solid rgba(212,168,73,0.1);padding-top:12px;">
-                        <button onclick="addNotification('profile','Tayangan Profil','${currentUser.fullName} melihat profil Anda','${currentUser.fullName}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:6px 16px;border-radius:20px;cursor:pointer;font-size:0.7rem;">
-                            <i class="fas fa-eye"></i> Lihat Pengunjung
-                        </button>
-                    </div>
-                `;
+                        <div class="info-row">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">${currentUser.email}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Jenis Kelamin</span>
+                            <span class="info-value">${currentUser.gender === 'male' ? 'Laki-laki' : 'Perempuan'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">WhatsApp</span>
+                            <span class="info-value">${currentUser.phone || '-'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Alamat</span>
+                            <span class="info-value">${currentUser.address || '-'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Bio</span>
+                            <span class="info-value">${currentUser.bio || '-'}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Bergabung</span>
+                            <span class="info-value">${new Date(currentUser.joined || Date.now()).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })}</span>
+                        </div>
+                        <div style="margin-top:12px;text-align:center;border-top:1px solid rgba(212,168,73,0.1);padding-top:12px;">
+                            <button onclick="addNotification('profile','Tayangan Profil','${currentUser.fullName} melihat profil Anda','${currentUser.fullName}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:6px 16px;border-radius:20px;cursor:pointer;font-size:0.7rem;">
+                                <i class="fas fa-eye"></i> Lihat Pengunjung
+                            </button>
+                        </div>
+                    `;
 
             document.getElementById('profileModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -4441,123 +4105,6 @@
         }
 
         // ============================================================
-        // SIGNUP MAPS FUNCTIONS
-        // ============================================================
-        function initSignupMap() {
-            const defaultLocation = { lat: -6.1823399, lng: 106.8325873 };
-            const container = document.getElementById('signupMapContainer');
-
-            signupMap = new google.maps.Map(container, {
-                center: defaultLocation,
-                zoom: 15,
-                styles: [
-                    { featureType: 'all', elementType: 'labels.text.fill', stylers: [{ color: '#f5f0e8' }] },
-                    { featureType: 'all', elementType: 'labels.text.stroke', stylers: [{ color: '#1a1008' }] },
-                    { featureType: 'all', elementType: 'all', stylers: [{ saturation: -70 }] }
-                ]
-            });
-
-            signupGeocoder = new google.maps.Geocoder();
-
-            signupMap.addListener('click', function(event) {
-                placeSignupMarker(event.latLng);
-            });
-        }
-
-        function placeSignupMarker(latLng) {
-            if (signupMarker) {
-                signupMarker.setMap(null);
-            }
-
-            signupMarker = new google.maps.Marker({
-                position: latLng,
-                map: signupMap,
-                animation: google.maps.Animation.DROP,
-                icon: {
-                    url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-                    scaledSize: new google.maps.Size(40, 40)
-                }
-            });
-
-            signupSelectedLocation = {
-                lat: latLng.lat(),
-                lng: latLng.lng()
-            };
-
-            signupIsLocationConfirmed = false;
-            getSignupAddressFromLocation(latLng);
-        }
-
-        function getSignupAddressFromLocation(latLng) {
-            signupGeocoder.geocode({ location: latLng }, function(results, status) {
-                if (status === 'OK' && results[0]) {
-                    const address = results[0].formatted_address;
-                    document.getElementById('signupLocationText').textContent = address;
-                    document.getElementById('signupCoordText').textContent =
-                        `Latitude: ${latLng.lat().toFixed(7)}, Longitude: ${latLng.lng().toFixed(7)}`;
-
-                    document.getElementById('signupMapLink').value =
-                        `https://www.google.com/maps?q=${latLng.lat()},${latLng.lng()}`;
-                    document.getElementById('signupMapLat').value = latLng.lat();
-                    document.getElementById('signupMapLng').value = latLng.lng();
-
-                    document.getElementById('signupMapConfirm').classList.add('active');
-                    document.getElementById('signupMapError').classList.remove('show');
-
-                    // Auto-fill address fields
-                    fillSignupAddressFromMaps(results[0].address_components);
-                }
-            });
-        }
-
-        function fillSignupAddressFromMaps(addressComponents) {
-            let country = '',
-                province = '',
-                city = '',
-                district = '',
-                village = '',
-                postalCode = '';
-
-            addressComponents.forEach(component => {
-                const types = component.types;
-                if (types.includes('country')) country = component.long_name;
-                if (types.includes('administrative_area_level_1')) province = component.long_name;
-                if (types.includes('administrative_area_level_2')) city = component.long_name;
-                if (types.includes('administrative_area_level_3')) district = component.long_name;
-                if (types.includes('locality') || types.includes('sublocality')) {
-                    if (!district) district = component.long_name;
-                }
-                if (types.includes('neighborhood') || types.includes('sublocality_level_1')) village = component
-                .long_name;
-                if (types.includes('postal_code')) postalCode = component.long_name;
-            });
-
-            if (country) document.getElementById('signupCountry').value = country;
-            if (province) document.getElementById('signupProvince').value = province;
-            if (city) document.getElementById('signupCity').value = city;
-            if (district) document.getElementById('signupDistrict').value = district;
-            if (village) document.getElementById('signupVillage').value = village;
-            if (postalCode) document.getElementById('signupPostalCode').value = postalCode;
-        }
-
-        function getSignupCurrentLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        const latLng = new google.maps.LatLng(
-                            position.coords.latitude,
-                            position.coords.longitude
-                        );
-                        signupMap.setCenter(latLng);
-                        placeSignupMarker(latLng);
-                    },
-                    function() {},
-                    { enableHighAccuracy: true }
-                );
-            }
-        }
-
-        // ============================================================
         // DOM READY
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
@@ -4621,9 +4168,7 @@
                 const username = document.getElementById('loginUsername').value;
                 const password = document.getElementById('loginPassword').value;
 
-                // Demo login - for testing
                 if (username && password) {
-                    // Simulasi login
                     const demoUser = {
                         username: username,
                         fullName: 'User Demo',
@@ -4640,11 +4185,8 @@
                     updateUserUI();
                     hideAuth();
                     document.getElementById('welcomeModal').style.display = 'none';
-
-                    // Add welcome notification
                     addNotification('inbox', 'Selamat datang kembali!',
                         `Selamat datang ${currentUser.fullName}!`, 'Sistem');
-
                     alert('✅ Login berhasil! Selamat datang ' + currentUser.fullName);
                 } else {
                     alert('❌ Mohon isi username dan password!');
@@ -4697,109 +4239,21 @@
                 }
             });
 
-            // Signup Map
-            document.getElementById('signupMapToggleBtn').addEventListener('click', function() {
-                const container = document.getElementById('signupMapContainer');
-                if (!signupMapOpen) {
-                    container.classList.add('active');
-                    signupMapOpen = true;
-
-                    if (!signupMap) {
-                        initSignupMap();
-                    }
-
-                    setTimeout(getSignupCurrentLocation, 500);
-
-                    this.innerHTML = `
-                            <i class="fas fa-chevron-up"></i>
-                            <span>Tutup Peta</span>
-                        `;
-                } else {
-                    container.classList.remove('active');
-                    signupMapOpen = false;
-                    this.innerHTML = `
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Klik untuk pilih lokasi Anda</span>
-                        `;
-                }
-            });
-
-            document.getElementById('signupConfirmLocation').addEventListener('click', function() {
-                if (signupSelectedLocation) {
-                    const address = document.getElementById('signupLocationText').textContent;
-                    const coords = document.getElementById('signupCoordText').textContent;
-
-                    if (confirm(`Konfirmasi lokasi Anda:\n\n📍 ${address}\n\n${coords}\n\nApakah lokasi ini benar?`)) {
-                        signupIsLocationConfirmed = true;
-
-                        document.getElementById('signupMapContainer').classList.remove('active');
-                        signupMapOpen = false;
-                        document.getElementById('signupMapToggleBtn').innerHTML = `
-                                <i class="fas fa-check-circle" style="color:#4CAF50;"></i>
-                                <span>✅ Lokasi sudah dipilih</span>
-                            `;
-                        document.getElementById('signupMapToggleBtn').classList.add('confirmed');
-                        document.getElementById('signupMapConfirm').classList.remove('active');
-                        document.getElementById('signupMapError').classList.remove('show');
-
-                        if (signupMarker) {
-                            signupMarker.setIcon({
-                                url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
-                                scaledSize: new google.maps.Size(40, 40)
-                            });
-                        }
-                    }
-                } else {
-                    alert('Silakan pilih lokasi terlebih dahulu di peta.');
-                }
-            });
-
-            document.getElementById('signupCancelLocation').addEventListener('click', function() {
-                document.getElementById('signupMapConfirm').classList.remove('active');
-                if (signupMarker) {
-                    signupMarker.setMap(null);
-                    signupMarker = null;
-                }
-                signupSelectedLocation = null;
-                signupIsLocationConfirmed = false;
-                document.getElementById('signupMapLink').value = '';
-                document.getElementById('signupMapLat').value = '';
-                document.getElementById('signupMapLng').value = '';
-                document.getElementById('signupLocationText').textContent = 'Lokasi dibatalkan';
-                document.getElementById('signupCoordText').textContent = 'Latitude: -, Longitude: -';
-                document.getElementById('signupMapError').classList.add('show');
-
-                document.getElementById('signupMapToggleBtn').innerHTML = `
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Klik untuk pilih lokasi Anda</span>
-                    `;
-                document.getElementById('signupMapToggleBtn').classList.remove('confirmed');
-            });
-
             // Signup form submit
             document.getElementById('signupForm').addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // Simple validation
                 const fullName = document.getElementById('signupFullName').value;
                 const email = document.getElementById('signupEmail').value;
                 const phone = document.getElementById('signupPhone').value;
                 const username = document.getElementById('signupUsername').value;
                 const password = document.getElementById('signupPassword').value;
-                const mapLink = document.getElementById('signupMapLink').value;
 
                 if (!fullName || !email || !phone || !username || !password) {
                     alert('⚠️ Mohon lengkapi semua field yang wajib diisi!');
                     return;
                 }
 
-                if (!mapLink) {
-                    document.getElementById('signupMapError').textContent = '⚠️ Silakan pilih lokasi Anda di Google Maps!';
-                    document.getElementById('signupMapError').classList.add('show');
-                    return;
-                }
-
-                // Collect data
                 const userData = {
                     username: username,
                     fullName: fullName,
@@ -4821,21 +4275,16 @@
                         document.getElementById('signupProvince').value,
                         document.getElementById('signupCountry').value
                     ].filter(Boolean).join(', '),
-                    mapLink: mapLink,
-                    mapLat: document.getElementById('signupMapLat').value,
-                    mapLng: document.getElementById('signupMapLng').value,
                     password: password,
                     bio: document.getElementById('signupBio').value || `Halo! Saya ${fullName}`,
                     profilePicture: document.getElementById('signupProfilePreview').dataset.image || null
                 };
 
-                // Simulasi register
                 const submitBtn = document.getElementById('signupSubmitBtn');
                 submitBtn.disabled = true;
                 submitBtn.textContent = '⏳ Mendaftar...';
 
                 setTimeout(() => {
-                    // Simulasi sukses
                     currentUser = userData;
                     localStorage.setItem('salink_user', JSON.stringify(userData));
                     updateUserUI();
@@ -4850,7 +4299,6 @@
 
                     alert('✅ Pendaftaran berhasil! Selamat datang ' + currentUser.fullName);
 
-                    // Reset form
                     document.getElementById('signupForm').reset();
                     document.getElementById('signupProfilePreview').innerHTML = '<i class="fas fa-user"></i>';
 
@@ -4876,7 +4324,7 @@
             });
 
             // ============================================================
-            // HOLOGRAM CLICK
+            // HOLOGRAM CLICK - CONVERT TO POST
             // ============================================================
             document.getElementById('hologramDisplay').addEventListener('click', function() {
                 if (!currentUser) {
@@ -4884,76 +4332,91 @@
                     return;
                 }
 
-                // Simulasi notifikasi emergency
-                const types = ['fire', 'death', 'theft', 'disaster'];
-                const randomType = types[Math.floor(Math.random() * types.length)];
-                const typeNames = {
-                    fire: 'KEBAKARAN',
-                    death: 'KEMATIAN',
-                    theft: 'PENCURIAN',
-                    disaster: 'BENCANA ALAM'
-                };
-                const icons = {
-                    fire: 'fa-fire',
-                    death: 'fa-skull',
-                    theft: 'fa-gem',
-                    disaster: 'fa-house-damage'
-                };
-                const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
-                const locations = [
-                    'Jl. Sudirman No. 45, Jakarta Selatan',
-                    'Jl. Thamrin No. 12, Jakarta Pusat',
-                    'Jl. Gatot Subroto No. 23, Jakarta Selatan',
-                    'Jl. MH Thamrin No. 1, Jakarta Pusat'
-                ];
+                // Check if there's a notification in hologram
+                const hologramContent = document.getElementById('hologramContent');
+                const alertType = hologramContent.querySelector('.alert-type');
 
-                const randomSender = senders[Math.floor(Math.random() * senders.length)];
-                const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-                const now = new Date();
-                const timeString = now.toLocaleString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
+                if (alertType) {
+                    // Convert hologram to post
+                    convertHologramToPost();
+                } else {
+                    // Simulate emergency notification
+                    const types = ['fire', 'death', 'theft', 'disaster'];
+                    const randomType = types[Math.floor(Math.random() * types.length)];
+                    const typeNames = {
+                        fire: 'KEBAKARAN',
+                        death: 'KEMATIAN',
+                        theft: 'PENCURIAN',
+                        disaster: 'BENCANA ALAM'
+                    };
+                    const icons = {
+                        fire: 'fa-fire',
+                        death: 'fa-skull',
+                        theft: 'fa-gem',
+                        disaster: 'fa-house-damage'
+                    };
+                    const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
+                    const locations = [
+                        'Jl. Sudirman No. 45, Jakarta Selatan',
+                        'Jl. Thamrin No. 12, Jakarta Pusat',
+                        'Jl. Gatot Subroto No. 23, Jakarta Selatan',
+                        'Jl. MH Thamrin No. 1, Jakarta Pusat'
+                    ];
 
-                // Update hologram
-                const content = document.getElementById('hologramContent');
-                content.innerHTML = `
-                        <div class="hologram-top">
-                            <div class="hologram-profile" id="hologramProfile">
-                                ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
-                            </div>
-                            <div class="alert-type ${randomType}">
-                                <i class="fas ${icons[randomType]}"></i>
-                                <span>${typeNames[randomType]}</span>
-                            </div>
-                        </div>
-                        <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
-                        <div class="alert-location">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>${randomLocation}</span>
-                        </div>
-                        <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                        <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
-                            <i class="fas fa-map"></i>
-                            <span style="margin-left:6px;">Lihat Lokasi</span>
-                            <div class="map-marker" style="top:50%;left:30%;"></div>
-                        </a>
-                        <div class="alert-time">${timeString}</div>
-                    `;
+                    const randomSender = senders[Math.floor(Math.random() * senders.length)];
+                    const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+                    const now = new Date();
+                    const timeString = now.toLocaleString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    });
 
-                // Add notification
-                addNotification('inbox', `Laporan ${typeNames[randomType]}`,
-                    `${randomSender} melaporkan ${typeNames[randomType].toLowerCase()} di ${randomLocation}`,
-                    randomSender);
+                    // Update hologram
+                    content.innerHTML = `
+                                <div class="hologram-top">
+                                    <div class="hologram-profile" id="hologramProfile">
+                                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                                    </div>
+                                    <div class="alert-type ${randomType}">
+                                        <i class="fas ${icons[randomType]}"></i>
+                                        <span>${typeNames[randomType]}</span>
+                                    </div>
+                                </div>
+                                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileModal();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
+                                <div class="alert-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${randomLocation}</span>
+                                </div>
+                                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
+                                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                                    <i class="fas fa-map"></i>
+                                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                                    <div class="map-marker" style="top:50%;left:30%;"></div>
+                                </a>
+                                <div class="alert-time">${timeString}</div>
+                            `;
 
-                // Play notification sound
-                playNotificationSound();
+                    // Add notification
+                    addNotification('inbox', `Laporan ${typeNames[randomType]}`,
+                        `${randomSender} melaporkan ${typeNames[randomType].toLowerCase()} di ${randomLocation}`,
+                        randomSender);
 
-                // Show indicator
-                alert(`🔔 Notifikasi Emergency!\n\n${typeNames[randomType]}\n📍 ${randomLocation}\n👤 ${randomSender}\n🕐 ${timeString}`);
+                    // Play notification sound
+                    playNotificationSound();
+
+                    // Show indicator
+                    alert(
+                        `🔔 Notifikasi Emergency!\n\n${typeNames[randomType]}\n📍 ${randomLocation}\n👤 ${randomSender}\n🕐 ${timeString}`
+                        );
+
+                    // Auto convert to post after 5 seconds
+                    setTimeout(() => {
+                        convertHologramToPost();
+                    }, 5000);
+                }
             });
 
             // ============================================================
@@ -4963,7 +4426,6 @@
                 e.preventDefault();
                 document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
                 this.classList.add('active');
-                // Scroll ke atas
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
 
@@ -5011,7 +4473,311 @@
             });
 
             // ============================================================
-            // PROFILE MODAL CLOSE
+            // HISTORY MODAL
+            // ============================================================
+            document.getElementById('historyNavLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    document.getElementById('welcomeModal').style.display = 'flex';
+                    return;
+                }
+
+                const body = document.getElementById('historyModalBody');
+                body.innerHTML = '';
+
+                if (posts.length === 0) {
+                    body.innerHTML = `
+                                <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                                    <i class="fas fa-inbox" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                                    <p>Belum ada riwayat laporan</p>
+                                </div>
+                            `;
+                } else {
+                    const userPosts = posts.filter(p => p.userId === currentUser.username);
+                    if (userPosts.length === 0) {
+                        body.innerHTML = `
+                                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                                        <i class="fas fa-inbox" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                                        <p>Belum ada laporan yang Anda posting</p>
+                                    </div>
+                                `;
+                    } else {
+                        userPosts.forEach(post => {
+                            const item = document.createElement('div');
+                            item.className = 'report-list-item';
+                            item.style.cursor = 'default';
+
+                            const iconClass = post.type ? `icon-${post.type}` : 'icon-fire';
+                            const icon = post.type ?
+                                (post.type === 'fire' ? 'fa-fire' :
+                                    post.type === 'theft' ? 'fa-gem' :
+                                    post.type === 'disaster' ? 'fa-house-damage' : 'fa-skull') :
+                                'fa-fire';
+
+                            item.innerHTML = `
+                                        <div class="alert-icon ${iconClass}" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;">
+                                            <i class="fas ${icon}"></i>
+                                        </div>
+                                        <div class="report-info">
+                                            <div class="report-title">${post.text.substring(0, 50)}${post.text.length > 50 ? '...' : ''}</div>
+                                            <div class="report-desc">${post.timestamp ? getTimeAgo(post.timestamp) : 'Baru saja'}</div>
+                                        </div>
+                                        <div class="report-time">${post.timestamp ? new Date(post.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : 'Sekarang'}</div>
+                                    `;
+
+                            body.appendChild(item);
+                        });
+                    }
+                }
+
+                document.getElementById('historyModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            });
+
+            document.getElementById('historyModalClose').addEventListener('click', function() {
+                document.getElementById('historyModal').classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            document.getElementById('historyModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // ============================================================
+            // SETTINGS MODAL
+            // ============================================================
+            document.getElementById('settingsNavLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    document.getElementById('welcomeModal').style.display = 'flex';
+                    return;
+                }
+
+                const body = document.getElementById('settingsModalBody');
+                body.innerHTML = `
+                            <div style="text-align:center;margin-bottom:12px;">
+                                <div style="position:relative;width:70px;height:70px;margin:0 auto;border-radius:50%;overflow:hidden;border:3px solid var(--gold);">
+                                    <div id="settingsProfilePicture" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));">
+                                        ${currentUser.profilePicture ? 
+                                            `<img src="${currentUser.profilePicture}" style="width:100%;height:100%;object-fit:cover;">` : 
+                                            `<i class="fas fa-user" style="font-size:1.8rem;color:var(--brown-dark);"></i>`
+                                        }
+                                    </div>
+                                    <button id="settingsUploadBtn" style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--gold);border-radius:50%;border:2px solid var(--brown-dark);color:var(--dark);cursor:pointer;display:flex;align-items:center;justify-content:center;transform:translate(10%,10%);">
+                                        <i class="fas fa-camera" style="font-size:0.6rem;"></i>
+                                    </button>
+                                    <input type="file" id="settingsProfilePictureInput" accept="image/*" style="display:none;">
+                                </div>
+                                <p style="font-size:0.65rem;color:var(--cream);margin-top:4px;">Ubah Foto Profil</p>
+                            </div>
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Nama Lengkap</label>
+                                <input type="text" id="settingsFullName" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.fullName || ''}">
+                            </div>
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Email</label>
+                                <input type="email" id="settingsEmail" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.email || ''}">
+                            </div>
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">No WhatsApp</label>
+                                <input type="tel" id="settingsPhone" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.phone || ''}">
+                            </div>
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Alamat</label>
+                                <input type="text" id="settingsAddress" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.address || ''}">
+                            </div>
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Bio</label>
+                                <input type="text" id="settingsBio" class="form-control" style="width:100%;padding:6px 10px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${currentUser.bio || ''}">
+                            </div>
+                            <button id="settingsSaveBtn" style="width:100%;padding:8px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.75rem;">Simpan Perubahan</button>
+                        `;
+
+                document.getElementById('settingsModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+
+                // Setup settings upload
+                document.getElementById('settingsUploadBtn').addEventListener('click', function() {
+                    document.getElementById('settingsProfilePictureInput').click();
+                });
+
+                document.getElementById('settingsProfilePictureInput').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            document.getElementById('settingsProfilePicture').innerHTML =
+                                `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+                            document.getElementById('settingsProfilePicture').dataset.image = ev.target
+                            .result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Setup settings save
+                document.getElementById('settingsSaveBtn').addEventListener('click', function() {
+                    const fullName = document.getElementById('settingsFullName').value;
+                    const email = document.getElementById('settingsEmail').value;
+                    const phone = document.getElementById('settingsPhone').value;
+                    const address = document.getElementById('settingsAddress').value;
+                    const bio = document.getElementById('settingsBio').value;
+                    const profileImage = document.getElementById('settingsProfilePicture').dataset.image ||
+                        currentUser.profilePicture;
+
+                    currentUser.fullName = fullName;
+                    currentUser.email = email;
+                    currentUser.phone = phone;
+                    currentUser.address = address;
+                    currentUser.bio = bio;
+                    currentUser.profilePicture = profileImage;
+
+                    localStorage.setItem('salink_user', JSON.stringify(currentUser));
+                    updateUserUI();
+
+                    document.getElementById('settingsModal').classList.remove('active');
+                    document.body.style.overflow = '';
+                    alert('✅ Profil berhasil diperbarui!');
+                });
+            });
+
+            document.getElementById('settingsModalClose').addEventListener('click', function() {
+                document.getElementById('settingsModal').classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            document.getElementById('settingsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // ============================================================
+            // SEARCH MODAL
+            // ============================================================
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                document.getElementById('searchModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                document.getElementById('searchInput').focus();
+
+                // Clear previous results
+                document.getElementById('searchResults').innerHTML =
+                    '<p style="color:rgba(245,240,232,0.4);font-size:0.75rem;text-align:center;">Mulai ketik untuk mencari...</p>';
+            });
+
+            document.getElementById('searchModalClose').addEventListener('click', function() {
+                document.getElementById('searchModal').classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            document.getElementById('searchModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const query = this.value.trim();
+                const resultsContainer = document.getElementById('searchResults');
+
+                if (!query || query.length < 2) {
+                    resultsContainer.innerHTML =
+                        '<p style="color:rgba(245,240,232,0.4);font-size:0.75rem;text-align:center;">Mulai ketik untuk mencari...</p>';
+                    return;
+                }
+
+                const results = [];
+
+                // Search in reports
+                reports.forEach(report => {
+                    if (report.title.toLowerCase().includes(query.toLowerCase()) ||
+                        report.desc.toLowerCase().includes(query.toLowerCase())) {
+                        results.push({ type: 'report', data: report });
+                    }
+                });
+
+                // Search in posts
+                posts.forEach(post => {
+                    if (post.text && post.text.toLowerCase().includes(query.toLowerCase())) {
+                        results.push({ type: 'post', data: post });
+                    }
+                });
+
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = `
+                                <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                                    <i class="fas fa-search" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:0.3;"></i>
+                                    <p>Tidak ditemukan hasil untuk "<strong>${query}</strong>"</p>
+                                </div>
+                            `;
+                    return;
+                }
+
+                resultsContainer.innerHTML = '';
+                results.forEach(result => {
+                    const item = document.createElement('div');
+                    item.style.cssText =
+                        'padding:10px;border-bottom:1px solid rgba(212,168,73,0.05);cursor:pointer;transition:all 0.3s;';
+                    item.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.03)'; };
+                    item.onmouseout = function() { this.style.background = 'transparent'; };
+
+                    if (result.type === 'report') {
+                        const report = result.data;
+                        const iconClass = `icon-${report.type}`;
+                        item.innerHTML = `
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="alert-icon ${iconClass}" style="width:30px;height:30px;font-size:0.7rem;">
+                                            <i class="fas ${report.icon}"></i>
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.8rem;color:var(--cream);font-weight:500;">${report.title}</div>
+                                            <div style="font-size:0.65rem;color:rgba(245,240,232,0.5);">${report.desc}</div>
+                                        </div>
+                                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${report.time}</div>
+                                    </div>
+                                `;
+                        item.addEventListener('click', function() {
+                            document.getElementById('searchModal').classList.remove('active');
+                            document.body.style.overflow = '';
+                            openDetailModal(report);
+                        });
+                    } else if (result.type === 'post') {
+                        const post = result.data;
+                        item.innerHTML = `
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:30px;height:30px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.7rem;">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:0.8rem;color:var(--cream);">${post.userFullName}</div>
+                                            <div style="font-size:0.65rem;color:rgba(245,240,232,0.5);">${post.text ? post.text.substring(0, 60) + (post.text.length > 60 ? '...' : '') : 'Postingan media'}</div>
+                                        </div>
+                                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${getTimeAgo(post.timestamp)}</div>
+                                    </div>
+                                `;
+                        item.addEventListener('click', function() {
+                            document.getElementById('searchModal').classList.remove('active');
+                            document.body.style.overflow = '';
+                            // Scroll to post section
+                            document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
+                        });
+                    }
+
+                    resultsContainer.appendChild(item);
+                });
+            });
+
+            // ============================================================
+            // OTHER MODALS CLOSE
             // ============================================================
             document.getElementById('profileModalClose').addEventListener('click', function() {
                 document.getElementById('profileModal').classList.remove('active');
@@ -5025,9 +4791,6 @@
                 }
             });
 
-            // ============================================================
-            // DETAIL MODAL CLOSE
-            // ============================================================
             document.getElementById('detailModalClose').addEventListener('click', function() {
                 document.getElementById('detailModal').classList.remove('active');
                 document.body.style.overflow = '';
@@ -5040,9 +4803,6 @@
                 }
             });
 
-            // ============================================================
-            // ALL REPORTS MODAL CLOSE
-            // ============================================================
             document.getElementById('allReportsModalClose').addEventListener('click', function() {
                 document.getElementById('allReportsModal').classList.remove('active');
                 document.body.style.overflow = '';
@@ -5083,23 +4843,24 @@
                     reader.onload = function(e) {
                         if (file.type.startsWith('image/')) {
                             mediaPreview.innerHTML = `
-                                    <span class="remove-media" id="removeMedia">&times;</span>
-                                    <img src="${e.target.result}" alt="Preview">
-                                `;
+                                        <span class="remove-media" id="removeMedia">&times;</span>
+                                        <img src="${e.target.result}" alt="Preview">
+                                    `;
                         } else if (file.type.startsWith('video/')) {
                             mediaPreview.innerHTML = `
-                                    <span class="remove-media" id="removeMedia">&times;</span>
-                                    <video controls>
-                                        <source src="${e.target.result}" type="${file.type}">
-                                    </video>
-                                `;
+                                        <span class="remove-media" id="removeMedia">&times;</span>
+                                        <video controls>
+                                            <source src="${e.target.result}" type="${file.type}">
+                                        </video>
+                                    `;
                         }
                         mediaPreview.style.display = 'block';
                         postSubmit.disabled = postInput.value.trim() === '' && !mediaUpload.files[0];
 
                         document.getElementById('removeMedia').addEventListener('click', function() {
                             mediaPreview.style.display = 'none';
-                            mediaPreview.innerHTML = '<span class="remove-media" id="removeMedia">&times;</span>';
+                            mediaPreview.innerHTML =
+                            '<span class="remove-media" id="removeMedia">&times;</span>';
                             mediaUpload.value = '';
                             postSubmit.disabled = postInput.value.trim() === '';
                         });
@@ -5142,7 +4903,7 @@
             });
 
             // ============================================================
-            // SIDEBAR NAVIGATION
+            // SIDEBAR NAVIGATION - HOME
             // ============================================================
             document.getElementById('homeNavLink').addEventListener('click', function(e) {
                 e.preventDefault();
@@ -5151,18 +4912,6 @@
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('overlay').classList.remove('active');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-
-            document.getElementById('historyNavLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (!currentUser) {
-                    document.getElementById('welcomeModal').style.display = 'flex';
-                    return;
-                }
-                alert('📋 Riwayat Laporan Anda:\n\nTotal postingan: ' + posts.length +
-                    '\n\nFitur riwayat lengkap akan segera hadir!');
-                document.getElementById('sidebar').classList.remove('active');
-                document.getElementById('overlay').classList.remove('active');
             });
 
             document.getElementById('mapNavLink').addEventListener('click', function(e) {
@@ -5177,17 +4926,6 @@
                 alert(
                     'ℹ️ Informasi SALINK\n\nVersi: 2.0.0\nPlatform: Emergency Alert System\nDeveloper: SALINK Team\n\n© 2026 SALINK. All rights reserved.'
                     );
-                document.getElementById('sidebar').classList.remove('active');
-                document.getElementById('overlay').classList.remove('active');
-            });
-
-            document.getElementById('settingsNavLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (!currentUser) {
-                    document.getElementById('welcomeModal').style.display = 'flex';
-                    return;
-                }
-                alert('⚙️ Pengaturan akan segera hadir!\n\nFitur ini akan memungkinkan Anda mengedit profil dan pengaturan aplikasi.');
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('overlay').classList.remove('active');
             });
@@ -5262,17 +5000,10 @@
             });
 
             // ============================================================
-            // SEARCH BUTTON
-            // ============================================================
-            document.getElementById('searchBtn').addEventListener('click', function() {
-                alert('🔍 Fitur Pencarian\n\nCari pengguna, postingan, atau laporan.\n\nFitur ini akan segera hadir!');
-            });
-
-            // ============================================================
             // RIPPLE EFFECT
             // ============================================================
             document.addEventListener('click', function(e) {
-                const target = e.target.closest('.emergency-btn, .stat-card, .alert-card');
+                const target = e.target.closest('.emergency-btn, .stat-card, .alert-card, .social-item');
                 if (target) {
                     const rect = target.getBoundingClientRect();
                     const x = e.clientX - rect.left;
@@ -5294,7 +5025,6 @@
             // ============================================================
             // INIT
             // ============================================================
-            // Check if user is logged in
             const savedUser = localStorage.getItem('salink_user');
             if (savedUser) {
                 try {
@@ -5310,12 +5040,10 @@
                 }, 800);
             }
 
-            // Render initial data
             renderAlerts();
             renderPosts();
             renderBarChart();
 
-            // Add sample notifications
             setTimeout(() => {
                 addNotification('inbox', 'Selamat datang di SALINK!',
                     'Aplikasi darurat siap membantu Anda.', 'Sistem');
@@ -5329,6 +5057,5 @@
             console.log('👤 Current User:', currentUser ? currentUser.username : 'Guest');
         });
     </script>
-
 </body>
 </html>
