@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SALINK - Login & Daftar (Offline Mode)</title>
+    <title>SALINK - Login & Daftar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== ALL STYLES (Sama seperti sebelumnya) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -494,17 +493,6 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .success-msg {
-            color: var(--success);
-            font-size: 0.65rem;
-            margin-top: 3px;
-            display: none;
-        }
-        .success-msg.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
         @media (max-width: 600px) {
             .container {
                 padding: 20px 14px;
@@ -750,9 +738,7 @@
                     </div>
                 </div>
 
-                <!-- ============================================================ -->
-                <!-- ⭐ UPLOAD LINK GOOGLE MAPS -->
-                <!-- ============================================================ -->
+                <!-- ===== UPLOAD LINK GOOGLE MAPS ===== -->
                 <div class="form-group" style="margin-top:12px;">
                     <label for="regMapLink">📍 Upload Link Google Maps <span class="required">*</span></label>
                     <p style="font-size:0.6rem;color:rgba(245,240,232,0.35);margin-bottom:4px;">
@@ -970,7 +956,7 @@
         });
 
         // ================================================================
-        // ⭐ LOGIN - Menggunakan localStorage (Tanpa API)
+        // ⭐ LOGIN - Menggunakan localStorage (Offline Mode)
         // ================================================================
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -1008,7 +994,7 @@
                 localStorage.setItem('salink_user', JSON.stringify(user));
                 if (rememberMe) localStorage.setItem('salink_remember', 'true');
 
-                alert('✅ Login berhasil! Selamat datang ' + user.fullName);
+                // Redirect ke dashboard
                 window.location.href = DASHBOARD_URL;
             } else {
                 // Cek apakah username ada
@@ -1026,7 +1012,7 @@
         });
 
         // ================================================================
-        // ⭐ REGISTER - Menggunakan localStorage (Tanpa API)
+        // ⭐ REGISTER - Menggunakan localStorage (Offline Mode)
         // ================================================================
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
