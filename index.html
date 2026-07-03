@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALINK</title>
+    <meta http-equiv="refresh" content="0; url=dashboard.html">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0d0805;
+            color: #f5f0e8;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .loader {
+            text-align: center;
+        }
+        .loader i {
+            font-size: 3rem;
+            color: #d4a849;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        .loader h1 {
+            margin-top: 16px;
+            font-size: 1.5rem;
+            background: linear-gradient(to right, #d4a849, #f0d080, #f5f0e8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .loader p {
+            margin-top: 8px;
+            color: rgba(245, 240, 232, 0.3);
+            font-size: 0.8rem;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <i class="fas fa-bell"></i>
+        <h1>SALINK</h1>
+        <p>Mengalihkan ke dashboard...</p>
+    </div>
+</body>
+</html>
