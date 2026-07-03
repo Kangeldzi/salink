@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SALINK - Login & Daftar</title>
+    <title>SALINK - Login & Daftar (Offline Mode)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ===== ALL STYLES (Sama seperti sebelumnya) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -365,7 +366,6 @@
             }
         }
 
-        /* ===== BUTTONS ===== */
         .btn-submit {
             width: 100%;
             padding: 12px;
@@ -490,6 +490,17 @@
             display: none;
         }
         .error-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-msg {
+            color: var(--success);
+            font-size: 0.65rem;
+            margin-top: 3px;
+            display: none;
+        }
+        .success-msg.show {
             display: block;
             animation: fadeIn 0.3s ease;
         }
@@ -740,7 +751,7 @@
                 </div>
 
                 <!-- ============================================================ -->
-                <!-- ⭐ UPLOAD LINK GOOGLE MAPS (SIMPLE - HANYA LINK) -->
+                <!-- ⭐ UPLOAD LINK GOOGLE MAPS -->
                 <!-- ============================================================ -->
                 <div class="form-group" style="margin-top:12px;">
                     <label for="regMapLink">📍 Upload Link Google Maps <span class="required">*</span></label>
@@ -757,7 +768,6 @@
                             </button>
                         </div>
 
-                        <!-- Preview Link -->
                         <div class="map-preview" id="mapPreview">
                             <div class="map-info">
                                 <i class="fas fa-check-circle"></i>
@@ -823,8 +833,6 @@
         // KONFIGURASI
         // ================================================================
 
-        // Ganti dengan URL Web App Anda
-        const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
         const DASHBOARD_URL = 'dashboard.html';
 
         // ================================================================
@@ -854,7 +862,7 @@
             showTab('login'); });
 
         // ================================================================
-        // ⭐ UPLOAD LINK GOOGLE MAPS (SIMPLE - HANYA LINK)
+        // ⭐ UPLOAD LINK GOOGLE MAPS
         // ================================================================
 
         const mapLinkInput = document.getElementById('regMapLink');
@@ -864,21 +872,17 @@
         const clearMapBtn = document.getElementById('clearMapBtn');
         const regMapError = document.getElementById('regMapError');
 
-        // Fungsi validasi link Google Maps
         function isValidGoogleMapsLink(url) {
             if (!url || url.trim() === '') return false;
-
             const patterns = [
                 /maps\.google\.com/,
                 /maps\.app\.goo\.gl/,
                 /google\.com\/maps/,
                 /goo\.gl\/maps/
             ];
-
             return patterns.some(pattern => pattern.test(url));
         }
 
-        // Fungsi update preview
         function updateMapPreview() {
             const url = mapLinkInput.value.trim();
 
@@ -902,21 +906,19 @@
             } else {
                 mapPreview.classList.remove('show');
                 clearMapBtn.classList.add('show');
-                regMapError.textContent = '⚠️ Link tidak valid! Pastikan link dari Google Maps (maps.app.goo.gl/... atau maps.google.com/...)';
+                regMapError.textContent = '⚠️ Link tidak valid! Pastikan link dari Google Maps';
                 regMapError.classList.add('show');
                 mapLinkInput.classList.add('error');
                 mapLinkInput.classList.remove('success');
             }
         }
 
-        // Event listener untuk input link
         mapLinkInput.addEventListener('input', updateMapPreview);
         mapLinkInput.addEventListener('change', updateMapPreview);
         mapLinkInput.addEventListener('paste', function() {
             setTimeout(updateMapPreview, 100);
         });
 
-        // Clear button
         clearMapBtn.addEventListener('click', function() {
             mapLinkInput.value = '';
             mapPreview.classList.remove('show');
@@ -968,7 +970,7 @@
         });
 
         // ================================================================
-        // LOGIN FORM
+        // ⭐ LOGIN - Menggunakan localStorage (Tanpa API)
         // ================================================================
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -997,43 +999,34 @@
                 return;
             }
 
-            const loginBtn = document.getElementById('loginBtn');
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            // Cari user di localStorage
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            const user = users.find(u => u.username === username && u.password === password);
 
-            fetch(`${SCRIPT_URL}?action=login&data=${encodeURIComponent(JSON.stringify({ username, password }))}`)
-                .then(response => response.json())
-                .then(result => {
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
+            if (user) {
+                // Simpan session
+                localStorage.setItem('salink_user', JSON.stringify(user));
+                if (rememberMe) localStorage.setItem('salink_remember', 'true');
 
-                    if (result.success) {
-                        localStorage.setItem('salink_user', JSON.stringify(result.data));
-                        if (rememberMe) localStorage.setItem('salink_remember', 'true');
-                        window.location.href = DASHBOARD_URL;
-                    } else {
-                        if (result.message.includes('Username')) {
-                            document.getElementById('loginUsernameError').textContent = result.message;
-                            document.getElementById('loginUsernameError').classList.add('show');
-                            document.getElementById('loginUsername').classList.add('error');
-                        } else if (result.message.includes('Password')) {
-                            document.getElementById('loginPasswordError').textContent = result.message;
-                            document.getElementById('loginPasswordError').classList.add('show');
-                            document.getElementById('loginPassword').classList.add('error');
-                        } else {
-                            alert('❌ ' + result.message);
-                        }
-                    }
-                })
-                .catch(error => {
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
-                    alert('❌ Error: ' + error.message);
-                });
+                alert('✅ Login berhasil! Selamat datang ' + user.fullName);
+                window.location.href = DASHBOARD_URL;
+            } else {
+                // Cek apakah username ada
+                const userExists = users.find(u => u.username === username);
+                if (userExists) {
+                    document.getElementById('loginPasswordError').textContent = 'Password salah!';
+                    document.getElementById('loginPasswordError').classList.add('show');
+                    document.getElementById('loginPassword').classList.add('error');
+                } else {
+                    document.getElementById('loginUsernameError').textContent = 'Username tidak ditemukan!';
+                    document.getElementById('loginUsernameError').classList.add('show');
+                    document.getElementById('loginUsername').classList.add('error');
+                }
+            }
         });
 
         // ================================================================
-        // REGISTER FORM
+        // ⭐ REGISTER - Menggunakan localStorage (Tanpa API)
         // ================================================================
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
@@ -1088,7 +1081,7 @@
                 mapLink.classList.add('error');
                 isValid = false;
             } else if (!isValidGoogleMapsLink(mapLink.value)) {
-                document.getElementById('regMapError').textContent = '⚠️ Link tidak valid! Pastikan link dari Google Maps (maps.app.goo.gl/... atau maps.google.com/...)';
+                document.getElementById('regMapError').textContent = '⚠️ Link tidak valid! Pastikan link dari Google Maps';
                 document.getElementById('regMapError').classList.add('show');
                 mapLink.classList.add('error');
                 isValid = false;
@@ -1113,115 +1106,53 @@
                 return;
             }
 
-            // Check username
-            fetch(`${SCRIPT_URL}?action=getUser&data=${encodeURIComponent(JSON.stringify({ username: username.value }))}`)
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success && result.data) {
-                        document.getElementById('regUsernameError').classList.add('show');
-                        document.getElementById('regUsername').classList.add('error');
-                        document.getElementById('regUsername').focus();
-                    } else {
-                        document.getElementById('regUsernameError').classList.remove('show');
-                        document.getElementById('regUsername').classList.remove('error');
-                        submitRegistration();
-                    }
-                })
-                .catch(() => submitRegistration());
-        });
+            // Cek username di localStorage
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            if (users.some(u => u.username === username.value)) {
+                document.getElementById('regUsernameError').classList.add('show');
+                document.getElementById('regUsername').classList.add('error');
+                document.getElementById('regUsername').focus();
+                return;
+            }
 
-        function submitRegistration() {
-            const userData = {
-                username: document.getElementById('regUsername').value,
-                fullName: document.getElementById('regFullName').value,
+            // Buat user baru
+            const newUser = {
+                username: username.value,
+                fullName: fullName.value,
                 gender: document.querySelector('input[name="gender"]:checked').value,
-                email: document.getElementById('regEmail').value,
-                phone: document.getElementById('regPhone').value,
-                password: document.getElementById('regPassword').value,
-                bio: document.getElementById('regBio').value || `Halo! Saya ${document.getElementById('regFullName').value}`,
+                email: email.value,
+                phone: phone.value,
+                password: password.value,
+                bio: document.getElementById('regBio').value || `Halo! Saya ${fullName.value}`,
                 profilePicture: document.getElementById('profilePreview').dataset.image || '',
-                country: document.getElementById('regCountry').value,
-                province: document.getElementById('regProvince').value,
-                city: document.getElementById('regCity').value,
-                district: document.getElementById('regDistrict').value,
-                village: document.getElementById('regVillage').value,
+                country: country.value,
+                province: province.value,
+                city: city.value,
+                district: district.value,
+                village: village.value,
                 postalCode: document.getElementById('regPostalCode').value,
-                detailAddress: document.getElementById('regDetailAddress').value,
+                detailAddress: detailAddress.value,
                 address: [
-                    document.getElementById('regDetailAddress').value,
-                    document.getElementById('regVillage').value,
-                    document.getElementById('regDistrict').value,
-                    document.getElementById('regCity').value,
-                    document.getElementById('regProvince').value,
-                    document.getElementById('regCountry').value
+                    detailAddress.value,
+                    village.value,
+                    district.value,
+                    city.value,
+                    province.value,
+                    country.value
                 ].filter(Boolean).join(', '),
-                mapLink: document.getElementById('regMapLink').value,
-                mapLat: '',
-                mapLng: ''
+                mapLink: mapLink.value,
+                joined: new Date().toISOString()
             };
 
-            const registerBtn = document.getElementById('registerBtn');
-            registerBtn.disabled = true;
-            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendaftar...';
+            // Simpan ke localStorage
+            users.push(newUser);
+            localStorage.setItem('salink_users', JSON.stringify(users));
 
-            fetch(`${SCRIPT_URL}?action=register&data=${encodeURIComponent(JSON.stringify(userData))}`)
-                .then(response => response.json())
-                .then(result => {
-                    registerBtn.disabled = false;
-                    registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
+            // Auto login
+            localStorage.setItem('salink_user', JSON.stringify(newUser));
 
-                    if (result.success) {
-                        alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.\n\nSilakan login untuk melanjutkan.');
-                        document.getElementById('registerForm').reset();
-                        document.getElementById('profilePreview').innerHTML = '<i class="fas fa-user"></i>';
-                        document.getElementById('mapPreview').classList.remove('show');
-                        document.getElementById('clearMapBtn').classList.remove('show');
-                        showTab('login');
-                        document.getElementById('loginUsername').value = userData.username;
-                    } else {
-                        alert('❌ Gagal mendaftar: ' + result.message);
-                        if (result.message.includes('Username')) {
-                            document.getElementById('regUsernameError').classList.add('show');
-                            document.getElementById('regUsername').classList.add('error');
-                        }
-                    }
-                })
-                .catch(error => {
-                    registerBtn.disabled = false;
-                    registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar';
-                    alert('❌ Error: ' + error.message);
-                });
-        }
-
-        // ================================================================
-        // REAL-TIME VALIDASI
-        // ================================================================
-
-        document.querySelectorAll('#registerForm .form-control').forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('error');
-                if (this.id === 'regUsername') document.getElementById('regUsernameError').classList.remove('show');
-                if (this.id === 'regMapLink') {
-                    document.getElementById('regMapError').classList.remove('show');
-                }
-            });
-        });
-
-        document.querySelectorAll('#loginForm .form-control').forEach(input => {
-            input.addEventListener('input', function() {
-                this.classList.remove('error');
-                const errorId = this.id === 'loginUsername' ? 'loginUsernameError' : 'loginPasswordError';
-                document.getElementById(errorId).classList.remove('show');
-            });
-        });
-
-        // ================================================================
-        // FORGOT PASSWORD
-        // ================================================================
-
-        document.getElementById('forgotPassword').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('🔄 Fitur reset password akan segera hadir!\n\nSilakan hubungi admin untuk bantuan.');
+            alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.');
+            window.location.href = DASHBOARD_URL;
         });
 
         // ================================================================
@@ -1253,9 +1184,18 @@
             }
         }
 
-        console.log('🔐 SALINK - Halaman Login');
-        console.log('📡 Script URL:', SCRIPT_URL);
+        // ================================================================
+        // FORGOT PASSWORD
+        // ================================================================
+
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('🔄 Fitur reset password akan segera hadir!\n\nSilakan hubungi admin untuk bantuan.');
+        });
+
+        console.log('🔐 SALINK - Offline Mode (LocalStorage)');
         console.log('📱 Dashboard URL:', DASHBOARD_URL);
+        console.log('📦 Users in localStorage:', JSON.parse(localStorage.getItem('salink_users') || '[]').length);
     </script>
 
 </body>
