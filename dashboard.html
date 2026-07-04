@@ -58,6 +58,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes notifPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
         @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -177,6 +178,69 @@
         }
         .user-btn .badge.show { display: flex; }
 
+        /* ===== PREVIEW MODE BADGE ===== */
+        .preview-badge {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, rgba(212, 168, 73, 0.2), rgba(212, 168, 73, 0.1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            text-align: center;
+            z-index: 999;
+            border-bottom: 1px solid var(--gold);
+            font-size: 0.7rem;
+            color: var(--gold-light);
+            display: none;
+        }
+        .preview-badge i { margin-right: 8px; animation: shiver 2s ease-in-out infinite; }
+        .preview-badge .login-link { color: var(--gold); font-weight: 600; cursor: pointer; text-decoration: underline; transition: all 0.3s; }
+        .preview-badge .login-link:hover { color: var(--gold-light); }
+        .preview-badge.active { display: block; animation: slideUp 0.4s ease; }
+
+        /* ===== PREVIEW OVERLAY ===== */
+        .preview-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .preview-overlay.active { display: flex; animation: fadeIn 0.4s ease; }
+
+        .preview-overlay-content {
+            background: linear-gradient(145deg, rgba(61, 35, 20, 0.98), rgba(13, 8, 5, 0.98));
+            border-radius: 20px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px 24px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 168, 73, 0.1);
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+        .preview-overlay-content .overlay-icon { width: 70px; height: 70px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); box-shadow: 0 0 30px rgba(212, 168, 73, 0.3); }
+        .preview-overlay-content .overlay-icon i { font-size: 2rem; color: var(--dark); }
+        .preview-overlay-content h2 { font-size: 1.2rem; margin-bottom: 8px; background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .preview-overlay-content p { font-size: 0.8rem; color: rgba(245, 240, 232, 0.7); margin-bottom: 20px; line-height: 1.6; }
+
+        .overlay-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .overlay-buttons button { padding: 10px 24px; border-radius: 10px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.3s; min-width: 120px; }
+        .overlay-buttons .btn-login { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--dark); box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3); }
+        .overlay-buttons .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4); }
+        .overlay-buttons .btn-cancel { background: rgba(255, 255, 255, 0.05); color: var(--cream); border: 1px solid rgba(212, 168, 73, 0.2); }
+        .overlay-buttons .btn-cancel:hover { background: rgba(255, 255, 255, 0.1); }
+
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             position: fixed;
@@ -241,6 +305,179 @@
             z-index: 5;
         }
         .nav-item-bottom .badge.show { display: flex; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, var(--brown-dark), var(--dark));
+            padding: 0;
+            z-index: 1100;
+            overflow-y: auto;
+            box-shadow: 15px 0 30px rgba(0, 0, 0, 0.6);
+            border-right: 2px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 3px; }
+        .sidebar::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+        .sidebar.active { left: 0; }
+
+        .sidebar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        .sidebar-close:hover { background: rgba(255, 107, 53, 0.2); transform: rotate(90deg); }
+
+        .sidebar-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 14px 16px 12px;
+            margin-bottom: 2px;
+            border-bottom: 2px solid var(--gold);
+            background: rgba(13, 8, 5, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sidebar-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brown-dark);
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: 0 0 20px rgba(212, 168, 73, 0.4);
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            flex-shrink: 0;
+        }
+        .sidebar-user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .sidebar-user-name { font-size: 0.95rem; font-weight: 600; color: var(--gold-light); text-align: center; }
+        .sidebar-user-email { font-size: 0.65rem; color: rgba(245, 240, 232, 0.5); text-align: center; }
+
+        .nav-menu {
+            list-style: none;
+            padding: 8px 14px 8px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .nav-item { margin-bottom: 3px; }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: var(--cream);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: rgba(61, 35, 20, 0.3);
+            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-link:hover { border-color: var(--gold); transform: translateX(5px); }
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(212, 168, 73, 0.25), rgba(245, 240, 232, 0.1));
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+            box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
+        }
+        .nav-link i { width: 22px; text-align: center; font-size: 1rem; color: var(--gold); }
+
+        .dropdown-container { position: relative; }
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: var(--cream);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: rgba(61, 35, 20, 0.3);
+            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
+            border: 1px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .dropdown-toggle:hover { border-color: var(--gold); }
+        .dropdown-toggle i { width: 22px; text-align: center; font-size: 1rem; color: var(--gold); }
+        .dropdown-toggle .arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.7rem; }
+        .dropdown-toggle.open .arrow { transform: rotate(180deg); }
+
+        .dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-left: 0;
+            list-style: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0 0 8px 8px;
+            margin: 0 0 0 8px;
+        }
+        .dropdown-menu.open { max-height: 200px; }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            color: var(--cream);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .dropdown-item:hover { background: rgba(255, 255, 255, 0.05); border-left-color: var(--gold); }
+        .dropdown-item i { margin-right: 10px; width: 18px; text-align: center; color: var(--gold); }
+        .dropdown-item .contact-number { background: var(--gold-dark); padding: 1px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; color: var(--cream); }
+
+        /* ===== OVERLAY ===== */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1050;
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: opacity 0.4s ease;
+        }
+        .overlay.active { opacity: 1; pointer-events: all; }
 
         /* ===== MAIN CONTENT ===== */
         .main-content {
@@ -1284,6 +1521,8 @@
             .social-links { gap: 12px; padding: 10px 0; }
             .app-footer { padding: 12px 10px; }
             .user-btn .badge { min-width: 14px; height: 14px; font-size: 0.45rem; }
+            .preview-overlay-content { padding: 20px 16px; }
+            .overlay-buttons button { min-width: 100px; padding: 8px 16px; font-size: 0.7rem; }
         }
 
         @media (max-width: 380px) {
@@ -1305,17 +1544,24 @@
 </head>
 <body>
 
+    <!-- ===== PREVIEW MODE BADGE ===== -->
+    <div class="preview-badge" id="previewBadge">
+        <i class="fas fa-eye"></i>
+        <span>Mode Preview - Anda melihat dashboard dalam mode baca. </span>
+        <span class="login-link" id="badgeLoginLink">Masuk untuk berinteraksi</span>
+    </div>
+
     <!-- ===== HEADER ===== -->
     <header class="app-bar">
-        <a href="#" class="app-title" id="appTitle">
+        <a href="#" class="app-title" id="appTitle" data-action="login">
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
         </a>
         <div class="header-right">
-            <button class="search-btn" id="searchBtn">
+            <button class="search-btn" id="searchBtn" data-action="login">
                 <i class="fas fa-search"></i>
             </button>
-            <a href="#" class="user-btn" id="userBtn" title="Profil">
+            <a href="#" class="user-btn" id="userBtn" data-action="login" title="Profil">
                 <i class="fas fa-user"></i>
                 <span class="badge" id="userViewBadge">0</span>
             </a>
@@ -1333,35 +1579,131 @@
         <div class="search-results" id="searchResults"></div>
     </div>
 
+    <!-- ===== PREVIEW OVERLAY ===== -->
+    <div class="preview-overlay" id="previewOverlay">
+        <div class="preview-overlay-content">
+            <div class="overlay-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2>Mode Preview</h2>
+            <p>Anda sedang melihat dashboard dalam mode baca. Untuk dapat berinteraksi penuh dan menggunakan fitur darurat, silakan masuk atau daftar terlebih dahulu.</p>
+            <div class="overlay-buttons">
+                <button class="btn-login" id="overlayLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+                </button>
+                <button class="btn-cancel" id="overlayCancelBtn">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" id="sidebarClose">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="sidebar-header">
+            <div class="sidebar-user-avatar" id="sidebarUserAvatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="sidebar-user-name" id="sidebarUserName">Guest</div>
+            <div class="sidebar-user-email" id="sidebarUserEmail">guest@salink.id</div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" id="homeNavLink" data-action="login">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="historyNavLink" data-action="login">
+                    <i class="fas fa-history"></i>
+                    <span>Riwayat Laporan</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="mapNavLink" data-action="login">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Peta Darurat</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <div class="dropdown-container">
+                    <div class="dropdown-toggle" id="dropdownToggle" data-action="login">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Kontak Darurat</span>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <ul class="dropdown-menu" id="dropdownMenu">
+                        <li class="dropdown-item" data-contact="police" data-name="Polisi" data-number="110" data-action="login">
+                            <span><i class="fas fa-shield-alt"></i> Polisi</span>
+                            <span class="contact-number">110</span>
+                        </li>
+                        <li class="dropdown-item" data-contact="fire" data-name="Damkar" data-number="113" data-action="login">
+                            <span><i class="fas fa-fire-extinguisher"></i> Damkar</span>
+                            <span class="contact-number">113</span>
+                        </li>
+                        <li class="dropdown-item" data-contact="bnpb" data-name="BNPB" data-number="117" data-action="login">
+                            <span><i class="fas fa-house-damage"></i> BNPB</span>
+                            <span class="contact-number">117</span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="infoNavLink" data-action="login">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Informasi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" id="settingsNavLink" data-action="login">
+                    <i class="fas fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
+            </li>
+            <li class="nav-item" id="logoutNavItem" style="display:none;">
+                <a href="#" class="nav-link" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Keluar</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
     <!-- ===== OVERLAY ===== -->
     <div class="overlay" id="overlay"></div>
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content" id="mainContent">
 
-        <h1 class="page-title">
+        <h1 class="page-title" data-action="login">
             <i class="fas fa-bell"></i>
             <span>Emergency Alert</span>
         </h1>
 
         <!-- Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" data-action="login">
                 <span class="stat-number" id="statActive">12</span>
                 <span class="stat-label">Laporan Aktif</span>
                 <i class="fas fa-exclamation-triangle stat-icon"></i>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-action="login">
                 <span class="stat-number" id="statCompleted">48</span>
                 <span class="stat-label">Selesai Ditangani</span>
                 <i class="fas fa-check-circle stat-icon"></i>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-action="login">
                 <span class="stat-number" id="statTeams">5</span>
                 <span class="stat-label">Tim Siaga</span>
                 <i class="fas fa-users stat-icon"></i>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" data-action="login">
                 <span class="stat-number" id="statResponse">93%</span>
                 <span class="stat-label">Tingkat Respons</span>
                 <i class="fas fa-chart-line stat-icon"></i>
@@ -1369,7 +1711,7 @@
         </div>
 
         <!-- Hologram Display -->
-        <div class="hologram-display" id="hologramDisplay">
+        <div class="hologram-display" id="hologramDisplay" data-action="login">
             <div class="hologram-content" id="hologramContent">
                 <div class="hologram-top">
                     <div class="hologram-profile" id="hologramProfile">
@@ -1380,13 +1722,13 @@
                         <span>KEBAKARAN</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfilePage();">Bpk. Ahmad</a></strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault();" data-action="login">Bpk. Ahmad</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
                 </div>
                 <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                <a href="#" class="mini-map" data-action="login">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
                     <div class="map-marker" style="top: 50%; left: 30%;"></div>
@@ -1397,7 +1739,7 @@
 
         <!-- Emergency Grid -->
         <div class="emergency-grid">
-            <button class="emergency-btn btn-fire" id="fireBtn" data-sound="kebakaran">
+            <button class="emergency-btn btn-fire" id="fireBtn" data-sound="kebakaran" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
                     <i class="fas fa-fire"></i>
@@ -1406,7 +1748,7 @@
                 </div>
             </button>
 
-            <button class="emergency-btn btn-death" id="deathBtn" data-sound="kematian">
+            <button class="emergency-btn btn-death" id="deathBtn" data-sound="kematian" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
                     <i class="fas fa-skull"></i>
@@ -1415,7 +1757,7 @@
                 </div>
             </button>
 
-            <button class="emergency-btn btn-theft" id="theftBtn" data-sound="pencurian">
+            <button class="emergency-btn btn-theft" id="theftBtn" data-sound="pencurian" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
                     <i class="fas fa-gem"></i>
@@ -1424,7 +1766,7 @@
                 </div>
             </button>
 
-            <button class="emergency-btn btn-disaster" id="disasterBtn" data-sound="bencana">
+            <button class="emergency-btn btn-disaster" id="disasterBtn" data-sound="bencana" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
                     <i class="fas fa-house-damage"></i>
@@ -1437,11 +1779,11 @@
         <!-- Post Section -->
         <div class="post-section" id="postSection">
             <div class="post-header">
-                <div class="post-profile-pic" id="postProfilePic">
+                <div class="post-profile-pic" id="postProfilePic" data-action="login">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="post-user-info">
-                    <h4 id="postUserName">Buat Postingan</h4>
+                    <h4 id="postUserName" data-action="login">Buat Postingan</h4>
                     <small>Bagikan informasi penting</small>
                 </div>
             </div>
@@ -1449,7 +1791,7 @@
             <div class="post-input-area">
                 <!-- Drop Down Notifikasi -->
                 <div class="post-notif-selector">
-                    <select id="notifTypeSelect">
+                    <select id="notifTypeSelect" data-action="login">
                         <option value="none">📝 Postingan Biasa</option>
                         <option value="fire">🔥 Kebakaran</option>
                         <option value="death">💀 Kematian</option>
@@ -1481,11 +1823,11 @@
                     </div>
                 </div>
 
-                <textarea class="post-input" id="postInput" placeholder="Apa yang terjadi di lokasi Anda?"></textarea>
+                <textarea class="post-input" id="postInput" placeholder="Apa yang terjadi di lokasi Anda?" readonly data-action="login"></textarea>
 
                 <!-- Upload Google Maps -->
                 <div class="map-input" id="mapInput">
-                    <input type="url" id="mapLinkInput" placeholder="https://maps.app.goo.gl/...">
+                    <input type="url" id="mapLinkInput" placeholder="https://maps.app.goo.gl/..." data-action="login">
                 </div>
 
                 <div class="media-preview" id="mediaPreview">
@@ -1494,18 +1836,18 @@
 
                 <div class="post-actions-bottom">
                     <div class="post-actions-left">
-                        <label for="mediaUpload" class="media-upload-btn">
+                        <label for="mediaUpload" class="media-upload-btn" data-action="login">
                             <i class="fas fa-camera"></i>
                             <span>Foto/Video</span>
                         </label>
-                        <input type="file" id="mediaUpload" class="file-input" accept="image/*, video/*">
+                        <input type="file" id="mediaUpload" class="file-input" accept="image/*, video/*" disabled>
 
-                        <button type="button" class="map-upload-btn" id="mapUploadBtn">
+                        <button type="button" class="map-upload-btn" id="mapUploadBtn" data-action="login">
                             <i class="fas fa-map-marker-alt"></i>
                             <span>Link Maps</span>
                         </button>
                     </div>
-                    <button class="post-submit-btn" id="postSubmit" disabled>Posting</button>
+                    <button class="post-submit-btn" id="postSubmit" disabled data-action="login">Posting</button>
                 </div>
             </div>
 
@@ -1516,7 +1858,7 @@
         <div class="recent-section">
             <div class="section-header">
                 <h2 class="section-title">Laporan Terkini</h2>
-                <button class="view-all" id="viewAllBtn">
+                <button class="view-all" id="viewAllBtn" data-action="login">
                     <span>Lihat Semua</span>
                     <i class="fas fa-chevron-right"></i>
                 </button>
@@ -1529,13 +1871,13 @@
             <div class="statistics-header">
                 <h2 class="statistics-title">Statistik Laporan</h2>
                 <div class="chart-nav">
-                    <button class="chart-nav-btn active" data-chart="pie">Pie</button>
-                    <button class="chart-nav-btn" data-chart="bar">Bar</button>
-                    <button class="chart-nav-btn" data-chart="line">Line</button>
+                    <button class="chart-nav-btn active" data-chart="pie" data-action="login">Pie</button>
+                    <button class="chart-nav-btn" data-chart="bar" data-action="login">Bar</button>
+                    <button class="chart-nav-btn" data-chart="line" data-action="login">Line</button>
                 </div>
             </div>
 
-            <div class="chart-container pie-chart-container" id="pieChartContainer">
+            <div class="chart-container pie-chart-container" id="pieChartContainer" data-action="login">
                 <div class="pie-chart">
                     <div class="pie-chart-center">
                         <span class="total-label">Total</span>
@@ -1543,51 +1885,51 @@
                     </div>
                 </div>
                 <div class="chart-legend">
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color fire"></div>
                         <span>Kebakaran (45%)</span>
                     </div>
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color theft"></div>
                         <span>Pencurian (30%)</span>
                     </div>
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color disaster"></div>
                         <span>Bencana (25%)</span>
                     </div>
                 </div>
             </div>
 
-            <div class="chart-container bar-chart-container" id="barChartContainer">
+            <div class="chart-container bar-chart-container" id="barChartContainer" data-action="login">
                 <div class="bar-chart" id="barChart"></div>
                 <div class="chart-legend">
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color fire"></div>
                         <span>Kebakaran</span>
                     </div>
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color theft"></div>
                         <span>Pencurian</span>
                     </div>
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color disaster"></div>
                         <span>Bencana</span>
                     </div>
                 </div>
             </div>
 
-            <div class="chart-container bar-chart-container" id="lineChartContainer">
+            <div class="chart-container bar-chart-container" id="lineChartContainer" data-action="login">
                 <div class="bar-chart" id="lineChart" style="position:relative;"></div>
                 <div class="chart-legend">
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color fire"></div>
                         <span>Kebakaran</span>
                     </div>
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color theft"></div>
                         <span>Pencurian</span>
                     </div>
-                    <div class="pie-legend-item">
+                    <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color disaster"></div>
                         <span>Bencana</span>
                     </div>
@@ -1601,25 +1943,25 @@
 
         <!-- Social Media Links -->
         <div class="social-links">
-            <a href="https://www.facebook.com/share/ZZZ7RYBWbxiF7S1t/?mibextid=qi2Omg" target="_blank" class="social-link facebook" title="Facebook">
+            <a href="https://www.facebook.com/share/ZZZ7RYBWbxiF7S1t/?mibextid=qi2Omg" target="_blank" class="social-link facebook" data-action="login" title="Facebook">
                 <span class="social-tooltip">Facebook</span>
                 <div class="social-icon-wrapper">
                     <i class="fab fa-facebook-f"></i>
                 </div>
             </a>
-            <a href="https://www.tiktok.com/@kang_l.01?_r=1&_t=ZS-97atOlBoJjM" target="_blank" class="social-link tiktok" title="TikTok">
+            <a href="https://www.tiktok.com/@kang_l.01?_r=1&_t=ZS-97atOlBoJjM" target="_blank" class="social-link tiktok" data-action="login" title="TikTok">
                 <span class="social-tooltip">TikTok</span>
                 <div class="social-icon-wrapper">
                     <i class="fab fa-tiktok"></i>
                 </div>
             </a>
-            <a href="https://www.youtube.com/channel/UCqWjymCh1tyLa50nyn687PA" target="_blank" class="social-link youtube" title="YouTube">
+            <a href="https://www.youtube.com/channel/UCqWjymCh1tyLa50nyn687PA" target="_blank" class="social-link youtube" data-action="login" title="YouTube">
                 <span class="social-tooltip">YouTube</span>
                 <div class="social-icon-wrapper">
                     <i class="fab fa-youtube"></i>
                 </div>
             </a>
-            <a href="https://bio-data-pi-three.vercel.app/" target="_blank" class="social-link portfolio" title="Portofolio">
+            <a href="https://bio-data-pi-three.vercel.app/" target="_blank" class="social-link portfolio" data-action="login" title="Portofolio">
                 <span class="social-tooltip">Portofolio</span>
                 <div class="social-icon-wrapper">
                     <i class="fas fa-briefcase"></i>
@@ -1632,10 +1974,10 @@
             <div style="max-width:600px;margin:0 auto;color:rgba(245,240,232,0.6);font-size:9px;">
                 <p style="font-weight:500;color:var(--gold-light);font-size:10px;margin-bottom:6px;">SALINK - Sistem Peringatan Darurat Masyarakat</p>
                 <div style="display:flex;justify-content:center;gap:12px;margin-top:6px;flex-wrap:wrap;">
-                    <a href="#" onclick="window.open('https://salink.id/about', '_blank'); return false;">Tentang Kami</a>
-                    <a href="#" onclick="window.open('https://salink.id/privacy', '_blank'); return false;">Kebijakan Privasi</a>
-                    <a href="#" onclick="window.open('https://salink.id/terms', '_blank'); return false;">Syarat & Ketentuan</a>
-                    <a href="#" onclick="window.open('https://salink.id/contact', '_blank'); return false;">Kontak</a>
+                    <a href="#" data-action="login" onclick="window.open('https://salink.id/about', '_blank'); return false;">Tentang Kami</a>
+                    <a href="#" data-action="login" onclick="window.open('https://salink.id/privacy', '_blank'); return false;">Kebijakan Privasi</a>
+                    <a href="#" data-action="login" onclick="window.open('https://salink.id/terms', '_blank'); return false;">Syarat & Ketentuan</a>
+                    <a href="#" data-action="login" onclick="window.open('https://salink.id/contact', '_blank'); return false;">Kontak</a>
                 </div>
                 <p style="margin-top:8px;font-size:9px;color:rgba(245,240,232,0.4);">&copy; 2026 SALINK. Semua hak dilindungi.</p>
             </div>
@@ -1644,24 +1986,24 @@
 
     <!-- ===== BOTTOM NAVIGATION ===== -->
     <nav class="bottom-nav">
-        <a href="#" class="nav-item-bottom active" id="bottomHomeNav">
+        <a href="#" class="nav-item-bottom active" id="bottomHomeNav" data-action="login">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <a href="toko.html" class="nav-item-bottom" id="bottomTokoNav">
+        <a href="toko.html" class="nav-item-bottom" id="bottomTokoNav" data-action="login">
             <i class="fas fa-store"></i>
             <span>Toko</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomInviteNav">
+        <a href="#" class="nav-item-bottom" id="bottomInviteNav" data-action="login">
             <i class="fas fa-user-plus"></i>
             <span>Invite</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomNotifNav">
+        <a href="#" class="nav-item-bottom" id="bottomNotifNav" data-action="login">
             <i class="fas fa-bell"></i>
             <span>Notif</span>
             <span class="badge" id="notifBadge">0</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomProfileNav">
+        <a href="#" class="nav-item-bottom" id="bottomProfileNav" data-action="login">
             <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
@@ -1779,50 +2121,13 @@
         const PROFILE_URL = 'profil.html';
         const LOGIN_URL = 'login.html';
         const TOKO_URL = 'toko.html';
-
-        // ================================================================
-        // PLAYLIST - Audio URLs
-        // ================================================================
-        const PLAYLIST = [
-            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/Kebakaran.mp3",
-            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/kematian.mp3",
-            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/pencurian.mp3",
-            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/bencana_tsunami.mp3",
-            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/smsblackber_4a537f155087133.mp3"
-        ];
-
-        const NOTIF_SOUND_MAP = {
-            'kebakaran': 0,
-            'kematian': 1,
-            'pencurian': 2,
-            'bencana': 3,
-            'notifikasi': 4
-        };
-
-        const NOTIF_ICONS = {
-            'fire': '🔥',
-            'death': '💀',
-            'theft': '💎',
-            'disaster': '🌪️'
-        };
-
-        const NOTIF_LABELS = {
-            'fire': 'KEBAKARAN',
-            'death': 'KEMATIAN',
-            'theft': 'PENCURIAN',
-            'disaster': 'BENCANA'
-        };
-
-        const NOTIF_COLORS = {
-            'fire': '#ff6b35',
-            'death': '#c792ea',
-            'theft': '#f0d080',
-            'disaster': '#4fc3f7'
-        };
+        const MODE_PREVIEW = 'preview';
+        const MODE_FULL = 'full';
 
         // ================================================================
         // STATE
         // ================================================================
+        let isPreviewMode = true;
         let currentUser = null;
         let posts = [];
         let postIdCounter = 0;
@@ -1836,6 +2141,8 @@
         let currentEditPostId = null;
         let audioObjects = {};
         let profileViews = 0;
+        let pendingContact = null;
+        let isMapUploadActive = false;
 
         // ================================================================
         // REPORTS DATA
@@ -1948,6 +2255,46 @@
         }];
 
         // ================================================================
+        // PLAYLIST - Audio URLs
+        // ================================================================
+        const PLAYLIST = [
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/Kebakaran.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/kematian.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/pencurian.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/bencana_tsunami.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/smsblackber_4a537f155087133.mp3"
+        ];
+
+        const NOTIF_SOUND_MAP = {
+            'kebakaran': 0,
+            'kematian': 1,
+            'pencurian': 2,
+            'bencana': 3,
+            'notifikasi': 4
+        };
+
+        const NOTIF_ICONS = {
+            'fire': '🔥',
+            'death': '💀',
+            'theft': '💎',
+            'disaster': '🌪️'
+        };
+
+        const NOTIF_LABELS = {
+            'fire': 'KEBAKARAN',
+            'death': 'KEMATIAN',
+            'theft': 'PENCURIAN',
+            'disaster': 'BENCANA'
+        };
+
+        const NOTIF_COLORS = {
+            'fire': '#ff6b35',
+            'death': '#c792ea',
+            'theft': '#f0d080',
+            'disaster': '#4fc3f7'
+        };
+
+        // ================================================================
         // DOM ELEMENTS
         // ================================================================
         const appTitle = document.getElementById('appTitle');
@@ -1957,6 +2304,21 @@
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         const searchModal = document.getElementById('searchModal');
+
+        const previewBadge = document.getElementById('previewBadge');
+        const badgeLoginLink = document.getElementById('badgeLoginLink');
+        const previewOverlay = document.getElementById('previewOverlay');
+        const overlayLoginBtn = document.getElementById('overlayLoginBtn');
+        const overlayCancelBtn = document.getElementById('overlayCancelBtn');
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const overlay = document.getElementById('overlay');
+        const sidebarUserAvatar = document.getElementById('sidebarUserAvatar');
+        const sidebarUserName = document.getElementById('sidebarUserName');
+        const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutNavItem = document.getElementById('logoutNavItem');
 
         const viewAllBtn = document.getElementById('viewAllBtn');
         const alertList = document.getElementById('alertList');
@@ -2035,7 +2397,14 @@
         const lineChart = document.getElementById('lineChart');
         const chartPeriodInfo = document.getElementById('chartPeriodInfo');
 
-        let isMapUploadActive = false;
+        const homeNavLink = document.getElementById('homeNavLink');
+        const historyNavLink = document.getElementById('historyNavLink');
+        const mapNavLink = document.getElementById('mapNavLink');
+        const infoNavLink = document.getElementById('infoNavLink');
+        const settingsNavLink = document.getElementById('settingsNavLink');
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
 
         // ================================================================
         // AUDIO FUNCTIONS
@@ -2066,6 +2435,12 @@
         }
 
         function playAlarm(button, soundKey) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menggunakan alarm', 'fa-lock');
+                return;
+            }
+
             const audio = audioObjects[soundKey];
             if (!audio) {
                 console.warn('Audio not found for key:', soundKey);
@@ -2146,6 +2521,7 @@
         }
 
         function playNotificationSound() {
+            if (isPreviewMode) return;
             const audio = audioObjects['notifikasi'];
             if (audio) {
                 audio.currentTime = 0;
@@ -2197,9 +2573,93 @@
         }
 
         // ================================================================
+        // PREVIEW MODE FUNCTIONS
+        // ================================================================
+        function showPreviewOverlay() {
+            previewOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hidePreviewOverlay() {
+            previewOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function handlePreviewAction(e) {
+            if (!isPreviewMode) return;
+            const target = e.currentTarget || e.target;
+            if (target && target.dataset && target.dataset.action === 'login') {
+                e.preventDefault();
+                e.stopPropagation();
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses fitur ini', 'fa-lock');
+            }
+        }
+
+        function redirectToLogin() {
+            window.location.href = LOGIN_URL + '?redirect=dashboard';
+        }
+
+        // ================================================================
+        // MODE SWITCH
+        // ================================================================
+        function switchToFullMode() {
+            isPreviewMode = false;
+            previewBadge.classList.remove('active');
+
+            document.querySelectorAll('[data-action="login"]').forEach(el => {
+                el.dataset.action = '';
+            });
+
+            // Enable post input
+            postInput.readOnly = false;
+            mediaUpload.disabled = false;
+            postSubmit.disabled = false;
+
+            // Enable comment inputs
+            document.querySelectorAll('.comment-input').forEach(input => {
+                input.readOnly = false;
+            });
+
+            // Tampilkan logout di sidebar
+            logoutNavItem.style.display = 'block';
+
+            // Update user UI
+            updateUserUI();
+
+            showToast('✅ Mode Full', 'Anda sekarang dapat berinteraksi penuh dengan dashboard', 'fa-check-circle');
+        }
+
+        function switchToPreviewMode() {
+            isPreviewMode = true;
+            previewBadge.classList.add('active');
+
+            document.querySelectorAll('[data-action="login"]').forEach(el => {
+                el.dataset.action = 'login';
+            });
+
+            // Disable post input
+            postInput.readOnly = true;
+            mediaUpload.disabled = true;
+            postSubmit.disabled = true;
+
+            // Disable comment inputs
+            document.querySelectorAll('.comment-input').forEach(input => {
+                input.readOnly = true;
+            });
+
+            // Sembunyikan logout di sidebar
+            logoutNavItem.style.display = 'none';
+
+            // Reset UI ke guest
+            updateUserUI();
+        }
+
+        // ================================================================
         // NOTIFICATION FUNCTIONS
         // ================================================================
         function addNotification(type, title, message, sender, postId, notifType) {
+            if (isPreviewMode) return null;
             if (sender && currentUser && sender === currentUser.fullName) return null;
 
             const notification = {
@@ -2333,6 +2793,11 @@
                 `;
 
                 item.addEventListener('click', () => {
+                    if (isPreviewMode) {
+                        showPreviewOverlay();
+                        showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat notifikasi', 'fa-lock');
+                        return;
+                    }
                     notif.read = true;
                     saveNotifications();
                     updateNotifBadge();
@@ -2354,8 +2819,6 @@
                     } else if (notif.type === 'profile') {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                         showToast('👁️ Tayangan Profil', `Profil Anda dilihat oleh ${notif.sender}`, 'fa-eye');
-                    } else if (notif.type === 'invite') {
-                        openInviteModal();
                     }
                 });
 
@@ -2390,28 +2853,6 @@
                 notifications.push(notif);
             });
             updateNotifBadge();
-        }
-
-        // ================================================================
-        // PROFILE VIEWS FUNCTIONS
-        // ================================================================
-        function loadProfileViews() {
-            const saved = localStorage.getItem('salink_profile_views');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    profileViews = data.count || 0;
-                } catch (e) {
-                    profileViews = 0;
-                }
-            }
-        }
-
-        function updateUserViewBadge() {
-            if (userViewBadge) {
-                userViewBadge.textContent = profileViews > 0 ? profileViews : '0';
-                userViewBadge.classList.toggle('show', profileViews > 0);
-            }
         }
 
         // ================================================================
@@ -2450,6 +2891,18 @@
 
         function saveNotifications() {
             localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+        }
+
+        function loadProfileViews() {
+            const saved = localStorage.getItem('salink_profile_views');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    profileViews = data.count || 0;
+                } catch (e) {
+                    profileViews = 0;
+                }
+            }
         }
 
         // ================================================================
@@ -2498,6 +2951,17 @@
         // ================================================================
         function performSearch(query) {
             searchResults.innerHTML = '';
+
+            if (isPreviewMode) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-lock" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Fitur pencarian hanya tersedia dalam mode Full</p>
+                        <p style="font-size:0.6rem;color:rgba(245,240,232,0.2);">Silakan masuk untuk mengakses</p>
+                    </div>
+                `;
+                return;
+            }
 
             if (!query || query.length < 2) {
                 searchResults.innerHTML = `
@@ -2620,6 +3084,12 @@
         // OPEN PROFILE PAGE
         // ================================================================
         function openProfilePage() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
+
             if (currentUser) {
                 window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(currentUser));
             } else {
@@ -2628,6 +3098,12 @@
         }
 
         function openUserProfile(username) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
+
             const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
             const user = users.find(u => u.username === username);
             if (user) {
@@ -2742,7 +3218,7 @@
                                 <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
                                 <div class="comment-actions">
                                     <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
-                                    ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
+                                    ${!isPreviewMode && comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -2762,7 +3238,7 @@
                                                     <div class="comment-user">${reply.userFullName}</div>
                                                     <div class="comment-text">${reply.text}</div>
                                                     <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                    ${reply.userId === currentUser?.username ? `
+                                                    ${!isPreviewMode && reply.userId === currentUser?.username ? `
                                                         <div class="comment-actions">
                                                             <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
                                                         </div>
@@ -2778,24 +3254,25 @@
                 `;
             });
 
-            const isLiked = currentUser && post.likes.includes(currentUser.username);
+            const isLiked = !isPreviewMode && currentUser && post.likes.includes(currentUser.username);
             const isHologram = post.isHologram ? `<span class="hologram-badge">📡 Hologram</span>` : '';
+            const isOwner = !isPreviewMode && post.userId === currentUser?.username;
 
             postDiv.innerHTML = `
-                <button class="post-options" data-post-id="${post.id}">
+                <button class="post-options" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
                 <div class="post-options-menu" id="options-${post.id}">
-                    <button class="option-item edit-post-btn" data-post-id="${post.id}">
+                    <button class="option-item edit-post-btn" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="fas fa-edit"></i> Edit Postingan
                     </button>
-                    <button class="option-item delete-post-btn" data-post-id="${post.id}">
+                    <button class="option-item delete-post-btn" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="fas fa-trash"></i> Hapus Postingan
                     </button>
                 </div>
 
                 <div class="post-header">
-                    <div class="post-profile-pic" onclick="event.preventDefault(); openUserProfile('${post.userId}')">
+                    <div class="post-profile-pic" onclick="event.preventDefault(); openUserProfile('${post.userId}')" ${isPreviewMode ? 'data-action="login"' : ''}>
                         ${profilePic}
                     </div>
                     <div class="post-user-info">
@@ -2813,26 +3290,26 @@
                 </div>
 
                 <div class="post-actions">
-                    <button class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
+                    <button class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
                         <span>Suka</span>
                         <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
                     </button>
-                    <button class="post-action comment-toggle" data-post-id="${post.id}">
+                    <button class="post-action comment-toggle" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="far fa-comment"></i>
                         <span>Komentar</span>
                         <span>(${post.comments.length})</span>
                     </button>
-                    <button class="post-action share-btn" data-post-id="${post.id}">
+                    <button class="post-action share-btn" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="fas fa-share-alt"></i>
                         <span>Bagikan</span>
                     </button>
-                    <button class="post-action view-btn" data-post-id="${post.id}">
+                    <button class="post-action view-btn" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="fas fa-eye"></i>
                         <span>View</span>
                     </button>
-                    ${post.userId === currentUser?.username ? `
-                        <button class="post-action delete" data-post-id="${post.id}">
+                    ${isOwner ? `
+                        <button class="post-action delete" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                             <i class="fas fa-trash"></i>
                             <span>Hapus</span>
                         </button>
@@ -2844,8 +3321,8 @@
                 </div>
 
                 <div class="add-comment">
-                    <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}">
-                    <button class="send-comment" data-post-id="${post.id}">
+                    <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}" ${isPreviewMode ? 'readonly data-action="login"' : ''}>
+                    <button class="send-comment" data-post-id="${post.id}" ${isPreviewMode ? 'data-action="login"' : ''}>
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
@@ -2931,6 +3408,12 @@
         // POST HANDLERS
         // ================================================================
         function handleLike(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
@@ -2952,6 +3435,12 @@
         }
 
         function handleDeletePost(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus postingan', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
@@ -2972,6 +3461,12 @@
         }
 
         function handleSendComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk berkomentar', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
@@ -3030,6 +3525,12 @@
         }
 
         function handleReplyComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membalas komentar', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const commentId = btn.dataset.commentId;
@@ -3048,6 +3549,12 @@
         }
 
         function handleDeleteComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus komentar', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const commentId = btn.dataset.commentId;
@@ -3077,6 +3584,12 @@
         }
 
         function handleShare(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membagikan postingan', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
@@ -3131,6 +3644,12 @@
         // OPTIONS MENU
         // ================================================================
         function handleOptionsToggle(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
+                return;
+            }
+
             e.stopPropagation();
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
@@ -3144,6 +3663,12 @@
         }
 
         function handleEditPost(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengedit postingan', 'fa-lock');
+                return;
+            }
+
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
@@ -3213,6 +3738,12 @@
         // CREATE NEW POST
         // ================================================================
         function createNewPost() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan', 'fa-lock');
+                return;
+            }
+
             if (!currentUser) return;
 
             const text = postInput.value.trim();
@@ -3312,7 +3843,6 @@
 
             if (isHologram && !isSpecial) {
                 showToast('📡 Hologram', 'Postingan dengan Link Maps akan tampil di Hologram Display!', 'fa-hologram');
-                // Update hologram with map
                 updateHologramWithMap(mapLink, currentUser.fullName);
             }
         }
@@ -3371,7 +3901,6 @@
             hologramDisplay.title = 'Emergency Alert - Klik untuk posting';
             isHologramPost = true;
 
-            // Auto convert to post after 10 seconds
             clearTimeout(alertTimeout);
             alertTimeout = setTimeout(() => {
                 convertHologramToPost();
@@ -3423,6 +3952,12 @@
         }
 
         function convertHologramToPost() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan dari hologram', 'fa-lock');
+                return;
+            }
+
             if (!currentUser) return;
 
             const hologramContentEl = document.getElementById('hologramContent');
@@ -3441,7 +3976,6 @@
             const locationText = alertLocation ? alertLocation.textContent.trim() : '';
             const timeText = alertTime ? alertTime.textContent.trim() : '';
 
-            // Cek apakah sudah ada postingan dari hologram ini
             const existingPost = posts.find(p => p.isHologram && p.hologramData?.time === timeText);
             if (existingPost) {
                 resetHologramDisplay();
@@ -3549,6 +4083,11 @@
                 `;
 
                 card.addEventListener('click', () => {
+                    if (isPreviewMode) {
+                        showPreviewOverlay();
+                        showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat detail laporan', 'fa-lock');
+                        return;
+                    }
                     openDetailModal(alert);
                 });
 
@@ -3577,6 +4116,11 @@
                 `;
 
                 item.addEventListener('click', () => {
+                    if (isPreviewMode) {
+                        showPreviewOverlay();
+                        showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat detail laporan', 'fa-lock');
+                        return;
+                    }
                     allReportsModal.classList.remove('active');
                     document.body.style.overflow = '';
                     openDetailModal(alert);
@@ -3587,6 +4131,12 @@
         }
 
         function openDetailModal(alert) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat detail laporan', 'fa-lock');
+                return;
+            }
+
             const detail = alert.detail;
             const typeColors = {
                 fire: '#ff6b35',
@@ -3635,6 +4185,12 @@
         // INVITE MODAL
         // ================================================================
         function openInviteModal() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang pengguna', 'fa-lock');
+                return;
+            }
+
             const users = [
                 { name: 'Bpk. Ahmad', region: 'Jakarta Pusat', gender: 'male' },
                 { name: 'Sdri. Rina', region: 'Jakarta Selatan', gender: 'female' },
@@ -3691,6 +4247,12 @@
         }
 
         function inviteUser(userName) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang', 'fa-lock');
+                return;
+            }
+
             if (!currentUser) return;
 
             if (userName !== currentUser.fullName) {
@@ -3709,14 +4271,18 @@
         // CONFIRMATION FUNCTIONS
         // ================================================================
         function showConfirmation(contactName, contactNumber) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghubungi darurat', 'fa-lock');
+                return;
+            }
+
             confirmationTitle.textContent = 'Konfirmasi Panggilan';
             confirmationMessage.textContent = `Apakah Anda yakin ingin menghubungi ${contactName} (${contactNumber})?`;
             pendingContact = { name: contactName, number: contactNumber };
             confirmationModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
-        let pendingContact = null;
 
         function closeConfirmationModal() {
             confirmationModal.classList.remove('active');
@@ -3860,47 +4426,38 @@
         }
 
         // ================================================================
-        // LOAD USER
-        // ================================================================
-        function loadUser() {
-            const savedUser = localStorage.getItem('salink_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    return currentUser;
-                } catch (e) {
-                    localStorage.removeItem('salink_user');
-                    currentUser = null;
-                }
-            }
-
-            // Cek URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const userParam = urlParams.get('user');
-            if (userParam) {
-                try {
-                    currentUser = JSON.parse(decodeURIComponent(userParam));
-                    localStorage.setItem('salink_user', JSON.stringify(currentUser));
-                    return currentUser;
-                } catch (e) {
-                    currentUser = null;
-                }
-            }
-
-            // Jika tidak ada user, redirect ke login
-            if (!currentUser) {
-                window.location.href = LOGIN_URL;
-            }
-            return currentUser;
-        }
-
-        // ================================================================
-        // UPDATE UI
+        // UPDATE USER UI
         // ================================================================
         function updateUserUI() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                // Guest / Preview mode
+                sidebarUserName.textContent = 'Guest';
+                sidebarUserEmail.textContent = 'guest@salink.id';
+                sidebarUserAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                hologramProfile.innerHTML = '<i class="fas fa-user"></i>';
+                postProfilePic.innerHTML = '<i class="fas fa-user"></i>';
+                postUserName.textContent = 'Buat Postingan';
 
-            // Update hologram profile
+                const userBtnIcon = userBtn.querySelector('i');
+                const userBtnImg = userBtn.querySelector('img');
+                if (userBtnIcon) userBtnIcon.style.display = 'block';
+                if (userBtnImg) userBtnImg.style.display = 'none';
+
+                reportedByName.textContent = '-';
+                return;
+            }
+
+            // Full mode
+            sidebarUserName.textContent = currentUser.fullName;
+            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
+
+            if (currentUser.profilePicture) {
+                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
+            } else {
+                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
+            }
+
             if (currentUser.profilePicture) {
                 hologramProfile.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
@@ -3908,7 +4465,6 @@
                     '<i class="fas fa-male"></i>';
             }
 
-            // Update post profile pic
             if (currentUser.profilePicture) {
                 postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
@@ -3917,7 +4473,6 @@
             }
             postUserName.textContent = currentUser.fullName;
 
-            // Update user button
             const userBtnIcon = userBtn.querySelector('i');
             const userBtnImg = userBtn.querySelector('img');
             if (!userBtnImg) {
@@ -3939,8 +4494,17 @@
                 userImg.style.display = 'none';
             }
 
-            // Update reported by name
             reportedByName.textContent = currentUser.fullName;
+
+            // Update view badge
+            updateUserViewBadge();
+        }
+
+        function updateUserViewBadge() {
+            if (userViewBadge) {
+                userViewBadge.textContent = profileViews > 0 ? profileViews : '0';
+                userViewBadge.classList.toggle('show', profileViews > 0);
+            }
         }
 
         // ================================================================
@@ -3969,23 +4533,90 @@
         }
 
         // ================================================================
-        // EVENT LISTENERS
+        // LOAD USER
+        // ================================================================
+        function loadUser() {
+            const savedUser = localStorage.getItem('salink_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    return currentUser;
+                } catch (e) {
+                    localStorage.removeItem('salink_user');
+                    currentUser = null;
+                }
+            }
+
+            // Cek URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('user');
+            if (userParam) {
+                try {
+                    currentUser = JSON.parse(decodeURIComponent(userParam));
+                    localStorage.setItem('salink_user', JSON.stringify(currentUser));
+                    return currentUser;
+                } catch (e) {
+                    currentUser = null;
+                }
+            }
+
+            return currentUser;
+        }
+
+        // ================================================================
+        // EVENT LISTENERS - PREVIEW MODE HANDLING
         // ================================================================
 
-        // App title - redirect ke profil
+        // Preview overlay controls
+        overlayLoginBtn.addEventListener('click', () => {
+            hidePreviewOverlay();
+            redirectToLogin();
+        });
+
+        overlayCancelBtn.addEventListener('click', hidePreviewOverlay);
+
+        previewOverlay.addEventListener('click', (e) => {
+            if (e.target === previewOverlay) hidePreviewOverlay();
+        });
+
+        badgeLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            redirectToLogin();
+        });
+
+        // ================================================================
+        // EVENT LISTENERS - NAVIGATION
+        // ================================================================
+
+        // App title
         appTitle.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
             openProfilePage();
         });
 
-        // User button - redirect ke profil
+        // User button
         userBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
             openProfilePage();
         });
 
         // Search
         searchBtn.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mencari', 'fa-lock');
+                return;
+            }
             searchModal.classList.add('active');
             searchInput.value = '';
             searchInput.focus();
@@ -4018,20 +4649,35 @@
         // Bottom nav
         bottomHomeNav.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
+                return;
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomHomeNav.classList.add('active');
         });
 
         bottomTokoNav.addEventListener('click', (e) => {
+            if (isPreviewMode) {
+                e.preventDefault();
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses Toko', 'fa-lock');
+                return;
+            }
             // Link to toko.html (already has href)
-            // Just add active class
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomTokoNav.classList.add('active');
         });
 
         bottomInviteNav.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang pengguna', 'fa-lock');
+                return;
+            }
             openInviteModal();
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomInviteNav.classList.add('active');
@@ -4039,6 +4685,11 @@
 
         bottomNotifNav.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat notifikasi', 'fa-lock');
+                return;
+            }
             renderNotifications();
             notifModal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -4048,6 +4699,11 @@
 
         bottomProfileNav.addEventListener('click', (e) => {
             e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
             openProfilePage();
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomProfileNav.classList.add('active');
@@ -4079,7 +4735,7 @@
             }
         });
 
-        // Detail modal close
+        // Detail modal
         detailModalClose.addEventListener('click', () => {
             detailModal.classList.remove('active');
             document.body.style.overflow = '';
@@ -4092,8 +4748,13 @@
             }
         });
 
-        // All reports modal
+        // All reports
         viewAllBtn.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat semua laporan', 'fa-lock');
+                return;
+            }
             renderAllReports();
             allReportsModal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -4111,7 +4772,7 @@
             }
         });
 
-        // Edit post modal close
+        // Edit post modal
         editPostModalClose.addEventListener('click', () => {
             editPostModal.classList.remove('active');
             document.body.style.overflow = '';
@@ -4138,8 +4799,121 @@
             if (e.target === confirmationModal) closeConfirmationModal();
         });
 
-        // Notif type select
+        // ================================================================
+        // EVENT LISTENERS - SIDEBAR
+        // ================================================================
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (isPreviewMode) {
+                    e.preventDefault();
+                    showPreviewOverlay();
+                    showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
+                }
+            });
+        });
+
+        dropdownToggle.addEventListener('click', function(e) {
+            if (isPreviewMode) {
+                e.preventDefault();
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat kontak darurat', 'fa-lock');
+                return;
+            }
+            e.stopPropagation();
+            dropdownToggle.classList.toggle('open');
+            dropdownMenu.classList.toggle('open');
+        });
+
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (isPreviewMode) {
+                    showPreviewOverlay();
+                    showToast('🔒 Mode Preview', 'Silakan masuk untuk menghubungi darurat', 'fa-lock');
+                    return;
+                }
+                const contactName = this.dataset.name;
+                const contactNumber = this.dataset.number;
+                showConfirmation(contactName, contactNumber);
+                dropdownToggle.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-container')) {
+                dropdownToggle.classList.remove('open');
+                dropdownMenu.classList.remove('open');
+            }
+        });
+
+        // Sidebar close
+        sidebarClose.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
+                return;
+            }
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
+                return;
+            }
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Sidebar toggle - hanya di full mode
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (isPreviewMode) {
+                    e.preventDefault();
+                    showPreviewOverlay();
+                    showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
+                    return;
+                }
+            });
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk logout', 'fa-lock');
+                return;
+            }
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                currentUser = null;
+                localStorage.removeItem('salink_user');
+                // Switch ke preview mode
+                switchToPreviewMode();
+                showToast('👋 Logout Berhasil', 'Anda kembali ke mode preview', 'fa-sign-out-alt');
+                showHomePage();
+            }
+        });
+
+        function showHomePage() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
+            bottomHomeNav.classList.add('active');
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        // ================================================================
+        // EVENT LISTENERS - POST
+        // ================================================================
         notifTypeSelect.addEventListener('change', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan', 'fa-lock');
+                return;
+            }
             updateNotifDetailFields();
             const hasText = postInput.value.trim() !== '';
             const hasMedia = mediaUpload.files.length > 0;
@@ -4148,8 +4922,8 @@
             postSubmit.disabled = !hasText && !hasMedia && !hasMap && !isSpecial;
         });
 
-        // Post input
         postInput.addEventListener('input', () => {
+            if (isPreviewMode) return;
             const hasText = postInput.value.trim() !== '';
             const hasMedia = mediaUpload.files.length > 0;
             const hasMap = mapLinkInput.value.trim() !== '';
@@ -4157,8 +4931,8 @@
             postSubmit.disabled = !hasText && !hasMedia && !hasMap && !isSpecial;
         });
 
-        // Media upload
         mediaUpload.addEventListener('change', () => {
+            if (isPreviewMode) return;
             if (mediaUpload.files && mediaUpload.files[0]) {
                 const file = mediaUpload.files[0];
                 const reader = new FileReader();
@@ -4195,8 +4969,12 @@
             }
         });
 
-        // Map upload
         mapUploadBtn.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengupload maps', 'fa-lock');
+                return;
+            }
             isMapUploadActive = !isMapUploadActive;
             mapInput.classList.toggle('show', isMapUploadActive);
             mapUploadBtn.classList.toggle('active', isMapUploadActive);
@@ -4214,6 +4992,7 @@
         });
 
         mapLinkInput.addEventListener('input', () => {
+            if (isPreviewMode) return;
             updateNotifDetailFields();
             const hasMap = mapLinkInput.value.trim() !== '';
             const hasText = postInput.value.trim() !== '';
@@ -4222,115 +5001,128 @@
             postSubmit.disabled = !hasText && !hasMedia && !hasMap && !isSpecial;
         });
 
-        // Post submit
         postSubmit.addEventListener('click', createNewPost);
 
-        // Hologram display click
+        // ================================================================
+        // EVENT LISTENERS - EMERGENCY & HOLOGRAM
+        // ================================================================
         hologramDisplay.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk berinteraksi dengan hologram', 'fa-lock');
+                return;
+            }
+
             if (isHologramPost) {
                 convertHologramToPost();
-            } else {
-                // Simulate emergency notification
-                const types = ['fire', 'death', 'theft', 'disaster'];
-                const randomType = types[Math.floor(Math.random() * types.length)];
-                const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi'];
-                const locations = [
-                    'Jl. Sudirman No. 45, Jakarta Selatan',
-                    'Jl. Thamrin No. 12, Jakarta Pusat',
-                    'Jl. Gatot Subroto No. 23, Jakarta Selatan',
-                    'Jl. MH Thamrin No. 1, Jakarta Pusat'
-                ];
-                const randomSender = senders[Math.floor(Math.random() * senders.length)];
-                const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-
-                // Update hologram with emergency
-                const typeNames = {
-                    'fire': 'KEBAKARAN',
-                    'death': 'KEMATIAN',
-                    'theft': 'PENCURIAN',
-                    'disaster': 'BENCANA ALAM'
-                };
-                const icons = {
-                    'fire': 'fa-fire',
-                    'death': 'fa-skull',
-                    'theft': 'fa-gem',
-                    'disaster': 'fa-house-damage'
-                };
-
-                const now = new Date();
-                const timeString = now.toLocaleString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
-
-                hologramContent.innerHTML = `
-                    <div class="hologram-top">
-                        <div class="hologram-profile" id="hologramProfile">
-                            ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
-                        </div>
-                        <div class="alert-type ${randomType}">
-                            <i class="fas ${icons[randomType]}"></i>
-                            <span>${typeNames[randomType]}</span>
-                        </div>
-                    </div>
-                    <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openUserProfile('ahmad')" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
-                    <div class="alert-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>${randomLocation}</span>
-                    </div>
-                    <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                    <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
-                        <i class="fas fa-map"></i>
-                        <span style="margin-left:6px;">Lihat Lokasi</span>
-                        <div class="map-marker" style="top: 50%; left: 30%;"></div>
-                    </a>
-                    <div class="alert-time">${timeString}</div>
-                `;
-
-                // Add notification
-                addNotification('inbox', `📢 Laporan ${typeNames[randomType]}`,
-                    `${randomSender} melaporkan ${typeNames[randomType].toLowerCase()} di ${randomLocation}`,
-                    randomSender, null, 'none');
-
-                // Add to reports
-                reports.unshift({
-                    id: reports.length + 1,
-                    type: randomType,
-                    icon: icons[randomType],
-                    title: `${typeNames[randomType]} ${Math.floor(Math.random() * 100)}`,
-                    desc: randomLocation,
-                    time: 'Baru saja',
-                    detail: {
-                        type: typeNames[randomType],
-                        sender: randomSender,
-                        location: randomLocation,
-                        address: randomLocation,
-                        image: `https://picsum.photos/seed/${randomType}${Date.now()}/400/200`,
-                        time: timeString
-                    }
-                });
-
-                renderAlerts(reports);
-                hologramDisplay.style.cursor = 'pointer';
-                hologramDisplay.title = 'Klik untuk mengubah menjadi postingan';
-                isHologramPost = true;
-
-                showToast('📡 Hologram', 'Hologram darurat aktif! Klik untuk posting', 'fa-hologram');
-
-                clearTimeout(alertTimeout);
-                alertTimeout = setTimeout(() => {
-                    convertHologramToPost();
-                }, 10000);
+                return;
             }
+
+            // Simulate emergency notification
+            const types = ['fire', 'death', 'theft', 'disaster'];
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
+            const locations = [
+                'Jl. Sudirman No. 45, Jakarta Selatan',
+                'Jl. Thamrin No. 12, Jakarta Pusat',
+                'Jl. Gatot Subroto No. 23, Jakarta Selatan',
+                'Jl. MH Thamrin No. 1, Jakarta Pusat',
+                'Jl. Pangeran Antasari No. 7, Jakarta Selatan'
+            ];
+            const randomSender = senders[Math.floor(Math.random() * senders.length)];
+            const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+
+            const typeNames = {
+                'fire': 'KEBAKARAN',
+                'death': 'KEMATIAN',
+                'theft': 'PENCURIAN',
+                'disaster': 'BENCANA ALAM'
+            };
+            const icons = {
+                'fire': 'fa-fire',
+                'death': 'fa-skull',
+                'theft': 'fa-gem',
+                'disaster': 'fa-house-damage'
+            };
+
+            const now = new Date();
+            const timeString = now.toLocaleString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            hologramContent.innerHTML = `
+                <div class="hologram-top">
+                    <div class="hologram-profile" id="hologramProfile">
+                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                    </div>
+                    <div class="alert-type ${randomType}">
+                        <i class="fas ${icons[randomType]}"></i>
+                        <span>${typeNames[randomType]}</span>
+                    </div>
+                </div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openUserProfile('ahmad')" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
+                <div class="alert-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${randomLocation}</span>
+                </div>
+                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
+                <a href="https://www.google.com/maps?q=-6.1823399,106.8325873" target="_blank" class="mini-map">
+                    <i class="fas fa-map"></i>
+                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
+                </a>
+                <div class="alert-time">${timeString}</div>
+            `;
+
+            // Add notification
+            addNotification('inbox', `📢 Laporan ${typeNames[randomType]}`,
+                `${randomSender} melaporkan ${typeNames[randomType].toLowerCase()} di ${randomLocation}`,
+                randomSender, null, 'none');
+
+            // Add to reports
+            reports.unshift({
+                id: reports.length + 1,
+                type: randomType,
+                icon: icons[randomType],
+                title: `${typeNames[randomType]} ${Math.floor(Math.random() * 100)}`,
+                desc: randomLocation,
+                time: 'Baru saja',
+                detail: {
+                    type: typeNames[randomType],
+                    sender: randomSender,
+                    location: randomLocation,
+                    address: randomLocation,
+                    image: `https://picsum.photos/seed/${randomType}${Date.now()}/400/200`,
+                    time: timeString
+                }
+            });
+
+            renderAlerts(reports);
+            hologramDisplay.style.cursor = 'pointer';
+            hologramDisplay.title = 'Klik untuk mengubah menjadi postingan';
+            isHologramPost = true;
+
+            showToast('📡 Hologram', 'Hologram darurat aktif! Klik untuk posting', 'fa-hologram');
+
+            clearTimeout(alertTimeout);
+            alertTimeout = setTimeout(() => {
+                convertHologramToPost();
+            }, 10000);
         });
 
-        // Emergency buttons
         emergencyBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
+
+                if (isPreviewMode) {
+                    showPreviewOverlay();
+                    showToast('🔒 Mode Preview', 'Silakan masuk untuk menggunakan alarm', 'fa-lock');
+                    return;
+                }
 
                 if (this.classList.contains('has-notification')) {
                     this.classList.remove('has-notification');
@@ -4344,14 +5136,23 @@
             });
         });
 
-        // Chart nav
+        // ================================================================
+        // EVENT LISTENERS - CHART
+        // ================================================================
         chartNavBtns.forEach(btn => {
             btn.addEventListener('click', () => {
+                if (isPreviewMode) {
+                    showPreviewOverlay();
+                    showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat statistik', 'fa-lock');
+                    return;
+                }
                 switchChart(btn.dataset.chart);
             });
         });
 
-        // Ripple effect
+        // ================================================================
+        // RIPPLE EFFECT
+        // ================================================================
         document.addEventListener('click', function(e) {
             if (e.target.closest('.emergency-btn') || e.target.closest('.stat-card') || e.target.closest(
                     '.alert-card')) {
@@ -4380,9 +5181,16 @@
 
         // Load user
         const user = loadUser();
-        if (!user) {
-            window.location.href = LOGIN_URL;
-            return;
+
+        // Tentukan mode
+        const mode = new URLSearchParams(window.location.search).get('mode');
+
+        if (mode === MODE_PREVIEW || !user) {
+            isPreviewMode = true;
+            switchToPreviewMode();
+        } else {
+            isPreviewMode = false;
+            switchToFullMode();
         }
 
         // Create audio elements
@@ -4396,7 +5204,6 @@
 
         // Update UI
         updateUserUI();
-        updateUserViewBadge();
 
         // Render posts
         renderPosts();
@@ -4406,6 +5213,7 @@
 
         // Update badges
         updateNotifBadge();
+        updateUserViewBadge();
 
         // Charts
         switchChart('pie');
@@ -4508,12 +5316,15 @@
         }
 
         console.log('🚀 SALINK Dashboard');
-        console.log(`👤 User: ${currentUser.fullName} (@${currentUser.username})`);
+        console.log(`📌 Mode: ${isPreviewMode ? 'PREVIEW' : 'FULL'}`);
+        console.log(`👤 User: ${currentUser ? currentUser.fullName : 'Guest'}`);
         console.log(`📝 Total Posts: ${posts.length}`);
         console.log(`🔔 Total Notifications: ${notifications.length}`);
         console.log(`👁️ Profile Views: ${profileViews}`);
-        console.log('✅ Terintegrasi penuh dengan profil.html');
+        console.log('✅ Preview Mode aktif - Semua elemen memiliki data-action="login"');
+        console.log('✅ Klik elemen apapun di Preview Mode → Overlay + Toast');
         console.log('✅ Tombol Toko → toko.html');
+        console.log('✅ Logout → Kembali ke Preview Mode');
     </script>
 
 </body>
