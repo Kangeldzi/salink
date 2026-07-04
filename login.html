@@ -1004,9 +1004,12 @@
             const user = users.find(u => u.username === username && u.password === password);
 
             if (user) {
-                // Simpan session
+                // Simpan session - PASTIKAN DATA LENGKAP TERSIMPAN
                 localStorage.setItem('salink_user', JSON.stringify(user));
                 if (rememberMe) localStorage.setItem('salink_remember', 'true');
+
+                console.log('✅ Login berhasil! User:', user.fullName);
+                console.log('📦 Data user tersimpan di localStorage');
 
                 // ✅ Redirect ke dashboard (Full Mode)
                 window.location.href = DASHBOARD_URL + '?mode=full';
@@ -1144,13 +1147,16 @@
                 joined: new Date().toISOString()
             };
 
-            // Simpan ke localStorage
+            // Simpan ke localStorage - USERS LIST
             users.push(newUser);
             localStorage.setItem('salink_users', JSON.stringify(users));
 
-            // Auto login - simpan session
+            // Simpan ke localStorage - CURRENT USER SESSION
             localStorage.setItem('salink_user', JSON.stringify(newUser));
             localStorage.setItem('salink_remember', 'true');
+
+            console.log('✅ Registrasi berhasil! User:', newUser.fullName);
+            console.log('📦 Data user tersimpan di localStorage');
 
             alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.');
 
@@ -1206,6 +1212,7 @@
         console.log('🔐 SALINK - Offline Mode (LocalStorage)');
         console.log('📱 Dashboard URL:', DASHBOARD_URL);
         console.log('📦 Users in localStorage:', JSON.parse(localStorage.getItem('salink_users') || '[]').length);
+        console.log('👤 Current User:', JSON.parse(localStorage.getItem('salink_user') || 'null'));
     </script>
 
 </body>
