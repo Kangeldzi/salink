@@ -106,6 +106,7 @@
             gap: 6px;
         }
 
+        /* Search Button - PRIVASI (hanya untuk pemilik) */
         .search-btn {
             width: 40px;
             height: 40px;
@@ -2082,25 +2083,35 @@
         }
 
         // ================================================================
-        // GET USER - DIPERBAIKI DENGAN ?username=
+        // GET USER - DIPERBAIKI UNTUK INTEGRASI DENGAN LOGIN
         // ================================================================
+
         function getUserFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
 
-            // Cek parameter username (cara baru - aman dari URI_TOO_LONG)
+            // Cek parameter username (cara baru - direkomendasikan)
             const username = urlParams.get('username');
             if (username) {
+                console.log('🔍 Mencari user dengan username:', username);
                 const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
                 const user = users.find(u => u.username === username);
-                if (user) return user;
+                if (user) {
+                    console.log('✅ User ditemukan dari localStorage:', user.fullName);
+                    return user;
+                } else {
+                    console.warn('⚠️ User dengan username', username, 'tidak ditemukan di localStorage');
+                }
             }
 
             // Fallback: parameter user (cara lama - kompatibilitas)
             const userParam = urlParams.get('user');
             if (userParam) {
                 try {
-                    return JSON.parse(decodeURIComponent(userParam));
+                    const user = JSON.parse(decodeURIComponent(userParam));
+                    console.log('✅ User ditemukan dari parameter user:', user.fullName);
+                    return user;
                 } catch (e) {
+                    console.warn('⚠️ Gagal parse parameter user:', e);
                     return null;
                 }
             }
@@ -2108,6 +2119,8 @@
         }
 
         function loadUser() {
+            console.log('📌 ===== MEMUAT DATA USER =====');
+
             // Ambil user dari URL (profil yang dilihat)
             profileOwner = getUserFromUrl();
 
@@ -2116,14 +2129,23 @@
             if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
+                    console.log('✅ Current User loaded from localStorage:', currentUser.fullName);
+                    console.log('📧 Email:', currentUser.email);
+                    console.log('📱 Phone:', currentUser.phone);
+                    console.log('📍 Address:', currentUser.address);
                 } catch (e) {
+                    console.warn('❌ Gagal parse currentUser dari localStorage:', e);
                     localStorage.removeItem('salink_user');
                     currentUser = null;
                 }
+            } else {
+                console.warn('❌ Tidak ada data user di localStorage (salink_user)');
+                console.log('💡 Pastikan Anda sudah login terlebih dahulu');
             }
 
             // Jika tidak ada current user, redirect ke login
             if (!currentUser) {
+                console.warn('❌ Tidak ada currentUser, redirect ke login.html');
                 window.location.href = LOGIN_URL;
                 return;
             }
@@ -2132,15 +2154,25 @@
             if (!profileOwner) {
                 profileOwner = currentUser;
                 isOwner = true;
+                console.log('🔓 Mode Pemilik (tidak ada parameter username)');
             } else {
                 // Cek apakah user yang melihat adalah pemilik profil
                 isOwner = profileOwner.username === currentUser.username;
+                console.log(`🔐 Profile Owner: ${profileOwner.fullName} (@${profileOwner.username})`);
+                console.log(`👤 Current User: ${currentUser.fullName} (@${currentUser.username})`);
+                console.log(`📌 isOwner: ${isOwner}`);
             }
 
             // Jika ini profil sendiri tapi ada parameter username, tetap isOwner = true
             if (profileOwner.username === currentUser.username) {
                 isOwner = true;
+                console.log('🔓 Mode Pemilik (username sama dengan currentUser)');
             }
+
+            console.log('📌 Profil yang ditampilkan:', profileOwner.fullName);
+            console.log('👤 Current User:', currentUser.fullName);
+            console.log('🔒 Status:', isOwner ? 'PEMILIK' : 'PENGUNJUNG');
+            console.log('=====================================');
 
             return currentUser;
         }
@@ -2590,7 +2622,7 @@
         }
 
         // ================================================================
-        // PRIVACY FUNCTIONS - DIPERBAIKI
+        // PRIVACY FUNCTIONS
         // ================================================================
         function togglePrivacy() {
             // Sembunyikan elemen privat jika bukan pemilik
@@ -2679,6 +2711,8 @@
         // ================================================================
         function updateUserUI() {
             if (!profileOwner) return;
+
+            console.log('🔄 Update UI untuk profil:', profileOwner.fullName);
 
             // Profile Header
             if (profileOwner.profilePicture) {
@@ -4093,6 +4127,7 @@
 
         bottomProfileNav.addEventListener('click', (e) => {
             e.preventDefault();
+            // Refresh halaman profil
             window.location.reload();
         });
 
@@ -4249,12 +4284,20 @@
         // INITIALIZE
         // ================================================================
 
-        // Load user
+        console.log('🚀 ===== SALINK - PROFIL =====');
+
+        // Load user - FUNGSI UTAMA YANG DIPERBAIKI
         const user = loadUser();
+
         if (!user) {
+            console.error('❌ Gagal load user, redirect ke login');
             window.location.href = LOGIN_URL;
             return;
         }
+
+        console.log('✅ User berhasil dimuat:', user.fullName);
+        console.log('📌 Profile Owner:', profileOwner ? profileOwner.fullName : 'Tidak ada');
+        console.log('🔒 isOwner:', isOwner);
 
         // Create audio elements
         createAudioElements();
@@ -4286,15 +4329,11 @@
             }, 1000);
         }
 
-        console.log('👤 SALINK - Profil (Lengkap dengan Privasi)');
-        console.log(`📌 Profil: ${profileOwner.fullName} (@${profileOwner.username})`);
-        console.log(`🔒 Pemilik: ${isOwner ? 'YA' : 'TIDAK'}`);
-        console.log(`📝 Total Posts: ${posts.filter(p => p.userId === profileOwner.username).length}`);
-        console.log(`👁️ Total Views: ${profileViews}`);
-        console.log('✅ Privasi: Buat Postingan, Sidebar, Search, Jual, Dokumentasi = TERSEMBUNYI');
-        console.log('✅ Publik: Foto Profil, Nama, Bio, Pesan, Invite, Stats, Postingan, Like, Komentar');
-        console.log('✅ Tombol Navbar: Foto & Teman = PUBLIK');
-        console.log('✅ Tombol upload diperbesar');
+        console.log('✅ Inisialisasi selesai');
+        console.log('📌 Profil:', profileOwner.fullName);
+        console.log('📝 Total Posts:', posts.filter(p => p.userId === profileOwner.username).length);
+        console.log('👁️ Total Views:', profileViews);
+        console.log('=====================================');
     </script>
 
 </body>
