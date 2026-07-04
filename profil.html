@@ -106,7 +106,6 @@
             gap: 6px;
         }
 
-        /* Search Button - PRIVASI (hanya untuk pemilik) */
         .search-btn {
             width: 40px;
             height: 40px;
@@ -521,34 +520,52 @@
             gap: 6px;
         }
 
-        .post-actions-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .post-actions-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
+        /* ===== TOMBOL UPLOAD DIPERBESAR ===== */
         .media-upload-btn {
-            background: none;
-            border: none;
-            color: var(--gold);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.7rem;
-        }
-        .media-upload-btn i { font-size: 0.9rem; }
-
-        .map-upload-btn {
-            background: none;
-            border: none;
+            background: rgba(212, 168, 73, 0.15);
+            border: 1px solid var(--gold);
             color: var(--gold-light);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.7rem;
-            opacity: 0.7;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 8px;
             transition: all 0.3s;
         }
-        .map-upload-btn:hover { opacity: 1; color: var(--gold); }
-        .map-upload-btn.active { opacity: 1; color: var(--gold); }
+        .media-upload-btn:hover {
+            background: rgba(212, 168, 73, 0.25);
+            border-color: var(--gold-light);
+        }
+        .media-upload-btn i { font-size: 1rem; }
+
+        .map-upload-btn {
+            background: rgba(79, 195, 247, 0.1);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            color: #4fc3f7;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            opacity: 0.8;
+        }
+        .map-upload-btn:hover {
+            background: rgba(79, 195, 247, 0.2);
+            opacity: 1;
+        }
+        .map-upload-btn.active {
+            background: rgba(79, 195, 247, 0.25);
+            border-color: #4fc3f7;
+            opacity: 1;
+        }
+        .map-upload-btn i { font-size: 1rem; }
 
         .file-input { display: none; }
         .map-input { display: none; width: 100%; margin-top: 6px; }
@@ -568,11 +585,11 @@
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: var(--dark);
             border: none;
-            padding: 5px 14px;
+            padding: 6px 16px;
             border-radius: 18px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             transition: all 0.3s;
         }
         .post-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -873,6 +890,7 @@
             flex-direction: column;
             transition: left 0.3s ease;
         }
+
         .sidebar::-webkit-scrollbar { width: 3px; }
         .sidebar::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
         .sidebar::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
@@ -1313,8 +1331,11 @@
             .post-action { font-size: 0.6rem; padding: 2px 4px; }
             .post-options { font-size: 0.9rem; top: 4px; right: 4px; }
             .post-options-menu { min-width: 120px; right: 4px; }
-            .post-actions-left { gap: 4px; }
-            .media-upload-btn span, .map-upload-btn span { display: none; }
+            .post-actions-left { gap: 6px; }
+            .media-upload-btn { font-size: 0.65rem; padding: 4px 10px; }
+            .media-upload-btn i { font-size: 0.8rem; }
+            .map-upload-btn { font-size: 0.65rem; padding: 4px 10px; }
+            .map-upload-btn i { font-size: 0.8rem; }
             .search-modal { padding: 12px; }
             .profile-views-counter { font-size: 0.6rem; padding: 3px 10px; }
             .private-view-message { font-size: 0.65rem; padding: 12px 8px; }
@@ -1329,6 +1350,8 @@
             .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 2px; }
             .profile-stat-number { font-size: 0.8rem; }
             .profile-navbar { grid-template-columns: 1fr 1fr; }
+            .media-upload-btn { font-size: 0.6rem; padding: 3px 8px; }
+            .map-upload-btn { font-size: 0.6rem; padding: 3px 8px; }
         }
     </style>
 </head>
@@ -2059,10 +2082,20 @@
         }
 
         // ================================================================
-        // GET USER
+        // GET USER - DIPERBAIKI DENGAN ?username=
         // ================================================================
         function getUserFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
+
+            // Cek parameter username (cara baru - aman dari URI_TOO_LONG)
+            const username = urlParams.get('username');
+            if (username) {
+                const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                const user = users.find(u => u.username === username);
+                if (user) return user;
+            }
+
+            // Fallback: parameter user (cara lama - kompatibilitas)
             const userParam = urlParams.get('user');
             if (userParam) {
                 try {
@@ -2102,6 +2135,11 @@
             } else {
                 // Cek apakah user yang melihat adalah pemilik profil
                 isOwner = profileOwner.username === currentUser.username;
+            }
+
+            // Jika ini profil sendiri tapi ada parameter username, tetap isOwner = true
+            if (profileOwner.username === currentUser.username) {
+                isOwner = true;
             }
 
             return currentUser;
@@ -2331,7 +2369,7 @@
                         searchModal.classList.remove('active');
                         document.body.style.overflow = '';
                         // Redirect ke profil user tersebut
-                        window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+                        window.location.href = PROFILE_URL + '?username=' + encodeURIComponent(user.username);
                     });
                 }
 
@@ -2552,7 +2590,7 @@
         }
 
         // ================================================================
-        // PRIVACY FUNCTIONS
+        // PRIVACY FUNCTIONS - DIPERBAIKI
         // ================================================================
         function togglePrivacy() {
             // Sembunyikan elemen privat jika bukan pemilik
@@ -2564,7 +2602,7 @@
                 if (searchBtn) searchBtn.classList.add('private');
 
                 // Sembunyikan Post Input Area
-                if (postInputArea) postInputArea.style.display = 'none';
+                if (postInputArea) postInputArea.classList.add('private');
 
                 // Sembunyikan Navbar Jual & Dokumentasi
                 if (navJual) navJual.classList.add('private');
@@ -2613,7 +2651,7 @@
                 // Mode Pemilik - Tampilkan semua
                 if (profileSidebarToggle) profileSidebarToggle.classList.remove('private');
                 if (searchBtn) searchBtn.classList.remove('private');
-                if (postInputArea) postInputArea.style.display = 'flex';
+                if (postInputArea) postInputArea.classList.remove('private');
                 if (navJual) navJual.classList.remove('private');
                 if (navDokumentasi) navDokumentasi.classList.remove('private');
                 if (privateViewMessage) privateViewMessage.style.display = 'none';
@@ -2915,7 +2953,7 @@
             const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
             const user = users.find(u => u.username === username);
             if (user) {
-                window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+                window.location.href = PROFILE_URL + '?username=' + encodeURIComponent(user.username);
             } else {
                 showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
             }
@@ -3396,7 +3434,6 @@
                 return;
             }
 
-            // Ambil data user dari localStorage
             const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
 
             followerList.forEach(followerUsername => {
@@ -4257,6 +4294,7 @@
         console.log('✅ Privasi: Buat Postingan, Sidebar, Search, Jual, Dokumentasi = TERSEMBUNYI');
         console.log('✅ Publik: Foto Profil, Nama, Bio, Pesan, Invite, Stats, Postingan, Like, Komentar');
         console.log('✅ Tombol Navbar: Foto & Teman = PUBLIK');
+        console.log('✅ Tombol upload diperbesar');
     </script>
 
 </body>
