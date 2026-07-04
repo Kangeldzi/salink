@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SALINK - Emergency Alert</title>
+    <title>SALINK - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ===== ROOT VARIABLES ===== */
         :root {
             --brown-dark: #3d2314;
             --brown: #6b3a2a;
@@ -22,16 +23,39 @@
             --neumorph-shadow: 8px 8px 16px #0a0604, -8px -8px 16px #2a1a0e;
             --header-height: 60px;
             --footer-height: 65px;
+            --danger: #ff6b35;
+            --success: #4CAF50;
         }
 
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        body {
+            font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--darker), var(--brown-dark));
+            color: var(--cream);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(61, 35, 20, 0.3);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 3px;
+        }
+
+        /* ===== ANIMATIONS ===== */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-12px); }
@@ -110,16 +134,11 @@
             100% { transform: scale(1); }
         }
 
-        body {
-            background: linear-gradient(135deg, var(--darker), var(--brown-dark));
-            color: var(--cream);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            padding-bottom: var(--footer-height);
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
         }
 
-        /* Header */
+        /* ===== HEADER / APP BAR ===== */
         .app-bar {
             position: fixed;
             top: 0;
@@ -212,7 +231,7 @@
             gap: 6px;
         }
 
-        /* Bottom Navigation */
+        /* ===== BOTTOM NAVIGATION ===== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -298,7 +317,7 @@
             display: flex;
         }
 
-        /* Sidebar */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -542,7 +561,7 @@
             color: var(--cream);
         }
 
-        /* Main Content */
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             padding: calc(var(--header-height) + 14px) 14px calc(var(--footer-height) + 14px);
             max-width: 600px;
@@ -563,7 +582,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Stats Cards */
+        /* ===== STATS CARDS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -621,7 +640,7 @@
             opacity: 0.3;
         }
 
-        /* Hologram Display */
+        /* ===== HOLOGRAM DISPLAY ===== */
         .hologram-display {
             width: 100%;
             min-height: 160px;
@@ -631,8 +650,7 @@
             border-radius: 10px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(212, 168, 73, 0.15),
-                        inset 0 0 30px rgba(212, 168, 73, 0.05);
+            box-shadow: 0 0 30px rgba(212, 168, 73, 0.15), inset 0 0 30px rgba(212, 168, 73, 0.05);
             animation: hologram-pulse 3s infinite;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -802,7 +820,7 @@
             animation: float 2s ease-in-out infinite;
         }
 
-        /* Emergency Buttons */
+        /* ===== EMERGENCY BUTTONS ===== */
         .emergency-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -928,7 +946,7 @@
         .btn-disaster .btn-content { color: #4fc3f7; }
         .btn-disaster .btn-glow { background: #4fc3f7; animation: float 3s ease-in-out infinite 1.5s; }
 
-        /* Post Section */
+        /* ===== POST SECTION ===== */
         .post-section {
             margin-top: 16px;
             background: rgba(61, 35, 20, 0.5);
@@ -1372,7 +1390,7 @@
             flex-shrink: 0;
         }
 
-        /* Recent Section */
+        /* ===== RECENT SECTION ===== */
         .recent-section {
             margin-top: 16px;
         }
@@ -1513,7 +1531,7 @@
             flex-shrink: 0;
         }
 
-        /* Statistics Section */
+        /* ===== STATISTICS SECTION ===== */
         .statistics-section {
             margin-top: 20px;
             background: rgba(61, 35, 20, 0.5);
@@ -1716,7 +1734,7 @@
             padding-top: 8px;
         }
 
-        /* Social Media Links */
+        /* ===== SOCIAL LINKS ===== */
         .social-links {
             display: flex;
             justify-content: center;
@@ -1784,21 +1802,7 @@
         .social-link.youtube:hover { color: #ff0000; border-color: #ff0000; box-shadow: 0 8px 30px rgba(255, 0, 0, 0.3); }
         .social-link.portfolio:hover { color: #4fc3f7; border-color: #4fc3f7; box-shadow: 0 8px 30px rgba(79, 195, 247, 0.3); }
 
-        .social-link .social-icon-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-
-        .social-link:hover .social-icon-wrapper i {
-            transform: scale(1.15) rotate(-5deg);
-        }
-
-        /* Footer */
+        /* ===== FOOTER ===== */
         .app-footer {
             background: rgba(61, 35, 20, 0.2);
             backdrop-filter: blur(15px);
@@ -1821,7 +1825,7 @@
             color: var(--gold-light);
         }
 
-        /* Modal */
+        /* ===== MODALS ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -2054,6 +2058,7 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* ===== OVERLAY ===== */
         .overlay {
             position: fixed;
             top: 0;
@@ -2083,13 +2088,7 @@
             pointer-events: none;
         }
 
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
-        }
-
+        /* ===== SEARCH MODAL ===== */
         .search-modal {
             position: fixed;
             top: 0;
@@ -2206,353 +2205,7 @@
             color: rgba(245, 240, 232, 0.5);
         }
 
-        /* Auth Pages */
-        .auth-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background: rgba(13, 8, 5, 0.95);
-            z-index: 2000;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            overflow-y: auto;
-        }
-
-        .auth-container.active {
-            display: flex;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 400px;
-            background: linear-gradient(145deg, rgba(61, 35, 20, 0.98), rgba(13, 8, 5, 0.98));
-            border-radius: 20px;
-            padding: 24px 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--gold);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            transform: translateY(0);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            opacity: 0;
-            animation: slideUp 0.5s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 16px;
-        }
-
-        .auth-logo {
-            width: 55px;
-            height: 55px;
-            margin: 0 auto 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            box-shadow: 0 0 25px rgba(212, 168, 73, 0.4);
-        }
-
-        .auth-logo i {
-            font-size: 1.6rem;
-            color: var(--dark);
-        }
-
-        .auth-title {
-            font-size: 1.1rem;
-            margin-bottom: 3px;
-            background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .auth-subtitle {
-            font-size: 0.7rem;
-            opacity: 0.8;
-            color: var(--cream);
-        }
-
-        .auth-form .form-group {
-            margin-bottom: 10px;
-        }
-
-        .auth-form label {
-            display: block;
-            margin-bottom: 3px;
-            font-size: 0.7rem;
-            opacity: 0.9;
-            color: var(--gold-light);
-        }
-
-        .auth-form .form-control {
-            width: 100%;
-            padding: 8px 12px;
-            background: rgba(255, 248, 240, 0.06);
-            border: 1px solid rgba(212, 168, 73, 0.2);
-            border-radius: 8px;
-            color: var(--cream);
-            font-size: 0.75rem;
-            transition: all 0.3s;
-        }
-
-        .auth-form .form-control:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(212, 168, 73, 0.15);
-            background: rgba(255, 248, 240, 0.1);
-        }
-
-        .auth-form .form-control::placeholder {
-            color: rgba(245, 240, 232, 0.3);
-        }
-
-        .password-input-wrapper {
-            position: relative;
-        }
-
-        .password-input-wrapper .form-control {
-            padding-right: 36px;
-        }
-
-        .password-toggle-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(245, 240, 232, 0.4);
-            cursor: pointer;
-            font-size: 0.8rem;
-            padding: 4px;
-            transition: all 0.3s;
-        }
-
-        .password-toggle-btn:hover {
-            color: var(--gold-light);
-        }
-
-        .btn-auth {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 6px;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--dark);
-            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.97);
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 0.7rem;
-            color: rgba(245, 240, 232, 0.7);
-        }
-
-        .auth-link {
-            color: var(--gold-light);
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .auth-link:hover {
-            text-decoration: underline;
-        }
-
-        .gender-options {
-            display: flex;
-            gap: 8px;
-            margin-top: 3px;
-        }
-
-        .gender-option {
-            flex: 1;
-        }
-
-        .gender-option input {
-            display: none;
-        }
-
-        .gender-option label {
-            display: block;
-            padding: 6px;
-            background: rgba(255, 248, 240, 0.06);
-            border-radius: 6px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.7rem;
-            border: 1px solid transparent;
-            color: var(--cream);
-        }
-
-        .gender-option input:checked + label {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--dark);
-            border-color: var(--gold);
-            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
-        }
-
-        .password-requirements {
-            margin-top: 3px;
-            font-size: 0.6rem;
-            opacity: 0.7;
-            color: var(--cream);
-        }
-
-        .welcome-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(13, 8, 5, 0.85);
-            z-index: 3000;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-            padding: 20px;
-        }
-
-        .welcome-modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .welcome-card {
-            background: linear-gradient(145deg, rgba(61, 35, 20, 0.98), rgba(13, 8, 5, 0.98));
-            border-radius: 20px;
-            padding: 26px 20px;
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--gold);
-            transform: scale(0.9);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .welcome-modal.active .welcome-card {
-            transform: scale(1);
-        }
-
-        .welcome-logo {
-            width: 65px;
-            height: 65px;
-            margin: 0 auto 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            box-shadow: 0 0 30px rgba(212, 168, 73, 0.4);
-        }
-
-        .welcome-logo i {
-            font-size: 1.8rem;
-            color: var(--dark);
-        }
-
-        .welcome-title {
-            font-size: 1.2rem;
-            margin-bottom: 6px;
-            background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .welcome-message {
-            font-size: 0.75rem;
-            margin-bottom: 14px;
-            opacity: 0.9;
-            line-height: 1.5;
-            color: var(--cream);
-        }
-
-        .auth-switch-btn {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            justify-content: center;
-        }
-
-        .auth-switch-btn button {
-            padding: 8px 18px;
-            border-radius: 8px;
-            border: none;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex: 1;
-        }
-
-        .auth-switch-btn .btn-signin {
-            background: rgba(212, 168, 73, 0.1);
-            color: var(--gold-light);
-            border: 1px solid var(--gold);
-        }
-
-        .auth-switch-btn .btn-signup {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--dark);
-        }
-
-        .auth-switch-btn button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .auth-switch-btn button:active {
-            transform: scale(0.97);
-        }
-
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(61, 35, 20, 0.3);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 3px;
-        }
-
-        /* Profile Page */
+        /* ===== PROFILE PAGE ===== */
         .profile-page {
             display: none;
             padding: 20px 0;
@@ -2633,7 +2286,24 @@
             color: rgba(245, 240, 232, 0.5);
         }
 
-        /* Responsive */
+        .back-home-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(212, 168, 73, 0.15);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .back-home-btn:hover {
+            background: rgba(212, 168, 73, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .emergency-grid {
                 gap: 10px;
@@ -2721,11 +2391,6 @@
                 top: -4px;
             }
 
-            .gender-options {
-                flex-direction: column;
-                gap: 4px;
-            }
-
             .pie-chart {
                 width: 140px;
                 height: 140px;
@@ -2738,10 +2403,6 @@
 
             .pie-chart-center .total-number {
                 font-size: 0.9rem;
-            }
-
-            .auth-card {
-                padding: 20px 16px;
             }
 
             .sidebar {
@@ -2797,10 +2458,6 @@
 
             .app-footer {
                 padding: 12px 10px;
-            }
-
-            .app-footer div {
-                gap: 8px;
             }
         }
 
@@ -2866,22 +2523,8 @@
     </style>
 </head>
 <body>
-    <!-- Welcome Modal -->
-    <div class="welcome-modal" id="welcomeModal">
-        <div class="welcome-card">
-            <div class="welcome-logo">
-                <i class="fas fa-bell"></i>
-            </div>
-            <h2 class="welcome-title">Selamat Datang di SALINK</h2>
-            <p class="welcome-message">Untuk menggunakan layanan darurat kami, silakan masuk atau daftar terlebih dahulu</p>
-            <div class="auth-switch-btn">
-                <button class="btn-signin" id="modalSignIn">Sign In</button>
-                <button class="btn-signup" id="modalSignUp">Sign Up</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- Header -->
+    <!-- ===== HEADER ===== -->
     <header class="app-bar">
         <button class="menu-btn" id="menuBtn">
             <i class="fas fa-bars"></i>
@@ -2900,7 +2543,7 @@
         </div>
     </header>
 
-    <!-- Sidebar -->
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
@@ -2977,10 +2620,10 @@
         </ul>
     </div>
 
-    <!-- Overlay -->
+    <!-- ===== OVERLAY ===== -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Search Modal -->
+    <!-- ===== SEARCH MODAL ===== -->
     <div class="search-modal" id="searchModal">
         <div class="search-header">
             <input type="text" class="search-input" id="searchInput" placeholder="Cari pengguna, postingan, atau laporan...">
@@ -2991,7 +2634,7 @@
         <div class="search-results" id="searchResults"></div>
     </div>
 
-    <!-- Main Content -->
+    <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content" id="mainContent">
         <h1 class="page-title">
             <i class="fas fa-bell"></i>
@@ -3248,8 +2891,8 @@
         </div>
     </main>
 
-    <!-- Profile Page -->
-    <div class="main-content profile-page" id="profilePage" style="display:none;">
+    <!-- ===== PROFILE PAGE ===== -->
+    <div class="main-content profile-page" id="profilePage">
         <div class="profile-header">
             <div class="profile-avatar-large" id="profileAvatarLarge">
                 <i class="fas fa-user"></i>
@@ -3279,12 +2922,12 @@
             <div id="profilePosts"></div>
         </div>
         
-        <button onclick="showHomePage()" style="width:100%;padding:10px;background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);border-radius:10px;cursor:pointer;margin-top:12px;font-size:0.8rem;">
+        <button class="back-home-btn" onclick="showHomePage()">
             <i class="fas fa-arrow-left"></i> Kembali ke Home
         </button>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- ===== BOTTOM NAVIGATION ===== -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item-bottom active" id="bottomHomeNav">
             <i class="fas fa-home"></i>
@@ -3309,6 +2952,8 @@
         </a>
     </nav>
 
+    <!-- ===== MODALS ===== -->
+    
     <!-- Detail Modal -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
@@ -3428,151 +3073,10 @@
         </div>
     </div>
 
-    <!-- Auth Containers -->
-    <div class="auth-container" id="loginContainer">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <h1 class="auth-title">Masuk Ke Akun Anda</h1>
-                <p class="auth-subtitle">Silakan masuk untuk mengakses layanan darurat</p>
-            </div>
-            
-            <form class="auth-form" id="loginForm">
-                <div class="form-group">
-                    <label for="loginUsername">Username</label>
-                    <input type="text" id="loginUsername" class="form-control" placeholder="Masukkan username" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" id="loginPassword" class="form-control" placeholder="Masukkan password" required>
-                        <button type="button" class="password-toggle-btn" id="toggleLoginPassword">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <div class="password-requirements">
-                        <div class="requirement">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Password harus diawali huruf kapital dan diakhiri angka</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-auth btn-primary">Masuk</button>
-                
-                <div class="auth-footer">
-                    <p>Belum punya akun? <span class="auth-link" id="showSignup">Daftar sekarang</span></p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="auth-container" id="signupContainer">
-        <div class="auth-card">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <h1 class="auth-title">Buat Akun Baru</h1>
-                <p class="auth-subtitle">Isi data berikut untuk mendaftar</p>
-            </div>
-            
-            <form class="auth-form" id="signupForm">
-                <div class="form-group">
-                    <label>Upload Foto Profil</label>
-                    <div style="text-align:center;margin-bottom:0;">
-                        <div style="position:relative;width:70px;height:70px;margin:0 auto 8px;border-radius:50%;overflow:hidden;border:3px solid var(--gold);">
-                            <div id="signupProfilePicture" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gold),var(--gold-light));">
-                                <i class="fas fa-user" style="font-size:1.8rem;color:var(--brown-dark);"></i>
-                            </div>
-                            <button type="button" id="signupUploadBtn" style="position:absolute;bottom:0;right:0;width:24px;height:24px;background:var(--gold);border-radius:50%;border:2px solid var(--brown-dark);color:var(--dark);cursor:pointer;display:flex;align-items:center;justify-content:center;transform:translate(10%,10%);">
-                                <i class="fas fa-camera" style="font-size:0.6rem;"></i>
-                            </button>
-                            <input type="file" id="signupProfilePictureInput" accept="image/*" style="display:none;">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="signupFullName">Nama Lengkap</label>
-                    <input type="text" id="signupFullName" class="form-control" placeholder="Masukkan nama lengkap" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Jenis Kelamin</label>
-                    <div class="gender-options">
-                        <div class="gender-option">
-                            <input type="radio" name="gender" id="male" value="male" checked>
-                            <label for="male">Laki-laki</label>
-                        </div>
-                        <div class="gender-option">
-                            <input type="radio" name="gender" id="female" value="female">
-                            <label for="female">Perempuan</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupEmail">Alamat Email</label>
-                    <input type="email" id="signupEmail" class="form-control" placeholder="Masukkan alamat email" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupPhone">Nomor WhatsApp</label>
-                    <input type="tel" id="signupPhone" class="form-control" placeholder="Masukkan nomor WhatsApp" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupAddress">Alamat Lengkap</label>
-                    <input type="text" id="signupAddress" class="form-control" placeholder="Masukkan alamat lengkap" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupMapLink">Link Google Maps</label>
-                    <input type="url" id="signupMapLink" class="form-control" placeholder="Masukkan link Google Maps">
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupUsername">Username</label>
-                    <input type="text" id="signupUsername" class="form-control" placeholder="Buat username" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <div class="password-input-wrapper">
-                        <input type="password" id="signupPassword" class="form-control" placeholder="Buat password" required>
-                        <button type="button" class="password-toggle-btn" id="toggleSignupPassword">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <div class="password-requirements">
-                        <div class="requirement">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Password harus diawali huruf kapital dan diakhiri angka</span>
-                        </div>
-                        <div class="requirement">
-                            <i class="fas fa-info-circle"></i>
-                            <span>Minimal 6 karakter</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-auth btn-primary">Daftar</button>
-                
-                <div class="auth-footer">
-                    <p>Sudah punya akun? <span class="auth-link" id="showLogin">Masuk disini</span></p>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
-        // ============================================
+        // ================================================================
         // PLAYLIST - Audio URLs
-        // ============================================
+        // ================================================================
         const playlist = [
             "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/Kebakaran.mp3",
             "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/kematian.mp3",
@@ -3589,9 +3093,9 @@
             'notifikasi': 4
         };
 
-        // ============================================
+        // ================================================================
         // DATA
-        // ============================================
+        // ================================================================
         
         const reports = [
             {
@@ -3710,7 +3214,6 @@
         let notificationIdCounter = 0;
         let notifBadgeCount = 0;
         let currentUser = null;
-        let signupProfileImage = null;
         let pendingContact = null;
         let currentlyPlaying = null;
         let posts = [];
@@ -3719,9 +3222,9 @@
         let hologramPostData = null;
         let alertTimeout = null;
 
-        // ============================================
+        // ================================================================
         // DOM ELEMENTS
-        // ============================================
+        // ================================================================
         
         const menuBtn = document.getElementById('menuBtn');
         const sidebarClose = document.getElementById('sidebarClose');
@@ -3796,17 +3299,6 @@
         const disasterBtn = document.getElementById('disasterBtn');
         const emergencyBtns = document.querySelectorAll('.emergency-btn');
         
-        const loginContainer = document.getElementById('loginContainer');
-        const signupContainer = document.getElementById('signupContainer');
-        const showSignup = document.getElementById('showSignup');
-        const showLogin = document.getElementById('showLogin');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        
-        const welcomeModal = document.getElementById('welcomeModal');
-        const modalSignIn = document.getElementById('modalSignIn');
-        const modalSignUp = document.getElementById('modalSignUp');
-        
         const postInput = document.getElementById('postInput');
         const mediaUpload = document.getElementById('mediaUpload');
         const mediaPreview = document.getElementById('mediaPreview');
@@ -3815,10 +3307,6 @@
         const postFeed = document.getElementById('postFeed');
         const postSection = document.getElementById('postSection');
         
-        const signupProfilePicture = document.getElementById('signupProfilePicture');
-        const signupUploadBtn = document.getElementById('signupUploadBtn');
-        const signupProfilePictureInput = document.getElementById('signupProfilePictureInput');
-        
         const chartNavBtns = document.querySelectorAll('.chart-nav-btn');
         const pieChartContainer = document.getElementById('pieChartContainer');
         const barChartContainer = document.getElementById('barChartContainer');
@@ -3826,11 +3314,6 @@
         const barChart = document.getElementById('barChart');
         const lineChart = document.getElementById('lineChart');
         const chartPeriodInfo = document.getElementById('chartPeriodInfo');
-        
-        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
-        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
-        const loginPassword = document.getElementById('loginPassword');
-        const signupPassword = document.getElementById('signupPassword');
 
         const profilePage = document.getElementById('profilePage');
         const profileAvatarLarge = document.getElementById('profileAvatarLarge');
@@ -3842,9 +3325,9 @@
         const profileStatFollowing = document.getElementById('profileStatFollowing');
         const profilePosts = document.getElementById('profilePosts');
 
-        // ============================================
+        // ================================================================
         // AUDIO FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function createAudioElements() {
             const audioObjects = {};
@@ -3964,12 +3447,11 @@
             }
         }
 
-        // ============================================
+        // ================================================================
         // NOTIFICATION FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function addNotification(type, title, message, sender, link) {
-            // Check if this is a self-notification (pengguna sendiri)
             if (sender && currentUser && sender === currentUser.fullName) {
                 return null;
             }
@@ -4112,9 +3594,9 @@
             updateNotifBadge();
         }
 
-        // ============================================
+        // ================================================================
         // HELPER FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function getTimeAgo(timestamp) {
             const diff = Date.now() - timestamp;
@@ -4313,18 +3795,18 @@
             document.body.style.overflow = '';
         }
 
-        // ============================================
+        // ================================================================
         // PROFILE PAGE FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function openProfilePage() {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
                 return;
             }
             
             document.getElementById('mainContent').style.display = 'none';
-            profilePage.style.display = 'block';
+            profilePage.classList.add('active');
             
             if (currentUser.profilePicture) {
                 profileAvatarLarge.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
@@ -4392,13 +3874,10 @@
             
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomProfileNav.classList.add('active');
-            
-            // Only add notification if viewed by other user
-            // This is handled when profile is opened from other user's click
         }
 
         function showHomePage() {
-            profilePage.style.display = 'none';
+            profilePage.classList.remove('active');
             document.getElementById('mainContent').style.display = 'block';
             
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -4410,13 +3889,13 @@
             overlay.classList.remove('active');
         }
 
-        // ============================================
+        // ================================================================
         // SETTINGS FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function openSettingsModal() {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -4463,7 +3942,7 @@
                 </div>
                 <div class="form-group" style="margin-bottom:10px;">
                     <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Password Lama</label>
-                    <div class="password-input-wrapper">
+                    <div class="password-input-wrapper" style="position:relative;">
                         <input type="password" id="settingsOldPassword" class="form-control" style="width:100%;padding:6px 10px;padding-right:32px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" placeholder="Masukkan password lama">
                         <button type="button" class="password-toggle-btn" id="toggleSettingsOldPassword" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(245,240,232,0.4);cursor:pointer;font-size:0.7rem;">
                             <i class="fas fa-eye"></i>
@@ -4472,7 +3951,7 @@
                 </div>
                 <div class="form-group" style="margin-bottom:10px;">
                     <label style="font-size:0.65rem;color:var(--gold-light);display:block;margin-bottom:2px;">Password Baru</label>
-                    <div class="password-input-wrapper">
+                    <div class="password-input-wrapper" style="position:relative;">
                         <input type="password" id="settingsNewPassword" class="form-control" style="width:100%;padding:6px 10px;padding-right:32px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" placeholder="Masukkan password baru">
                         <button type="button" class="password-toggle-btn" id="toggleSettingsNewPassword" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(245,240,232,0.4);cursor:pointer;font-size:0.7rem;">
                             <i class="fas fa-eye"></i>
@@ -4576,13 +4055,13 @@
             }
         }
 
-        // ============================================
+        // ================================================================
         // INVITE FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function openInviteModal() {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -4675,9 +4154,9 @@
             document.body.style.overflow = '';
         }
 
-        // ============================================
+        // ================================================================
         // CONFIRMATION FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function showConfirmation(contactName, contactNumber) {
             confirmationTitle.textContent = `Konfirmasi Panggilan`;
@@ -4693,13 +4172,13 @@
             pendingContact = null;
         }
 
-        // ============================================
+        // ================================================================
         // POST FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function createPost(text, mediaFile, isHologram, hologramData) {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -4958,7 +4437,7 @@
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
             if (!post || !currentUser) {
-                if (!currentUser) welcomeModal.classList.add('active');
+                if (!currentUser) window.location.href = 'login.html';
                 return;
             }
             
@@ -4997,7 +4476,7 @@
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
             if (!post || !currentUser) {
-                if (!currentUser) welcomeModal.classList.add('active');
+                if (!currentUser) window.location.href = 'login.html';
                 return;
             }
             
@@ -5058,7 +4537,7 @@
             const commentId = btn.dataset.commentId;
             const post = posts.find(p => p.id === postId);
             if (!post || !currentUser) {
-                if (!currentUser) welcomeModal.classList.add('active');
+                if (!currentUser) window.location.href = 'login.html';
                 return;
             }
             
@@ -5134,9 +4613,9 @@
             profileStatPosts.textContent = userPosts.length;
         }
 
-        // ============================================
+        // ================================================================
         // CHART FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function renderPieChart() {}
 
@@ -5269,15 +4748,18 @@
             }
         }
 
-        // ============================================
+        // ================================================================
         // UPDATE UI FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function updateUserUI() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
             
             sidebarUserName.textContent = currentUser.fullName;
-            sidebarUserEmail.textContent = currentUser.email;
+            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
             
             if (currentUser.profilePicture) {
                 sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
@@ -5319,7 +4801,7 @@
                 userImg.style.display = 'none';
             }
             
-            if (profilePage.style.display !== 'none') {
+            if (profilePage.classList.contains('active')) {
                 openProfilePage();
             }
         }
@@ -5334,9 +4816,9 @@
             });
         }
 
-        // ============================================
+        // ================================================================
         // SEARCH FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function performSearch(query) {
             searchResults.innerHTML = '';
@@ -5453,13 +4935,13 @@
             });
         }
 
-        // ============================================
+        // ================================================================
         // HOLOGRAM FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function convertHologramToPost() {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -5648,12 +5130,12 @@
             }, 5000);
         }
 
-        // ============================================
+        // ================================================================
         // NAVIGATION FUNCTIONS
-        // ============================================
+        // ================================================================
         
         function showHomePage() {
-            profilePage.style.display = 'none';
+            profilePage.classList.remove('active');
             document.getElementById('mainContent').style.display = 'block';
             
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -5665,9 +5147,9 @@
             overlay.classList.remove('active');
         }
 
-        // ============================================
+        // ================================================================
         // EVENT LISTENERS
-        // ============================================
+        // ================================================================
         
         homeNavLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -5696,7 +5178,7 @@
         
         userBtn.addEventListener('click', () => {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
             } else {
                 openProfilePage();
             }
@@ -5707,7 +5189,7 @@
             if (confirm('Apakah Anda yakin ingin keluar?')) {
                 currentUser = null;
                 localStorage.removeItem('salink_user');
-                location.reload();
+                window.location.href = 'login.html';
             }
         });
         
@@ -5744,9 +5226,7 @@
                 const contactNumber = item.dataset.number;
                 
                 if (!currentUser) {
-                    welcomeModal.classList.add('active');
-                    dropdownToggle.classList.remove('open');
-                    dropdownMenu.classList.remove('open');
+                    window.location.href = 'login.html';
                     return;
                 }
                 
@@ -5843,7 +5323,7 @@
         bottomProfileNav.addEventListener('click', (e) => {
             e.preventDefault();
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
             } else {
                 openProfilePage();
             }
@@ -5920,7 +5400,7 @@
         
         postSubmit.addEventListener('click', () => {
             if (!currentUser) {
-                welcomeModal.classList.add('active');
+                window.location.href = 'login.html';
                 return;
             }
             
@@ -5930,142 +5410,6 @@
             if (text === '' && !file) return;
             
             createPost(text, file, false, null);
-        });
-        
-        toggleLoginPassword.addEventListener('click', () => {
-            const icon = toggleLoginPassword.querySelector('i');
-            if (loginPassword.type === 'password') {
-                loginPassword.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                loginPassword.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-        
-        toggleSignupPassword.addEventListener('click', () => {
-            const icon = toggleSignupPassword.querySelector('i');
-            if (signupPassword.type === 'password') {
-                signupPassword.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                signupPassword.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-        
-        showSignup.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginContainer.classList.remove('active');
-            signupContainer.classList.add('active');
-        });
-        
-        showLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupContainer.classList.remove('active');
-            loginContainer.classList.add('active');
-        });
-        
-        modalSignIn.addEventListener('click', () => {
-            welcomeModal.classList.remove('active');
-            loginContainer.classList.add('active');
-        });
-        
-        modalSignUp.addEventListener('click', () => {
-            welcomeModal.classList.remove('active');
-            signupContainer.classList.add('active');
-        });
-        
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            const users = JSON.parse(localStorage.getItem('salink_users')) || [];
-            const user = users.find(u => u.username === username && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                if (!currentUser.joined) {
-                    currentUser.joined = Date.now();
-                }
-                localStorage.setItem('salink_user', JSON.stringify(currentUser));
-                loginContainer.classList.remove('active');
-                updateUserUI();
-                welcomeModal.classList.remove('active');
-                resetHologramDisplay();
-                showHomePage();
-            } else {
-                alert('Username atau password salah!');
-            }
-        });
-        
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('signupFullName').value;
-            const gender = document.querySelector('input[name="gender"]:checked').value;
-            const email = document.getElementById('signupEmail').value;
-            const phone = document.getElementById('signupPhone').value;
-            const address = document.getElementById('signupAddress').value;
-            const mapLink = document.getElementById('signupMapLink').value;
-            const username = document.getElementById('signupUsername').value;
-            const password = document.getElementById('signupPassword').value;
-            
-            const users = JSON.parse(localStorage.getItem('salink_users')) || [];
-            if (users.some(u => u.username === username)) {
-                alert('Username sudah digunakan!');
-                return;
-            }
-            
-            const newUser = {
-                fullName,
-                gender,
-                email,
-                phone,
-                address,
-                mapLink,
-                username,
-                password,
-                bio: '',
-                profilePicture: signupProfileImage || null,
-                joined: Date.now()
-            };
-            
-            users.push(newUser);
-            localStorage.setItem('salink_users', JSON.stringify(users));
-            
-            currentUser = newUser;
-            localStorage.setItem('salink_user', JSON.stringify(newUser));
-            signupContainer.classList.remove('active');
-            updateUserUI();
-            welcomeModal.classList.remove('active');
-            resetHologramDisplay();
-            showHomePage();
-            
-            alert('Pendaftaran berhasil! Selamat datang di SALINK.');
-        });
-        
-        signupUploadBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupProfilePictureInput.click();
-        });
-        
-        signupProfilePictureInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    signupProfilePicture.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
-                    signupProfileImage = ev.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
         });
         
         chartNavBtns.forEach(btn => {
@@ -6094,23 +5438,45 @@
             }
         });
 
-        // ============================================
+        // ================================================================
         // INITIALIZE
-        // ============================================
+        // ================================================================
         
+        // Cek user dari URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const userParam = urlParams.get('user');
+        
+        if (userParam) {
+            try {
+                currentUser = JSON.parse(decodeURIComponent(userParam));
+                localStorage.setItem('salink_user', JSON.stringify(currentUser));
+            } catch (e) {
+                console.warn('Gagal parse user dari URL');
+            }
+        }
+        
+        // Cek localStorage
+        if (!currentUser) {
+            const savedUser = localStorage.getItem('salink_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                } catch (e) {
+                    localStorage.removeItem('salink_user');
+                }
+            }
+        }
+        
+        // Redirect ke login jika tidak ada user
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        } else {
+            updateUserUI();
+        }
+        
+        // Inisialisasi data
         preloadAllAudio();
         generateSampleNotifications();
-        
-        const savedUser = localStorage.getItem('salink_user');
-        if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-            updateUserUI();
-            welcomeModal.classList.remove('active');
-        } else {
-            setTimeout(() => {
-                welcomeModal.classList.add('active');
-            }, 800);
-        }
         
         renderAlerts(reports);
         updateBadge();
@@ -6209,5 +5575,6 @@
             }
         }, 5000);
     </script>
+
 </body>
 </html>
