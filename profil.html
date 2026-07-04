@@ -27,6 +27,7 @@
             --footer-height: 65px;
             --danger: #ff6b35;
             --success: #4CAF50;
+            --view-color: #4fc3f7;
         }
 
         * {
@@ -60,8 +61,6 @@
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
         @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
-        @keyframes hologram-pulse { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
-        @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100vh; } }
 
         /* ===== HEADER ===== */
         .app-bar {
@@ -107,6 +106,7 @@
             gap: 6px;
         }
 
+        /* Search Button - PRIVASI (hanya untuk pemilik) */
         .search-btn {
             width: 40px;
             height: 40px;
@@ -119,12 +119,14 @@
             color: var(--gold);
             cursor: pointer;
             box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
+            transition: all 0.3s;
         }
-
+        .search-btn:hover { background: rgba(212, 168, 73, 0.2); }
         .search-btn:active {
             box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
             transform: scale(0.95);
         }
+        .search-btn.private { display: none; }
 
         .back-btn {
             width: 40px;
@@ -141,7 +143,6 @@
             text-decoration: none;
             transition: all 0.3s;
         }
-
         .back-btn:hover { background: rgba(212, 168, 73, 0.2); }
         .back-btn:active { box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e; transform: scale(0.95); }
 
@@ -210,6 +211,12 @@
         }
         .nav-item-bottom .badge.show { display: flex; }
 
+        .nav-item-bottom .badge.view-badge {
+            background: #4fc3f7;
+            color: var(--dark);
+            box-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
+        }
+
         /* ===== MAIN CONTENT ===== */
         .main-content {
             padding: calc(var(--header-height) + 14px) 14px calc(var(--footer-height) + 14px);
@@ -244,7 +251,7 @@
 
         .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Tombol Sidebar di kiri foto */
+        /* Sidebar Toggle - PRIVASI (hanya untuk pemilik) */
         .profile-sidebar-toggle {
             position: absolute;
             left: 5px;
@@ -268,54 +275,588 @@
             background: rgba(212, 168, 73, 0.3);
             transform: translateY(-50%) scale(1.05);
         }
+        .profile-sidebar-toggle.private { display: none; }
 
         .profile-name { font-size: 1.2rem; font-weight: 600; color: var(--gold-light); }
         .profile-username { font-size: 0.8rem; color: rgba(245, 240, 232, 0.5); }
         .profile-bio { font-size: 0.75rem; color: var(--cream); margin-top: 4px; opacity: 0.8; }
+
+        /* ===== PROFILE VIEWS COUNTER ===== */
+        .profile-views-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 6px auto 10px;
+            padding: 4px 14px;
+            background: rgba(79, 195, 247, 0.1);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--view-color);
+            max-width: fit-content;
+        }
+        .profile-views-counter i { font-size: 0.8rem; }
+        .profile-views-counter .view-count { font-weight: 700; }
+
+        /* ===== TOMBOL PESAN & INVITE ===== */
+        .profile-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 14px;
+            flex-wrap: wrap;
+        }
+
+        .profile-action-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-action-btn.pesan {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--dark);
+            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
+        }
+        .profile-action-btn.pesan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
+        }
+
+        .profile-action-btn.invite {
+            background: rgba(212, 168, 73, 0.15);
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+        }
+        .profile-action-btn.invite:hover {
+            background: rgba(212, 168, 73, 0.25);
+            transform: translateY(-2px);
+        }
 
         /* ===== PROFILE STATS ===== */
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-            margin: 12px auto 16px;
+            margin: 0 auto 16px;
             background: rgba(61, 35, 20, 0.3);
             padding: 10px 12px;
             border-radius: 12px;
             border: 1px solid rgba(212, 168, 73, 0.1);
-            position: relative;
             max-width: 400px;
         }
 
-        .profile-stat-item { text-align: center; }
+        .profile-stat-item {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 4px;
+            border-radius: 8px;
+        }
+        .profile-stat-item:hover {
+            background: rgba(212, 168, 73, 0.1);
+            transform: scale(1.02);
+        }
+        .profile-stat-item:active { transform: scale(0.95); }
+
         .profile-stat-number { font-size: 1.1rem; font-weight: 700; color: var(--gold-light); display: block; }
         .profile-stat-label { font-size: 0.55rem; color: rgba(245, 240, 232, 0.5); }
 
-        /* Tombol PESAN - Center */
-        .profile-pesan-btn {
-            display: block;
-            margin: 0 auto 10px;
+        /* ===== PROFILE NAVBAR (di bawah stats) ===== */
+        .profile-navbar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 16px;
+            background: rgba(61, 35, 20, 0.3);
+            padding: 8px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+        }
+
+        .profile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 4px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: rgba(245, 240, 232, 0.7);
+            background: rgba(255, 248, 240, 0.03);
+            border: 1px solid transparent;
+            font-size: 0.55rem;
+            gap: 4px;
+        }
+        .profile-nav-item:hover {
+            background: rgba(212, 168, 73, 0.1);
+            border-color: var(--gold);
+            color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        .profile-nav-item i { font-size: 1.1rem; }
+        .profile-nav-item span { font-size: 0.5rem; }
+
+        .profile-nav-item.private { display: none; }
+
+        /* ===== POST SECTION ===== */
+        .post-section {
+            margin-top: 0;
+            background: rgba(61, 35, 20, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid var(--gold);
+            box-shadow: var(--neumorph-shadow);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .post-section::-webkit-scrollbar { width: 3px; }
+        .post-section::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
+        .post-section::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+        .post-header { display: flex; align-items: center; margin-bottom: 12px; }
+        .post-profile-pic {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid var(--gold);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .post-profile-pic:hover { transform: scale(1.05); }
+        .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .post-profile-pic i { color: var(--brown-dark); font-size: 0.85rem; }
+
+        .post-user-info h4 { font-size: 0.85rem; color: var(--gold-light); }
+        .post-user-info h4 .profile-link { color: var(--gold-light); text-decoration: none; cursor: pointer; transition: all 0.3s; }
+        .post-user-info h4 .profile-link:hover { text-decoration: underline; color: var(--cream); }
+        .post-user-info small { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); }
+
+        /* ===== INPUT POSTINGAN (PRIVASI - hanya untuk pemilik) ===== */
+        .post-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .post-input-area.private { display: none !important; }
+
+        .post-notif-selector {
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .post-notif-selector select {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255, 248, 240, 0.06);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 8px;
+            color: var(--cream);
+            font-size: 0.75rem;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .post-notif-selector select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 73, 0.15);
+        }
+        .post-notif-selector select option {
+            background: var(--brown-dark);
+            color: var(--cream);
+            padding: 8px;
+        }
+        .post-notif-selector .select-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(245, 240, 232, 0.3);
+            pointer-events: none;
+            font-size: 0.7rem;
+        }
+
+        .post-input {
+            width: 100%;
+            background: rgba(255, 248, 240, 0.05);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--cream);
+            resize: none;
+            min-height: 55px;
+            font-size: 0.75rem;
+        }
+        .post-input:focus { outline: none; border-color: var(--gold); }
+
+        .post-actions-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .post-actions-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+        .media-upload-btn {
+            background: none;
+            border: none;
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+        }
+        .media-upload-btn i { font-size: 0.9rem; }
+
+        .map-upload-btn {
+            background: none;
+            border: none;
+            color: var(--gold-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        .map-upload-btn:hover { opacity: 1; color: var(--gold); }
+        .map-upload-btn.active { opacity: 1; color: var(--gold); }
+
+        .file-input { display: none; }
+        .map-input { display: none; width: 100%; margin-top: 6px; }
+        .map-input.show { display: block; animation: fadeIn 0.3s ease; }
+        .map-input input {
+            width: 100%;
+            padding: 6px 10px;
+            background: rgba(255, 248, 240, 0.05);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 6px;
+            color: var(--cream);
+            font-size: 0.7rem;
+        }
+        .map-input input:focus { outline: none; border-color: var(--gold); }
+
+        .post-submit-btn {
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: var(--dark);
             border: none;
-            padding: 8px 24px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 18px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
+            font-weight: 600;
+            font-size: 0.7rem;
             transition: all 0.3s;
-            text-decoration: none;
-            text-align: center;
-            max-width: 200px;
-            width: fit-content;
         }
-        .profile-pesan-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
+        .post-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .post-submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3); }
+
+        .media-preview { margin-top: 8px; position: relative; display: none; }
+        .media-preview img, .media-preview video { max-width: 100%; max-height: 120px; border-radius: 8px; }
+        .remove-media {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
         }
 
-        /* ===== SIDEBAR ===== */
+        .post-feed { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+
+        /* ===== PESAN PRIVASI ===== */
+        .private-view-message {
+            text-align: center;
+            padding: 16px 12px;
+            color: rgba(245, 240, 232, 0.5);
+            font-size: 0.7rem;
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 10px;
+            border: 1px dashed rgba(212, 168, 73, 0.15);
+            margin-bottom: 12px;
+        }
+        .private-view-message i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 6px;
+            color: var(--gold);
+            opacity: 0.5;
+        }
+        .private-view-message .owner-name {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        /* ===== POST CARD ===== */
+        .post {
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 10px;
+            padding: 14px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+            position: relative;
+        }
+
+        .post-options {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: rgba(245, 240, 232, 0.4);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            z-index: 3;
+        }
+        .post-options:hover { background: rgba(255, 255, 255, 0.05); color: var(--gold-light); }
+
+        .post-options-menu {
+            position: absolute;
+            top: 30px;
+            right: 8px;
+            background: rgba(13, 8, 5, 0.95);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 4px 0;
+            min-width: 140px;
+            z-index: 10;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .post-options-menu.show { display: block; animation: fadeIn 0.2s ease; }
+
+        .post-options-menu .option-item {
+            padding: 8px 14px;
+            color: var(--cream);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        .post-options-menu .option-item:hover { background: rgba(212, 168, 73, 0.1); color: var(--gold-light); }
+        .post-options-menu .option-item i { width: 16px; font-size: 0.8rem; }
+
+        .post-content { margin: 8px 0; }
+        .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--cream); white-space: pre-wrap; }
+        .post-media { margin: 8px 0; }
+        .post-media img, .post-media video { max-width: 100%; max-height: 220px; border-radius: 8px; }
+
+        .post-notif-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .post-notif-badge.fire { background: rgba(255, 107, 53, 0.2); color: #ff6b35; border: 1px solid rgba(255, 107, 53, 0.3); }
+        .post-notif-badge.death { background: rgba(199, 146, 234, 0.2); color: #c792ea; border: 1px solid rgba(199, 146, 234, 0.3); }
+        .post-notif-badge.theft { background: rgba(212, 168, 73, 0.2); color: var(--gold-light); border: 1px solid rgba(212, 168, 73, 0.3); }
+        .post-notif-badge.disaster { background: rgba(79, 195, 247, 0.2); color: #4fc3f7; border: 1px solid rgba(79, 195, 247, 0.3); }
+
+        .post-notif-detail {
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin: 4px 0 6px;
+            border: 1px solid rgba(212, 168, 73, 0.08);
+            font-size: 0.65rem;
+        }
+        .post-notif-detail .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 0;
+        }
+        .post-notif-detail .detail-row .label {
+            color: var(--gold-light);
+            font-weight: 500;
+            min-width: 70px;
+            font-size: 0.6rem;
+        }
+        .post-notif-detail .detail-row .value {
+            color: var(--cream);
+            font-size: 0.65rem;
+        }
+        .post-notif-detail .detail-row .value i {
+            color: var(--gold);
+            margin-right: 4px;
+        }
+
+        .post-map-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 4px 0;
+            padding: 4px 8px;
+            background: rgba(212, 168, 73, 0.05);
+            border: 1px solid rgba(212, 168, 73, 0.15);
+            border-radius: 4px;
+            font-size: 0.6rem;
+            color: var(--gold-light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .post-map-link:hover {
+            background: rgba(212, 168, 73, 0.1);
+            border-color: var(--gold);
+        }
+        .post-map-link i { color: var(--gold); }
+
+        .hologram-badge {
+            display: inline-block;
+            background: rgba(212, 168, 73, 0.15);
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 0.5rem;
+            color: var(--gold);
+            margin-left: 6px;
+            border: 1px solid rgba(212, 168, 73, 0.2);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            padding: 6px 0;
+            border-top: 1px solid rgba(212, 168, 73, 0.1);
+            border-bottom: 1px solid rgba(212, 168, 73, 0.1);
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: rgba(245, 240, 232, 0.6);
+            font-size: 0.65rem;
+            transition: all 0.3s;
+            padding: 3px 6px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+        }
+        .post-action:hover { color: var(--gold-light); background: rgba(255, 255, 255, 0.05); }
+        .post-action i { font-size: 0.8rem; }
+        .post-action.liked { color: #ff6b35; }
+        .post-action.liked i { color: #ff6b35; }
+        .post-action.delete { color: rgba(255, 107, 53, 0.6); margin-left: auto; }
+        .post-action.delete:hover { color: #ff6b35; }
+        .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
+
+        /* ===== COMMENTS ===== */
+        .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
+        .comment {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 8px;
+            padding: 6px 8px;
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 8px;
+        }
+        .comment-main { display: flex; align-items: flex-start; gap: 8px; }
+        .comment-profile-pic {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        }
+        .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .comment-profile-pic i { font-size: 0.65rem; color: var(--brown-dark); }
+        .comment-content { flex: 1; }
+        .comment-user { font-weight: 600; font-size: 0.65rem; color: var(--gold-light); }
+        .comment-text { font-size: 0.7rem; color: var(--cream); margin: 2px 0; }
+        .comment-time { font-size: 0.5rem; color: rgba(245, 240, 232, 0.35); }
+        .comment-actions { display: flex; gap: 10px; margin-top: 4px; }
+        .comment-action { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); cursor: pointer; transition: all 0.3s; }
+        .comment-action:hover { color: var(--gold-light); }
+        .comment-action.delete-comment { color: rgba(255, 107, 53, 0.4); }
+        .comment-action.delete-comment:hover { color: #ff6b35; }
+
+        .comment-replies { margin-left: 34px; margin-top: 6px; border-left: 2px solid rgba(212, 168, 73, 0.15); padding-left: 10px; }
+        .reply-comment { margin-bottom: 6px; padding: 4px 6px; background: rgba(255, 248, 240, 0.02); border-radius: 6px; }
+        .reply-comment .comment-main { display: flex; align-items: flex-start; gap: 6px; }
+        .reply-comment .comment-profile-pic { width: 20px; height: 20px; }
+        .reply-comment .comment-user { font-size: 0.6rem; }
+        .reply-comment .comment-text { font-size: 0.65rem; }
+        .reply-comment .comment-time { font-size: 0.45rem; }
+
+        .add-comment { display: flex; gap: 6px; align-items: center; }
+        .comment-input {
+            flex: 1;
+            background: rgba(255, 248, 240, 0.05);
+            border: 1px solid rgba(212, 168, 73, 0.15);
+            border-radius: 18px;
+            padding: 5px 10px;
+            color: var(--cream);
+            font-size: 0.65rem;
+        }
+        .comment-input:focus { outline: none; border-color: var(--gold); }
+        .send-comment {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: var(--dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        /* ===== SIDEBAR (PRIVASI) ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -332,7 +873,6 @@
             flex-direction: column;
             transition: left 0.3s ease;
         }
-
         .sidebar::-webkit-scrollbar { width: 3px; }
         .sidebar::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
         .sidebar::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
@@ -488,345 +1028,86 @@
         }
         .overlay.active { opacity: 1; pointer-events: all; }
 
-        /* ===== POST SECTION ===== */
-        .post-section {
-            margin-top: 12px;
-            background: rgba(61, 35, 20, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid var(--gold);
-            box-shadow: var(--neumorph-shadow);
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        .post-section::-webkit-scrollbar { width: 3px; }
-        .post-section::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
-        .post-section::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-
-        .post-header { display: flex; align-items: center; margin-bottom: 12px; }
-        .post-profile-pic {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 2px solid var(--gold);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .post-profile-pic:hover { transform: scale(1.05); }
-        .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-        .post-profile-pic i { color: var(--brown-dark); font-size: 0.85rem; }
-
-        .post-user-info h4 { font-size: 0.85rem; color: var(--gold-light); }
-        .post-user-info h4 .profile-link { color: var(--gold-light); text-decoration: none; cursor: pointer; transition: all 0.3s; }
-        .post-user-info h4 .profile-link:hover { text-decoration: underline; color: var(--cream); }
-        .post-user-info small { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); }
-
-        .post-input-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-        .post-input {
-            width: 100%;
-            background: rgba(255, 248, 240, 0.05);
-            border: 1px solid rgba(212, 168, 73, 0.2);
-            border-radius: 8px;
-            padding: 10px;
-            color: var(--cream);
-            resize: none;
-            min-height: 55px;
-            font-size: 0.75rem;
-        }
-        .post-input:focus { outline: none; border-color: var(--gold); }
-
-        .post-actions-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .post-actions-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-        .media-upload-btn {
-            background: none;
-            border: none;
-            color: var(--gold);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.7rem;
-        }
-        .media-upload-btn i { font-size: 0.9rem; }
-
-        .map-upload-btn {
-            background: none;
-            border: none;
-            color: var(--gold-light);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.7rem;
-            opacity: 0.7;
-            transition: all 0.3s;
-        }
-        .map-upload-btn:hover { opacity: 1; color: var(--gold); }
-        .map-upload-btn.active { opacity: 1; color: var(--gold); }
-
-        .file-input { display: none; }
-        .map-input { display: none; width: 100%; margin-top: 6px; }
-
-        .map-input.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        .map-input input {
-            width: 100%;
-            padding: 6px 10px;
-            background: rgba(255, 248, 240, 0.05);
-            border: 1px solid rgba(212, 168, 73, 0.2);
-            border-radius: 6px;
-            color: var(--cream);
-            font-size: 0.7rem;
-        }
-        .map-input input:focus { outline: none; border-color: var(--gold); }
-
-        .post-submit-btn {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--dark);
-            border: none;
-            padding: 5px 14px;
-            border-radius: 18px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.7rem;
-            transition: all 0.3s;
-        }
-        .post-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .post-submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3); }
-
-        .media-preview { margin-top: 8px; position: relative; display: none; }
-        .media-preview img, .media-preview video { max-width: 100%; max-height: 120px; border-radius: 8px; }
-        .remove-media {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(0, 0, 0, 0.7);
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-
-        .post-feed { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
-
-        /* ===== POST CARD ===== */
-        .post {
-            background: rgba(255, 248, 240, 0.03);
-            border-radius: 10px;
-            padding: 14px;
-            border: 1px solid rgba(212, 168, 73, 0.1);
-            position: relative;
-        }
-
-        .post-options {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: none;
-            border: none;
-            color: rgba(245, 240, 232, 0.4);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: all 0.3s;
-            z-index: 3;
-        }
-        .post-options:hover { background: rgba(255, 255, 255, 0.05); color: var(--gold-light); }
-
-        .post-options-menu {
-            position: absolute;
-            top: 30px;
-            right: 8px;
+        /* ===== SEARCH MODAL (PRIVASI) ===== */
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(13, 8, 5, 0.95);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            padding: 4px 0;
-            min-width: 140px;
-            z-index: 10;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 1500;
             display: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-        .post-options-menu.show { display: block; animation: fadeIn 0.2s ease; }
-
-        .post-options-menu .option-item {
-            padding: 8px 14px;
-            color: var(--cream);
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-        }
-        .post-options-menu .option-item:hover { background: rgba(212, 168, 73, 0.1); color: var(--gold-light); }
-        .post-options-menu .option-item i { width: 16px; font-size: 0.8rem; }
-
-        .post-content { margin: 8px 0; }
-        .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--cream); white-space: pre-wrap; }
-        .post-media { margin: 8px 0; }
-        .post-media img, .post-media video { max-width: 100%; max-height: 220px; border-radius: 8px; }
-
-        /* Map link di postingan */
-        .post-map-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin: 6px 0;
-            padding: 6px 10px;
-            background: rgba(212, 168, 73, 0.05);
-            border: 1px solid rgba(212, 168, 73, 0.15);
-            border-radius: 6px;
-            font-size: 0.65rem;
-            color: var(--gold-light);
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .post-map-link:hover {
-            background: rgba(212, 168, 73, 0.1);
-            border-color: var(--gold);
-        }
-        .post-map-link i { color: var(--gold); }
-
-        /* Hologram badge */
-        .hologram-badge {
-            display: inline-block;
-            background: rgba(212, 168, 73, 0.15);
-            padding: 1px 8px;
-            border-radius: 10px;
-            font-size: 0.5rem;
-            color: var(--gold);
-            margin-left: 6px;
-            border: 1px solid rgba(212, 168, 73, 0.2);
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 12px;
-            padding: 6px 0;
-            border-top: 1px solid rgba(212, 168, 73, 0.1);
-            border-bottom: 1px solid rgba(212, 168, 73, 0.1);
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            color: rgba(245, 240, 232, 0.6);
-            font-size: 0.65rem;
-            transition: all 0.3s;
-            padding: 3px 6px;
-            border-radius: 6px;
-            border: none;
-            background: none;
-        }
-        .post-action:hover { color: var(--gold-light); background: rgba(255, 255, 255, 0.05); }
-        .post-action i { font-size: 0.8rem; }
-        .post-action.liked { color: #ff6b35; }
-        .post-action.liked i { color: #ff6b35; }
-        .post-action.delete { color: rgba(255, 107, 53, 0.6); margin-left: auto; }
-        .post-action.delete:hover { color: #ff6b35; }
-        .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
-
-        /* ===== COMMENTS ===== */
-        .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
-        .comment {
-            display: flex;
             flex-direction: column;
-            margin-bottom: 8px;
-            padding: 6px 8px;
-            background: rgba(255, 248, 240, 0.03);
-            border-radius: 8px;
+            padding: 20px;
         }
-        .comment-main { display: flex; align-items: flex-start; gap: 8px; }
-        .comment-profile-pic {
-            width: 26px;
-            height: 26px;
+        .search-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: rgba(255, 248, 240, 0.06);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 10px;
+            color: var(--cream);
+            font-size: 0.85rem;
+        }
+        .search-input:focus { outline: none; border-color: var(--gold); }
+        .search-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        .search-close:hover { background: rgba(212, 168, 73, 0.2); }
+        .search-results { flex: 1; overflow-y: auto; }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(212, 168, 73, 0.05);
+        }
+        .search-result-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .search-result-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             overflow: hidden;
+            border: 2px solid var(--gold);
             flex-shrink: 0;
-            border: 1px solid var(--gold);
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--brown-dark);
+            font-size: 1.2rem;
         }
-        .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-        .comment-profile-pic i { font-size: 0.65rem; color: var(--brown-dark); }
-        .comment-content { flex: 1; }
-        .comment-user { font-weight: 600; font-size: 0.65rem; color: var(--gold-light); }
-        .comment-text { font-size: 0.7rem; color: var(--cream); margin: 2px 0; }
-        .comment-time { font-size: 0.5rem; color: rgba(245, 240, 232, 0.35); }
-        .comment-actions { display: flex; gap: 10px; margin-top: 4px; }
-        .comment-action { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); cursor: pointer; transition: all 0.3s; }
-        .comment-action:hover { color: var(--gold-light); }
-        .comment-action.delete-comment { color: rgba(255, 107, 53, 0.4); }
-        .comment-action.delete-comment:hover { color: #ff6b35; }
-
-        .comment-replies { margin-left: 34px; margin-top: 6px; border-left: 2px solid rgba(212, 168, 73, 0.15); padding-left: 10px; }
-        .reply-comment { margin-bottom: 6px; padding: 4px 6px; background: rgba(255, 248, 240, 0.02); border-radius: 6px; }
-        .reply-comment .comment-main { display: flex; align-items: flex-start; gap: 6px; }
-        .reply-comment .comment-profile-pic { width: 20px; height: 20px; }
-        .reply-comment .comment-user { font-size: 0.6rem; }
-        .reply-comment .comment-text { font-size: 0.65rem; }
-        .reply-comment .comment-time { font-size: 0.45rem; }
-
-        .add-comment { display: flex; gap: 6px; align-items: center; }
-        .comment-input {
-            flex: 1;
-            background: rgba(255, 248, 240, 0.05);
-            border: 1px solid rgba(212, 168, 73, 0.15);
-            border-radius: 18px;
-            padding: 5px 10px;
-            color: var(--cream);
-            font-size: 0.65rem;
-        }
-        .comment-input:focus { outline: none; border-color: var(--gold); }
-        .send-comment {
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            color: var(--dark);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            flex-shrink: 0;
-        }
+        .search-result-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .search-result-info { flex: 1; }
+        .search-result-name { font-size: 0.85rem; color: var(--cream); font-weight: 500; }
+        .search-result-desc { font-size: 0.65rem; color: rgba(245, 240, 232, 0.5); }
 
         /* ===== MODALS ===== */
         .modal-overlay {
@@ -899,6 +1180,42 @@
         .modal-close:hover { background: rgba(255, 107, 53, 0.2); transform: rotate(90deg); }
 
         .modal-body { color: var(--cream); font-size: 0.75rem; overflow-y: auto; flex: 1; }
+
+        /* ===== FOLLOWERS / FOLLOWING MODAL ===== */
+        .follower-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(61, 35, 20, 0.3);
+            margin-bottom: 8px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .follower-item:hover {
+            background: rgba(61, 35, 20, 0.5);
+            border-color: var(--gold-light);
+        }
+        .follower-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brown-dark);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        .follower-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .follower-info { flex: 1; }
+        .follower-name { font-size: 0.8rem; color: var(--cream); font-weight: 500; }
+        .follower-username { font-size: 0.6rem; color: rgba(245, 240, 232, 0.4); }
+        .follower-status { font-size: 0.55rem; color: rgba(245, 240, 232, 0.3); }
 
         /* ===== TOAST ===== */
         .toast-container {
@@ -988,13 +1305,20 @@
             .profile-sidebar-toggle { width: 30px; height: 30px; font-size: 0.7rem; left: 2px; }
             .profile-stats { padding: 8px 10px; gap: 4px; }
             .profile-stat-number { font-size: 0.9rem; }
-            .profile-pesan-btn { font-size: 0.65rem; padding: 6px 16px; max-width: 160px; }
+            .profile-action-btn { font-size: 0.65rem; padding: 6px 14px; }
+            .profile-navbar { grid-template-columns: repeat(2, 1fr); padding: 6px; }
+            .profile-nav-item i { font-size: 0.9rem; }
+            .profile-nav-item span { font-size: 0.45rem; }
             .post-actions { gap: 8px; }
             .post-action { font-size: 0.6rem; padding: 2px 4px; }
             .post-options { font-size: 0.9rem; top: 4px; right: 4px; }
             .post-options-menu { min-width: 120px; right: 4px; }
             .post-actions-left { gap: 4px; }
             .media-upload-btn span, .map-upload-btn span { display: none; }
+            .search-modal { padding: 12px; }
+            .profile-views-counter { font-size: 0.6rem; padding: 3px 10px; }
+            .private-view-message { font-size: 0.65rem; padding: 12px 8px; }
+            .private-view-message i { font-size: 1.2rem; }
         }
 
         @media (max-width: 380px) {
@@ -1004,6 +1328,7 @@
             .profile-avatar-large { width: 60px; height: 60px; font-size: 1.6rem; }
             .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 2px; }
             .profile-stat-number { font-size: 0.8rem; }
+            .profile-navbar { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -1019,18 +1344,29 @@
             <span>SALINK</span>
         </a>
         <div class="header-right">
-            <button class="search-btn" id="searchBtn">
+            <button class="search-btn" id="searchBtn" title="Cari">
                 <i class="fas fa-search"></i>
             </button>
         </div>
     </header>
 
-    <!-- ===== SIDEBAR ===== -->
+    <!-- ===== SEARCH MODAL (PRIVASI) ===== -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-header">
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari postingan atau pengguna...">
+            <button class="search-close" id="searchClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- ===== SIDEBAR (PRIVASI) ===== -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
         </button>
-        
+
         <div class="sidebar-header">
             <div class="sidebar-user-avatar" id="sidebarUserAvatar">
                 <i class="fas fa-user"></i>
@@ -1038,7 +1374,7 @@
             <div class="sidebar-user-name" id="sidebarUserName">Guest</div>
             <div class="sidebar-user-email" id="sidebarUserEmail">guest@salink.id</div>
         </div>
-        
+
         <ul class="nav-menu">
             <li class="nav-item">
                 <a href="dashboard.html" class="nav-link active">
@@ -1053,7 +1389,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="mapNavLink">
+                <a href="https://www.google.com/maps" target="_blank" class="nav-link" id="mapNavLink">
                     <i class="fas fa-map-marked-alt"></i>
                     <span>Peta Darurat</span>
                 </a>
@@ -1082,7 +1418,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="infoNavLink">
+                <a href="https://salink.id/informasi" target="_blank" class="nav-link" id="infoNavLink">
                     <i class="fas fa-info-circle"></i>
                     <span>Informasi</span>
                 </a>
@@ -1110,6 +1446,7 @@
 
         <!-- ===== PROFILE HEADER ===== -->
         <div class="profile-header">
+            <!-- Sidebar Toggle - PRIVASI (hanya untuk pemilik) -->
             <button class="profile-sidebar-toggle" id="profileSidebarToggle" title="Buka Menu">
                 <i class="fas fa-bars"></i>
             </button>
@@ -1121,44 +1458,112 @@
             <div class="profile-bio" id="profileBio">Bergabung di SALINK untuk keamanan bersama</div>
         </div>
 
-        <!-- ===== TOMBOL PESAN - CENTER ===== -->
-        <a href="https://salink.id/pesan" target="_blank" class="profile-pesan-btn" id="profilePesanBtn">
-            <i class="fas fa-paper-plane"></i> PESAN
-        </a>
+        <!-- ===== VIEWS COUNTER ===== -->
+        <div class="profile-views-counter">
+            <i class="fas fa-eye"></i>
+            <span class="view-count" id="profileViewCount">0</span>
+            <span>Tayangan Profil</span>
+        </div>
+
+        <!-- ===== TOMBOL PESAN & INVITE ===== -->
+        <div class="profile-actions">
+            <a href="https://salink.id/pesan" target="_blank" class="profile-action-btn pesan">
+                <i class="fas fa-paper-plane"></i> PESAN
+            </a>
+            <button class="profile-action-btn invite" id="inviteBtn">
+                <i class="fas fa-user-plus"></i> Invite
+            </button>
+        </div>
 
         <!-- ===== PROFILE STATS ===== -->
         <div class="profile-stats">
-            <div class="profile-stat-item">
+            <div class="profile-stat-item" data-type="posts" id="statPosts">
                 <span class="profile-stat-number" id="profileStatPosts">0</span>
                 <span class="profile-stat-label">Postingan</span>
             </div>
-            <div class="profile-stat-item">
+            <div class="profile-stat-item" data-type="followers" id="statFollowers">
                 <span class="profile-stat-number" id="profileStatFollowers">0</span>
                 <span class="profile-stat-label">Pengikut</span>
             </div>
-            <div class="profile-stat-item">
+            <div class="profile-stat-item" data-type="following" id="statFollowing">
                 <span class="profile-stat-number" id="profileStatFollowing">0</span>
                 <span class="profile-stat-label">Mengikuti</span>
             </div>
         </div>
 
+        <!-- ===== PROFILE NAVBAR ===== -->
+        <div class="profile-navbar" id="profileNavbar">
+            <!-- Jual - PRIVASI (hanya untuk pemilik) -->
+            <a href="https://salink.id/jual" target="_blank" class="profile-nav-item private" id="navJual">
+                <i class="fas fa-store"></i>
+                <span>🛍️ Jual</span>
+            </a>
+            <!-- Foto - PUBLIK -->
+            <a href="https://salink.id/foto" target="_blank" class="profile-nav-item" id="navFoto">
+                <i class="fas fa-image"></i>
+                <span>🖼️ Foto</span>
+            </a>
+            <!-- Dokumentasi - PRIVASI (hanya untuk pemilik) -->
+            <a href="https://salink.id/dokumentasi" target="_blank" class="profile-nav-item private" id="navDokumentasi">
+                <i class="fas fa-folder"></i>
+                <span>📁 Dokumentasi</span>
+            </a>
+            <!-- Teman - PUBLIK -->
+            <a href="#" class="profile-nav-item" id="navTeman">
+                <i class="fas fa-users"></i>
+                <span>🧑‍🤝‍🧑 Teman</span>
+            </a>
+        </div>
+
         <!-- ===== POST SECTION ===== -->
         <div class="post-section" id="postSection">
-            <div class="post-header">
-                <div class="post-profile-pic" id="postProfilePic">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="post-user-info">
-                    <h4 id="postUserName">Buat Postingan</h4>
-                    <small>Bagikan informasi penting</small>
-                </div>
-            </div>
 
-            <!-- Input Postingan -->
-            <div class="post-input-area">
+            <!-- ===== INPUT POSTINGAN (PRIVASI - hanya untuk pemilik) ===== -->
+            <div class="post-input-area" id="postInputArea">
+                <div class="post-header">
+                    <div class="post-profile-pic" id="postProfilePic">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="post-user-info">
+                        <h4 id="postUserName">Buat Postingan</h4>
+                        <small>Bagikan informasi penting</small>
+                    </div>
+                </div>
+
+                <div class="post-notif-selector">
+                    <select id="notifTypeSelect">
+                        <option value="none">📝 Postingan Biasa</option>
+                        <option value="fire">🔥 Kebakaran</option>
+                        <option value="death">💀 Kematian</option>
+                        <option value="theft">💎 Pencurian</option>
+                        <option value="disaster">🌪️ Bencana</option>
+                    </select>
+                    <span class="select-arrow"><i class="fas fa-chevron-down"></i></span>
+                </div>
+
+                <div class="notif-detail-fields" id="notifDetailFields">
+                    <div class="field-group">
+                        <label>Dilaporkan Oleh</label>
+                        <div class="field-value" id="notifReportedBy">
+                            <i class="fas fa-user"></i> <span id="reportedByName">-</span>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Alamat Lengkap</label>
+                        <div class="field-value" id="notifAddress">
+                            <i class="fas fa-map-marker-alt"></i> <span id="notifAddressText">-</span>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Titik Koordinat</label>
+                        <div class="field-value" id="notifCoords">
+                            <i class="fas fa-crosshairs"></i> <span id="notifCoordsText">-</span>
+                        </div>
+                    </div>
+                </div>
+
                 <textarea class="post-input" id="postInput" placeholder="Apa yang terjadi di lokasi Anda?"></textarea>
 
-                <!-- Upload Google Maps -->
                 <div class="map-input" id="mapInput">
                     <input type="url" id="mapLinkInput" placeholder="https://maps.app.goo.gl/...">
                 </div>
@@ -1184,7 +1589,14 @@
                 </div>
             </div>
 
-            <!-- Feed Postingan -->
+            <!-- ===== PESAN PRIVASI ===== -->
+            <div class="private-view-message" id="privateViewMessage" style="display:none;">
+                <i class="fas fa-lock"></i>
+                <p>Halaman ini adalah profil pribadi <span class="owner-name" id="privateOwnerName">-</span></p>
+                <p style="font-size:0.65rem;margin-top:4px;">Anda hanya dapat melihat postingan. Fitur membuat postingan hanya untuk pemilik akun.</p>
+            </div>
+
+            <!-- ===== FEED POSTINGAN ===== -->
             <div class="post-feed" id="postFeed"></div>
         </div>
 
@@ -1204,14 +1616,15 @@
             <i class="fas fa-user-plus"></i>
             <span>Invite</span>
         </a>
-        <a href="#" class="nav-item-bottom active" id="bottomNotifNav">
+        <a href="#" class="nav-item-bottom" id="bottomNotifNav">
             <i class="fas fa-bell"></i>
             <span>Notif</span>
             <span class="badge" id="notifBadge">0</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomProfileNav">
+        <a href="#" class="nav-item-bottom active" id="bottomProfileNav">
             <i class="fas fa-user"></i>
             <span>Profil</span>
+            <span class="badge view-badge" id="viewBadge">0</span>
         </a>
     </nav>
 
@@ -1320,23 +1733,122 @@
         </div>
     </div>
 
+    <!-- Followers Modal -->
+    <div class="modal-overlay" id="followersModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-users"></i>
+                    <span>Pengikut</span>
+                    <span style="background:var(--gold);color:var(--dark);padding:2px 10px;border-radius:12px;font-size:0.7rem;margin-left:8px;" id="followersCount">0</span>
+                </div>
+                <button class="modal-close" id="followersModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="followersModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Following Modal -->
+    <div class="modal-overlay" id="followingModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Mengikuti</span>
+                    <span style="background:var(--gold);color:var(--dark);padding:2px 10px;border-radius:12px;font-size:0.7rem;margin-left:8px;" id="followingCount">0</span>
+                </div>
+                <button class="modal-close" id="followingModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="followingModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Teman Modal -->
+    <div class="modal-overlay" id="temanModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-users"></i>
+                    <span>Daftar Teman</span>
+                    <span style="background:var(--gold);color:var(--dark);padding:2px 10px;border-radius:12px;font-size:0.7rem;margin-left:8px;" id="temanCount">0</span>
+                </div>
+                <button class="modal-close" id="temanModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="temanModalBody"></div>
+        </div>
+    </div>
+
     <script>
         // ================================================================
         // KONFIGURASI
         // ================================================================
         const DASHBOARD_URL = 'dashboard.html';
         const LOGIN_URL = 'login.html';
+        const PROFILE_URL = 'profil.html';
+
+        // ================================================================
+        // PLAYLIST - Audio URLs (Emergency Alerts)
+        // ================================================================
+        const PLAYLIST = [
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/Kebakaran.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/kematian.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/pencurian.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/bencana_tsunami.mp3",
+            "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/smsblackber_4a537f155087133.mp3"
+        ];
+
+        const NOTIF_SOUND_MAP = {
+            'fire': 0,
+            'death': 1,
+            'theft': 2,
+            'disaster': 3,
+            'notifikasi': 4
+        };
+
+        const NOTIF_ICONS = {
+            'fire': '🔥',
+            'death': '💀',
+            'theft': '💎',
+            'disaster': '🌪️'
+        };
+
+        const NOTIF_LABELS = {
+            'fire': 'KEBAKARAN',
+            'death': 'KEMATIAN',
+            'theft': 'PENCURIAN',
+            'disaster': 'BENCANA'
+        };
+
+        const NOTIF_COLORS = {
+            'fire': '#ff6b35',
+            'death': '#c792ea',
+            'theft': '#f0d080',
+            'disaster': '#4fc3f7'
+        };
 
         // ================================================================
         // STATE
         // ================================================================
         let currentUser = null;
+        let profileOwner = null;
+        let isOwner = false;
         let posts = [];
         let postIdCounter = 0;
         let notifications = [];
         let notificationIdCounter = 0;
         let toastTimeout = null;
         let currentEditPostId = null;
+        let audioObjects = {};
+        let profileViews = 0;
+        let profileViewers = [];
+        let friends = [];
+        let friendIdCounter = 0;
 
         // ================================================================
         // DOM ELEMENTS
@@ -1348,8 +1860,10 @@
         const profileStatPosts = document.getElementById('profileStatPosts');
         const profileStatFollowers = document.getElementById('profileStatFollowers');
         const profileStatFollowing = document.getElementById('profileStatFollowing');
-        const profilePesanBtn = document.getElementById('profilePesanBtn');
+        const profileViewCount = document.getElementById('profileViewCount');
         const profileSidebarToggle = document.getElementById('profileSidebarToggle');
+        const searchBtn = document.getElementById('searchBtn');
+        const inviteBtn = document.getElementById('inviteBtn');
 
         const sidebar = document.getElementById('sidebar');
         const sidebarClose = document.getElementById('sidebarClose');
@@ -1358,6 +1872,9 @@
         const sidebarUserName = document.getElementById('sidebarUserName');
         const sidebarUserEmail = document.getElementById('sidebarUserEmail');
 
+        const postInputArea = document.getElementById('postInputArea');
+        const privateViewMessage = document.getElementById('privateViewMessage');
+        const privateOwnerName = document.getElementById('privateOwnerName');
         const postProfilePic = document.getElementById('postProfilePic');
         const postUserName = document.getElementById('postUserName');
         const postInput = document.getElementById('postInput');
@@ -1370,11 +1887,24 @@
         const mapInput = document.getElementById('mapInput');
         const mapLinkInput = document.getElementById('mapLinkInput');
 
+        const notifTypeSelect = document.getElementById('notifTypeSelect');
+        const notifDetailFields = document.getElementById('notifDetailFields');
+        const reportedByName = document.getElementById('reportedByName');
+        const notifAddressText = document.getElementById('notifAddressText');
+        const notifCoordsText = document.getElementById('notifCoordsText');
+
         const notifBadge = document.getElementById('notifBadge');
         const notifModalBadge = document.getElementById('notifModalBadge');
         const notifModalBody = document.getElementById('notifModalBody');
         const notifModal = document.getElementById('notifModal');
         const notifModalClose = document.getElementById('notifModalClose');
+
+        const viewBadge = document.getElementById('viewBadge');
+
+        const searchModal = document.getElementById('searchModal');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchClose = document.getElementById('searchClose');
 
         const inviteModal = document.getElementById('inviteModal');
         const inviteModalClose = document.getElementById('inviteModalClose');
@@ -1392,6 +1922,21 @@
         const editPostModalClose = document.getElementById('editPostModalClose');
         const editPostModalBody = document.getElementById('editPostModalBody');
 
+        const followersModal = document.getElementById('followersModal');
+        const followersModalClose = document.getElementById('followersModalClose');
+        const followersModalBody = document.getElementById('followersModalBody');
+        const followersCount = document.getElementById('followersCount');
+
+        const followingModal = document.getElementById('followingModal');
+        const followingModalClose = document.getElementById('followingModalClose');
+        const followingModalBody = document.getElementById('followingModalBody');
+        const followingCount = document.getElementById('followingCount');
+
+        const temanModal = document.getElementById('temanModal');
+        const temanModalClose = document.getElementById('temanModalClose');
+        const temanModalBody = document.getElementById('temanModalBody');
+        const temanCount = document.getElementById('temanCount');
+
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmationModalClose = document.getElementById('confirmationModalClose');
         const confirmationTitle = document.getElementById('confirmationTitle');
@@ -1405,6 +1950,15 @@
         const bottomNotifNav = document.getElementById('bottomNotifNav');
         const bottomProfileNav = document.getElementById('bottomProfileNav');
 
+        const navJual = document.getElementById('navJual');
+        const navFoto = document.getElementById('navFoto');
+        const navDokumentasi = document.getElementById('navDokumentasi');
+        const navTeman = document.getElementById('navTeman');
+
+        const statPosts = document.getElementById('statPosts');
+        const statFollowers = document.getElementById('statFollowers');
+        const statFollowing = document.getElementById('statFollowing');
+
         const dropdownToggle = document.getElementById('dropdownToggle');
         const dropdownMenu = document.getElementById('dropdownMenu');
         const dropdownItems = document.querySelectorAll('.dropdown-item');
@@ -1415,6 +1969,52 @@
 
         let pendingContact = null;
         let isMapUploadActive = false;
+
+        // ================================================================
+        // AUDIO FUNCTIONS
+        // ================================================================
+        function createAudioElements() {
+            Object.keys(NOTIF_SOUND_MAP).forEach((key, index) => {
+                const audio = new Audio();
+                audio.src = PLAYLIST[index];
+                audio.preload = 'auto';
+                audio.volume = 1.0;
+                audioObjects[key] = audio;
+
+                audio.addEventListener('canplaythrough', () => {
+                    console.log(`✅ Audio "${key}" loaded successfully`);
+                });
+
+                audio.addEventListener('error', (e) => {
+                    console.warn(`❌ Audio "${key}" load error:`, e);
+                });
+            });
+        }
+
+        function playNotificationSound(type) {
+            if (type === 'none') {
+                const audio = audioObjects['notifikasi'];
+                if (audio) {
+                    audio.currentTime = 0;
+                    audio.volume = 0.7;
+                    audio.play().catch(e => console.warn('Notif sound failed:', e));
+                }
+                return;
+            }
+
+            const audio = audioObjects[type];
+            if (audio) {
+                audio.currentTime = 0;
+                audio.volume = 1.0;
+                audio.play().catch(e => console.warn('Emergency sound failed:', e));
+
+                clearTimeout(audio._stopTimeout);
+                audio._stopTimeout = setTimeout(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }, 10000);
+            }
+        }
 
         // ================================================================
         // TOAST SYSTEM
@@ -1459,7 +2059,7 @@
         }
 
         // ================================================================
-        // GET USER FROM URL / LOCALSTORAGE
+        // GET USER
         // ================================================================
         function getUserFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1475,40 +2075,46 @@
         }
 
         function loadUser() {
-            // Cek dari URL parameter
-            let user = getUserFromUrl();
+            // Ambil user dari URL (profil yang dilihat)
+            profileOwner = getUserFromUrl();
 
-            // Cek dari localStorage
-            if (!user) {
-                const savedUser = localStorage.getItem('salink_user');
-                if (savedUser) {
-                    try {
-                        user = JSON.parse(savedUser);
-                    } catch (e) {
-                        localStorage.removeItem('salink_user');
-                    }
+            // Ambil current user dari localStorage
+            const savedUser = localStorage.getItem('salink_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                } catch (e) {
+                    localStorage.removeItem('salink_user');
+                    currentUser = null;
                 }
             }
 
-            // Jika tidak ada user, redirect ke login
-            if (!user) {
+            // Jika tidak ada current user, redirect ke login
+            if (!currentUser) {
                 window.location.href = LOGIN_URL;
                 return;
             }
 
-            currentUser = user;
-            return user;
+            // Jika tidak ada profileOwner, berarti ini profil sendiri
+            if (!profileOwner) {
+                profileOwner = currentUser;
+                isOwner = true;
+            } else {
+                // Cek apakah user yang melihat adalah pemilik profil
+                isOwner = profileOwner.username === currentUser.username;
+            }
+
+            return currentUser;
         }
 
         // ================================================================
-        // LOAD POSTS FROM LOCALSTORAGE
+        // LOAD / SAVE DATA
         // ================================================================
         function loadPosts() {
             const savedPosts = localStorage.getItem('salink_posts');
             if (savedPosts) {
                 try {
                     posts = JSON.parse(savedPosts);
-                    // Update postIdCounter
                     posts.forEach(p => {
                         const id = parseInt(p.id.replace('post-', ''));
                         if (id > postIdCounter) postIdCounter = id;
@@ -1523,9 +2129,6 @@
             localStorage.setItem('salink_posts', JSON.stringify(posts));
         }
 
-        // ================================================================
-        // LOAD NOTIFICATIONS
-        // ================================================================
         function loadNotifications() {
             const saved = localStorage.getItem('salink_notifications');
             if (saved) {
@@ -1543,9 +2146,209 @@
         }
 
         // ================================================================
+        // PROFILE VIEWS FUNCTIONS
+        // ================================================================
+        function loadProfileViews() {
+            const saved = localStorage.getItem('salink_profile_views');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    profileViews = data.count || 0;
+                    profileViewers = data.viewers || [];
+                } catch (e) {
+                    profileViews = 0;
+                    profileViewers = [];
+                }
+            }
+        }
+
+        function saveProfileViews() {
+            localStorage.setItem('salink_profile_views', JSON.stringify({
+                count: profileViews,
+                viewers: profileViewers
+            }));
+        }
+
+        function addProfileView(viewerName) {
+            if (!viewerName || viewerName === profileOwner?.fullName) return false;
+
+            const now = Date.now();
+            const existingView = profileViewers.find(v =>
+                v.name === viewerName && (now - v.timestamp) < 86400000
+            );
+
+            if (existingView) {
+                existingView.timestamp = now;
+                saveProfileViews();
+                return false;
+            }
+
+            profileViewers.push({
+                name: viewerName,
+                timestamp: now
+            });
+            profileViews++;
+
+            // Kirim notifikasi ke pemilik profil
+            if (profileOwner && profileOwner.username !== currentUser.username) {
+                addNotification(
+                    'profile',
+                    '👁️ Tayangan Profil',
+                    `${viewerName} melihat profil ${profileOwner.fullName}`,
+                    viewerName,
+                    null,
+                    'none'
+                );
+            }
+
+            saveProfileViews();
+            updateViewBadge();
+            updateProfileViewCounter();
+            return true;
+        }
+
+        function updateProfileViewCounter() {
+            if (profileViewCount) {
+                profileViewCount.textContent = profileViews;
+            }
+        }
+
+        function updateViewBadge() {
+            if (viewBadge) {
+                const now = Date.now();
+                const unreadViews = profileViewers.filter(v => (now - v.timestamp) < 604800000).length;
+                viewBadge.textContent = unreadViews > 0 ? unreadViews : '0';
+                viewBadge.classList.toggle('show', unreadViews > 0);
+            }
+        }
+
+        // ================================================================
+        // SEARCH FUNCTIONS
+        // ================================================================
+        function performSearch(query) {
+            searchResults.innerHTML = '';
+
+            if (!query || query.length < 2) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Masukkan minimal 2 karakter untuk mencari</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+            const results = [];
+
+            posts.forEach(post => {
+                const matchText = post.text && post.text.toLowerCase().includes(lowerQuery);
+                const matchUser = post.userFullName && post.userFullName.toLowerCase().includes(lowerQuery);
+                if (matchText || matchUser) {
+                    results.push({ type: 'post', data: post });
+                }
+            });
+
+            const uniqueUsers = [];
+            posts.forEach(post => {
+                if (!uniqueUsers.find(u => u.username === post.userId)) {
+                    uniqueUsers.push({
+                        username: post.userId,
+                        fullName: post.userFullName,
+                        gender: post.userGender,
+                        profilePicture: post.userProfilePic
+                    });
+                }
+            });
+
+            uniqueUsers.forEach(user => {
+                if (user.fullName && user.fullName.toLowerCase().includes(lowerQuery)) {
+                    results.push({ type: 'user', data: user });
+                }
+            });
+
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Tidak ditemukan hasil untuk "<strong>${query}</strong>"</p>
+                    </div>
+                `;
+                return;
+            }
+
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+
+                if (result.type === 'post') {
+                    const post = result.data;
+                    const avatarIcon = post.userGender === 'female' ? 'fa-female' : 'fa-male';
+
+                    item.innerHTML = `
+                        <div class="search-result-avatar">
+                            ${post.userProfilePic ? `<img src="${post.userProfilePic}" alt="Profile">` : `<i class="fas ${avatarIcon}"></i>`}
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${post.userFullName}</div>
+                            <div class="search-result-desc">${post.text ? post.text.substring(0, 60) + (post.text.length > 60 ? '...' : '') : 'Postingan tanpa teks'}</div>
+                            <div style="font-size:0.5rem;color:rgba(245,240,232,0.3);margin-top:2px;">${getTimeAgo(post.timestamp)}</div>
+                        </div>
+                        <div style="font-size:0.55rem;color:var(--gold);"><i class="fas fa-file-alt"></i></div>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        searchModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                        const postEl = document.getElementById(post.id);
+                        if (postEl) {
+                            postEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            postEl.style.borderColor = 'var(--gold)';
+                            postEl.style.background = 'rgba(212,168,73,0.15)';
+                            setTimeout(() => {
+                                postEl.style.borderColor = 'rgba(212,168,73,0.1)';
+                                postEl.style.background = 'rgba(255,248,240,0.03)';
+                            }, 3000);
+                        }
+                    });
+                } else if (result.type === 'user') {
+                    const user = result.data;
+                    const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+                    const postCount = posts.filter(p => p.userId === user.username).length;
+
+                    item.innerHTML = `
+                        <div class="search-result-avatar">
+                            ${user.profilePicture ? `<img src="${user.profilePicture}" alt="Profile">` : `<i class="fas ${avatarIcon}"></i>`}
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${user.fullName}</div>
+                            <div class="search-result-desc">@${user.username} • ${postCount} postingan</div>
+                        </div>
+                        <div style="font-size:0.55rem;color:var(--gold);"><i class="fas fa-user"></i></div>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        searchModal.classList.remove('active');
+                        document.body.style.overflow = '';
+                        // Redirect ke profil user tersebut
+                        window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+                    });
+                }
+
+                searchResults.appendChild(item);
+            });
+
+            const info = document.createElement('div');
+            info.style.cssText =
+                'padding:8px 12px;font-size:0.6rem;color:rgba(245,240,232,0.3);text-align:center;border-top:1px solid rgba(212,168,73,0.05);margin-top:4px;';
+            info.textContent = `Ditemukan ${results.length} hasil untuk "${query}"`;
+            searchResults.appendChild(info);
+        }
+
+        // ================================================================
         // NOTIFICATION FUNCTIONS
         // ================================================================
-        function addNotification(type, title, message, sender, postId) {
+        function addNotification(type, title, message, sender, postId, notifType) {
             if (sender && currentUser && sender === currentUser.fullName) return null;
 
             const notification = {
@@ -1555,12 +2358,16 @@
                 message: message,
                 sender: sender || 'Sistem',
                 postId: postId || null,
+                notifType: notifType || 'none',
                 timestamp: Date.now(),
                 read: false
             };
             notifications.unshift(notification);
             saveNotifications();
             updateNotifBadge();
+
+            playNotificationSound(notifType || 'none');
+
             return notification;
         }
 
@@ -1588,18 +2395,32 @@
 
             notifications.forEach(notif => {
                 const item = document.createElement('div');
+                const isEmergency = notif.notifType && notif.notifType !== 'none';
+                const isProfileView = notif.type === 'profile';
+
+                let bgColor = notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)';
+                let borderColor = notif.read ? 'rgba(212,168,73,0.2)' : 'var(--gold)';
+
+                if (isEmergency) {
+                    bgColor = 'rgba(255,107,53,0.15)';
+                    borderColor = '#ff6b35';
+                } else if (isProfileView) {
+                    bgColor = notif.read ? 'rgba(79,195,247,0.05)' : 'rgba(79,195,247,0.15)';
+                    borderColor = '#4fc3f7';
+                }
+
                 item.style.cssText = `
-                    background: ${notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)'};
+                    background: ${bgColor};
                     border-radius: 10px;
                     padding: 12px 14px;
                     margin-bottom: 8px;
-                    border-left: 3px solid ${notif.read ? 'rgba(212,168,73,0.2)' : 'var(--gold)'};
+                    border-left: 3px solid ${borderColor};
                     cursor: pointer;
                     transition: all 0.3s;
                 `;
                 item.onmouseover = () => { item.style.background = 'rgba(61,35,20,0.5)'; };
                 item.onmouseout = () => {
-                    item.style.background = notif.read ? 'rgba(61,35,20,0.2)' : 'rgba(212,168,73,0.1)';
+                    item.style.background = bgColor;
                 };
 
                 const iconMap = {
@@ -1608,17 +2429,46 @@
                     'report': 'fa-exclamation-triangle',
                     'comment': 'fa-comment',
                     'profile': 'fa-eye',
-                    'post': 'fa-file-alt'
+                    'post': 'fa-file-alt',
+                    'emergency': 'fa-exclamation-circle'
                 };
+
+                let notifIcon = iconMap[notif.type] || 'fa-bell';
+                let iconColor = 'var(--gold)';
+
+                if (isEmergency) {
+                    notifIcon = 'fa-exclamation-circle';
+                    iconColor = '#ff6b35';
+                } else if (isProfileView) {
+                    notifIcon = 'fa-eye';
+                    iconColor = '#4fc3f7';
+                }
+
+                let notifBadgeHTML = '';
+                if (isEmergency && notif.notifType) {
+                    const label = NOTIF_LABELS[notif.notifType] || 'DARURAT';
+                    const color = NOTIF_COLORS[notif.notifType] || '#ff6b35';
+                    notifBadgeHTML = `
+                        <span style="background:${color}20;color:${color};padding:1px 8px;border-radius:10px;font-size:0.5rem;font-weight:600;border:1px solid ${color}40;margin-left:6px;">
+                            ${NOTIF_ICONS[notif.notifType] || '🚨'} ${label}
+                        </span>
+                    `;
+                } else if (isProfileView) {
+                    notifBadgeHTML = `
+                        <span style="background:#4fc3f720;color:#4fc3f7;padding:1px 8px;border-radius:10px;font-size:0.5rem;font-weight:600;border:1px solid #4fc3f740;margin-left:6px;">
+                            👁️ Baru
+                        </span>
+                    `;
+                }
 
                 item.innerHTML = `
                     <div style="display:flex;align-items:center;gap:10px;">
-                        <div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);">
-                            <i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i>
+                        <div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:${iconColor};">
+                            <i class="fas ${notifIcon}"></i>
                         </div>
                         <div style="flex:1;min-width:0;">
                             <div style="font-size:0.8rem;font-weight:500;color:var(--cream);">
-                                ${notif.title}
+                                ${notif.title} ${notifBadgeHTML}
                             </div>
                             <div style="font-size:0.7rem;color:rgba(245,240,232,0.6);">
                                 ${notif.message}
@@ -1650,6 +2500,9 @@
                                 postEl.style.background = 'rgba(255,248,240,0.03)';
                             }, 2000);
                         }
+                    } else if (notif.type === 'profile') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        showToast('👁️ Tayangan Profil', `Profil Anda dilihat oleh ${notif.sender}`, 'fa-eye');
                     }
                 });
 
@@ -1658,7 +2511,7 @@
         }
 
         // ================================================================
-        // HELPER FUNCTIONS
+        // HELPERS
         // ================================================================
         function getTimeAgo(timestamp) {
             const diff = Date.now() - timestamp;
@@ -1690,53 +2543,159 @@
             return patterns.some(pattern => pattern.test(url));
         }
 
+        function extractCoordsFromMapLink(url) {
+            const coordsMatch = url.match(/@([-.\d]+),([-.\d]+)/);
+            if (coordsMatch) {
+                return `${coordsMatch[1]}, ${coordsMatch[2]}`;
+            }
+            return 'Koordinat tidak tersedia';
+        }
+
+        // ================================================================
+        // PRIVACY FUNCTIONS
+        // ================================================================
+        function togglePrivacy() {
+            // Sembunyikan elemen privat jika bukan pemilik
+            if (!isOwner) {
+                // Sembunyikan Sidebar Toggle
+                if (profileSidebarToggle) profileSidebarToggle.classList.add('private');
+
+                // Sembunyikan Search Button
+                if (searchBtn) searchBtn.classList.add('private');
+
+                // Sembunyikan Post Input Area
+                if (postInputArea) postInputArea.style.display = 'none';
+
+                // Sembunyikan Navbar Jual & Dokumentasi
+                if (navJual) navJual.classList.add('private');
+                if (navDokumentasi) navDokumentasi.classList.add('private');
+
+                // Tampilkan pesan privasi
+                if (privateViewMessage) {
+                    privateViewMessage.style.display = 'block';
+                    if (privateOwnerName && profileOwner) {
+                        privateOwnerName.textContent = profileOwner.fullName;
+                    }
+                }
+
+                // Disable Notif Select
+                if (notifTypeSelect) {
+                    notifTypeSelect.disabled = true;
+                    notifTypeSelect.style.opacity = '0.5';
+                    notifTypeSelect.style.cursor = 'not-allowed';
+                }
+
+                // Disable Post Submit
+                if (postSubmit) postSubmit.disabled = true;
+
+                // Disable Media Upload
+                if (mediaUpload) mediaUpload.disabled = true;
+
+                // Disable Map Upload
+                if (mapUploadBtn) mapUploadBtn.style.display = 'none';
+
+                // Disable Post Input
+                if (postInput) postInput.readOnly = true;
+
+                // Sembunyikan post actions bottom
+                const postActionsBottom = document.querySelector('.post-actions-bottom');
+                if (postActionsBottom) postActionsBottom.style.display = 'none';
+
+                // Sembunyikan map input
+                if (mapInput) mapInput.classList.remove('show');
+
+                // Sembunyikan media preview
+                if (mediaPreview) mediaPreview.style.display = 'none';
+
+                console.log('🔒 Mode Pengunjung - Fitur privat disembunyikan');
+
+            } else {
+                // Mode Pemilik - Tampilkan semua
+                if (profileSidebarToggle) profileSidebarToggle.classList.remove('private');
+                if (searchBtn) searchBtn.classList.remove('private');
+                if (postInputArea) postInputArea.style.display = 'flex';
+                if (navJual) navJual.classList.remove('private');
+                if (navDokumentasi) navDokumentasi.classList.remove('private');
+                if (privateViewMessage) privateViewMessage.style.display = 'none';
+
+                if (notifTypeSelect) {
+                    notifTypeSelect.disabled = false;
+                    notifTypeSelect.style.opacity = '1';
+                    notifTypeSelect.style.cursor = 'pointer';
+                }
+
+                if (postSubmit) postSubmit.disabled = true;
+                if (mediaUpload) mediaUpload.disabled = false;
+                if (mapUploadBtn) mapUploadBtn.style.display = 'flex';
+                if (postInput) postInput.readOnly = false;
+
+                const postActionsBottom = document.querySelector('.post-actions-bottom');
+                if (postActionsBottom) postActionsBottom.style.display = 'flex';
+
+                console.log('🔓 Mode Pemilik - Semua fitur aktif');
+            }
+        }
+
         // ================================================================
         // UPDATE UI
         // ================================================================
         function updateUserUI() {
-            if (!currentUser) return;
+            if (!profileOwner) return;
 
-            // Profile header
-            if (currentUser.profilePicture) {
-                profileAvatarLarge.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            // Profile Header
+            if (profileOwner.profilePicture) {
+                profileAvatarLarge.innerHTML = `<img src="${profileOwner.profilePicture}" alt="Profile">`;
             } else {
-                profileAvatarLarge.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+                profileAvatarLarge.innerHTML = profileOwner.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
             }
 
-            profileName.textContent = currentUser.fullName || 'Nama Pengguna';
-            profileUsername.textContent = `@${currentUser.username || 'username'}`;
-            profileBio.textContent = currentUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
+            profileName.textContent = profileOwner.fullName || 'Nama Pengguna';
+            profileUsername.textContent = `@${profileOwner.username || 'username'}`;
+            profileBio.textContent = profileOwner.bio || 'Bergabung di SALINK untuk keamanan bersama';
 
-            // Post header
-            if (currentUser.profilePicture) {
-                postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            // Post Header
+            if (profileOwner.profilePicture) {
+                postProfilePic.innerHTML = `<img src="${profileOwner.profilePicture}" alt="Profile">`;
             } else {
-                postProfilePic.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+                postProfilePic.innerHTML = profileOwner.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
             }
-            postUserName.textContent = currentUser.fullName;
+            postUserName.textContent = profileOwner.fullName;
 
             // Sidebar
-            sidebarUserName.textContent = currentUser.fullName;
-            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
-            if (currentUser.profilePicture) {
-                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            sidebarUserName.textContent = profileOwner.fullName;
+            sidebarUserEmail.textContent = profileOwner.email || profileOwner.username + '@salink.id';
+            if (profileOwner.profilePicture) {
+                sidebarUserAvatar.innerHTML = `<img src="${profileOwner.profilePicture}" alt="Profile">`;
             } else {
-                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+                sidebarUserAvatar.innerHTML = profileOwner.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
             }
 
-            // Update stats
+            reportedByName.textContent = profileOwner.fullName;
+            if (privateOwnerName) privateOwnerName.textContent = profileOwner.fullName;
+
             updateProfileStats();
+            updateProfileViewCounter();
+            updateViewBadge();
         }
 
         function updateProfileStats() {
-            const userPosts = posts.filter(p => p.userId === currentUser.username);
+            const userPosts = posts.filter(p => p.userId === profileOwner.username);
             profileStatPosts.textContent = userPosts.length;
 
-            // Simulasi followers & following dari localStorage
             const followers = JSON.parse(localStorage.getItem('salink_followers') || '{}');
             const following = JSON.parse(localStorage.getItem('salink_following') || '{}');
-            profileStatFollowers.textContent = followers[currentUser.username] || 0;
-            profileStatFollowing.textContent = following[currentUser.username] || 0;
+            const followingList = following[profileOwner.username] || [];
+            const followersList = followers[profileOwner.username] || [];
+
+            profileStatFollowers.textContent = followersList.length;
+            profileStatFollowing.textContent = followingList.length;
+
+            // Update counts untuk modal
+            if (followersCount) followersCount.textContent = followersList.length;
+            if (followingCount) followingCount.textContent = followingList.length;
         }
 
         // ================================================================
@@ -1744,7 +2703,7 @@
         // ================================================================
         function renderPosts() {
             postFeed.innerHTML = '';
-            const userPosts = posts.filter(p => p.userId === currentUser.username);
+            const userPosts = posts.filter(p => p.userId === profileOwner.username);
             const sortedPosts = userPosts.sort((a, b) => b.timestamp - a.timestamp);
 
             if (sortedPosts.length === 0) {
@@ -1752,7 +2711,6 @@
                     <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
                         <i class="fas fa-file-alt" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
                         <p>Belum ada postingan</p>
-                        <p style="font-size:0.6rem;margin-top:4px;">Buat postingan pertama Anda!</p>
                     </div>
                 `;
                 return;
@@ -1789,6 +2747,38 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <span>📍 Lihat Lokasi di Google Maps</span>
                     </a>
+                `;
+            }
+
+            let notifBadgeHTML = '';
+            let notifDetailHTML = '';
+
+            if (post.notifType && post.notifType !== 'none') {
+                const label = NOTIF_LABELS[post.notifType] || 'DARURAT';
+                const icon = NOTIF_ICONS[post.notifType] || '🚨';
+                const color = NOTIF_COLORS[post.notifType] || '#ff6b35';
+
+                notifBadgeHTML = `
+                    <div class="post-notif-badge ${post.notifType}">
+                        ${icon} ${label}
+                    </div>
+                `;
+
+                notifDetailHTML = `
+                    <div class="post-notif-detail">
+                        <div class="detail-row">
+                            <span class="label">Dilaporkan</span>
+                            <span class="value"><i class="fas fa-user"></i> ${post.reportedBy || post.userFullName}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Alamat</span>
+                            <span class="value"><i class="fas fa-map-marker-alt"></i> ${post.address || 'Alamat tidak tersedia'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Koordinat</span>
+                            <span class="value"><i class="fas fa-crosshairs"></i> ${post.coords || '-'}</span>
+                        </div>
+                    </div>
                 `;
             }
 
@@ -1867,13 +2857,20 @@
                         ${profilePic}
                     </div>
                     <div class="post-user-info">
-                        <h4>${post.userFullName} ${isHologram}</h4>
+                        <h4>
+                            <a href="#" class="profile-link" onclick="event.preventDefault(); openUserProfile('${post.userId}')">
+                                ${post.userFullName}
+                            </a>
+                            ${isHologram}
+                        </h4>
                         <small>${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })} • ${getTimeAgo(post.timestamp)}</small>
                     </div>
                 </div>
 
                 <div class="post-content">
+                    ${notifBadgeHTML}
                     ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
+                    ${notifDetailHTML}
                     ${mapHTML}
                     ${mediaHTML}
                 </div>
@@ -1914,77 +2911,75 @@
             return postDiv;
         }
 
+        function openUserProfile(username) {
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            const user = users.find(u => u.username === username);
+            if (user) {
+                window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+            } else {
+                showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
+            }
+        }
+
         // ================================================================
         // POST EVENT LISTENERS
         // ================================================================
         function attachPostEventListeners() {
-            // Like
             document.querySelectorAll('.post-action[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleLike);
                 btn.addEventListener('click', handleLike);
             });
 
-            // Comment toggle
             document.querySelectorAll('.comment-toggle[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleCommentToggle);
                 btn.addEventListener('click', handleCommentToggle);
             });
 
-            // Send comment
             document.querySelectorAll('.send-comment[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleSendComment);
                 btn.addEventListener('click', handleSendComment);
             });
 
-            // Comment input enter
             document.querySelectorAll('.comment-input[data-post-id]').forEach(input => {
                 input.removeEventListener('keypress', handleCommentKeyPress);
                 input.addEventListener('keypress', handleCommentKeyPress);
             });
 
-            // Reply comment
             document.querySelectorAll('.reply-comment-action[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleReplyComment);
                 btn.addEventListener('click', handleReplyComment);
             });
 
-            // Delete comment
             document.querySelectorAll('.delete-comment[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleDeleteComment);
                 btn.addEventListener('click', handleDeleteComment);
             });
 
-            // Share
             document.querySelectorAll('.share-btn[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleShare);
                 btn.addEventListener('click', handleShare);
             });
 
-            // View
             document.querySelectorAll('.view-btn[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleView);
                 btn.addEventListener('click', handleView);
             });
 
-            // Options menu toggle
             document.querySelectorAll('.post-options[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleOptionsToggle);
                 btn.addEventListener('click', handleOptionsToggle);
             });
 
-            // Edit post
             document.querySelectorAll('.edit-post-btn[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleEditPost);
                 btn.addEventListener('click', handleEditPost);
             });
 
-            // Delete post
             document.querySelectorAll('.delete-post-btn[data-post-id]').forEach(btn => {
                 btn.removeEventListener('click', handleDeletePost);
                 btn.addEventListener('click', handleDeletePost);
             });
 
-            // Close options menu on outside click
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.post-options') && !e.target.closest('.post-options-menu')) {
                     document.querySelectorAll('.post-options-menu.show').forEach(el => el.classList.remove('show'));
@@ -1992,9 +2987,6 @@
             });
         }
 
-        // ================================================================
-        // POST HANDLERS
-        // ================================================================
         function handleLike(e) {
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
@@ -2007,7 +2999,8 @@
             } else {
                 post.likes.push(currentUser.username);
                 if (post.userId !== currentUser.username) {
-                    addNotification('inbox', '❤️ Suka', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, postId);
+                    addNotification('inbox', '❤️ Suka', `${currentUser.fullName} menyukai postingan Anda`,
+                        currentUser.fullName, postId, 'none');
                 }
             }
 
@@ -2060,7 +3053,9 @@
             } else {
                 post.comments.push(comment);
                 if (post.userId !== currentUser.username) {
-                    addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, postId);
+                    addNotification('comment', '💬 Balasan Komentar',
+                        `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`,
+                        currentUser.fullName, postId, 'none');
                 }
             }
 
@@ -2159,7 +3154,6 @@
             const post = posts.find(p => p.id === postId);
             if (!post) return;
 
-            // Scroll ke postingan dan highlight
             const postEl = document.getElementById(postId);
             if (postEl) {
                 postEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2171,7 +3165,6 @@
                 }, 2000);
             }
 
-            // Buka komentar
             const commentsSection = document.getElementById(`comments-${postId}`);
             if (commentsSection) {
                 commentsSection.style.display = 'block';
@@ -2187,7 +3180,6 @@
             const postId = btn.dataset.postId;
             const menu = document.getElementById(`options-${postId}`);
 
-            // Tutup semua menu lain
             document.querySelectorAll('.post-options-menu.show').forEach(el => {
                 if (el.id !== `options-${postId}`) el.classList.remove('show');
             });
@@ -2195,16 +3187,12 @@
             menu.classList.toggle('show');
         }
 
-        // ================================================================
-        // EDIT POST
-        // ================================================================
         function handleEditPost(e) {
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
             const post = posts.find(p => p.id === postId);
             if (!post) return;
 
-            // Tutup menu options
             const menu = document.getElementById(`options-${postId}`);
             if (menu) menu.classList.remove('show');
 
@@ -2219,6 +3207,13 @@
                     <label style="font-size:0.7rem;color:var(--gold-light);display:block;margin-bottom:4px;">Link Google Maps</label>
                     <input type="url" id="editPostMap" class="form-control" style="width:100%;padding:8px 12px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:8px;color:var(--cream);font-size:0.75rem;" value="${post.mapLink || ''}" placeholder="https://maps.app.goo.gl/...">
                 </div>
+                ${post.notifType && post.notifType !== 'none' ? `
+                    <div style="margin-bottom:12px;padding:8px 12px;background:rgba(212,168,73,0.05);border-radius:8px;border:1px solid rgba(212,168,73,0.1);">
+                        <div style="font-size:0.65rem;color:var(--gold-light);">
+                            <i class="fas fa-info-circle"></i> Ini adalah postingan khusus: ${NOTIF_ICONS[post.notifType] || ''} ${NOTIF_LABELS[post.notifType] || 'DARURAT'}
+                        </div>
+                    </div>
+                ` : ''}
                 <button id="saveEditPostBtn" style="width:100%;padding:10px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--dark);border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.75rem;">
                     <i class="fas fa-save"></i> Simpan Perubahan
                 </button>
@@ -2241,9 +3236,9 @@
                     postToEdit.text = newText || postToEdit.text;
                     postToEdit.mapLink = newMap || null;
 
-                    // Jika ada map link, tandai sebagai hologram
                     if (newMap && isValidGoogleMapsLink(newMap)) {
                         postToEdit.isHologram = true;
+                        postToEdit.coords = extractCoordsFromMapLink(newMap);
                     } else {
                         postToEdit.isHologram = false;
                     }
@@ -2259,14 +3254,10 @@
             });
         }
 
-        // ================================================================
-        // DELETE POST
-        // ================================================================
         function handleDeletePost(e) {
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
 
-            // Tutup menu options
             const menu = document.getElementById(`options-${postId}`);
             if (menu) menu.classList.remove('show');
 
@@ -2283,11 +3274,15 @@
         // CREATE NEW POST
         // ================================================================
         function createNewPost() {
-            if (!currentUser) return;
+            if (!currentUser || !isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses untuk membuat postingan', 'fa-exclamation-triangle');
+                return;
+            }
 
             const text = postInput.value.trim();
             const file = mediaUpload.files[0];
             const mapLink = mapLinkInput.value.trim();
+            const notifType = notifTypeSelect.value;
 
             if (!text && !file && !mapLink) {
                 showToast('⚠️ Peringatan', 'Isi teks, upload media, atau tambahkan link map!', 'fa-exclamation-triangle');
@@ -2300,22 +3295,22 @@
             let mediaType = null;
             let mediaData = null;
 
-            // Proses file jika ada
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     mediaData = e.target.result;
                     mediaType = file.type.startsWith('image/') ? 'image' : 'video';
-                    savePostData(postId, text, mediaType, mediaData, mapLink, now);
+                    savePostData(postId, text, mediaType, mediaData, mapLink, now, notifType);
                 };
                 reader.readAsDataURL(file);
             } else {
-                savePostData(postId, text, null, null, mapLink, now);
+                savePostData(postId, text, null, null, mapLink, now, notifType);
             }
         }
 
-        function savePostData(postId, text, mediaType, mediaData, mapLink, timestamp) {
+        function savePostData(postId, text, mediaType, mediaData, mapLink, timestamp, notifType) {
             const isHologram = mapLink && isValidGoogleMapsLink(mapLink);
+            const isSpecial = notifType && notifType !== 'none';
 
             const postData = {
                 id: postId,
@@ -2328,6 +3323,10 @@
                 mediaData: mediaData,
                 mapLink: mapLink || null,
                 isHologram: isHologram,
+                notifType: notifType || 'none',
+                reportedBy: currentUser.fullName,
+                address: mapLink ? 'Alamat dari Google Maps' : 'Alamat tidak tersedia',
+                coords: mapLink && isValidGoogleMapsLink(mapLink) ? extractCoordsFromMapLink(mapLink) : '-',
                 timestamp: timestamp,
                 likes: [],
                 comments: []
@@ -2347,17 +3346,193 @@
             mapInput.classList.remove('show');
             isMapUploadActive = false;
             mapUploadBtn.classList.remove('active');
+            notifTypeSelect.value = 'none';
+            notifDetailFields.classList.remove('show');
             postSubmit.disabled = true;
 
-            // Add notification
-            addNotification('post', '📝 Postingan Baru', `${currentUser.fullName} memposting status baru`, currentUser.fullName, postId);
+            // Kirim notifikasi
+            let notifTitle = '📝 Postingan Baru';
+            let notifMessage = `${currentUser.fullName} memposting status baru`;
+            let notifSoundType = 'none';
 
-            showToast('✅ Berhasil', 'Postingan berhasil dibuat!', 'fa-check-circle');
+            if (isSpecial) {
+                const icon = NOTIF_ICONS[notifType] || '🚨';
+                const label = NOTIF_LABELS[notifType] || 'DARURAT';
+                notifTitle = `🚨 ${icon} ${label}`;
+                notifMessage =
+                    `${currentUser.fullName} melaporkan ${label.toLowerCase()} di ${mapLink || 'lokasi tidak diketahui'}`;
+                notifSoundType = notifType;
 
-            // Jika hologram, beri notifikasi khusus
-            if (isHologram) {
+                addNotification('emergency', notifTitle, notifMessage, currentUser.fullName, postId, notifType);
+
+                showToast(`🚨 ${icon} Emergency Alert!`, `${label} dilaporkan oleh ${currentUser.fullName}`,
+                    'fa-exclamation-triangle');
+            } else {
+                addNotification('post', notifTitle, notifMessage, currentUser.fullName, postId, 'none');
+                showToast('✅ Berhasil', 'Postingan berhasil dibuat!', 'fa-check-circle');
+            }
+
+            if (isHologram && !isSpecial) {
                 showToast('📡 Hologram', 'Postingan dengan Link Maps akan tampil di Hologram Display!', 'fa-hologram');
             }
+        }
+
+        // ================================================================
+        // FOLLOWERS / FOLLOWING MODALS
+        // ================================================================
+        function renderFollowersModal() {
+            const followers = JSON.parse(localStorage.getItem('salink_followers') || '{}');
+            const followerList = followers[profileOwner.username] || [];
+
+            followersModalBody.innerHTML = '';
+
+            if (followerList.length === 0) {
+                followersModalBody.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-users" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum ada pengikut</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Ambil data user dari localStorage
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+
+            followerList.forEach(followerUsername => {
+                const user = users.find(u => u.username === followerUsername);
+                if (!user) return;
+
+                const item = document.createElement('div');
+                item.className = 'follower-item';
+
+                const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+
+                item.innerHTML = `
+                    <div class="follower-avatar">
+                        ${user.profilePicture ? `<img src="${user.profilePicture}" alt="${user.fullName}">` : `<i class="fas ${avatarIcon}"></i>`}
+                    </div>
+                    <div class="follower-info">
+                        <div class="follower-name">${user.fullName}</div>
+                        <div class="follower-username">@${user.username}</div>
+                        <div class="follower-status">Mengikuti Anda</div>
+                    </div>
+                    <button onclick="openUserProfile('${user.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                        <i class="fas fa-eye"></i> Lihat
+                    </button>
+                `;
+
+                followersModalBody.appendChild(item);
+            });
+        }
+
+        function renderFollowingModal() {
+            const following = JSON.parse(localStorage.getItem('salink_following') || '{}');
+            const followingList = following[profileOwner.username] || [];
+
+            followingModalBody.innerHTML = '';
+
+            if (followingList.length === 0) {
+                followingModalBody.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-user-friends" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum mengikuti siapa pun</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+
+            followingList.forEach(followingUsername => {
+                const user = users.find(u => u.username === followingUsername);
+                if (!user) return;
+
+                const item = document.createElement('div');
+                item.className = 'follower-item';
+
+                const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+
+                item.innerHTML = `
+                    <div class="follower-avatar">
+                        ${user.profilePicture ? `<img src="${user.profilePicture}" alt="${user.fullName}">` : `<i class="fas ${avatarIcon}"></i>`}
+                    </div>
+                    <div class="follower-info">
+                        <div class="follower-name">${user.fullName}</div>
+                        <div class="follower-username">@${user.username}</div>
+                        <div class="follower-status">Diikuti</div>
+                    </div>
+                    <button onclick="openUserProfile('${user.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                        <i class="fas fa-eye"></i> Lihat
+                    </button>
+                `;
+
+                followingModalBody.appendChild(item);
+            });
+        }
+
+        // ================================================================
+        // TEMAN MODAL
+        // ================================================================
+        function generateSampleFriends() {
+            const sampleFriends = [
+                { name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
+                { name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
+                { name: 'Bpk. Joko', username: 'joko', gender: 'male', status: 'Online' },
+                { name: 'Sdri. Dewi', username: 'dewi', gender: 'female', status: 'Online' },
+                { name: 'Bpk. Budi', username: 'budi', gender: 'male', status: 'Offline' },
+                { name: 'Sdri. Siti', username: 'siti', gender: 'female', status: 'Online' }
+            ];
+
+            sampleFriends.forEach((f) => {
+                friends.push({
+                    id: ++friendIdCounter,
+                    name: f.name,
+                    username: f.username,
+                    gender: f.gender,
+                    status: f.status,
+                    avatar: null
+                });
+            });
+        }
+
+        function renderTemanModal() {
+            temanModalBody.innerHTML = '';
+            temanCount.textContent = friends.length;
+
+            if (friends.length === 0) {
+                temanModalBody.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-users" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum ada teman</p>
+                    </div>
+                `;
+                return;
+            }
+
+            friends.forEach(friend => {
+                const item = document.createElement('div');
+                item.className = 'follower-item';
+
+                const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
+                const statusColor = friend.status === 'Online' ? '#4CAF50' : '#888';
+
+                item.innerHTML = `
+                    <div class="follower-avatar">
+                        ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
+                    </div>
+                    <div class="follower-info">
+                        <div class="follower-name">${friend.name}</div>
+                        <div class="follower-username">@${friend.username}</div>
+                        <div class="follower-status"><span style="color:${statusColor};">${friend.status}</span></div>
+                    </div>
+                    <button onclick="openUserProfile('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                        <i class="fas fa-eye"></i> Lihat
+                    </button>
+                `;
+
+                temanModalBody.appendChild(item);
+            });
         }
 
         // ================================================================
@@ -2423,7 +3598,8 @@
             if (!currentUser) return;
 
             if (userName !== currentUser.fullName) {
-                addNotification('invite', '👋 Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, null);
+                addNotification('invite', '👋 Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`,
+                    currentUser.fullName, null, 'none');
                 showToast('✅ Berhasil', `Undangan dikirim ke ${userName}!`, 'fa-check-circle');
             } else {
                 showToast('⚠️ Peringatan', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
@@ -2437,7 +3613,10 @@
         // SETTINGS MODAL
         // ================================================================
         function openSettingsModal() {
-            if (!currentUser) return;
+            if (!currentUser || !isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses ke pengaturan ini', 'fa-exclamation-triangle');
+                return;
+            }
 
             settingsModalBody.innerHTML = `
                 <div style="text-align:center;margin-bottom:12px;">
@@ -2515,7 +3694,6 @@
 
                 localStorage.setItem('salink_user', JSON.stringify(currentUser));
 
-                // Update di users list
                 const users = JSON.parse(localStorage.getItem('salink_users')) || [];
                 const userIndex = users.findIndex(u => u.username === currentUser.username);
                 if (userIndex !== -1) {
@@ -2534,6 +3712,11 @@
         // HISTORY MODAL
         // ================================================================
         function openHistoryModal() {
+            if (!currentUser || !isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses ke riwayat ini', 'fa-exclamation-triangle');
+                return;
+            }
+
             historyModalBody.innerHTML = '';
 
             const userPosts = posts.filter(p => p.userId === currentUser.username);
@@ -2549,22 +3732,37 @@
                 userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
                     const item = document.createElement('div');
                     item.className = 'report-list-item';
-                    item.style.cssText = 'background:rgba(61,35,20,0.3);border-radius:10px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(212,168,73,0.2);cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:10px;';
-                    item.onmouseover = () => { item.style.borderColor = 'var(--gold-light)';
-                        item.style.background = 'rgba(61,35,20,0.5)'; };
-                    item.onmouseout = () => { item.style.borderColor = 'rgba(212,168,73,0.2)';
-                        item.style.background = 'rgba(61,35,20,0.3)'; };
+                    item.style.cssText =
+                        'background:rgba(61,35,20,0.3);border-radius:10px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(212,168,73,0.2);cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:10px;';
+                    item.onmouseover = () => {
+                        item.style.borderColor = 'var(--gold-light)';
+                        item.style.background = 'rgba(61,35,20,0.5)';
+                    };
+                    item.onmouseout = () => {
+                        item.style.borderColor = 'rgba(212,168,73,0.2)';
+                        item.style.background = 'rgba(61,35,20,0.3)';
+                    };
 
-                    const iconClass = post.isHologram ? 'icon-fire' : 'icon-theft';
-                    const icon = post.isHologram ? 'fa-hologram' : 'fa-file-alt';
+                    const isEmergency = post.notifType && post.notifType !== 'none';
+                    const iconClass = isEmergency ? 'icon-fire' : (post.isHologram ? 'icon-theft' : 'icon-disaster');
+                    const icon = isEmergency ? 'fa-exclamation-circle' : (post.isHologram ? 'fa-hologram' :
+                        'fa-file-alt');
+                    const iconColor = isEmergency ? '#ff6b35' : 'var(--gold)';
+
+                    let notifLabel = '';
+                    if (isEmergency && post.notifType) {
+                        notifLabel =
+                            `${NOTIF_ICONS[post.notifType] || '🚨'} ${NOTIF_LABELS[post.notifType] || 'DARURAT'}`;
+                    }
 
                     item.innerHTML = `
-                        <div class="alert-icon ${iconClass}" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);">
+                        <div class="alert-icon ${iconClass}" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(212,168,73,0.15);color:${iconColor};border:1px solid ${iconColor}30;">
                             <i class="fas ${icon}"></i>
                         </div>
                         <div class="report-info" style="flex:1;min-width:0;">
                             <div class="report-title" style="font-size:0.8rem;font-weight:500;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                 ${post.text ? post.text.substring(0, 50) + (post.text.length > 50 ? '...' : '') : 'Postingan tanpa teks'}
+                                ${notifLabel ? `<span style="font-size:0.55rem;margin-left:6px;color:${iconColor};">${notifLabel}</span>` : ''}
                             </div>
                             <div class="report-desc" style="font-size:0.65rem;color:rgba(245,240,232,0.6);">
                                 ${post.mapLink ? '📍 Maps • ' : ''}${post.mediaType ? '📎 Media • ' : ''}${getTimeAgo(post.timestamp)}
@@ -2619,8 +3817,12 @@
         // EVENT LISTENERS
         // ================================================================
 
-        // Sidebar toggle
+        // Sidebar toggle (hanya untuk pemilik)
         profileSidebarToggle.addEventListener('click', () => {
+            if (!isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses ke menu ini', 'fa-exclamation-triangle');
+                return;
+            }
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
         });
@@ -2635,15 +3837,108 @@
             overlay.classList.remove('active');
         });
 
-        // Post input
+        // ===== SEARCH (hanya untuk pemilik) =====
+        searchBtn.addEventListener('click', () => {
+            if (!isOwner) {
+                showToast('⚠️ Peringatan', 'Fitur pencarian hanya untuk pemilik profil', 'fa-exclamation-triangle');
+                return;
+            }
+            searchModal.classList.add('active');
+            searchInput.value = '';
+            searchInput.focus();
+            searchResults.innerHTML = `
+                <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                    <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                    <p>Masukkan kata kunci untuk mencari</p>
+                </div>
+            `;
+            document.body.style.overflow = 'hidden';
+        });
+
+        searchClose.addEventListener('click', () => {
+            searchModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        searchModal.addEventListener('click', (e) => {
+            if (e.target === searchModal) {
+                searchModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+        // ===== INVITE BUTTON =====
+        inviteBtn.addEventListener('click', openInviteModal);
+
+        // ===== STATS CLICK =====
+        statPosts.addEventListener('click', () => {
+            // Scroll ke postingan
+            document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
+            showToast('📝 Postingan', `Menampilkan semua postingan ${profileOwner.fullName}`, 'fa-file-alt');
+        });
+
+        statFollowers.addEventListener('click', () => {
+            renderFollowersModal();
+            followersModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        statFollowing.addEventListener('click', () => {
+            renderFollowingModal();
+            followingModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // ===== FOLLOWERS MODAL CLOSE =====
+        followersModalClose.addEventListener('click', () => {
+            followersModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        followersModal.addEventListener('click', (e) => {
+            if (e.target === followersModal) {
+                followersModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ===== FOLLOWING MODAL CLOSE =====
+        followingModalClose.addEventListener('click', () => {
+            followingModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        followingModal.addEventListener('click', (e) => {
+            if (e.target === followingModal) {
+                followingModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ===== NOTIF TYPE SELECT =====
+        notifTypeSelect.addEventListener('change', () => {
+            updateNotifDetailFields();
+            const hasText = postInput.value.trim() !== '';
+            const hasMedia = mediaUpload.files.length > 0;
+            const hasMap = mapLinkInput.value.trim() !== '';
+            const isSpecial = notifTypeSelect.value !== 'none';
+            postSubmit.disabled = !hasText && !hasMedia && !hasMap && !isSpecial;
+        });
+
+        // ===== POST INPUT =====
         postInput.addEventListener('input', () => {
             const hasText = postInput.value.trim() !== '';
             const hasMedia = mediaUpload.files.length > 0;
             const hasMap = mapLinkInput.value.trim() !== '';
-            postSubmit.disabled = !hasText && !hasMedia && !hasMap;
+            const isSpecial = notifTypeSelect.value !== 'none';
+            postSubmit.disabled = !hasText && !hasMedia && !hasMap && !isSpecial;
         });
 
-        // Media upload
+        // ===== MEDIA UPLOAD =====
         mediaUpload.addEventListener('change', () => {
             if (mediaUpload.files && mediaUpload.files[0]) {
                 const file = mediaUpload.files[0];
@@ -2663,20 +3958,30 @@
                         `;
                     }
                     mediaPreview.style.display = 'block';
-                    postSubmit.disabled = false;
+                    const hasText = postInput.value.trim() !== '';
+                    const hasMap = mapLinkInput.value.trim() !== '';
+                    const isSpecial = notifTypeSelect.value !== 'none';
+                    postSubmit.disabled = !hasText && !hasMap && !isSpecial;
                     document.getElementById('removeMedia').addEventListener('click', () => {
                         mediaPreview.style.display = 'none';
                         mediaPreview.innerHTML = '<span class="remove-media" id="removeMedia">&times;</span>';
                         mediaUpload.value = '';
-                        postSubmit.disabled = postInput.value.trim() === '' && mapLinkInput.value.trim() === '';
+                        const hasText2 = postInput.value.trim() !== '';
+                        const hasMap2 = mapLinkInput.value.trim() !== '';
+                        const isSpecial2 = notifTypeSelect.value !== 'none';
+                        postSubmit.disabled = !hasText2 && !hasMap2 && !isSpecial2;
                     });
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // Map upload toggle
+        // ===== MAP UPLOAD =====
         mapUploadBtn.addEventListener('click', () => {
+            if (!isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses', 'fa-exclamation-triangle');
+                return;
+            }
             isMapUploadActive = !isMapUploadActive;
             mapInput.classList.toggle('show', isMapUploadActive);
             mapUploadBtn.classList.toggle('active', isMapUploadActive);
@@ -2685,21 +3990,48 @@
                 mapLinkInput.focus();
             } else {
                 mapLinkInput.value = '';
-                postSubmit.disabled = postInput.value.trim() === '' && mediaUpload.files.length === 0;
+                updateNotifDetailFields();
+                const hasText = postInput.value.trim() !== '';
+                const hasMedia = mediaUpload.files.length > 0;
+                const isSpecial = notifTypeSelect.value !== 'none';
+                postSubmit.disabled = !hasText && !hasMedia && !isSpecial;
             }
         });
 
         mapLinkInput.addEventListener('input', () => {
+            updateNotifDetailFields();
             const hasMap = mapLinkInput.value.trim() !== '';
             const hasText = postInput.value.trim() !== '';
             const hasMedia = mediaUpload.files.length > 0;
-            postSubmit.disabled = !hasText && !hasMedia && !hasMap;
+            const isSpecial = notifTypeSelect.value !== 'none';
+            postSubmit.disabled = !hasText && !hasMedia && !hasMap && !isSpecial;
         });
 
-        // Post submit
+        function updateNotifDetailFields() {
+            const selected = notifTypeSelect.value;
+
+            if (selected === 'none') {
+                notifDetailFields.classList.remove('show');
+                return;
+            }
+
+            notifDetailFields.classList.add('show');
+            reportedByName.textContent = currentUser ? currentUser.fullName : '-';
+
+            const mapLink = mapLinkInput.value.trim();
+            if (mapLink && isValidGoogleMapsLink(mapLink)) {
+                notifAddressText.textContent = 'Alamat dari Google Maps';
+                notifCoordsText.textContent = extractCoordsFromMapLink(mapLink);
+            } else {
+                notifAddressText.textContent = 'Silakan upload link Google Maps';
+                notifCoordsText.textContent = '-';
+            }
+        }
+
+        // ===== POST SUBMIT =====
         postSubmit.addEventListener('click', createNewPost);
 
-        // Bottom nav
+        // ===== BOTTOM NAV =====
         bottomHomeNav.addEventListener('click', (e) => {
             e.preventDefault();
             window.location.href = DASHBOARD_URL;
@@ -2727,6 +4059,7 @@
             window.location.reload();
         });
 
+        // ===== MODAL CLOSES =====
         notifModalClose.addEventListener('click', () => {
             notifModal.classList.remove('active');
             document.body.style.overflow = '';
@@ -2787,7 +4120,27 @@
             }
         });
 
-        // Dropdown
+        temanModalClose.addEventListener('click', () => {
+            temanModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        temanModal.addEventListener('click', (e) => {
+            if (e.target === temanModal) {
+                temanModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ===== TEMAN NAV =====
+        navTeman.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderTemanModal();
+            temanModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // ===== DROPDOWN =====
         dropdownToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             dropdownToggle.classList.toggle('open');
@@ -2824,9 +4177,13 @@
             if (e.target === confirmationModal) closeConfirmationModal();
         });
 
-        // Sidebar nav links
+        // ===== SIDEBAR NAV =====
         settingsNavLink.addEventListener('click', (e) => {
             e.preventDefault();
+            if (!isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses', 'fa-exclamation-triangle');
+                return;
+            }
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
             openSettingsModal();
@@ -2834,6 +4191,10 @@
 
         historyNavLink.addEventListener('click', (e) => {
             e.preventDefault();
+            if (!isOwner) {
+                showToast('⚠️ Peringatan', 'Anda tidak memiliki akses', 'fa-exclamation-triangle');
+                return;
+            }
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
             openHistoryModal();
@@ -2847,11 +4208,6 @@
             }
         });
 
-        // Search
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            showToast('🔍 Pencarian', 'Fitur pencarian akan segera hadir!', 'fa-search');
-        });
-
         // ================================================================
         // INITIALIZE
         // ================================================================
@@ -2863,24 +4219,44 @@
             return;
         }
 
+        // Create audio elements
+        createAudioElements();
+
         // Load data
         loadPosts();
         loadNotifications();
+        loadProfileViews();
+        generateSampleFriends();
 
         // Update UI
         updateUserUI();
 
         // Render posts
         renderPosts();
-        updateNotifBadge();
 
-        console.log('👤 SALINK - Profil');
-        console.log(`📌 User: ${currentUser.fullName} (@${currentUser.username})`);
-        console.log(`📝 Total Posts: ${posts.filter(p => p.userId === currentUser.username).length}`);
-        console.log(`🔔 Total Notifications: ${notifications.length}`);
-        console.log('ℹ️ Sidebar ada di sebelah kiri foto profil (tombol ☰)');
-        console.log('ℹ️ Tombol PESAN di tengah (center)');
-        console.log('ℹ️ Fitur Edit Postingan via tombol ⋮ di setiap postingan');
+        // Update badges
+        updateNotifBadge();
+        updateViewBadge();
+        updateProfileViewCounter();
+
+        // Apply privacy settings
+        togglePrivacy();
+
+        // Simulasi tayangan profil jika pengunjung
+        if (!isOwner && currentUser) {
+            setTimeout(() => {
+                addProfileView(currentUser.fullName);
+            }, 1000);
+        }
+
+        console.log('👤 SALINK - Profil (Lengkap dengan Privasi)');
+        console.log(`📌 Profil: ${profileOwner.fullName} (@${profileOwner.username})`);
+        console.log(`🔒 Pemilik: ${isOwner ? 'YA' : 'TIDAK'}`);
+        console.log(`📝 Total Posts: ${posts.filter(p => p.userId === profileOwner.username).length}`);
+        console.log(`👁️ Total Views: ${profileViews}`);
+        console.log('✅ Privasi: Buat Postingan, Sidebar, Search, Jual, Dokumentasi = TERSEMBUNYI');
+        console.log('✅ Publik: Foto Profil, Nama, Bio, Pesan, Invite, Stats, Postingan, Like, Komentar');
+        console.log('✅ Tombol Navbar: Foto & Teman = PUBLIK');
     </script>
 
 </body>
