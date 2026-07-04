@@ -6,7 +6,7 @@
     <title>SALINK - Login & Daftar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== ALL STYLES (Sama seperti sebelumnya) ===== */
+        /* ===== ALL STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1008,8 +1008,8 @@
                 localStorage.setItem('salink_user', JSON.stringify(user));
                 if (rememberMe) localStorage.setItem('salink_remember', 'true');
 
-                // ✅ Redirect ke dashboard dengan parameter user
-                window.location.href = DASHBOARD_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+                // ✅ Redirect ke dashboard (Full Mode)
+                window.location.href = DASHBOARD_URL + '?mode=full';
             } else {
                 // Cek apakah username ada
                 const userExists = users.find(u => u.username === username);
@@ -1115,7 +1115,7 @@
                 return;
             }
 
-            // Buat user baru
+            // Buat user baru dengan semua data lengkap
             const newUser = {
                 username: username.value,
                 fullName: fullName.value,
@@ -1148,11 +1148,14 @@
             users.push(newUser);
             localStorage.setItem('salink_users', JSON.stringify(users));
 
-            // Auto login
+            // Auto login - simpan session
             localStorage.setItem('salink_user', JSON.stringify(newUser));
+            localStorage.setItem('salink_remember', 'true');
 
             alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.');
-            window.location.href = DASHBOARD_URL + '?user=' + encodeURIComponent(JSON.stringify(newUser));
+
+            // ✅ Redirect ke dashboard (Full Mode)
+            window.location.href = DASHBOARD_URL + '?mode=full';
         });
 
         // ================================================================
@@ -1178,7 +1181,14 @@
         if (currentUser) {
             try {
                 const user = JSON.parse(currentUser);
-                window.location.href = DASHBOARD_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+                // Cek apakah ada parameter redirect
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirect = urlParams.get('redirect');
+                if (redirect === 'dashboard') {
+                    window.location.href = DASHBOARD_URL + '?mode=full';
+                } else {
+                    window.location.href = DASHBOARD_URL + '?mode=full';
+                }
             } catch (e) {
                 localStorage.removeItem('salink_user');
             }
