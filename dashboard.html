@@ -1990,7 +1990,7 @@
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <a href="toko.html" class="nav-item-bottom" id="bottomTokoNav" data-action="login">
+        <a href="#" class="nav-item-bottom" id="bottomTokoNav" data-action="login">
             <i class="fas fa-store"></i>
             <span>Toko</span>
         </a>
@@ -2145,7 +2145,7 @@
         let isMapUploadActive = false;
 
         // ================================================================
-        // REPORTS DATA (Sama dengan profil.html)
+        // REPORTS DATA
         // ================================================================
         const reports = [{
             id: 1,
@@ -2654,7 +2654,7 @@
         }
 
         // ================================================================
-        // LOAD / SAVE DATA - SAMA DENGAN profil.html
+        // LOAD / SAVE DATA
         // ================================================================
         function loadPosts() {
             const savedPosts = localStorage.getItem('salink_posts');
@@ -2704,7 +2704,7 @@
         }
 
         // ================================================================
-        // NOTIFICATION FUNCTIONS - SAMA DENGAN profil.html
+        // NOTIFICATION FUNCTIONS
         // ================================================================
         function addNotification(type, title, message, sender, postId, notifType) {
             if (isPreviewMode) return null;
@@ -3244,7 +3244,7 @@
         }
 
         // ================================================================
-        // RENDER POSTS - TAMPILKAN SEMUA POSTINGAN (tidak hanya user sendiri)
+        // RENDER POSTS - TAMPILKAN SEMUA POSTINGAN
         // ================================================================
         function renderPosts() {
             postFeed.innerHTML = '';
@@ -3462,7 +3462,7 @@
         }
 
         // ================================================================
-        // POST EVENT LISTENERS - SAMA DENGAN profil.html
+        // POST EVENT LISTENERS
         // ================================================================
         function attachPostEventListeners() {
             document.querySelectorAll('.post-action[data-post-id]').forEach(btn => {
@@ -3535,7 +3535,7 @@
         }
 
         // ================================================================
-        // POST HANDLERS - SAMA DENGAN profil.html
+        // POST HANDLERS
         // ================================================================
         function handleLike(e) {
             if (isPreviewMode) {
@@ -4556,7 +4556,7 @@
         }
 
         // ================================================================
-        // EVENT LISTENERS - PREVIEW MODE HANDLING
+        // EVENT LISTENERS
         // ================================================================
 
         // Preview overlay controls
@@ -4575,10 +4575,6 @@
             e.preventDefault();
             redirectToLogin();
         });
-
-        // ================================================================
-        // EVENT LISTENERS - NAVIGATION
-        // ================================================================
 
         // App title
         appTitle.addEventListener('click', (e) => {
@@ -4658,7 +4654,7 @@
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses Toko', 'fa-lock');
                 return;
             }
-            // Link to toko.html (already has href)
+            // Link ke toko.html (menggunakan href)
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomTokoNav.classList.add('active');
         });
@@ -4701,9 +4697,92 @@
             bottomProfileNav.classList.add('active');
         });
 
-        // ================================================================
-        // EVENT LISTENERS - SIDEBAR
-        // ================================================================
+        // Modals
+        notifModalClose.addEventListener('click', () => {
+            notifModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        notifModal.addEventListener('click', (e) => {
+            if (e.target === notifModal) {
+                notifModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        inviteModalClose.addEventListener('click', () => {
+            inviteModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        inviteModal.addEventListener('click', (e) => {
+            if (e.target === inviteModal) {
+                inviteModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        detailModalClose.addEventListener('click', () => {
+            detailModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) {
+                detailModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        viewAllBtn.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat semua laporan', 'fa-lock');
+                return;
+            }
+            renderAllReports();
+            allReportsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        allReportsModalClose.addEventListener('click', () => {
+            allReportsModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        allReportsModal.addEventListener('click', (e) => {
+            if (e.target === allReportsModal) {
+                allReportsModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        editPostModalClose.addEventListener('click', () => {
+            editPostModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        editPostModal.addEventListener('click', (e) => {
+            if (e.target === editPostModal) {
+                editPostModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        confirmYes.addEventListener('click', () => {
+            if (pendingContact) {
+                window.open(`tel:${pendingContact.number}`, '_blank');
+                closeConfirmationModal();
+            }
+        });
+
+        confirmNo.addEventListener('click', closeConfirmationModal);
+        confirmationModalClose.addEventListener('click', closeConfirmationModal);
+        confirmationModal.addEventListener('click', (e) => {
+            if (e.target === confirmationModal) closeConfirmationModal();
+        });
+
+        // Sidebar
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 if (isPreviewMode) {
@@ -4748,7 +4827,6 @@
             }
         });
 
-        // Sidebar close
         sidebarClose.addEventListener('click', () => {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -4780,7 +4858,6 @@
             if (confirm('Apakah Anda yakin ingin keluar?')) {
                 currentUser = null;
                 localStorage.removeItem('salink_user');
-                // Switch ke preview mode
                 switchToPreviewMode();
                 showToast('👋 Logout Berhasil', 'Anda kembali ke mode preview', 'fa-sign-out-alt');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4791,9 +4868,7 @@
             }
         });
 
-        // ================================================================
-        // EVENT LISTENERS - POST
-        // ================================================================
+        // Post events
         notifTypeSelect.addEventListener('change', () => {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -4889,9 +4964,7 @@
 
         postSubmit.addEventListener('click', createNewPost);
 
-        // ================================================================
-        // EVENT LISTENERS - EMERGENCY & HOLOGRAM
-        // ================================================================
+        // Emergency & Hologram
         hologramDisplay.addEventListener('click', () => {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -4904,7 +4977,7 @@
                 return;
             }
 
-            // Simulate emergency notification
+            // Simulate emergency
             const types = ['fire', 'death', 'theft', 'disaster'];
             const randomType = types[Math.floor(Math.random() * types.length)];
             const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
@@ -4964,12 +5037,10 @@
                 <div class="alert-time">${timeString}</div>
             `;
 
-            // Add notification
             addNotification('inbox', `📢 Laporan ${typeNames[randomType]}`,
                 `${randomSender} melaporkan ${typeNames[randomType].toLowerCase()} di ${randomLocation}`,
                 randomSender, null, 'none');
 
-            // Add to reports
             reports.unshift({
                 id: reports.length + 1,
                 type: randomType,
@@ -5022,9 +5093,7 @@
             });
         });
 
-        // ================================================================
-        // EVENT LISTENERS - CHART
-        // ================================================================
+        // Chart
         chartNavBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 if (isPreviewMode) {
@@ -5036,96 +5105,7 @@
             });
         });
 
-        // ================================================================
-        // EVENT LISTENERS - MODALS
-        // ================================================================
-        notifModalClose.addEventListener('click', () => {
-            notifModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        notifModal.addEventListener('click', (e) => {
-            if (e.target === notifModal) {
-                notifModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        inviteModalClose.addEventListener('click', () => {
-            inviteModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        inviteModal.addEventListener('click', (e) => {
-            if (e.target === inviteModal) {
-                inviteModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        detailModalClose.addEventListener('click', () => {
-            detailModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        detailModal.addEventListener('click', (e) => {
-            if (e.target === detailModal) {
-                detailModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        viewAllBtn.addEventListener('click', () => {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat semua laporan', 'fa-lock');
-                return;
-            }
-            renderAllReports();
-            allReportsModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        allReportsModalClose.addEventListener('click', () => {
-            allReportsModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        allReportsModal.addEventListener('click', (e) => {
-            if (e.target === allReportsModal) {
-                allReportsModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        editPostModalClose.addEventListener('click', () => {
-            editPostModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        editPostModal.addEventListener('click', (e) => {
-            if (e.target === editPostModal) {
-                editPostModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        confirmYes.addEventListener('click', () => {
-            if (pendingContact) {
-                window.open(`tel:${pendingContact.number}`, '_blank');
-                closeConfirmationModal();
-            }
-        });
-
-        confirmNo.addEventListener('click', closeConfirmationModal);
-        confirmationModalClose.addEventListener('click', closeConfirmationModal);
-        confirmationModal.addEventListener('click', (e) => {
-            if (e.target === confirmationModal) closeConfirmationModal();
-        });
-
-        // ================================================================
-        // RIPPLE EFFECT
-        // ================================================================
+        // Ripple effect
         document.addEventListener('click', function(e) {
             if (e.target.closest('.emergency-btn') || e.target.closest('.stat-card') || e.target.closest(
                     '.alert-card')) {
@@ -5155,8 +5135,9 @@
         // Load user
         const user = loadUser();
 
-        // Tentukan mode
-        const mode = new URLSearchParams(window.location.search).get('mode');
+        // Tentukan mode dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
 
         if (mode === MODE_PREVIEW || !user) {
             isPreviewMode = true;
@@ -5297,7 +5278,6 @@
         console.log('✅ Terintegrasi penuh dengan profil.html');
         console.log('✅ Kirim username → ?username= (hindari URI_TOO_LONG)');
         console.log('✅ Preview Mode aktif - data-action="login" di semua elemen');
-        console.log('✅ Tombol Toko → toko.html');
         console.log('✅ Logout → Kembali ke Preview Mode');
     </script>
 
