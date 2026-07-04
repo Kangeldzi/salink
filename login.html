@@ -6,6 +6,7 @@
     <title>SALINK - Login & Daftar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* ===== ALL STYLES (Sama seperti sebelumnya) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -493,6 +494,17 @@
             animation: fadeIn 0.3s ease;
         }
 
+        .success-msg {
+            color: var(--success);
+            font-size: 0.65rem;
+            margin-top: 3px;
+            display: none;
+        }
+        .success-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
         @media (max-width: 600px) {
             .container {
                 padding: 20px 14px;
@@ -738,7 +750,9 @@
                     </div>
                 </div>
 
-                <!-- ===== UPLOAD LINK GOOGLE MAPS ===== -->
+                <!-- ============================================================ -->
+                <!-- ⭐ UPLOAD LINK GOOGLE MAPS -->
+                <!-- ============================================================ -->
                 <div class="form-group" style="margin-top:12px;">
                     <label for="regMapLink">📍 Upload Link Google Maps <span class="required">*</span></label>
                     <p style="font-size:0.6rem;color:rgba(245,240,232,0.35);margin-bottom:4px;">
@@ -956,7 +970,7 @@
         });
 
         // ================================================================
-        // ⭐ LOGIN - Menggunakan localStorage (Offline Mode)
+        // ⭐ LOGIN - Menggunakan localStorage
         // ================================================================
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -994,8 +1008,8 @@
                 localStorage.setItem('salink_user', JSON.stringify(user));
                 if (rememberMe) localStorage.setItem('salink_remember', 'true');
 
-                // Redirect ke dashboard
-                window.location.href = DASHBOARD_URL;
+                // ✅ Redirect ke dashboard dengan parameter user
+                window.location.href = DASHBOARD_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
             } else {
                 // Cek apakah username ada
                 const userExists = users.find(u => u.username === username);
@@ -1012,7 +1026,7 @@
         });
 
         // ================================================================
-        // ⭐ REGISTER - Menggunakan localStorage (Offline Mode)
+        // ⭐ REGISTER - Menggunakan localStorage
         // ================================================================
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
@@ -1138,7 +1152,7 @@
             localStorage.setItem('salink_user', JSON.stringify(newUser));
 
             alert('✅ Pendaftaran berhasil! Selamat datang di SALINK.');
-            window.location.href = DASHBOARD_URL;
+            window.location.href = DASHBOARD_URL + '?user=' + encodeURIComponent(JSON.stringify(newUser));
         });
 
         // ================================================================
@@ -1164,7 +1178,7 @@
         if (currentUser) {
             try {
                 const user = JSON.parse(currentUser);
-                window.location.href = DASHBOARD_URL;
+                window.location.href = DASHBOARD_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
             } catch (e) {
                 localStorage.removeItem('salink_user');
             }
