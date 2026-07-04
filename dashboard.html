@@ -1626,7 +1626,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="mapNavLink" data-action="login">
+                <a href="https://www.google.com/maps" target="_blank" class="nav-link" id="mapNavLink" data-action="login">
                     <i class="fas fa-map-marked-alt"></i>
                     <span>Peta Darurat</span>
                 </a>
@@ -1655,7 +1655,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="infoNavLink" data-action="login">
+                <a href="https://salink.id/informasi" target="_blank" class="nav-link" id="infoNavLink" data-action="login">
                     <i class="fas fa-info-circle"></i>
                     <span>Informasi</span>
                 </a>
@@ -2145,7 +2145,7 @@
         let isMapUploadActive = false;
 
         // ================================================================
-        // REPORTS DATA
+        // REPORTS DATA (Sama dengan profil.html)
         // ================================================================
         const reports = [{
             id: 1,
@@ -2399,8 +2399,6 @@
 
         const homeNavLink = document.getElementById('homeNavLink');
         const historyNavLink = document.getElementById('historyNavLink');
-        const mapNavLink = document.getElementById('mapNavLink');
-        const infoNavLink = document.getElementById('infoNavLink');
         const settingsNavLink = document.getElementById('settingsNavLink');
         const dropdownToggle = document.getElementById('dropdownToggle');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -2656,7 +2654,57 @@
         }
 
         // ================================================================
-        // NOTIFICATION FUNCTIONS
+        // LOAD / SAVE DATA - SAMA DENGAN profil.html
+        // ================================================================
+        function loadPosts() {
+            const savedPosts = localStorage.getItem('salink_posts');
+            if (savedPosts) {
+                try {
+                    posts = JSON.parse(savedPosts);
+                    posts.forEach(p => {
+                        const id = parseInt(p.id.replace('post-', ''));
+                        if (id > postIdCounter) postIdCounter = id;
+                    });
+                } catch (e) {
+                    posts = [];
+                }
+            }
+        }
+
+        function savePosts() {
+            localStorage.setItem('salink_posts', JSON.stringify(posts));
+        }
+
+        function loadNotifications() {
+            const saved = localStorage.getItem('salink_notifications');
+            if (saved) {
+                try {
+                    notifications = JSON.parse(saved);
+                    notificationIdCounter = notifications.length;
+                } catch (e) {
+                    notifications = [];
+                }
+            }
+        }
+
+        function saveNotifications() {
+            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+        }
+
+        function loadProfileViews() {
+            const saved = localStorage.getItem('salink_profile_views');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    profileViews = data.count || 0;
+                } catch (e) {
+                    profileViews = 0;
+                }
+            }
+        }
+
+        // ================================================================
+        // NOTIFICATION FUNCTIONS - SAMA DENGAN profil.html
         // ================================================================
         function addNotification(type, title, message, sender, postId, notifType) {
             if (isPreviewMode) return null;
@@ -2856,56 +2904,6 @@
         }
 
         // ================================================================
-        // LOAD / SAVE DATA
-        // ================================================================
-        function loadPosts() {
-            const savedPosts = localStorage.getItem('salink_posts');
-            if (savedPosts) {
-                try {
-                    posts = JSON.parse(savedPosts);
-                    posts.forEach(p => {
-                        const id = parseInt(p.id.replace('post-', ''));
-                        if (id > postIdCounter) postIdCounter = id;
-                    });
-                } catch (e) {
-                    posts = [];
-                }
-            }
-        }
-
-        function savePosts() {
-            localStorage.setItem('salink_posts', JSON.stringify(posts));
-        }
-
-        function loadNotifications() {
-            const saved = localStorage.getItem('salink_notifications');
-            if (saved) {
-                try {
-                    notifications = JSON.parse(saved);
-                    notificationIdCounter = notifications.length;
-                } catch (e) {
-                    notifications = [];
-                }
-            }
-        }
-
-        function saveNotifications() {
-            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-        }
-
-        function loadProfileViews() {
-            const saved = localStorage.getItem('salink_profile_views');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    profileViews = data.count || 0;
-                } catch (e) {
-                    profileViews = 0;
-                }
-            }
-        }
-
-        // ================================================================
         // HELPERS
         // ================================================================
         function getTimeAgo(timestamp) {
@@ -2944,6 +2942,146 @@
                 return `${coordsMatch[1]}, ${coordsMatch[2]}`;
             }
             return 'Koordinat tidak tersedia';
+        }
+
+        // ================================================================
+        // OPEN PROFILE PAGE - Kirim hanya username (hindari URI_TOO_LONG)
+        // ================================================================
+        function openProfilePage() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
+
+            if (currentUser) {
+                window.location.href = PROFILE_URL + '?username=' + encodeURIComponent(currentUser.username);
+            } else {
+                window.location.href = LOGIN_URL;
+            }
+        }
+
+        function openUserProfile(username) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
+
+            window.location.href = PROFILE_URL + '?username=' + encodeURIComponent(username);
+        }
+
+        // ================================================================
+        // LOAD USER
+        // ================================================================
+        function loadUser() {
+            const savedUser = localStorage.getItem('salink_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    return currentUser;
+                } catch (e) {
+                    localStorage.removeItem('salink_user');
+                    currentUser = null;
+                }
+            }
+
+            // Cek URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('user');
+            if (userParam) {
+                try {
+                    currentUser = JSON.parse(decodeURIComponent(userParam));
+                    localStorage.setItem('salink_user', JSON.stringify(currentUser));
+                    return currentUser;
+                } catch (e) {
+                    currentUser = null;
+                }
+            }
+
+            return currentUser;
+        }
+
+        // ================================================================
+        // UPDATE USER UI
+        // ================================================================
+        function updateUserUI() {
+            if (!currentUser) {
+                // Guest / Preview mode
+                sidebarUserName.textContent = 'Guest';
+                sidebarUserEmail.textContent = 'guest@salink.id';
+                sidebarUserAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                hologramProfile.innerHTML = '<i class="fas fa-user"></i>';
+                postProfilePic.innerHTML = '<i class="fas fa-user"></i>';
+                postUserName.textContent = 'Buat Postingan';
+
+                const userBtnIcon = userBtn.querySelector('i');
+                const userBtnImg = userBtn.querySelector('img');
+                if (userBtnIcon) userBtnIcon.style.display = 'block';
+                if (userBtnImg) userBtnImg.style.display = 'none';
+
+                reportedByName.textContent = '-';
+                return;
+            }
+
+            // Full mode
+            sidebarUserName.textContent = currentUser.fullName;
+            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
+
+            if (currentUser.profilePicture) {
+                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
+            } else {
+                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
+            }
+
+            if (currentUser.profilePicture) {
+                hologramProfile.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            } else {
+                hologramProfile.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
+            }
+
+            if (currentUser.profilePicture) {
+                postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            } else {
+                postProfilePic.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
+                    '<i class="fas fa-male"></i>';
+            }
+            postUserName.textContent = currentUser.fullName;
+
+            const userBtnIcon = userBtn.querySelector('i');
+            const userBtnImg = userBtn.querySelector('img');
+            if (!userBtnImg) {
+                const img = document.createElement('img');
+                img.style.width = '32px';
+                img.style.height = '32px';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.style.display = 'none';
+                userBtn.appendChild(img);
+            }
+            const userImg = userBtn.querySelector('img');
+            if (currentUser.profilePicture) {
+                userBtnIcon.style.display = 'none';
+                userImg.src = currentUser.profilePicture;
+                userImg.style.display = 'block';
+            } else {
+                userBtnIcon.style.display = 'block';
+                userImg.style.display = 'none';
+            }
+
+            reportedByName.textContent = currentUser.fullName;
+
+            // Update view badge
+            updateUserViewBadge();
+        }
+
+        function updateUserViewBadge() {
+            if (userViewBadge) {
+                userViewBadge.textContent = profileViews > 0 ? profileViews : '0';
+                userViewBadge.classList.toggle('show', profileViews > 0);
+            }
         }
 
         // ================================================================
@@ -3066,7 +3204,7 @@
                     item.addEventListener('click', () => {
                         searchModal.classList.remove('active');
                         document.body.style.overflow = '';
-                        window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+                        openUserProfile(user.username);
                     });
                 }
 
@@ -3081,40 +3219,32 @@
         }
 
         // ================================================================
-        // OPEN PROFILE PAGE
+        // NOTIF DETAIL FIELDS
         // ================================================================
-        function openProfilePage() {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+        function updateNotifDetailFields() {
+            const selected = notifTypeSelect.value;
+
+            if (selected === 'none') {
+                notifDetailFields.classList.remove('show');
                 return;
             }
 
-            if (currentUser) {
-                window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(currentUser));
-            } else {
-                window.location.href = LOGIN_URL;
-            }
-        }
+            notifDetailFields.classList.add('show');
 
-        function openUserProfile(username) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
-                return;
-            }
+            reportedByName.textContent = currentUser ? currentUser.fullName : '-';
 
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            const user = users.find(u => u.username === username);
-            if (user) {
-                window.location.href = PROFILE_URL + '?user=' + encodeURIComponent(JSON.stringify(user));
+            const mapLink = mapLinkInput.value.trim();
+            if (mapLink && isValidGoogleMapsLink(mapLink)) {
+                notifAddressText.textContent = 'Alamat dari Google Maps';
+                notifCoordsText.textContent = extractCoordsFromMapLink(mapLink);
             } else {
-                showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
+                notifAddressText.textContent = 'Silakan upload link Google Maps';
+                notifCoordsText.textContent = '-';
             }
         }
 
         // ================================================================
-        // RENDER POSTS
+        // RENDER POSTS - TAMPILKAN SEMUA POSTINGAN (tidak hanya user sendiri)
         // ================================================================
         function renderPosts() {
             postFeed.innerHTML = '';
@@ -3332,7 +3462,7 @@
         }
 
         // ================================================================
-        // POST EVENT LISTENERS
+        // POST EVENT LISTENERS - SAMA DENGAN profil.html
         // ================================================================
         function attachPostEventListeners() {
             document.querySelectorAll('.post-action[data-post-id]').forEach(btn => {
@@ -3405,7 +3535,7 @@
         }
 
         // ================================================================
-        // POST HANDLERS
+        // POST HANDLERS - SAMA DENGAN profil.html
         // ================================================================
         function handleLike(e) {
             if (isPreviewMode) {
@@ -4426,144 +4556,6 @@
         }
 
         // ================================================================
-        // UPDATE USER UI
-        // ================================================================
-        function updateUserUI() {
-            if (!currentUser) {
-                // Guest / Preview mode
-                sidebarUserName.textContent = 'Guest';
-                sidebarUserEmail.textContent = 'guest@salink.id';
-                sidebarUserAvatar.innerHTML = '<i class="fas fa-user"></i>';
-                hologramProfile.innerHTML = '<i class="fas fa-user"></i>';
-                postProfilePic.innerHTML = '<i class="fas fa-user"></i>';
-                postUserName.textContent = 'Buat Postingan';
-
-                const userBtnIcon = userBtn.querySelector('i');
-                const userBtnImg = userBtn.querySelector('img');
-                if (userBtnIcon) userBtnIcon.style.display = 'block';
-                if (userBtnImg) userBtnImg.style.display = 'none';
-
-                reportedByName.textContent = '-';
-                return;
-            }
-
-            // Full mode
-            sidebarUserName.textContent = currentUser.fullName;
-            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
-
-            if (currentUser.profilePicture) {
-                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
-            } else {
-                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
-                    '<i class="fas fa-male"></i>';
-            }
-
-            if (currentUser.profilePicture) {
-                hologramProfile.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
-            } else {
-                hologramProfile.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
-                    '<i class="fas fa-male"></i>';
-            }
-
-            if (currentUser.profilePicture) {
-                postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
-            } else {
-                postProfilePic.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' :
-                    '<i class="fas fa-male"></i>';
-            }
-            postUserName.textContent = currentUser.fullName;
-
-            const userBtnIcon = userBtn.querySelector('i');
-            const userBtnImg = userBtn.querySelector('img');
-            if (!userBtnImg) {
-                const img = document.createElement('img');
-                img.style.width = '32px';
-                img.style.height = '32px';
-                img.style.borderRadius = '50%';
-                img.style.objectFit = 'cover';
-                img.style.display = 'none';
-                userBtn.appendChild(img);
-            }
-            const userImg = userBtn.querySelector('img');
-            if (currentUser.profilePicture) {
-                userBtnIcon.style.display = 'none';
-                userImg.src = currentUser.profilePicture;
-                userImg.style.display = 'block';
-            } else {
-                userBtnIcon.style.display = 'block';
-                userImg.style.display = 'none';
-            }
-
-            reportedByName.textContent = currentUser.fullName;
-
-            // Update view badge
-            updateUserViewBadge();
-        }
-
-        function updateUserViewBadge() {
-            if (userViewBadge) {
-                userViewBadge.textContent = profileViews > 0 ? profileViews : '0';
-                userViewBadge.classList.toggle('show', profileViews > 0);
-            }
-        }
-
-        // ================================================================
-        // NOTIF DETAIL FIELDS
-        // ================================================================
-        function updateNotifDetailFields() {
-            const selected = notifTypeSelect.value;
-
-            if (selected === 'none') {
-                notifDetailFields.classList.remove('show');
-                return;
-            }
-
-            notifDetailFields.classList.add('show');
-
-            reportedByName.textContent = currentUser ? currentUser.fullName : '-';
-
-            const mapLink = mapLinkInput.value.trim();
-            if (mapLink && isValidGoogleMapsLink(mapLink)) {
-                notifAddressText.textContent = 'Alamat dari Google Maps';
-                notifCoordsText.textContent = extractCoordsFromMapLink(mapLink);
-            } else {
-                notifAddressText.textContent = 'Silakan upload link Google Maps';
-                notifCoordsText.textContent = '-';
-            }
-        }
-
-        // ================================================================
-        // LOAD USER
-        // ================================================================
-        function loadUser() {
-            const savedUser = localStorage.getItem('salink_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    return currentUser;
-                } catch (e) {
-                    localStorage.removeItem('salink_user');
-                    currentUser = null;
-                }
-            }
-
-            // Cek URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const userParam = urlParams.get('user');
-            if (userParam) {
-                try {
-                    currentUser = JSON.parse(decodeURIComponent(userParam));
-                    localStorage.setItem('salink_user', JSON.stringify(currentUser));
-                    return currentUser;
-                } catch (e) {
-                    currentUser = null;
-                }
-            }
-
-            return currentUser;
-        }
-
-        // ================================================================
         // EVENT LISTENERS - PREVIEW MODE HANDLING
         // ================================================================
 
@@ -4709,96 +4701,6 @@
             bottomProfileNav.classList.add('active');
         });
 
-        // Notif modal close
-        notifModalClose.addEventListener('click', () => {
-            notifModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        notifModal.addEventListener('click', (e) => {
-            if (e.target === notifModal) {
-                notifModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Invite modal close
-        inviteModalClose.addEventListener('click', () => {
-            inviteModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        inviteModal.addEventListener('click', (e) => {
-            if (e.target === inviteModal) {
-                inviteModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Detail modal
-        detailModalClose.addEventListener('click', () => {
-            detailModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        detailModal.addEventListener('click', (e) => {
-            if (e.target === detailModal) {
-                detailModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // All reports
-        viewAllBtn.addEventListener('click', () => {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat semua laporan', 'fa-lock');
-                return;
-            }
-            renderAllReports();
-            allReportsModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        allReportsModalClose.addEventListener('click', () => {
-            allReportsModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        allReportsModal.addEventListener('click', (e) => {
-            if (e.target === allReportsModal) {
-                allReportsModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Edit post modal
-        editPostModalClose.addEventListener('click', () => {
-            editPostModal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        editPostModal.addEventListener('click', (e) => {
-            if (e.target === editPostModal) {
-                editPostModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Confirmation modal
-        confirmYes.addEventListener('click', () => {
-            if (pendingContact) {
-                window.open(`tel:${pendingContact.number}`, '_blank');
-                closeConfirmationModal();
-            }
-        });
-
-        confirmNo.addEventListener('click', closeConfirmationModal);
-        confirmationModalClose.addEventListener('click', closeConfirmationModal);
-        confirmationModal.addEventListener('click', (e) => {
-            if (e.target === confirmationModal) closeConfirmationModal();
-        });
-
         // ================================================================
         // EVENT LISTENERS - SIDEBAR
         // ================================================================
@@ -4867,18 +4769,6 @@
             overlay.classList.remove('active');
         });
 
-        // Sidebar toggle - hanya di full mode
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (isPreviewMode) {
-                    e.preventDefault();
-                    showPreviewOverlay();
-                    showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses menu', 'fa-lock');
-                    return;
-                }
-            });
-        });
-
         // Logout
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -4893,17 +4783,13 @@
                 // Switch ke preview mode
                 switchToPreviewMode();
                 showToast('👋 Logout Berhasil', 'Anda kembali ke mode preview', 'fa-sign-out-alt');
-                showHomePage();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
+                bottomHomeNav.classList.add('active');
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
             }
         });
-
-        function showHomePage() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
-            bottomHomeNav.classList.add('active');
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        }
 
         // ================================================================
         // EVENT LISTENERS - POST
@@ -5151,6 +5037,93 @@
         });
 
         // ================================================================
+        // EVENT LISTENERS - MODALS
+        // ================================================================
+        notifModalClose.addEventListener('click', () => {
+            notifModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        notifModal.addEventListener('click', (e) => {
+            if (e.target === notifModal) {
+                notifModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        inviteModalClose.addEventListener('click', () => {
+            inviteModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        inviteModal.addEventListener('click', (e) => {
+            if (e.target === inviteModal) {
+                inviteModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        detailModalClose.addEventListener('click', () => {
+            detailModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) {
+                detailModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        viewAllBtn.addEventListener('click', () => {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat semua laporan', 'fa-lock');
+                return;
+            }
+            renderAllReports();
+            allReportsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        allReportsModalClose.addEventListener('click', () => {
+            allReportsModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        allReportsModal.addEventListener('click', (e) => {
+            if (e.target === allReportsModal) {
+                allReportsModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        editPostModalClose.addEventListener('click', () => {
+            editPostModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        editPostModal.addEventListener('click', (e) => {
+            if (e.target === editPostModal) {
+                editPostModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        confirmYes.addEventListener('click', () => {
+            if (pendingContact) {
+                window.open(`tel:${pendingContact.number}`, '_blank');
+                closeConfirmationModal();
+            }
+        });
+
+        confirmNo.addEventListener('click', closeConfirmationModal);
+        confirmationModalClose.addEventListener('click', closeConfirmationModal);
+        confirmationModal.addEventListener('click', (e) => {
+            if (e.target === confirmationModal) closeConfirmationModal();
+        });
+
+        // ================================================================
         // RIPPLE EFFECT
         // ================================================================
         document.addEventListener('click', function(e) {
@@ -5321,8 +5294,9 @@
         console.log(`📝 Total Posts: ${posts.length}`);
         console.log(`🔔 Total Notifications: ${notifications.length}`);
         console.log(`👁️ Profile Views: ${profileViews}`);
-        console.log('✅ Preview Mode aktif - Semua elemen memiliki data-action="login"');
-        console.log('✅ Klik elemen apapun di Preview Mode → Overlay + Toast');
+        console.log('✅ Terintegrasi penuh dengan profil.html');
+        console.log('✅ Kirim username → ?username= (hindari URI_TOO_LONG)');
+        console.log('✅ Preview Mode aktif - data-action="login" di semua elemen');
         console.log('✅ Tombol Toko → toko.html');
         console.log('✅ Logout → Kembali ke Preview Mode');
     </script>
