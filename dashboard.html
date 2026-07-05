@@ -247,13 +247,30 @@
         }
         .nav-item-bottom .badge.show { display: flex; }
 
-        /* ===== SIDEBAR ===== */
+        /* ===== SIDEBAR - Overlay ===== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1099;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         .sidebar {
             position: fixed;
-            top: calc(var(--header-height) + 3px);
+            top: var(--header-height);
             left: 0;
             width: var(--sidebar-width);
-            max-height: calc(100vh - var(--header-height) - 3px - 20px);
+            max-height: calc(100vh - var(--header-height));
             background: linear-gradient(180deg, var(--brown-dark), var(--dark));
             padding: 0;
             z-index: 1100;
@@ -606,7 +623,6 @@
         .alert-coords { font-size: 0.6rem; font-family: monospace; color: var(--gold-light); margin-bottom: 4px; opacity: 0.7; }
         .alert-time { font-size: 0.6rem; color: rgba(245, 240, 232, 0.6); margin-top: 3px; text-align: right; }
         .mini-map { width: 100%; height: 45px; background: rgba(0, 0, 0, 0.4); border-radius: 5px; margin: 3px 0; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 0.6rem; border: 1px solid rgba(212, 168, 73, 0.2); text-decoration: none; }
-        .map-marker { position: absolute; width: 8px; height: 8px; background: #ff6b35; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3), 0 0 20px rgba(255, 107, 53, 0.2); animation: float 2s ease-in-out infinite; }
 
         /* ===== EMERGENCY BUTTONS ===== */
         .emergency-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
@@ -1080,23 +1096,23 @@
         .confirmation-actions .btn-cancel { background: rgba(255, 255, 255, 0.05); color: var(--cream); border: 1px solid rgba(212, 168, 73, 0.2); }
         .confirmation-actions .btn-cancel:hover { background: rgba(255, 255, 255, 0.1); }
 
-        /* ===== OVERLAY ===== */
-        .overlay {
+        /* ===== SIDEBAR OVERLAY ===== */
+        .sidebar-overlay-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1050;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1099;
+            display: none;
             opacity: 0;
-            pointer-events: none;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
-        .overlay.active { opacity: 1; pointer-events: all; }
-        .ripple { position: absolute; border-radius: 50%; background: rgba(212, 168, 73, 0.3); transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        .sidebar-overlay-bg.active {
+            display: block;
+            opacity: 1;
+        }
 
         /* ===== SEARCH MODAL ===== */
         .search-modal {
@@ -1381,10 +1397,10 @@
             margin-right: 4px;
         }
 
-        /* Profile Navbar - 3 items */
+        /* Profile Navbar - 4 items */
         .profile-nav-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
 
@@ -1410,8 +1426,34 @@
             color: var(--gold-light);
             transform: translateY(-2px);
         }
-        .profile-nav-item i { font-size: 1.4rem; }
-        .profile-nav-item span { font-size: 0.6rem; }
+        .profile-nav-item span:first-child { font-size: 1.4rem; }
+        .profile-nav-item span:last-child { font-size: 0.6rem; }
+
+        /* Bio Data Modal */
+        .bio-data-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 4px 0;
+        }
+        .bio-data-item {
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 8px;
+            padding: 8px 10px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+        }
+        .bio-data-item .bio-label {
+            font-size: 0.55rem;
+            color: rgba(245, 240, 232, 0.4);
+            display: block;
+        }
+        .bio-data-item .bio-value {
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            font-weight: 500;
+            margin-top: 2px;
+            word-break: break-word;
+        }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
@@ -1456,11 +1498,12 @@
             .profile-invite-btn { font-size: 0.65rem; padding: 6px 14px; }
             .profile-actions { gap: 6px; }
             .back-home-btn { padding: 6px 12px; font-size: 0.6rem; bottom: calc(var(--footer-height) + 12px); right: 12px; }
-            .profile-nav-grid { grid-template-columns: repeat(3, 1fr); }
+            .profile-nav-grid { grid-template-columns: repeat(4, 1fr); }
             .profile-sidebar-toggle { width: 30px; height: 30px; font-size: 0.7rem; left: 2px; }
             .post-type-selector select { font-size: 0.65rem; padding: 3px 8px; }
             .post-special-fields .field-label { min-width: 55px; font-size: 0.55rem; }
             .post-special-fields .field-input { font-size: 0.65rem; }
+            .bio-data-content { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 380px) {
@@ -1477,7 +1520,7 @@
             .nav-item-bottom i { font-size: 0.95rem; }
             .nav-item-bottom span { font-size: 0.45rem; }
             .social-link { width: 34px; height: 34px; font-size: 0.9rem; }
-            .profile-nav-grid { grid-template-columns: repeat(3, 1fr); }
+            .profile-nav-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
@@ -1506,7 +1549,10 @@
         </div>
     </header>
 
-    <!-- ===== SIDEBAR (di sebelah kiri) ===== -->
+    <!-- ===== SIDEBAR OVERLAY BACKGROUND ===== -->
+    <div class="sidebar-overlay-bg" id="sidebarOverlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
@@ -1582,9 +1628,6 @@
             </li>
         </ul>
     </div>
-
-    <!-- ===== OVERLAY ===== -->
-    <div class="overlay" id="overlay"></div>
 
     <!-- ===== PREVIEW OVERLAY ===== -->
     <div class="preview-overlay" id="previewOverlay">
@@ -1668,7 +1711,6 @@
                 <a href="#" class="mini-map" data-action="login">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
-                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
                 </a>
                 <div class="alert-time">10 menit yang lalu</div>
             </div>
@@ -1913,7 +1955,7 @@
             </button>
         </div>
 
-        <!-- ===== NAVBAR DI DALAM MODAL PROFIL (3 items) ===== -->
+        <!-- ===== NAVBAR DI DALAM MODAL PROFIL (4 items) ===== -->
         <div class="profile-navbar active" id="profileNavbar">
             <div class="profile-nav-grid">
                 <a href="toko.html" target="_blank" class="profile-nav-item">
@@ -1927,6 +1969,10 @@
                 <a href="#" class="profile-nav-item" id="profileTemanBtn">
                     <span>🧑‍🤝‍🧑</span>
                     <span>Teman</span>
+                </a>
+                <a href="#" class="profile-nav-item" id="profileBiodataBtn">
+                    <span>🕵🏻</span>
+                    <span>Biodata</span>
                 </a>
             </div>
         </div>
@@ -2162,6 +2208,22 @@
         </div>
     </div>
 
+    <!-- Biodata Modal -->
+    <div class="modal-overlay" id="biodataModal">
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-id-card"></i>
+                    <span>🕵🏻 Biodata Profil</span>
+                </div>
+                <button class="modal-close" id="biodataModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="biodataModalBody"></div>
+        </div>
+    </div>
+
     <script>
         // ================================================================
         // KONFIGURASI & STATE
@@ -2185,6 +2247,7 @@
         let isHologramPost = false;
         let hologramPostData = null;
         let alertTimeout = null;
+        let isSidebarOpen = false;
 
         // ================================================================
         // PLAYLIST - Audio URLs
@@ -2239,7 +2302,7 @@
         const searchModal = document.getElementById('searchModal');
         const sidebar = document.getElementById('sidebar');
         const sidebarClose = document.getElementById('sidebarClose');
-        const overlay = document.getElementById('overlay');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
         const viewAllBtn = document.getElementById('viewAllBtn');
         const alertList = document.getElementById('alertList');
         const settingsBtn = document.getElementById('settingsNavLink');
@@ -2301,6 +2364,10 @@
         const temanModalBody = document.getElementById('temanModalBody');
         const totalTemanCount = document.getElementById('totalTemanCount');
         
+        const biodataModal = document.getElementById('biodataModal');
+        const biodataModalClose = document.getElementById('biodataModalClose');
+        const biodataModalBody = document.getElementById('biodataModalBody');
+        
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmationModalClose = document.getElementById('confirmationModalClose');
         const confirmationTitle = document.getElementById('confirmationTitle');
@@ -2345,6 +2412,7 @@
         const profileSidebarToggle = document.getElementById('profileSidebarToggle');
         const profileNavbar = document.getElementById('profileNavbar');
         const profileTemanBtn = document.getElementById('profileTemanBtn');
+        const profileBiodataBtn = document.getElementById('profileBiodataBtn');
         
         // Profile Post Input
         const profilePostInput = document.getElementById('profilePostInput');
@@ -2604,8 +2672,8 @@
             const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
             users.forEach(user => {
                 if (user.username !== currentUser?.username) {
-                    // In real app, this would be sent via WebSocket/API
                     console.log(`📨 Notifikasi dikirim ke ${user.fullName}: ${notification.title}`);
+                    // In real app, this would be sent via WebSocket/API
                 }
             });
         }
@@ -2664,7 +2732,7 @@
                     'disaster': 'fa-house-damage'
                 };
                 
-                // Make sender clickable
+                // Make sender clickable - redirect to profile
                 const senderHtml = notif.sender && notif.sender !== 'Sistem' ? 
                     `<a href="#" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${notif.sender}</a>` : 
                     notif.sender;
@@ -2699,6 +2767,23 @@
                     notif.read = true;
                     updateNotifBadge();
                     renderNotifications();
+                    
+                    // Redirect based on notification type
+                    if (notif.type === 'inbox' || notif.type === 'post' || notif.type === 'comment') {
+                        // Redirect to post section
+                        document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
+                    } else if (notif.type === 'profile' || notif.type === 'invite') {
+                        // Redirect to profile
+                        if (!profilePage.classList.contains('active')) {
+                            openProfilePage();
+                        }
+                    } else if (notif.type === 'chart') {
+                        // Redirect to statistics
+                        document.querySelector('.statistics-section').scrollIntoView({ behavior: 'smooth' });
+                    } else if (notif.type === 'fire' || notif.type === 'death' || notif.type === 'theft' || notif.type === 'disaster') {
+                        // Redirect to hologram
+                        hologramDisplay.scrollIntoView({ behavior: 'smooth' });
+                    }
                 });
                 
                 notifModalBody.appendChild(item);
@@ -2760,7 +2845,6 @@
                 });
             });
             
-            // Update follower count
             if (currentUser) {
                 profileStatFollowers.textContent = friends.length;
                 profileStatFollowing.textContent = Math.floor(Math.random() * 3) + 1;
@@ -2818,6 +2902,62 @@
 
         function closeTemanModal() {
             temanModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ================================================================
+        // BIODATA FUNCTIONS
+        // ================================================================
+        
+        function renderBiodata() {
+            if (!currentUser) {
+                biodataModalBody.innerHTML = `
+                    <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-lock" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Silakan masuk untuk melihat biodata</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const bioData = {
+                'Nama Lengkap': currentUser.fullName || '-',
+                'Username': currentUser.username || '-',
+                'Email': currentUser.email || '-',
+                'No WhatsApp': currentUser.phone || '-',
+                'Alamat': currentUser.address || '-',
+                'Bio': currentUser.bio || '-',
+                'Jenis Kelamin': currentUser.gender === 'female' ? 'Perempuan' : currentUser.gender === 'male' ? 'Laki-laki' : '-',
+                'Bergabung': currentUser.joinedDate || new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
+            };
+            
+            let html = '<div class="bio-data-content">';
+            Object.keys(bioData).forEach(key => {
+                html += `
+                    <div class="bio-data-item">
+                        <span class="bio-label">${key}</span>
+                        <span class="bio-value">${bioData[key]}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            biodataModalBody.innerHTML = html;
+        }
+
+        function openBiodataModal() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat biodata', 'fa-lock');
+                return;
+            }
+            renderBiodata();
+            biodataModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBiodataModal() {
+            biodataModal.classList.remove('active');
             document.body.style.overflow = '';
         }
 
@@ -3061,12 +3201,15 @@
                 updateBadge();
                 updateProfileStats();
                 
-                // Notification
+                // Notification with sound
                 if (isSpecial && specialData) {
                     const notifSound = notifTypeMap[specialData.type] || 'notifikasi';
                     const icon = notifIconMap[specialData.type] || '🚨';
                     const label = notifLabelMap[specialData.type] || 'KEBAKARAN';
                     const soundKey = notifTypeMap[specialData.type] || 'notifikasi';
+                    
+                    // Play emergency sound
+                    playNotificationSound(soundKey);
                     
                     addNotification(
                         specialData.type,
@@ -3084,6 +3227,9 @@
                     // Update stats
                     updateEmergencyStats(specialData.type);
                 } else {
+                    // Play regular notification sound
+                    playNotificationSound('notifikasi');
+                    
                     addNotification('post', '📝 Postingan Baru', `${currentUser.fullName} membuat postingan baru`, currentUser.fullName, '#', postId, 'notifikasi');
                 }
                 
@@ -3095,6 +3241,8 @@
                 profilePostSubmit.disabled = true;
                 postMapLink.value = '';
                 postLocationAddress.value = '';
+                
+                showToast('✅ Berhasil', 'Postingan berhasil dipublikasikan!', 'fa-check-circle');
             };
             
             if (mediaFile) {
@@ -3111,7 +3259,6 @@
         }
 
         function updateEmergencyStats(type) {
-            // Update stat counters
             const statActive = document.getElementById('statActive');
             if (statActive) {
                 const current = parseInt(statActive.textContent) || 0;
@@ -3641,11 +3788,9 @@
             
             profilePesanBtn.href = 'pesan.html';
             
-            // Update stats - default 0
             const userPosts = posts.filter(p => p.userId === currentUser.username);
             profileStatPosts.textContent = userPosts.length;
             
-            // Follower & Following - default 0
             profileStatFollowers.textContent = friends.length > 0 ? friends.length : '0';
             profileStatFollowing.textContent = '0';
             
@@ -4194,7 +4339,6 @@
                 <a href="#" class="mini-map" onclick="event.preventDefault(); window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank');">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
-                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
                 </a>
                 <div class="alert-time">${timeString}</div>
             `;
@@ -4239,7 +4383,6 @@
             const locationText = alertLocation ? alertLocation.textContent.trim() : '';
             const coordsText = alertCoords ? alertCoords.textContent.trim() : '';
             
-            // Determine type from text
             let type = 'fire';
             if (typeText.includes('KEMATIAN')) type = 'death';
             else if (typeText.includes('PENCURIAN')) type = 'theft';
@@ -4287,7 +4430,6 @@
                 <a href="#" class="mini-map" onclick="event.preventDefault(); window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank');">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
-                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
                 </a>
                 <div class="alert-time">10 menit yang lalu</div>
             `;
@@ -4321,7 +4463,7 @@
             // Notif type change
             postNotifType.addEventListener('change', updateSpecialFields);
             
-            // Map link input
+            // Map link input - enable submit when link is entered
             postMapLink.addEventListener('input', function() {
                 const url = this.value.trim();
                 if (url) {
@@ -4345,7 +4487,7 @@
                 validateProfilePost();
             });
             
-            // Input validation
+            // Input validation - enable submit for both normal and special posts
             profilePostInput.addEventListener('input', validateProfilePost);
             profileMediaUpload.addEventListener('change', validateProfilePost);
             
@@ -4381,7 +4523,7 @@
                 }
             });
             
-            // Submit
+            // Submit - works for both normal and special posts
             profilePostSubmit.addEventListener('click', function() {
                 if (isPreviewMode) {
                     showPreviewOverlay();
@@ -4399,6 +4541,15 @@
                 const isSpecial = profilePostType.value === 'khusus';
                 
                 if (text === '' && !file) return;
+                
+                // For special posts, check if map link is provided
+                if (isSpecial) {
+                    const mapLink = postMapLink.value.trim();
+                    if (!mapLink) {
+                        showToast('⚠️ Perhatian', 'Mohon upload Link Google Maps untuk Postingan Khusus', 'fa-exclamation-triangle');
+                        return;
+                    }
+                }
                 
                 let specialData = null;
                 if (isSpecial) {
@@ -4419,8 +4570,7 @@
                 postMapLink.value = '';
                 postLocationAddress.value = '';
                 if (isSpecial) {
-                    postSpecialFields.classList.remove('active');
-                    profilePostType.value = 'biasa';
+                    // Don't auto-switch, keep the form as is
                 }
             });
         }
@@ -4442,9 +4592,11 @@
             
             if (isSpecial) {
                 const hasMapLink = postMapLink.value.trim() !== '';
-                profilePostSubmit.disabled = !(text && hasMapLink) && !file;
+                // Enable submit when there's text OR file, AND map link is provided
+                profilePostSubmit.disabled = !((text || file) && hasMapLink);
             } else {
-                profilePostSubmit.disabled = !text && !file;
+                // Enable submit when there's text OR file
+                profilePostSubmit.disabled = !(text || file);
             }
         }
 
@@ -4553,17 +4705,33 @@
             document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
             bottomHomeNav.classList.add('active');
             
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
+            closeSidebar();
         }
 
         // ================================================================
-        // SIDEBAR TOGGLE
+        // SIDEBAR TOGGLE - Overlay style
         // ================================================================
         
         function toggleSidebar() {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if (isSidebarOpen) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+
+        function openSidebar() {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            isSidebarOpen = true;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            isSidebarOpen = false;
+            document.body.style.overflow = '';
         }
 
         // ================================================================
@@ -4739,7 +4907,7 @@
         }
 
         // ================================================================
-        // INVITE FUNCTIONS (Menerima Undangan)
+        // INVITE FUNCTIONS - For receiving invites only
         // ================================================================
         
         function openInviteModal() {
@@ -4754,6 +4922,8 @@
                 return;
             }
             
+            // Check if this is the profile owner clicking invite
+            // For profile owner, show incoming invites
             inviteModalBody.innerHTML = `
                 <div style="margin-bottom:12px;">
                     <p style="font-size:0.7rem;color:rgba(245,240,232,0.5);margin-bottom:8px;">📨 Orang yang mengundang Anda untuk berteman</p>
@@ -4811,7 +4981,6 @@
             inviteModal.classList.remove('active');
             document.body.style.overflow = '';
             
-            // Add to friends
             const newFriend = {
                 id: ++friendIdCounter,
                 name: userName,
@@ -4822,7 +4991,6 @@
             };
             friends.push(newFriend);
             
-            // Update follower count
             profileStatFollowers.textContent = friends.length;
             
             addNotification('inbox', '👤 Teman Baru', `${userName} sekarang menjadi teman Anda`, userName, '#', null, 'notifikasi');
@@ -5235,6 +5403,7 @@
                 return;
             }
             showHomePage();
+            closeSidebar();
         });
         
         bottomHomeNav.addEventListener('click', (e) => {
@@ -5248,7 +5417,6 @@
         });
         
         bottomTokoNav.addEventListener('click', (e) => {
-            // Link ke toko.html
             window.open('toko.html', '_blank');
         });
         
@@ -5291,22 +5459,15 @@
         // Profile sidebar toggle
         profileSidebarToggle.addEventListener('click', toggleSidebar);
         
-        // Profile invite button - now shows incoming invites
+        // Profile invite button - shows incoming invites
         profileInviteBtn.addEventListener('click', (e) => {
             e.preventDefault();
             openInviteModal();
         });
         
         // Sidebar close
-        sidebarClose.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-        
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+        sidebarClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
         
         // Logout
         logoutBtn.addEventListener('click', (e) => {
@@ -5317,8 +5478,7 @@
                 switchToPreviewMode();
                 showToast('👋 Logout Berhasil', 'Anda kembali ke mode preview', 'fa-sign-out-alt');
                 showHomePage();
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
+                closeSidebar();
             }
         });
         
@@ -5460,10 +5620,22 @@
             if (e.target === temanModal) closeTemanModal();
         });
         
+        // Biodata Modal
+        biodataModalClose.addEventListener('click', closeBiodataModal);
+        biodataModal.addEventListener('click', (e) => {
+            if (e.target === biodataModal) closeBiodataModal();
+        });
+        
         // Profile Teman Button
         profileTemanBtn.addEventListener('click', (e) => {
             e.preventDefault();
             openTemanModal();
+        });
+        
+        // Profile Biodata Button
+        profileBiodataBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openBiodataModal();
         });
         
         // History
@@ -5509,7 +5681,6 @@
             if (hasNotification) {
                 convertHologramToPost();
             } else {
-                // Simulate emergency notification
                 const types = ['fire', 'death', 'theft', 'disaster'];
                 const randomType = types[Math.floor(Math.random() * types.length)];
                 const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
@@ -5526,7 +5697,7 @@
             }
         });
         
-        // Emergency Buttons
+        // Emergency Buttons - click to stop alarm
         emergencyBtns.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -5537,9 +5708,25 @@
                     return;
                 }
                 
+                // If there's a notification, convert to post
                 if (this.classList.contains('has-notification')) {
                     this.classList.remove('has-notification');
                     this.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                    convertHologramToPost();
+                    return;
+                }
+                
+                // If currently playing, stop it
+                if (currentlyPlaying === this) {
+                    const soundKey = this.dataset.sound;
+                    const audio = audioObjects[soundKey];
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                    this.classList.remove('playing');
+                    this.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                    currentlyPlaying = null;
                     return;
                 }
                 
@@ -5771,6 +5958,10 @@
         if (savedUser) {
             try {
                 currentUser = JSON.parse(savedUser);
+                // Add joinedDate if not exists
+                if (!currentUser.joinedDate) {
+                    currentUser.joinedDate = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+                }
             } catch (e) {
                 localStorage.removeItem('salink_user');
             }
@@ -5910,14 +6101,13 @@
         console.log(`👤 User: ${currentUser ? currentUser.fullName : 'Guest'}`);
         console.log(`👥 Friends: ${friends.length}`);
         console.log(`📝 Posts: ${posts.length} (disimpan di Local Storage)`);
-        console.log('✅ Sidebar di kiri dengan jarak 3px dari header');
-        console.log('✅ Tombol PESAN di tengah, INVITE untuk menerima undangan');
-        console.log('✅ Postingan Khusus dengan dropdown dan link Google Maps');
-        console.log('✅ Hologram klik -> menjadi postingan');
-        console.log('✅ Notifikasi dengan nada dering berbeda');
-        console.log('✅ Semua foto profil & nama bisa diklik ke profile-user.html');
-        console.log('✅ Toko link ke toko.html');
-        console.log('✅ Grafik default 0, update real-time');
+        console.log('✅ Sidebar sebagai overlay dengan background transparan');
+        console.log('✅ Tombol POSTING aktif untuk Biasa dan Khusus');
+        console.log('✅ Nada dering notifikasi dengan volume device');
+        console.log('✅ Titik tiga edit postingan di semua halaman');
+        console.log('✅ INVITE untuk menerima undangan dari orang lain');
+        console.log('✅ Biodata dari data registrasi di Local Storage');
+        console.log('✅ 4 navbar: Jual, Foto, Teman, Biodata');
     </script>
 
 </body>
