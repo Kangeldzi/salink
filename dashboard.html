@@ -247,33 +247,35 @@
         }
         .nav-item-bottom .badge.show { display: flex; }
 
-        /* ===== SIDEBAR (di dalam modal profil) ===== */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
-            top: 0;
-            left: -100%;
+            top: var(--header-height);
+            right: 0;
             width: var(--sidebar-width);
-            height: 100vh;
+            max-height: calc(100vh - var(--header-height) - 20px);
             background: linear-gradient(180deg, var(--brown-dark), var(--dark));
             padding: 0;
             z-index: 1100;
             overflow-y: auto;
-            box-shadow: 15px 0 30px rgba(0, 0, 0, 0.6);
-            border-right: 2px solid var(--gold);
+            box-shadow: -15px 0 30px rgba(0, 0, 0, 0.6);
+            border-left: 2px solid var(--gold);
             display: flex;
             flex-direction: column;
-            transition: left 0.3s ease;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            border-radius: 0 0 0 12px;
         }
 
         .sidebar::-webkit-scrollbar { width: 3px; }
         .sidebar::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
         .sidebar::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-        .sidebar.active { left: 0; }
+        .sidebar.active { transform: translateX(0); }
 
         .sidebar-close {
             position: absolute;
             top: 10px;
-            right: 10px;
+            left: 10px;
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -295,7 +297,7 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 14px 16px 12px;
+            padding: 10px 16px 10px;
             margin-bottom: 2px;
             border-bottom: 2px solid var(--gold);
             background: rgba(13, 8, 5, 0.3);
@@ -303,8 +305,8 @@
         }
 
         .sidebar-user-avatar {
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             display: flex;
@@ -312,7 +314,7 @@
             justify-content: center;
             color: var(--brown-dark);
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             box-shadow: 0 0 20px rgba(212, 168, 73, 0.4);
             overflow: hidden;
             position: relative;
@@ -320,50 +322,50 @@
             flex-shrink: 0;
         }
         .sidebar-user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .sidebar-user-name { font-size: 0.95rem; font-weight: 600; color: var(--gold-light); text-align: center; }
-        .sidebar-user-email { font-size: 0.65rem; color: rgba(245, 240, 232, 0.5); text-align: center; }
+        .sidebar-user-name { font-size: 0.85rem; font-weight: 600; color: var(--gold-light); text-align: center; }
+        .sidebar-user-email { font-size: 0.6rem; color: rgba(245, 240, 232, 0.5); text-align: center; }
 
         .nav-menu {
             list-style: none;
-            padding: 8px 14px 8px;
+            padding: 6px 12px 6px;
             flex: 1;
             overflow-y: auto;
         }
-        .nav-item { margin-bottom: 3px; }
+        .nav-item { margin-bottom: 2px; }
 
         .nav-link {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 14px;
+            padding: 8px 14px;
             color: var(--cream);
             text-decoration: none;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             background: rgba(61, 35, 20, 0.3);
             box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
             border: 1px solid transparent;
             cursor: pointer;
             transition: all 0.3s;
         }
-        .nav-link:hover { border-color: var(--gold); transform: translateX(5px); }
+        .nav-link:hover { border-color: var(--gold); transform: translateX(-5px); }
         .nav-link.active {
             background: linear-gradient(135deg, rgba(212, 168, 73, 0.25), rgba(245, 240, 232, 0.1));
             color: var(--gold-light);
             border: 1px solid var(--gold);
             box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
         }
-        .nav-link i { width: 22px; text-align: center; font-size: 1rem; color: var(--gold); }
+        .nav-link i { width: 22px; text-align: center; font-size: 0.95rem; color: var(--gold); }
 
         .dropdown-container { position: relative; }
         .dropdown-toggle {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 14px;
+            padding: 8px 14px;
             color: var(--cream);
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             background: rgba(61, 35, 20, 0.3);
             box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
             border: 1px solid transparent;
@@ -372,7 +374,7 @@
             transition: all 0.3s;
         }
         .dropdown-toggle:hover { border-color: var(--gold); }
-        .dropdown-toggle i { width: 22px; text-align: center; font-size: 1rem; color: var(--gold); }
+        .dropdown-toggle i { width: 22px; text-align: center; font-size: 0.95rem; color: var(--gold); }
         .dropdown-toggle .arrow { margin-left: auto; transition: transform 0.3s; font-size: 0.7rem; }
         .dropdown-toggle.open .arrow { transform: rotate(180deg); }
 
@@ -392,17 +394,33 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 16px;
+            padding: 6px 16px;
             color: var(--cream);
             text-decoration: none;
             border-left: 3px solid transparent;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             transition: all 0.3s;
         }
         .dropdown-item:hover { background: rgba(255, 255, 255, 0.05); border-left-color: var(--gold); }
         .dropdown-item i { margin-right: 10px; width: 18px; text-align: center; color: var(--gold); }
-        .dropdown-item .contact-number { background: var(--gold-dark); padding: 1px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; color: var(--cream); }
+        .dropdown-item .contact-number { background: var(--gold-dark); padding: 1px 8px; border-radius: 10px; font-size: 0.6rem; font-weight: bold; color: var(--cream); }
+
+        .nav-logout {
+            margin-top: 4px;
+            border-top: 1px solid rgba(212, 168, 73, 0.2);
+            padding-top: 6px;
+        }
+        .nav-logout .nav-link {
+            color: rgba(255, 107, 53, 0.7);
+        }
+        .nav-logout .nav-link:hover {
+            color: #ff6b35;
+            border-color: #ff6b35;
+        }
+        .nav-logout .nav-link i {
+            color: rgba(255, 107, 53, 0.7);
+        }
 
         /* ===== MAIN CONTENT ===== */
         .main-content {
@@ -694,7 +712,7 @@
         .post-input-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         .post-input { width: 100%; background: rgba(255, 248, 240, 0.05); border: 1px solid rgba(212, 168, 73, 0.2); border-radius: 8px; padding: 10px; color: var(--cream); resize: none; min-height: 55px; font-size: 0.75rem; }
         .post-input:focus { outline: none; border-color: var(--gold); }
-        .post-actions-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .post-actions-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
         .media-upload-btn { background: none; border: none; color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 0.7rem; }
         .media-upload-btn i { font-size: 0.9rem; }
         .file-input { display: none; }
@@ -706,7 +724,7 @@
         .remove-media { position: absolute; top: 4px; right: 4px; background: rgba(0, 0, 0, 0.7); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; font-size: 0.7rem; }
 
         .post-feed { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
-        .post { background: rgba(255, 248, 240, 0.03); border-radius: 10px; padding: 14px; border: 1px solid rgba(212, 168, 73, 0.1); }
+        .post { background: rgba(255, 248, 240, 0.03); border-radius: 10px; padding: 14px; border: 1px solid rgba(212, 168, 73, 0.1); position: relative; }
         .post-content { margin: 8px 0; }
         .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--cream); }
         .post-media { margin: 8px 0; }
@@ -741,6 +759,60 @@
         .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
         .post-action.share { color: rgba(76, 201, 240, 0.6); }
         .post-action.share:hover { color: #4cc9f0; }
+
+        /* Menu titik tiga (Edit Postingan) */
+        .post-menu-toggle {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: rgba(245, 240, 232, 0.4);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+        .post-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--gold-light);
+        }
+
+        .post-menu-dropdown {
+            position: absolute;
+            top: 32px;
+            right: 8px;
+            background: rgba(13, 8, 5, 0.95);
+            border: 1px solid var(--gold);
+            border-radius: 8px;
+            padding: 4px 0;
+            min-width: 140px;
+            z-index: 10;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .post-menu-dropdown.active { display: block; animation: fadeIn 0.2s ease; }
+        .post-menu-dropdown .menu-item {
+            padding: 8px 14px;
+            color: var(--cream);
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+        .post-menu-dropdown .menu-item:hover {
+            background: rgba(212, 168, 73, 0.1);
+            color: var(--gold-light);
+        }
+        .post-menu-dropdown .menu-item i { width: 16px; text-align: center; color: var(--gold); }
 
         .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
         .comment { display: flex; flex-direction: column; margin-bottom: 8px; padding: 6px 8px; background: rgba(255, 248, 240, 0.03); border-radius: 8px; }
@@ -1093,7 +1165,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin: 16px 0;
+            margin: 16px 0 10px;
             background: rgba(61, 35, 20, 0.3);
             padding: 12px;
             border-radius: 12px;
@@ -1104,78 +1176,62 @@
         .profile-stat-number { font-size: 1.1rem; font-weight: 700; color: var(--gold-light); display: block; }
         .profile-stat-label { font-size: 0.55rem; color: rgba(245, 240, 232, 0.5); }
 
-        /* Tombol PESAN dengan link tujuan */
+        /* Tombol PESAN di tengah */
+        .profile-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0 12px;
+            flex-wrap: wrap;
+        }
         .profile-pesan-btn {
-            position: absolute;
-            top: -15px;
-            right: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             color: var(--dark);
             border: none;
-            padding: 6px 16px;
+            padding: 8px 24px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
             transition: all 0.3s;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         .profile-pesan-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
         }
 
-        /* ===== NAVBAR DI DALAM MODAL PROFIL ===== */
-        .profile-navbar {
-            display: none;
-            margin-top: 12px;
-            padding: 8px 0;
-            background: rgba(61, 35, 20, 0.3);
-            border-radius: 12px;
-            border: 1px solid rgba(212, 168, 73, 0.1);
-        }
-        .profile-navbar.active { display: block; }
-
-        .profile-nav-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-        }
-
-        .profile-nav-item {
-            display: flex;
-            flex-direction: column;
+        .profile-invite-btn {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 8px 4px;
-            border-radius: 10px;
+            gap: 6px;
+            background: rgba(212, 168, 73, 0.15);
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
-            color: rgba(245, 240, 232, 0.7);
-            background: rgba(255, 248, 240, 0.03);
-            border: 1px solid transparent;
-            font-size: 0.55rem;
-            gap: 4px;
         }
-        .profile-nav-item:hover {
-            background: rgba(212, 168, 73, 0.1);
-            border-color: var(--gold);
-            color: var(--gold-light);
+        .profile-invite-btn:hover {
+            background: rgba(212, 168, 73, 0.25);
             transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.2);
         }
-        .profile-nav-item i { font-size: 1.2rem; }
-        .profile-nav-item span { font-size: 0.55rem; }
 
-        /* ===== TOGGLE SIDEBAR DI MODAL PROFIL ===== */
+        /* Sidebar toggle di kiri */
         .profile-sidebar-toggle {
             position: absolute;
             top: 0;
-            right: 5px;
+            left: 5px;
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -1254,6 +1310,77 @@
         .friend-name { font-size: 0.8rem; color: var(--cream); font-weight: 500; }
         .friend-status { font-size: 0.6rem; color: rgba(245, 240, 232, 0.4); }
 
+        /* Post Type Dropdown */
+        .post-type-selector {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .post-type-selector select {
+            background: rgba(255, 248, 240, 0.06);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 6px;
+            padding: 4px 10px;
+            color: var(--cream);
+            font-size: 0.7rem;
+            cursor: pointer;
+            flex: 1;
+        }
+        .post-type-selector select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .post-type-selector select option {
+            background: var(--brown-dark);
+            color: var(--cream);
+        }
+
+        .post-special-fields {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+            padding: 8px 10px;
+            background: rgba(255, 248, 240, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(212, 168, 73, 0.1);
+        }
+        .post-special-fields.active { display: flex; }
+
+        .post-special-fields .field-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .post-special-fields .field-label {
+            font-size: 0.6rem;
+            color: rgba(245, 240, 232, 0.5);
+            min-width: 70px;
+        }
+        .post-special-fields .field-input {
+            flex: 1;
+            background: rgba(255, 248, 240, 0.05);
+            border: 1px solid rgba(212, 168, 73, 0.15);
+            border-radius: 6px;
+            padding: 4px 8px;
+            color: var(--cream);
+            font-size: 0.7rem;
+            width: 100%;
+        }
+        .post-special-fields .field-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .post-special-fields .field-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .post-special-fields .post-icon-display {
+            font-size: 1.2rem;
+            margin-right: 4px;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .emergency-grid { gap: 10px; }
@@ -1280,8 +1407,8 @@
             .pie-chart-center { width: 55px; height: 55px; }
             .pie-chart-center .total-number { font-size: 0.9rem; }
             .sidebar { width: 85%; }
-            .sidebar-user-avatar { width: 44px; height: 44px; font-size: 1.1rem; }
-            .sidebar-user-name { font-size: 0.9rem; }
+            .sidebar-user-avatar { width: 40px; height: 40px; font-size: 1rem; }
+            .sidebar-user-name { font-size: 0.8rem; }
             .post-actions { gap: 8px; }
             .post-action { font-size: 0.6rem; padding: 2px 4px; }
             .comment-main { gap: 6px; }
@@ -1293,10 +1420,15 @@
             .app-footer { padding: 12px 10px; }
             .preview-overlay-content { padding: 20px 16px; }
             .overlay-buttons button { min-width: 100px; padding: 8px 16px; font-size: 0.7rem; }
-            .profile-pesan-btn { font-size: 0.6rem; padding: 4px 12px; top: -12px; right: 6px; }
+            .profile-pesan-btn { font-size: 0.65rem; padding: 6px 16px; }
+            .profile-invite-btn { font-size: 0.65rem; padding: 6px 14px; }
+            .profile-actions { gap: 6px; }
             .back-home-btn { padding: 6px 12px; font-size: 0.6rem; bottom: calc(var(--footer-height) + 12px); right: 12px; }
             .profile-nav-grid { grid-template-columns: repeat(2, 1fr); }
-            .profile-sidebar-toggle { width: 30px; height: 30px; font-size: 0.7rem; right: 2px; }
+            .profile-sidebar-toggle { width: 30px; height: 30px; font-size: 0.7rem; left: 2px; }
+            .post-type-selector select { font-size: 0.65rem; padding: 3px 8px; }
+            .post-special-fields .field-label { min-width: 55px; font-size: 0.55rem; }
+            .post-special-fields .field-input { font-size: 0.65rem; }
         }
 
         @media (max-width: 380px) {
@@ -1342,7 +1474,7 @@
         </div>
     </header>
 
-    <!-- ===== SIDEBAR (di dalam modal profil - tidak terlihat di header) ===== -->
+    <!-- ===== SIDEBAR (di sebelah kanan) ===== -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
@@ -1410,7 +1542,7 @@
                     <span>Pengaturan</span>
                 </a>
             </li>
-            <li class="nav-item" id="logoutNavItem" style="display:none;">
+            <li class="nav-item nav-logout" id="logoutNavItem" style="display:none;">
                 <a href="#" class="nav-link" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Keluar</span>
@@ -1715,7 +1847,7 @@
             <div class="profile-avatar-large" id="profileAvatarLarge">
                 <i class="fas fa-user"></i>
             </div>
-            <!-- Tombol toggle sidebar di dalam modal profil -->
+            <!-- Tombol toggle sidebar di kiri -->
             <button class="profile-sidebar-toggle" id="profileSidebarToggle" title="Buka Menu">
                 <i class="fas fa-bars"></i>
             </button>
@@ -1737,10 +1869,16 @@
                 <span class="profile-stat-number" id="profileStatFollowing">0</span>
                 <span class="profile-stat-label">Mengikuti</span>
             </div>
-            <!-- Tombol PESAN dengan href link -->
+        </div>
+
+        <!-- Tombol PESAN di tengah + INVITE -->
+        <div class="profile-actions">
             <a href="https://salink.id/pesan" target="_blank" class="profile-pesan-btn" id="profilePesanBtn">
                 <i class="fas fa-paper-plane"></i> PESAN
             </a>
+            <button class="profile-invite-btn" id="profileInviteBtn">
+                <i class="fas fa-user-plus"></i> INVITE
+            </button>
         </div>
 
         <!-- ===== NAVBAR DI DALAM MODAL PROFIL ===== -->
@@ -1765,8 +1903,66 @@
             </div>
         </div>
         
+        <!-- ===== POSTINGAN BARU (Stats Card) ===== -->
         <div class="post-section profile-posts-section" style="margin-top:12px;">
-            <h4 style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;">Postingan Saya</h4>
+            <h4 style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;">📝 Postingan Baru</h4>
+            
+            <!-- Post Type Dropdown -->
+            <div class="post-type-selector">
+                <select id="profilePostType">
+                    <option value="biasa">📝 Postingan Biasa</option>
+                    <option value="khusus">🚨 Postingan Khusus</option>
+                </select>
+            </div>
+            
+            <div class="post-input-area" style="margin-bottom:12px;">
+                <textarea class="post-input" id="profilePostInput" placeholder="Tulis postingan baru..." readonly style="min-height:50px;"></textarea>
+                
+                <!-- Special Fields for Postingan Khusus -->
+                <div class="post-special-fields" id="postSpecialFields">
+                    <div class="field-row">
+                        <span class="field-label">Pesan Notif:</span>
+                        <select id="postNotifType" class="field-input">
+                            <option value="fire">🔥 Kebakaran</option>
+                            <option value="death">💀 Kematian</option>
+                            <option value="theft">💎 Pencurian</option>
+                            <option value="disaster">🌪️ Bencana</option>
+                        </select>
+                        <span class="post-icon-display" id="postIconDisplay">🔥</span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Dilaporkan Oleh:</span>
+                        <input type="text" class="field-input" id="postReportedBy" disabled>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Link Google Maps:</span>
+                        <input type="text" class="field-input" id="postMapLink" placeholder="Tempel link Google Maps...">
+                    </div>
+                    <div class="field-row" style="flex-direction:column;align-items:stretch;gap:2px;">
+                        <span class="field-label">📍 Alamat & Koordinat:</span>
+                        <input type="text" class="field-input" id="postLocationAddress" placeholder="Alamat akan muncul otomatis..." readonly style="font-size:0.65rem;">
+                    </div>
+                </div>
+                
+                <div class="media-preview" id="profileMediaPreview">
+                    <span class="remove-media" id="profileRemoveMedia">&times;</span>
+                </div>
+                <div class="post-actions-bottom">
+                    <div>
+                        <label for="profileMediaUpload" class="media-upload-btn">
+                            <i class="fas fa-camera"></i>
+                            <span>Foto/Video</span>
+                        </label>
+                        <input type="file" id="profileMediaUpload" class="file-input" accept="image/*, video/*" disabled>
+                    </div>
+                    <button class="post-submit-btn" id="profilePostSubmit" disabled>Posting</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== POSTINGAN SAYA (Unlimited, Local Storage) ===== -->
+        <div class="post-section profile-posts-section" style="margin-top:12px;">
+            <h4 style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;">📄 Postingan Saya</h4>
             <div id="profilePosts"></div>
         </div>
         
@@ -1775,7 +1971,7 @@
         </button>
     </div>
 
-    <!-- ===== BOTTOM NAVIGATION (TIDAK BERUBAH) ===== -->
+    <!-- ===== BOTTOM NAVIGATION ===== -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item-bottom active" id="bottomHomeNav" data-action="login">
             <i class="fas fa-home"></i>
@@ -1940,21 +2136,27 @@
 
     <script>
         // ================================================================
-        // KONFIGURASI
+        // KONFIGURASI & STATE
         // ================================================================
         
         const LOGIN_URL = 'login.html';
         const MODE_PREVIEW = 'preview';
         const MODE_FULL = 'full';
 
-        // ================================================================
-        // STATE
-        // ================================================================
-        
         let isPreviewMode = true;
         let currentUser = null;
         let pendingAction = null;
         let toastTimeout = null;
+        let posts = [];
+        let postIdCounter = 0;
+        let notifications = [];
+        let notificationIdCounter = 0;
+        let friends = [];
+        let friendIdCounter = 0;
+        let currentlyPlaying = null;
+        let isHologramPost = false;
+        let hologramPostData = null;
+        let alertTimeout = null;
 
         // ================================================================
         // PLAYLIST - Audio URLs
@@ -1975,137 +2177,26 @@
             'notifikasi': 4
         };
 
-        // ================================================================
-        // DATA
-        // ================================================================
-        
-        const reports = [
-            {
-                id: 1,
-                type: 'fire',
-                icon: 'fa-fire',
-                title: 'Kebakaran Rumah Tinggal',
-                desc: 'Jl. Sudirman No. 45, Jakarta Selatan',
-                time: '15m',
-                detail: {
-                    type: 'KEBAKARAN',
-                    sender: 'Bpk. Budi Santoso',
-                    location: 'Jl. Sudirman No. 45, Jakarta Selatan',
-                    address: 'Perumahan Mutiara Indah Blok A No. 12',
-                    image: 'https://picsum.photos/seed/fire/400/200',
-                    time: new Date(Date.now() - 15 * 60000).toLocaleString('id-ID', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                    })
-                }
-            },
-            {
-                id: 2,
-                type: 'theft',
-                icon: 'fa-gem',
-                title: 'Pencurian Motor',
-                desc: 'Jl. Thamrin No. 12, Jakarta Pusat',
-                time: '32m',
-                detail: {
-                    type: 'PENCURIAN',
-                    sender: 'Sdri. Rina Wati',
-                    location: 'Jl. Thamrin No. 12, Jakarta Pusat',
-                    address: 'Parkiran Mall Grand Indonesia Lt. 3',
-                    image: 'https://picsum.photos/seed/theft/400/200',
-                    time: new Date(Date.now() - 32 * 60000).toLocaleString('id-ID', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                    })
-                }
-            },
-            {
-                id: 3,
-                type: 'disaster',
-                icon: 'fa-house-damage',
-                title: 'Tanah Longsor',
-                desc: 'Jl. Bukit Duri, Tebet, Jakarta Selatan',
-                time: '1h',
-                detail: {
-                    type: 'BENCANA ALAM',
-                    sender: 'Bpk. Agus Priyono',
-                    location: 'Jl. Bukit Duri, Tebet, Jakarta Selatan',
-                    address: 'Perumahan Bukit Hijau Blok C No. 7',
-                    image: 'https://picsum.photos/seed/disaster/400/200',
-                    time: new Date(Date.now() - 60 * 60000).toLocaleString('id-ID', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                    })
-                }
-            },
-            {
-                id: 4,
-                type: 'death',
-                icon: 'fa-skull',
-                title: 'Kecelakaan Lalu Lintas',
-                desc: 'Jl. Gatot Subroto, Jakarta Selatan',
-                time: '2h',
-                detail: {
-                    type: 'KEMATIAN',
-                    sender: 'Bpk. Dedi Mulyadi',
-                    location: 'Jl. Gatot Subroto, Jakarta Selatan',
-                    address: 'Simpang Jalan Gatot Subroto - Kuningan',
-                    image: 'https://picsum.photos/seed/accident/400/200',
-                    time: new Date(Date.now() - 120 * 60000).toLocaleString('id-ID', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                    })
-                }
-            },
-            {
-                id: 5,
-                type: 'fire',
-                icon: 'fa-fire',
-                title: 'Kebakaran Pabrik',
-                desc: 'Kawasan Industri Pulogadung, Jakarta Timur',
-                time: '3h',
-                detail: {
-                    type: 'KEBAKARAN',
-                    sender: 'Bpk. Hendra Gunawan',
-                    location: 'Kawasan Industri Pulogadung, Jakarta Timur',
-                    address: 'Jl. Industri Raya No. 88, Pulogadung',
-                    image: 'https://picsum.photos/seed/factory/400/200',
-                    time: new Date(Date.now() - 180 * 60000).toLocaleString('id-ID', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric'
-                    })
-                }
-            }
-        ];
+        const notifTypeMap = {
+            'fire': 'kebakaran',
+            'death': 'kematian',
+            'theft': 'pencurian',
+            'disaster': 'bencana'
+        };
 
-        let notifications = [];
-        let notificationIdCounter = 0;
-        let notifBadgeCount = 0;
-        let pendingContact = null;
-        let currentlyPlaying = null;
-        let posts = [];
-        let postIdCounter = 0;
-        let isHologramPost = false;
-        let hologramPostData = null;
-        let alertTimeout = null;
+        const notifIconMap = {
+            'fire': '🔥',
+            'death': '💀',
+            'theft': '💎',
+            'disaster': '🌪️'
+        };
 
-        // Data teman
-        let friends = [];
-        let friendIdCounter = 0;
+        const notifLabelMap = {
+            'fire': 'KEBAKARAN',
+            'death': 'KEMATIAN',
+            'theft': 'PENCURIAN',
+            'disaster': 'BENCANA'
+        };
 
         // ================================================================
         // DOM ELEMENTS
@@ -2221,10 +2312,25 @@
         const profileStatFollowing = document.getElementById('profileStatFollowing');
         const profilePosts = document.getElementById('profilePosts');
         const profilePesanBtn = document.getElementById('profilePesanBtn');
+        const profileInviteBtn = document.getElementById('profileInviteBtn');
         const backHomeBtn = document.getElementById('backHomeBtn');
         const profileSidebarToggle = document.getElementById('profileSidebarToggle');
         const profileNavbar = document.getElementById('profileNavbar');
         const profileTemanBtn = document.getElementById('profileTemanBtn');
+        
+        // Profile Post Input
+        const profilePostInput = document.getElementById('profilePostInput');
+        const profileMediaUpload = document.getElementById('profileMediaUpload');
+        const profileMediaPreview = document.getElementById('profileMediaPreview');
+        const profileRemoveMedia = document.getElementById('profileRemoveMedia');
+        const profilePostSubmit = document.getElementById('profilePostSubmit');
+        const profilePostType = document.getElementById('profilePostType');
+        const postSpecialFields = document.getElementById('postSpecialFields');
+        const postNotifType = document.getElementById('postNotifType');
+        const postIconDisplay = document.getElementById('postIconDisplay');
+        const postReportedBy = document.getElementById('postReportedBy');
+        const postMapLink = document.getElementById('postMapLink');
+        const postLocationAddress = document.getElementById('postLocationAddress');
 
         // ================================================================
         // TOAST SYSTEM
@@ -2282,17 +2388,6 @@
         function hidePreviewOverlay() {
             previewOverlay.classList.remove('active');
             document.body.style.overflow = '';
-        }
-
-        function handlePreviewAction(e) {
-            if (!isPreviewMode) return;
-            const target = e.currentTarget || e.target;
-            if (target && target.dataset && target.dataset.action === 'login') {
-                e.preventDefault();
-                e.stopPropagation();
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses fitur ini', 'fa-lock');
-            }
         }
 
         function redirectToLogin() {
@@ -2418,9 +2513,9 @@
             }
         }
 
-        function playNotificationSound() {
+        function playNotificationSound(soundKey = 'notifikasi') {
             if (isPreviewMode) return;
-            const audio = audioObjects['notifikasi'];
+            const audio = audioObjects[soundKey];
             if (audio) {
                 audio.currentTime = 0;
                 audio.volume = 0.7;
@@ -2432,7 +2527,7 @@
         // NOTIFICATION FUNCTIONS
         // ================================================================
         
-        function addNotification(type, title, message, sender, link, postId) {
+        function addNotification(type, title, message, sender, link, postId, soundKey = 'notifikasi') {
             if (isPreviewMode) return null;
             if (sender && currentUser && sender === currentUser.fullName) {
                 return null;
@@ -2447,13 +2542,14 @@
                 link: link || '#',
                 postId: postId || null,
                 timestamp: Date.now(),
-                read: false
+                read: false,
+                soundKey: soundKey
             };
             notifications.unshift(notification);
             updateNotifBadge();
             
             if (!(sender && currentUser && sender === currentUser.fullName)) {
-                playNotificationSound();
+                playNotificationSound(soundKey);
             }
             
             return notification;
@@ -2461,7 +2557,6 @@
 
         function updateNotifBadge() {
             const unread = notifications.filter(n => !n.read).length;
-            notifBadgeCount = unread;
             notifBadge.textContent = unread > 0 ? unread : '0';
             notifBadge.classList.toggle('show', unread > 0);
             if (notifModalBadge) {
@@ -2507,7 +2602,11 @@
                     'comment': 'fa-comment',
                     'profile': 'fa-eye',
                     'chart': 'fa-chart-line',
-                    'post': 'fa-file-alt'
+                    'post': 'fa-file-alt',
+                    'fire': 'fa-fire',
+                    'death': 'fa-skull',
+                    'theft': 'fa-gem',
+                    'disaster': 'fa-house-damage'
                 };
                 
                 item.innerHTML = `
@@ -2524,6 +2623,7 @@
                             </div>
                             <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);margin-top:3px;">
                                 ${getTimeAgo(notif.timestamp)} • ${notif.sender}
+                                ${notif.soundKey && notif.soundKey !== 'notifikasi' ? ` • 🔔 ${notif.soundKey.toUpperCase()}` : ''}
                             </div>
                         </div>
                         ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>` : ''}
@@ -2539,30 +2639,6 @@
                     notif.read = true;
                     updateNotifBadge();
                     renderNotifications();
-                    
-                    if (notif.postId) {
-                        const post = posts.find(p => p.id === notif.postId);
-                        if (post) {
-                            document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
-                            const postEl = document.getElementById(notif.postId);
-                            if (postEl) {
-                                postEl.style.borderColor = 'var(--gold)';
-                                postEl.style.background = 'rgba(212,168,73,0.1)';
-                                setTimeout(() => {
-                                    postEl.style.borderColor = 'rgba(212,168,73,0.1)';
-                                    postEl.style.background = 'rgba(255,248,240,0.03)';
-                                }, 2000);
-                            }
-                        }
-                    } else if (notif.type === 'post' || notif.type === 'report' || notif.type === 'inbox') {
-                        document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
-                    } else if (notif.type === 'profile') {
-                        openProfilePage();
-                    } else if (notif.type === 'invite') {
-                        openInviteModal();
-                    } else if (notif.type === 'comment') {
-                        document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
-                    }
                 });
                 
                 notifModalBody.appendChild(item);
@@ -2572,11 +2648,11 @@
         function generateSampleNotifications() {
             const now = Date.now();
             const notifTypes = [
-                { type: 'inbox', title: 'Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat' },
-                { type: 'invite', title: 'Undangan', msg: 'Sdri. Rina mengundang Anda berteman' },
-                { type: 'report', title: 'Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan' },
-                { type: 'comment', title: 'Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda' },
-                { type: 'chart', title: 'Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%' }
+                { type: 'inbox', title: 'Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat', sound: 'notifikasi' },
+                { type: 'invite', title: 'Undangan', msg: 'Sdri. Rina mengundang Anda berteman', sound: 'notifikasi' },
+                { type: 'report', title: 'Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan', sound: 'notifikasi' },
+                { type: 'comment', title: 'Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda', sound: 'notifikasi' },
+                { type: 'chart', title: 'Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%', sound: 'notifikasi' }
             ];
             
             notifTypes.forEach((nt, index) => {
@@ -2590,7 +2666,8 @@
                     link: '#',
                     postId: null,
                     timestamp: now - timeOffset,
-                    read: index > 2
+                    read: index > 2,
+                    soundKey: nt.sound
                 };
                 notifications.push(notif);
             });
@@ -2621,6 +2698,13 @@
                     avatar: null
                 });
             });
+            
+            // Update follower/following counts
+            if (currentUser) {
+                // Set default counts to 0, will be updated from friends
+                profileStatFollowers.textContent = friends.length;
+                profileStatFollowing.textContent = Math.floor(Math.random() * 5) + 1;
+            }
         }
 
         function renderTemanModal() {
@@ -2708,6 +2792,7 @@
             
             if (seconds < 60) return 'Baru saja';
             if (minutes < 60) return `${minutes} menit yang lalu`;
+            if (minutes < 120) return '1 jam yang lalu';
             if (hours < 24) return `${hours} jam yang lalu`;
             if (days < 7) return `${days} hari yang lalu`;
             if (weeks < 4) return `${weeks} minggu yang lalu`;
@@ -2848,74 +2933,620 @@
             document.body.style.overflow = '';
         }
 
-        function openHistoryModal() {
+        // ================================================================
+        // LOCAL STORAGE FUNCTIONS
+        // ================================================================
+        
+        function savePostsToLocalStorage() {
+            try {
+                localStorage.setItem('salink_posts', JSON.stringify(posts));
+            } catch (e) {
+                console.warn('Gagal menyimpan posts ke localStorage:', e);
+            }
+        }
+
+        function loadPostsFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('salink_posts');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        posts = parsed;
+                        let maxId = 0;
+                        posts.forEach(p => {
+                            const numId = parseInt(p.id.replace('post-', ''));
+                            if (!isNaN(numId) && numId > maxId) maxId = numId;
+                        });
+                        postIdCounter = maxId;
+                        return true;
+                    }
+                }
+            } catch (e) {
+                console.warn('Gagal memuat posts dari localStorage:', e);
+            }
+            return false;
+        }
+
+        // ================================================================
+        // POST FUNCTIONS
+        // ================================================================
+        
+        function createPost(text, mediaFile, isSpecial, specialData, postType) {
             if (isPreviewMode) {
                 showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat riwayat', 'fa-lock');
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan', 'fa-lock');
                 return;
             }
             
-            historyModalBody.innerHTML = '';
-            
             if (!currentUser) {
-                historyModalBody.innerHTML = `
-                    <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
-                        <i class="fas fa-lock" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Silakan masuk terlebih dahulu untuk melihat riwayat laporan Anda</p>
-                    </div>
-                `;
-            } else if (posts.length === 0) {
-                historyModalBody.innerHTML = `
-                    <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
-                        <i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada laporan yang Anda posting</p>
-                    </div>
-                `;
+                window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const now = Date.now();
+            const postId = 'post-' + (++postIdCounter);
+            
+            let mediaContent = '';
+            let mediaType = '';
+            let mediaData = '';
+            
+            const finishPost = () => {
+                const postData = {
+                    id: postId,
+                    userId: currentUser.username,
+                    userFullName: currentUser.fullName,
+                    userGender: currentUser.gender,
+                    userProfilePic: currentUser.profilePicture || null,
+                    text: text,
+                    mediaType: mediaType,
+                    mediaData: mediaData,
+                    timestamp: now,
+                    likes: [],
+                    comments: [],
+                    isSpecial: isSpecial || false,
+                    specialData: specialData || null,
+                    postType: postType || 'biasa'
+                };
+                posts.push(postData);
+                savePostsToLocalStorage();
+                renderPosts();
+                if (currentUser) {
+                    renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+                }
+                updateBadge();
+                updateProfileStats();
+                
+                // Notification
+                if (isSpecial && specialData) {
+                    const notifSound = notifTypeMap[specialData.type] || 'notifikasi';
+                    const icon = notifIconMap[specialData.type] || '🚨';
+                    const label = notifLabelMap[specialData.type] || 'KEBAKARAN';
+                    const soundKey = notifTypeMap[specialData.type] || 'notifikasi';
+                    
+                    addNotification(
+                        specialData.type,
+                        `📢 ${label}`,
+                        `${currentUser.fullName} melaporkan ${label.toLowerCase()} di ${specialData.location || 'lokasi tidak diketahui'}`,
+                        currentUser.fullName,
+                        '#',
+                        postId,
+                        soundKey
+                    );
+                    
+                    // Tambahkan ke hologram
+                    addToHologram(specialData.type, currentUser.fullName, specialData.location, specialData.address);
+                } else {
+                    addNotification('post', '📝 Postingan Baru', `${currentUser.fullName} membuat postingan baru`, currentUser.fullName, '#', postId, 'notifikasi');
+                }
+                
+                // Reset form
+                profilePostInput.value = '';
+                profileMediaUpload.value = '';
+                profileMediaPreview.style.display = 'none';
+                profileMediaPreview.innerHTML = '<span class="remove-media" id="profileRemoveMedia">&times;</span>';
+                profilePostSubmit.disabled = true;
+                postMapLink.value = '';
+                postLocationAddress.value = '';
+            };
+            
+            if (mediaFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    mediaData = e.target.result;
+                    mediaType = mediaFile.type.startsWith('image/') ? 'image' : 'video';
+                    finishPost();
+                };
+                reader.readAsDataURL(mediaFile);
             } else {
-                const userPosts = posts.filter(p => p.userId === currentUser.username);
-                if (userPosts.length === 0) {
-                    historyModalBody.innerHTML = `
-                        <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
-                            <i class="fas fa-inbox" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                            <p>Belum ada laporan yang Anda posting</p>
+                finishPost();
+            }
+        }
+
+        function renderPosts() {
+            postFeed.innerHTML = '';
+            const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
+            const displayPosts = sortedPosts.slice(0, 20);
+            
+            displayPosts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'post';
+                postElement.id = post.id;
+                
+                const profilePic = post.userProfilePic 
+                    ? `<img src="${post.userProfilePic}" alt="Profile">` 
+                    : (post.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                
+                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
+                
+                let mediaHTML = '';
+                if (post.mediaType === 'image') {
+                    mediaHTML = `<div class="post-media"><img src="${post.mediaData}" alt="Post media"></div>`;
+                } else if (post.mediaType === 'video') {
+                    mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
+                }
+                
+                let commentsHTML = '';
+                post.comments.forEach(comment => {
+                    const commentProfilePic = comment.userProfilePic 
+                        ? `<img src="${comment.userProfilePic}" alt="Profile">` 
+                        : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                    
+                    commentsHTML += `
+                        <div class="comment" id="comment-${comment.id}">
+                            <div class="comment-main">
+                                <div class="comment-profile-pic">
+                                    ${commentProfilePic}
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-user">${comment.userFullName}</div>
+                                    <div class="comment-text">${comment.text}</div>
+                                    <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                                    <div class="comment-actions">
+                                        <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}" data-action="login">Balas</span>
+                                        ${!isPreviewMode && comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-action="login">Hapus</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            ${comment.replies && comment.replies.length > 0 ? `
+                                <div class="comment-replies">
+                                    ${comment.replies.map(reply => {
+                                        const replyProfilePic = reply.userProfilePic 
+                                            ? `<img src="${reply.userProfilePic}" alt="Profile">` 
+                                            : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                        return `
+                                            <div class="reply-comment">
+                                                <div class="comment-main">
+                                                    <div class="comment-profile-pic">
+                                                        ${replyProfilePic}
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        <div class="comment-user">${reply.userFullName}</div>
+                                                        <div class="comment-text">${reply.text}</div>
+                                                        <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
+                                                        ${!isPreviewMode && reply.userId === currentUser?.username ? `
+                                                            <div class="comment-actions">
+                                                                <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}" data-action="login">Hapus</span>
+                                                            </div>
+                                                        ` : ''}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                     `;
-                } else {
-                    userPosts.forEach(post => {
-                        const item = document.createElement('div');
-                        item.className = 'report-list-item';
-                        item.style.cursor = 'default';
-                        
-                        const iconClass = post.type ? `icon-${post.type}` : 'icon-fire';
-                        const icon = post.type ? 
-                            (post.type === 'fire' ? 'fa-fire' : 
-                             post.type === 'theft' ? 'fa-gem' : 
-                             post.type === 'disaster' ? 'fa-house-damage' : 'fa-skull') : 
-                            'fa-fire';
-                        
-                        item.innerHTML = `
-                            <div class="alert-icon ${iconClass}" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;">
-                                <i class="fas ${icon}"></i>
+                });
+                
+                const isLiked = !isPreviewMode && currentUser && post.likes.includes(currentUser.username);
+                const specialBadge = post.isSpecial ? `<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">🚨 ${notifLabelMap[post.specialData?.type] || 'Khusus'}</span>` : '';
+                
+                postElement.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-profile-pic" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }">
+                            ${profilePic}
+                        </div>
+                        <div class="post-user-info">
+                            <h4>${profileLink} ${specialBadge}</h4>
+                            <small>${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })} • ${getTimeAgo(post.timestamp)}</small>
+                        </div>
+                        <button class="post-menu-toggle" data-post-id="${post.id}">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="post-menu-dropdown" id="postMenu-${post.id}">
+                            <button class="menu-item edit-post" data-post-id="${post.id}">
+                                <i class="fas fa-edit"></i> Edit Postingan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
+                        ${mediaHTML}
+                        ${post.isSpecial && post.specialData ? `
+                            <div style="margin-top:6px;padding:6px 10px;background:rgba(212,168,73,0.05);border-radius:6px;border-left:3px solid var(--gold);">
+                                <div style="font-size:0.65rem;color:var(--gold-light);">
+                                    <span>${notifIconMap[post.specialData.type] || '🚨'}</span>
+                                    <strong>${notifLabelMap[post.specialData.type] || 'Khusus'}</strong>
+                                </div>
+                                <div style="font-size:0.6rem;color:rgba(245,240,232,0.6);">
+                                    📍 ${post.specialData.location || 'Lokasi tidak diketahui'}
+                                </div>
+                                <div style="font-size:0.55rem;color:rgba(245,240,232,0.4);">
+                                    📌 ${post.specialData.address || ''}
+                                </div>
                             </div>
-                            <div class="report-info">
-                                <div class="report-title">${post.text.substring(0, 50)}${post.text.length > 50 ? '...' : ''}</div>
-                                <div class="report-desc">${post.timestamp ? getTimeAgo(post.timestamp) : 'Baru saja'}</div>
+                        ` : ''}
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}" data-action="login">
+                            <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                            <span>Suka</span>
+                            <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
+                        </div>
+                        <div class="post-action comment-toggle" data-post-id="${post.id}" data-action="login">
+                            <i class="far fa-comment"></i>
+                            <span>Komentar</span>
+                            <span>(${post.comments.length})</span>
+                        </div>
+                        <div class="post-action share" data-post-id="${post.id}" data-action="login">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Bagikan</span>
+                        </div>
+                        ${!isPreviewMode && post.userId === currentUser?.username ? `
+                            <div class="post-action delete" data-post-id="${post.id}" data-action="login">
+                                <i class="fas fa-trash"></i>
+                                <span>Hapus</span>
                             </div>
-                            <div class="report-time">${post.timestamp ? new Date(post.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : 'Sekarang'}</div>
-                        `;
-                        
-                        historyModalBody.appendChild(item);
+                        ` : ''}
+                    </div>
+                    <div class="comments-section" id="comments-${post.id}">
+                        ${commentsHTML}
+                    </div>
+                    <div class="add-comment">
+                        <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}" ${isPreviewMode ? 'readonly' : ''}>
+                        <button class="send-comment" data-post-id="${post.id}" data-action="login">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                `;
+                
+                postFeed.appendChild(postElement);
+            });
+            
+            attachPostEventListeners();
+        }
+
+        function attachPostEventListeners() {
+            document.querySelectorAll('.post-action[data-post-id]').forEach(btn => {
+                if (btn.querySelector('.fa-heart')) {
+                    btn.removeEventListener('click', handleLike);
+                    btn.addEventListener('click', handleLike);
+                }
+            });
+            
+            document.querySelectorAll('.post-action.delete[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleDeletePost);
+                btn.addEventListener('click', handleDeletePost);
+            });
+            
+            document.querySelectorAll('.comment-toggle[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleCommentToggle);
+                btn.addEventListener('click', handleCommentToggle);
+            });
+            
+            document.querySelectorAll('.send-comment[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleSendComment);
+                btn.addEventListener('click', handleSendComment);
+            });
+            
+            document.querySelectorAll('.comment-input[data-post-id]').forEach(input => {
+                input.removeEventListener('keypress', handleCommentKeyPress);
+                input.addEventListener('keypress', handleCommentKeyPress);
+            });
+            
+            document.querySelectorAll('.reply-comment-action[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleReplyComment);
+                btn.addEventListener('click', handleReplyComment);
+            });
+            
+            document.querySelectorAll('.delete-comment[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleDeleteComment);
+                btn.addEventListener('click', handleDeleteComment);
+            });
+            
+            document.querySelectorAll('.post-action.share[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleShare);
+                btn.addEventListener('click', handleShare);
+            });
+            
+            document.querySelectorAll('.post-menu-toggle').forEach(btn => {
+                btn.removeEventListener('click', handleMainMenuToggle);
+                btn.addEventListener('click', handleMainMenuToggle);
+            });
+            
+            document.querySelectorAll('.edit-post').forEach(btn => {
+                btn.removeEventListener('click', handleMainEditPost);
+                btn.addEventListener('click', handleMainEditPost);
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.post-menu-toggle') && !e.target.closest('.post-menu-dropdown')) {
+                    document.querySelectorAll('.post-menu-dropdown.active').forEach(menu => {
+                        menu.classList.remove('active');
                     });
+                }
+            });
+        }
+
+        function handleLike(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
+                return;
+            }
+            
+            if (!post || !currentUser) {
+                if (!currentUser) window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const index = post.likes.indexOf(currentUser.username);
+            if (index > -1) {
+                post.likes.splice(index, 1);
+            } else {
+                post.likes.push(currentUser.username);
+                if (post.userId !== currentUser.username) {
+                    addNotification('inbox', '❤️ Suka', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, '#', postId, 'notifikasi');
+                }
+            }
+            savePostsToLocalStorage();
+            renderPosts();
+            if (currentUser) {
+                renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+            }
+            updateProfileStats();
+        }
+
+        function handleDeletePost(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus postingan', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+                posts = posts.filter(p => p.id !== postId);
+                savePostsToLocalStorage();
+                renderPosts();
+                if (currentUser) {
+                    renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+                }
+                updateBadge();
+                updateProfileStats();
+                showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
+            }
+        }
+
+        function handleCommentToggle(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (commentsSection) {
+                commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function handleSendComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk berkomentar', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const input = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const comment = {
+                id: 'comment-' + Date.now(),
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
+                text: text,
+                timestamp: Date.now(),
+                replies: []
+            };
+            
+            const replyToCommentId = input.dataset.replyToCommentId;
+            if (replyToCommentId) {
+                const parentComment = post.comments.find(c => c.id === replyToCommentId);
+                if (parentComment) {
+                    if (!parentComment.replies) parentComment.replies = [];
+                    parentComment.replies.push(comment);
+                    delete input.dataset.replyToCommentId;
+                    input.placeholder = 'Tulis komentar...';
+                }
+            } else {
+                post.comments.push(comment);
+                if (post.userId !== currentUser.username) {
+                    addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#', postId, 'notifikasi');
                 }
             }
             
-            historyModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            input.value = '';
+            savePostsToLocalStorage();
+            renderPosts();
+            if (currentUser) {
+                renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+            }
+            updateProfileStats();
         }
 
-        function closeHistoryModal() {
-            historyModal.classList.remove('active');
-            document.body.style.overflow = '';
+        function handleCommentKeyPress(e) {
+            if (e.key === 'Enter') {
+                const input = e.currentTarget;
+                const postId = input.dataset.postId;
+                const sendBtn = document.querySelector(`.send-comment[data-post-id="${postId}"]`);
+                if (sendBtn) sendBtn.click();
+            }
+        }
+
+        function handleReplyComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membalas komentar', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentId = btn.dataset.commentId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const comment = post.comments.find(c => c.id === commentId);
+            if (!comment) return;
+            
+            const input = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
+            if (input) {
+                input.dataset.replyToCommentId = commentId;
+                input.placeholder = `Membalas @${comment.userFullName}...`;
+                input.focus();
+            }
+        }
+
+        function handleDeleteComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus komentar', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentId = btn.dataset.commentId;
+            const replyId = btn.dataset.replyId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            if (replyId) {
+                for (const comment of post.comments) {
+                    if (comment.replies) {
+                        const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                        if (replyIndex > -1) {
+                            comment.replies.splice(replyIndex, 1);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                const commentIndex = post.comments.findIndex(c => c.id === commentId);
+                if (commentIndex > -1) {
+                    post.comments.splice(commentIndex, 1);
+                }
+            }
+            savePostsToLocalStorage();
+            renderPosts();
+            if (currentUser) {
+                renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+            }
+            updateProfileStats();
+        }
+
+        function handleShare(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membagikan postingan', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SALINK - Postingan',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showToast('📋 Disalin', 'Link postingan disalin ke clipboard', 'fa-clipboard');
+                }).catch(() => {
+                    prompt('Salin teks ini:', shareText);
+                });
+            }
+            
+            if (currentUser && post.userId !== currentUser.username) {
+                addNotification('inbox', '📤 Postingan Dibagikan', `${currentUser.fullName} membagikan postingan Anda`, currentUser.fullName, '#', postId, 'notifikasi');
+            }
+        }
+
+        function handleMainMenuToggle(e) {
+            e.stopPropagation();
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const menu = document.getElementById(`postMenu-${postId}`);
+            if (menu) {
+                document.querySelectorAll('.post-menu-dropdown.active').forEach(m => {
+                    if (m.id !== `postMenu-${postId}`) {
+                        m.classList.remove('active');
+                    }
+                });
+                menu.classList.toggle('active');
+            }
+        }
+
+        function handleMainEditPost(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengedit postingan', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const menu = document.getElementById(`postMenu-${postId}`);
+            if (menu) menu.classList.remove('active');
+            
+            const newText = prompt('Edit postingan:', post.text || '');
+            if (newText !== null) {
+                post.text = newText.trim() || post.text;
+                savePostsToLocalStorage();
+                renderPosts();
+                if (currentUser) {
+                    renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+                }
+                showToast('✅ Diperbarui', 'Postingan berhasil diedit', 'fa-check');
+            }
         }
 
         // ================================================================
@@ -2939,7 +3570,6 @@
             backHomeBtn.classList.add('active');
             profileNavbar.classList.add('active');
             
-            // Foto profil hanya display picture (tidak bisa di klik)
             if (currentUser.profilePicture) {
                 profileAvatarLarge.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
@@ -2950,15 +3580,37 @@
             profileUsername.textContent = `@${currentUser.username || 'username'}`;
             profileBio.textContent = currentUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
             
-            // Tombol PESAN dengan link tujuan
             profilePesanBtn.href = 'https://salink.id/pesan';
             
+            // Update stats - default 0 unless there are followers/following
             const userPosts = posts.filter(p => p.userId === currentUser.username);
             profileStatPosts.textContent = userPosts.length;
-            profileStatFollowers.textContent = friends.length;
-            profileStatFollowing.textContent = Math.floor(Math.random() * 15) + 3;
             
+            // Follower & Following counts - default 0, updated from friends
+            if (friends.length > 0) {
+                profileStatFollowers.textContent = friends.length;
+            } else {
+                profileStatFollowers.textContent = '0';
+            }
+            
+            // Following - random small number or 0
+            const followingCount = Math.floor(Math.random() * 5);
+            profileStatFollowing.textContent = followingCount > 0 ? followingCount : '0';
+            
+            // Update reported by field
+            if (postReportedBy) {
+                postReportedBy.value = currentUser.fullName || 'User';
+            }
+            
+            renderProfilePosts(userPosts);
+            
+            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
+            bottomProfileNav.classList.add('active');
+        }
+
+        function renderProfilePosts(userPosts) {
             profilePosts.innerHTML = '';
+            
             if (userPosts.length === 0) {
                 profilePosts.innerHTML = `
                     <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
@@ -2971,6 +3623,7 @@
                     const postEl = document.createElement('div');
                     postEl.className = 'post';
                     postEl.style.marginBottom = '10px';
+                    postEl.id = `profile-post-${post.id}`;
                     
                     const profilePic = post.userProfilePic 
                         ? `<img src="${post.userProfilePic}" alt="Profile">` 
@@ -2984,6 +3637,7 @@
                     }
                     
                     const isLiked = currentUser && post.likes.includes(currentUser.username);
+                    const specialBadge = post.isSpecial ? `<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">🚨 ${notifLabelMap[post.specialData?.type] || 'Khusus'}</span>` : '';
                     
                     postEl.innerHTML = `
                         <div class="post-header">
@@ -2991,43 +3645,65 @@
                                 ${profilePic}
                             </div>
                             <div class="post-user-info">
-                                <h4>${post.userFullName}</h4>
+                                <h4>${post.userFullName} ${specialBadge}</h4>
                                 <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
+                            </div>
+                            <button class="post-menu-toggle" data-post-id="${post.id}">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="post-menu-dropdown" id="postMenu-${post.id}">
+                                <button class="menu-item edit-post" data-post-id="${post.id}">
+                                    <i class="fas fa-edit"></i> Edit Postingan
+                                </button>
                             </div>
                         </div>
                         <div class="post-content">
                             ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
                             ${mediaHTML}
+                            ${post.isSpecial && post.specialData ? `
+                                <div style="margin-top:6px;padding:6px 10px;background:rgba(212,168,73,0.05);border-radius:6px;border-left:3px solid var(--gold);">
+                                    <div style="font-size:0.65rem;color:var(--gold-light);">
+                                        <span>${notifIconMap[post.specialData.type] || '🚨'}</span>
+                                        <strong>${notifLabelMap[post.specialData.type] || 'Khusus'}</strong>
+                                    </div>
+                                    <div style="font-size:0.6rem;color:rgba(245,240,232,0.6);">
+                                        📍 ${post.specialData.location || 'Lokasi tidak diketahui'}
+                                    </div>
+                                    <div style="font-size:0.55rem;color:rgba(245,240,232,0.4);">
+                                        📌 ${post.specialData.address || ''}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="post-actions">
-                            <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}" data-action="login">
+                            <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
                                 <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
                                 <span>Suka</span>
                                 <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
                             </div>
-                            <div class="post-action comment-toggle" data-post-id="${post.id}" data-action="login">
+                            <div class="post-action comment-toggle" data-post-id="${post.id}">
                                 <i class="far fa-comment"></i>
                                 <span>Komentar</span>
                                 <span>(${post.comments.length})</span>
                             </div>
-                            <div class="post-action share" data-post-id="${post.id}" data-action="login">
+                            <div class="post-action share" data-post-id="${post.id}">
                                 <i class="fas fa-share-alt"></i>
                                 <span>Bagikan</span>
                             </div>
                             ${post.userId === currentUser?.username ? `
-                                <div class="post-action delete" data-post-id="${post.id}" data-action="login">
+                                <div class="post-action delete" data-post-id="${post.id}">
                                     <i class="fas fa-trash"></i>
                                     <span>Hapus</span>
                                 </div>
                             ` : ''}
                         </div>
-                        <div class="comments-section" id="comments-${post.id}">
+                        <div class="comments-section" id="profile-comments-${post.id}">
                             ${post.comments.map(comment => {
                                 const commentProfilePic = comment.userProfilePic 
                                     ? `<img src="${comment.userProfilePic}" alt="Profile">` 
                                     : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
                                 return `
-                                    <div class="comment" id="comment-${comment.id}">
+                                    <div class="comment" id="profile-comment-${comment.id}">
                                         <div class="comment-main">
                                             <div class="comment-profile-pic">
                                                 ${commentProfilePic}
@@ -3037,8 +3713,8 @@
                                                 <div class="comment-text">${comment.text}</div>
                                                 <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
                                                 <div class="comment-actions">
-                                                    <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}" data-action="login">Balas</span>
-                                                    ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-action="login">Hapus</span>` : ''}
+                                                    <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
+                                                    ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}">Hapus</span>` : ''}
                                                 </div>
                                             </div>
                                         </div>
@@ -3060,7 +3736,7 @@
                                                                     <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
                                                                     ${reply.userId === currentUser?.username ? `
                                                                         <div class="comment-actions">
-                                                                            <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}" data-action="login">Hapus</span>
+                                                                            <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}">Hapus</span>
                                                                         </div>
                                                                     ` : ''}
                                                                 </div>
@@ -3076,7 +3752,7 @@
                         </div>
                         <div class="add-comment">
                             <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}" ${isPreviewMode ? 'readonly' : ''}>
-                            <button class="send-comment" data-post-id="${post.id}" data-action="login">
+                            <button class="send-comment" data-post-id="${post.id}">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -3086,8 +3762,666 @@
                 });
             }
             
-            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
-            bottomProfileNav.classList.add('active');
+            attachProfilePostListeners();
+        }
+
+        function attachProfilePostListeners() {
+            document.querySelectorAll('#profilePosts .post-action[data-post-id]').forEach(btn => {
+                if (btn.querySelector('.fa-heart')) {
+                    btn.removeEventListener('click', handleProfileLike);
+                    btn.addEventListener('click', handleProfileLike);
+                }
+            });
+            
+            document.querySelectorAll('#profilePosts .post-action.delete[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileDelete);
+                btn.addEventListener('click', handleProfileDelete);
+            });
+            
+            document.querySelectorAll('#profilePosts .comment-toggle[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileCommentToggle);
+                btn.addEventListener('click', handleProfileCommentToggle);
+            });
+            
+            document.querySelectorAll('#profilePosts .send-comment[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileSendComment);
+                btn.addEventListener('click', handleProfileSendComment);
+            });
+            
+            document.querySelectorAll('#profilePosts .comment-input[data-post-id]').forEach(input => {
+                input.removeEventListener('keypress', handleProfileCommentKeyPress);
+                input.addEventListener('keypress', handleProfileCommentKeyPress);
+            });
+            
+            document.querySelectorAll('#profilePosts .reply-comment-action[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileReplyComment);
+                btn.addEventListener('click', handleProfileReplyComment);
+            });
+            
+            document.querySelectorAll('#profilePosts .delete-comment[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileDeleteComment);
+                btn.addEventListener('click', handleProfileDeleteComment);
+            });
+            
+            document.querySelectorAll('#profilePosts .post-action.share[data-post-id]').forEach(btn => {
+                btn.removeEventListener('click', handleProfileShare);
+                btn.addEventListener('click', handleProfileShare);
+            });
+            
+            document.querySelectorAll('#profilePosts .post-menu-toggle').forEach(btn => {
+                btn.removeEventListener('click', handleProfileMenuToggle);
+                btn.addEventListener('click', handleProfileMenuToggle);
+            });
+            
+            document.querySelectorAll('#profilePosts .edit-post').forEach(btn => {
+                btn.removeEventListener('click', handleProfileEditPost);
+                btn.addEventListener('click', handleProfileEditPost);
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.post-menu-toggle') && !e.target.closest('.post-menu-dropdown')) {
+                    document.querySelectorAll('#profilePosts .post-menu-dropdown.active').forEach(menu => {
+                        menu.classList.remove('active');
+                    });
+                }
+            });
+        }
+
+        // ===== Profile Post Handlers =====
+        function handleProfileLike(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
+                return;
+            }
+            
+            if (!post || !currentUser) {
+                if (!currentUser) window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const index = post.likes.indexOf(currentUser.username);
+            if (index > -1) {
+                post.likes.splice(index, 1);
+            } else {
+                post.likes.push(currentUser.username);
+                if (post.userId !== currentUser.username) {
+                    addNotification('inbox', '❤️ Suka', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, '#', postId, 'notifikasi');
+                }
+            }
+            savePostsToLocalStorage();
+            renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+            renderPosts();
+            updateProfileStats();
+        }
+
+        function handleProfileDelete(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus postingan', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+                posts = posts.filter(p => p.id !== postId);
+                savePostsToLocalStorage();
+                renderProfilePosts(posts.filter(p => p.userId === currentUser?.username));
+                renderPosts();
+                updateBadge();
+                updateProfileStats();
+                showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
+            }
+        }
+
+        function handleProfileCommentToggle(e) {
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentsSection = document.getElementById(`profile-comments-${postId}`);
+            if (commentsSection) {
+                commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function handleProfileSendComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk berkomentar', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const input = document.querySelector(`#profilePosts .comment-input[data-post-id="${postId}"]`);
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const comment = {
+                id: 'comment-' + Date.now(),
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
+                text: text,
+                timestamp: Date.now(),
+                replies: []
+            };
+            
+            const replyToCommentId = input.dataset.replyToCommentId;
+            if (replyToCommentId) {
+                const parentComment = post.comments.find(c => c.id === replyToCommentId);
+                if (parentComment) {
+                    if (!parentComment.replies) parentComment.replies = [];
+                    parentComment.replies.push(comment);
+                    delete input.dataset.replyToCommentId;
+                    input.placeholder = 'Tulis komentar...';
+                }
+            } else {
+                post.comments.push(comment);
+                if (post.userId !== currentUser.username) {
+                    addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#', postId, 'notifikasi');
+                }
+            }
+            
+            input.value = '';
+            savePostsToLocalStorage();
+            renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+            renderPosts();
+            updateProfileStats();
+        }
+
+        function handleProfileCommentKeyPress(e) {
+            if (e.key === 'Enter') {
+                const input = e.currentTarget;
+                const postId = input.dataset.postId;
+                const sendBtn = document.querySelector(`#profilePosts .send-comment[data-post-id="${postId}"]`);
+                if (sendBtn) sendBtn.click();
+            }
+        }
+
+        function handleProfileReplyComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membalas komentar', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentId = btn.dataset.commentId;
+            const post = posts.find(p => p.id === postId);
+            if (!post || !currentUser) {
+                if (!currentUser) window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const comment = post.comments.find(c => c.id === commentId);
+            if (!comment) return;
+            
+            const input = document.querySelector(`#profilePosts .comment-input[data-post-id="${postId}"]`);
+            if (input) {
+                input.dataset.replyToCommentId = commentId;
+                input.placeholder = `Membalas @${comment.userFullName}...`;
+                input.focus();
+            }
+        }
+
+        function handleProfileDeleteComment(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus komentar', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const commentId = btn.dataset.commentId;
+            const replyId = btn.dataset.replyId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            if (replyId) {
+                for (const comment of post.comments) {
+                    if (comment.replies) {
+                        const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                        if (replyIndex > -1) {
+                            comment.replies.splice(replyIndex, 1);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                const commentIndex = post.comments.findIndex(c => c.id === commentId);
+                if (commentIndex > -1) {
+                    post.comments.splice(commentIndex, 1);
+                }
+            }
+            savePostsToLocalStorage();
+            renderProfilePosts(posts.filter(p => p.userId === currentUser?.username));
+            renderPosts();
+            updateProfileStats();
+        }
+
+        function handleProfileShare(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membagikan postingan', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SALINK - Postingan',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showToast('📋 Disalin', 'Link postingan disalin ke clipboard', 'fa-clipboard');
+                }).catch(() => {
+                    prompt('Salin teks ini:', shareText);
+                });
+            }
+            
+            if (currentUser && post.userId !== currentUser.username) {
+                addNotification('inbox', '📤 Postingan Dibagikan', `${currentUser.fullName} membagikan postingan Anda`, currentUser.fullName, '#', postId, 'notifikasi');
+            }
+        }
+
+        function handleProfileMenuToggle(e) {
+            e.stopPropagation();
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const menu = document.getElementById(`postMenu-${postId}`);
+            if (menu) {
+                document.querySelectorAll('#profilePosts .post-menu-dropdown.active').forEach(m => {
+                    if (m.id !== `postMenu-${postId}`) {
+                        m.classList.remove('active');
+                    }
+                });
+                menu.classList.toggle('active');
+            }
+        }
+
+        function handleProfileEditPost(e) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengedit postingan', 'fa-lock');
+                return;
+            }
+            
+            const btn = e.currentTarget;
+            const postId = btn.dataset.postId;
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const menu = document.getElementById(`postMenu-${postId}`);
+            if (menu) menu.classList.remove('active');
+            
+            const newText = prompt('Edit postingan:', post.text || '');
+            if (newText !== null) {
+                post.text = newText.trim() || post.text;
+                savePostsToLocalStorage();
+                renderProfilePosts(posts.filter(p => p.userId === currentUser?.username));
+                renderPosts();
+                showToast('✅ Diperbarui', 'Postingan berhasil diedit', 'fa-check');
+            }
+        }
+
+        function updateProfileStats() {
+            if (!currentUser) return;
+            const userPosts = posts.filter(p => p.userId === currentUser.username);
+            profileStatPosts.textContent = userPosts.length;
+            
+            // Update followers/following
+            if (friends.length > 0) {
+                profileStatFollowers.textContent = friends.length;
+            }
+        }
+
+        // ================================================================
+        // HOLOGRAM FUNCTIONS
+        // ================================================================
+        
+        function addToHologram(type, sender, location, address) {
+            const hologramContent = document.getElementById('hologramContent');
+            const typeNames = {
+                fire: 'KEBAKARAN',
+                death: 'KEMATIAN',
+                theft: 'PENCURIAN',
+                disaster: 'BENCANA ALAM'
+            };
+            const icons = {
+                fire: 'fa-fire',
+                death: 'fa-skull',
+                theft: 'fa-gem',
+                disaster: 'fa-house-damage'
+            };
+            
+            const now = new Date();
+            const timeString = now.toLocaleString('id-ID', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            hologramContent.innerHTML = `
+                <div class="hologram-top">
+                    <div class="hologram-profile" id="hologramProfile">
+                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                    </div>
+                    <div class="alert-type ${type}">
+                        <i class="fas ${icons[type]}"></i>
+                        <span>${typeNames[type]}</span>
+                    </div>
+                </div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${sender}</a></strong></div>
+                <div class="alert-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${location || 'Lokasi tidak diketahui'}</span>
+                </div>
+                <div class="alert-coords">${address || 'Koordinat: -6.1823399, 106.8325873'}</div>
+                <a href="#" class="mini-map" onclick="event.preventDefault(); if(!isPreviewMode) window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank'); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat lokasi', 'fa-lock'); }">
+                    <i class="fas fa-map"></i>
+                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
+                </a>
+                <div class="alert-time">${timeString}</div>
+            `;
+            
+            // Trigger emergency button notification
+            const btnMap = {
+                fire: fireBtn,
+                death: deathBtn,
+                theft: theftBtn,
+                disaster: disasterBtn
+            };
+            
+            const btn = btnMap[type];
+            if (btn) {
+                btn.classList.add('has-notification');
+                btn.querySelector('.play-status').textContent = '🔔 Ada Notifikasi!';
+                
+                // Auto convert to post after 5 seconds
+                clearTimeout(alertTimeout);
+                alertTimeout = setTimeout(() => {
+                    if (btn) {
+                        btn.classList.remove('has-notification');
+                        btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                    }
+                }, 5000);
+            }
+        }
+
+        // ================================================================
+        // PROFILE POST INPUT SETUP
+        // ================================================================
+        
+        function setupProfilePostInput() {
+            if (!profilePostInput) return;
+            
+            // Post type toggle
+            profilePostType.addEventListener('change', function() {
+                const isSpecial = this.value === 'khusus';
+                postSpecialFields.classList.toggle('active', isSpecial);
+                
+                if (isSpecial) {
+                    profilePostInput.placeholder = 'Tulis pesan notifikasi khusus...';
+                    updateSpecialFields();
+                } else {
+                    profilePostInput.placeholder = 'Tulis postingan biasa...';
+                }
+                
+                validateProfilePost();
+            });
+            
+            // Notif type change
+            postNotifType.addEventListener('change', updateSpecialFields);
+            
+            // Map link input
+            postMapLink.addEventListener('input', function() {
+                const url = this.value.trim();
+                if (url) {
+                    // Extract location from Google Maps URL
+                    const match = url.match(/@([-0-9.]+),([-0-9.]+)/);
+                    if (match) {
+                        const lat = match[1];
+                        const lng = match[2];
+                        postLocationAddress.value = `📍 Koordinat: ${lat}, ${lng}`;
+                    } else {
+                        // Try to get address from URL
+                        const addressMatch = url.match(/place\/([^/@]+)/);
+                        if (addressMatch) {
+                            const address = decodeURIComponent(addressMatch[1].replace(/\+/g, ' '));
+                            postLocationAddress.value = `📍 ${address}`;
+                        } else {
+                            postLocationAddress.value = '📍 Link Google Maps terdeteksi';
+                        }
+                    }
+                } else {
+                    postLocationAddress.value = '';
+                }
+                validateProfilePost();
+            });
+            
+            // Input validation
+            profilePostInput.addEventListener('input', validateProfilePost);
+            profileMediaUpload.addEventListener('change', validateProfilePost);
+            
+            // Media upload
+            profileMediaUpload.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (file.type.startsWith('image/')) {
+                            profileMediaPreview.innerHTML = `
+                                <span class="remove-media" id="profileRemoveMedia">&times;</span>
+                                <img src="${e.target.result}" alt="Preview">
+                            `;
+                        } else if (file.type.startsWith('video/')) {
+                            profileMediaPreview.innerHTML = `
+                                <span class="remove-media" id="profileRemoveMedia">&times;</span>
+                                <video controls>
+                                    <source src="${e.target.result}" type="${file.type}">
+                                </video>
+                            `;
+                        }
+                        profileMediaPreview.style.display = 'block';
+                        validateProfilePost();
+                        document.getElementById('profileRemoveMedia').addEventListener('click', function() {
+                            profileMediaPreview.style.display = 'none';
+                            profileMediaPreview.innerHTML = '<span class="remove-media" id="profileRemoveMedia">&times;</span>';
+                            profileMediaUpload.value = '';
+                            validateProfilePost();
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Submit
+            profilePostSubmit.addEventListener('click', function() {
+                if (isPreviewMode) {
+                    showPreviewOverlay();
+                    showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan', 'fa-lock');
+                    return;
+                }
+                
+                if (!currentUser) {
+                    window.location.href = LOGIN_URL;
+                    return;
+                }
+                
+                const text = profilePostInput.value.trim();
+                const file = profileMediaUpload.files[0];
+                const isSpecial = profilePostType.value === 'khusus';
+                
+                if (text === '' && !file) return;
+                
+                let specialData = null;
+                if (isSpecial) {
+                    const type = postNotifType.value;
+                    const location = postLocationAddress.value || postMapLink.value || 'Lokasi tidak diketahui';
+                    const address = postMapLink.value || '';
+                    specialData = { type, location, address };
+                }
+                
+                createPost(text, file, isSpecial, specialData, profilePostType.value);
+                
+                // Reset form
+                profilePostInput.value = '';
+                profileMediaUpload.value = '';
+                profileMediaPreview.style.display = 'none';
+                profileMediaPreview.innerHTML = '<span class="remove-media" id="profileRemoveMedia">&times;</span>';
+                profilePostSubmit.disabled = true;
+                postMapLink.value = '';
+                postLocationAddress.value = '';
+                if (isSpecial) {
+                    postSpecialFields.classList.remove('active');
+                    profilePostType.value = 'biasa';
+                }
+            });
+        }
+
+        function updateSpecialFields() {
+            const type = postNotifType.value;
+            const icon = notifIconMap[type] || '🚨';
+            postIconDisplay.textContent = icon;
+            
+            if (currentUser) {
+                postReportedBy.value = currentUser.fullName || 'User';
+            }
+        }
+
+        function validateProfilePost() {
+            const text = profilePostInput.value.trim();
+            const file = profileMediaUpload.files[0];
+            const isSpecial = profilePostType.value === 'khusus';
+            
+            if (isSpecial) {
+                const hasMapLink = postMapLink.value.trim() !== '';
+                profilePostSubmit.disabled = !(text && hasMapLink) && !file;
+            } else {
+                profilePostSubmit.disabled = !text && !file;
+            }
+        }
+
+        // ================================================================
+        // UPDATE UI FUNCTIONS
+        // ================================================================
+        
+        function updateUserUI() {
+            if (!currentUser) {
+                sidebarUserName.textContent = 'Guest';
+                sidebarUserEmail.textContent = 'guest@salink.id';
+                sidebarUserAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                hologramProfile.innerHTML = '<i class="fas fa-user"></i>';
+                postProfilePic.innerHTML = '<i class="fas fa-user"></i>';
+                postUserName.textContent = 'Buat Postingan';
+                
+                const userBtnIcon = userBtn.querySelector('i');
+                const userBtnImg = userBtn.querySelector('img');
+                if (userBtnIcon) userBtnIcon.style.display = 'block';
+                if (userBtnImg) userBtnImg.style.display = 'none';
+                
+                logoutNavItem.style.display = 'none';
+                return;
+            }
+            
+            sidebarUserName.textContent = currentUser.fullName;
+            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
+            
+            if (currentUser.profilePicture) {
+                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
+            } else {
+                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            }
+            
+            if (currentUser.profilePicture) {
+                hologramProfile.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            } else {
+                hologramProfile.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            }
+            
+            if (currentUser.profilePicture) {
+                postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            } else {
+                postProfilePic.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            }
+            postUserName.textContent = currentUser.fullName;
+            
+            const userBtnIcon = userBtn.querySelector('i');
+            const userBtnImg = userBtn.querySelector('img');
+            if (!userBtnImg) {
+                const img = document.createElement('img');
+                img.style.width = '32px';
+                img.style.height = '32px';
+                img.style.borderRadius = '50%';
+                img.style.objectFit = 'cover';
+                img.style.display = 'none';
+                userBtn.appendChild(img);
+            }
+            const userImg = userBtn.querySelector('img');
+            if (currentUser.profilePicture) {
+                userBtnIcon.style.display = 'none';
+                userImg.src = currentUser.profilePicture;
+                userImg.style.display = 'block';
+            } else {
+                userBtnIcon.style.display = 'block';
+                userImg.style.display = 'none';
+            }
+            
+            logoutNavItem.style.display = 'block';
+            
+            if (profilePage.classList.contains('active')) {
+                openProfilePage();
+            }
+            
+            // Update profile post input
+            if (profilePostInput) {
+                profilePostInput.readOnly = false;
+                profilePostInput.placeholder = 'Tulis postingan baru...';
+            }
+            if (profileMediaUpload) profileMediaUpload.disabled = false;
+            if (profilePostSubmit) profilePostSubmit.disabled = true;
+            
+            // Update reported by
+            if (postReportedBy && currentUser) {
+                postReportedBy.value = currentUser.fullName || 'User';
+            }
+        }
+
+        function updateBadge() {
+            const badges = document.querySelectorAll('.badge');
+            const count = posts.length;
+            badges.forEach(badge => {
+                if (badge.id === 'notifBadge' || badge.id === 'notifModalBadge') return;
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            });
         }
 
         function showHomePage() {
@@ -3106,7 +4440,7 @@
         }
 
         // ================================================================
-        // SIDEBAR TOGGLE (di dalam modal profil)
+        // SIDEBAR TOGGLE
         // ================================================================
         
         function toggleSidebar() {
@@ -3258,7 +4592,7 @@
                 updateUserUI();
                 settingsModal.classList.remove('active');
                 document.body.style.overflow = '';
-                alert('Profil berhasil diperbarui!');
+                showToast('✅ Berhasil', 'Profil berhasil diperbarui', 'fa-check-circle');
             });
         }
 
@@ -3382,10 +4716,10 @@
             if (!currentUser) return;
             
             if (userName !== currentUser.fullName) {
-                addNotification('invite', 'Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, '#', null);
-                alert(`✅ Undangan telah dikirim ke ${userName}!`);
+                addNotification('invite', '📨 Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, '#', null, 'notifikasi');
+                showToast('✅ Terkirim', `Undangan telah dikirim ke ${userName}!`, 'fa-user-plus');
             } else {
-                alert('Anda tidak dapat mengundang diri sendiri!');
+                showToast('⚠️ Error', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
             }
             
             inviteModal.classList.remove('active');
@@ -3422,490 +4756,133 @@
         }
 
         // ================================================================
-        // POST FUNCTIONS
+        // SEARCH FUNCTIONS
         // ================================================================
         
-        function createPost(text, mediaFile, isHologram, hologramData) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan', 'fa-lock');
-                return;
-            }
+        function performSearch(query) {
+            searchResults.innerHTML = '';
             
-            if (!currentUser) {
-                window.location.href = LOGIN_URL;
-                return;
-            }
-            
-            const now = Date.now();
-            const postId = 'post-' + (++postIdCounter);
-            
-            let mediaContent = '';
-            let mediaType = '';
-            let mediaData = '';
-            
-            if (mediaFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    mediaData = e.target.result;
-                    mediaType = mediaFile.type.startsWith('image/') ? 'image' : 'video';
-                    const postData = {
-                        id: postId,
-                        userId: currentUser.username,
-                        userFullName: currentUser.fullName,
-                        userGender: currentUser.gender,
-                        userProfilePic: currentUser.profilePicture || null,
-                        text: text,
-                        mediaType: mediaType,
-                        mediaData: mediaData,
-                        timestamp: now,
-                        likes: [],
-                        comments: [],
-                        isHologram: isHologram || false,
-                        hologramData: hologramData || null
-                    };
-                    posts.push(postData);
-                    renderPosts();
-                    postInput.value = '';
-                    mediaUpload.value = '';
-                    mediaPreview.style.display = 'none';
-                    mediaPreview.innerHTML = '<span class="remove-media" id="removeMedia">&times;</span>';
-                    postSubmit.disabled = true;
-                    updateBadge();
-                    
-                    if (!isHologram) {
-                        addNotification('post', 'Laporan Baru', `${currentUser.fullName} memposting laporan baru`, currentUser.fullName, '#', postId);
-                    }
-                    
-                    updateProfileStats();
-                };
-                reader.readAsDataURL(mediaFile);
-            } else {
-                const postData = {
-                    id: postId,
-                    userId: currentUser.username,
-                    userFullName: currentUser.fullName,
-                    userGender: currentUser.gender,
-                    userProfilePic: currentUser.profilePicture || null,
-                    text: text,
-                    mediaType: null,
-                    mediaData: null,
-                    timestamp: now,
-                    likes: [],
-                    comments: [],
-                    isHologram: isHologram || false,
-                    hologramData: hologramData || null
-                };
-                posts.push(postData);
-                renderPosts();
-                postInput.value = '';
-                postSubmit.disabled = true;
-                updateBadge();
-                
-                if (!isHologram) {
-                    addNotification('post', 'Laporan Baru', `${currentUser.fullName} memposting laporan baru`, currentUser.fullName, '#', postId);
-                }
-                
-                updateProfileStats();
-            }
-        }
-
-        function renderPosts() {
-            postFeed.innerHTML = '';
-            const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
-            const displayPosts = sortedPosts.slice(0, 20);
-            
-            displayPosts.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.className = 'post';
-                postElement.id = post.id;
-                
-                const profilePic = post.userProfilePic 
-                    ? `<img src="${post.userProfilePic}" alt="Profile">` 
-                    : (post.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                
-                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
-                
-                let mediaHTML = '';
-                if (post.mediaType === 'image') {
-                    mediaHTML = `<div class="post-media"><img src="${post.mediaData}" alt="Post media"></div>`;
-                } else if (post.mediaType === 'video') {
-                    mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
-                }
-                
-                let commentsHTML = '';
-                post.comments.forEach(comment => {
-                    const commentProfilePic = comment.userProfilePic 
-                        ? `<img src="${comment.userProfilePic}" alt="Profile">` 
-                        : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                    
-                    commentsHTML += `
-                        <div class="comment" id="comment-${comment.id}">
-                            <div class="comment-main">
-                                <div class="comment-profile-pic">
-                                    ${commentProfilePic}
-                                </div>
-                                <div class="comment-content">
-                                    <div class="comment-user">${comment.userFullName}</div>
-                                    <div class="comment-text">${comment.text}</div>
-                                    <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
-                                    <div class="comment-actions">
-                                        <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}" data-action="login">Balas</span>
-                                        ${!isPreviewMode && comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-action="login">Hapus</span>` : ''}
-                                    </div>
-                                </div>
-                            </div>
-                            ${comment.replies && comment.replies.length > 0 ? `
-                                <div class="comment-replies">
-                                    ${comment.replies.map(reply => {
-                                        const replyProfilePic = reply.userProfilePic 
-                                            ? `<img src="${reply.userProfilePic}" alt="Profile">` 
-                                            : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                                        return `
-                                            <div class="reply-comment">
-                                                <div class="comment-main">
-                                                    <div class="comment-profile-pic">
-                                                        ${replyProfilePic}
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        <div class="comment-user">${reply.userFullName}</div>
-                                                        <div class="comment-text">${reply.text}</div>
-                                                        <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                        ${!isPreviewMode && reply.userId === currentUser?.username ? `
-                                                            <div class="comment-actions">
-                                                                <span class="comment-action delete-comment" data-post-id="${post.id}" data-comment-id="${comment.id}" data-reply-id="${reply.id}" data-action="login">Hapus</span>
-                                                            </div>
-                                                        ` : ''}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                });
-                
-                const isLiked = !isPreviewMode && currentUser && post.likes.includes(currentUser.username);
-                const isHologramBadge = post.isHologram ? '<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">📡 Hologram</span>' : '';
-                
-                postElement.innerHTML = `
-                    <div class="post-header">
-                        <div class="post-profile-pic" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }">
-                            ${profilePic}
-                        </div>
-                        <div class="post-user-info">
-                            <h4>${profileLink} ${isHologramBadge}</h4>
-                            <small>${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })} • ${getTimeAgo(post.timestamp)}</small>
-                        </div>
-                    </div>
-                    <div class="post-content">
-                        ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
-                        ${mediaHTML}
-                    </div>
-                    <div class="post-actions">
-                        <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}" data-action="login">
-                            <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
-                            <span>Suka</span>
-                            <span class="like-count">${post.likes.length > 0 ? post.likes.length : ''}</span>
-                        </div>
-                        <div class="post-action comment-toggle" data-post-id="${post.id}" data-action="login">
-                            <i class="far fa-comment"></i>
-                            <span>Komentar</span>
-                            <span>(${post.comments.length})</span>
-                        </div>
-                        <div class="post-action share" data-post-id="${post.id}" data-action="login">
-                            <i class="fas fa-share-alt"></i>
-                            <span>Bagikan</span>
-                        </div>
-                        ${!isPreviewMode && post.userId === currentUser?.username ? `
-                            <div class="post-action delete" data-post-id="${post.id}" data-action="login">
-                                <i class="fas fa-trash"></i>
-                                <span>Hapus</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div class="comments-section" id="comments-${post.id}">
-                        ${commentsHTML}
-                    </div>
-                    <div class="add-comment">
-                        <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}" ${isPreviewMode ? 'readonly' : ''}>
-                        <button class="send-comment" data-post-id="${post.id}" data-action="login">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+            if (!query || query.length < 2) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Cari pengguna, postingan, atau laporan...</p>
                     </div>
                 `;
+                return;
+            }
+            
+            const results = [];
+            
+            const sampleUsers = [
+                { name: 'Bpk. Ahmad', username: 'ahmad', region: 'Jakarta Pusat', gender: 'male' },
+                { name: 'Sdri. Rina', username: 'rina', region: 'Jakarta Selatan', gender: 'female' },
+                { name: 'Bpk. Joko', username: 'joko', region: 'Jakarta Timur', gender: 'male' },
+                { name: 'Sdri. Dewi', username: 'dewi', region: 'Jakarta Barat', gender: 'female' },
+                { name: 'Bpk. Budi', username: 'budi', region: 'Jakarta Utara', gender: 'male' }
+            ];
+            
+            sampleUsers.forEach(user => {
+                if (user.name.toLowerCase().includes(query.toLowerCase()) || 
+                    user.username.toLowerCase().includes(query.toLowerCase()) ||
+                    user.region.toLowerCase().includes(query.toLowerCase())) {
+                    results.push({ type: 'user', data: user });
+                }
+            });
+            
+            posts.forEach(post => {
+                if (post.text && post.text.toLowerCase().includes(query.toLowerCase())) {
+                    results.push({ type: 'post', data: post });
+                }
+            });
+            
+            reports.forEach(report => {
+                if (report.title.toLowerCase().includes(query.toLowerCase()) || 
+                    report.desc.toLowerCase().includes(query.toLowerCase())) {
+                    results.push({ type: 'report', data: report });
+                }
+            });
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
+                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Tidak ditemukan hasil untuk "${query}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.dataset.action = 'login';
                 
-                postFeed.appendChild(postElement);
-            });
-            
-            attachPostEventListeners();
-        }
-
-        function attachPostEventListeners() {
-            document.querySelectorAll('.post-action[data-post-id]').forEach(btn => {
-                if (btn.querySelector('.fa-heart')) {
-                    btn.removeEventListener('click', handleLike);
-                    btn.addEventListener('click', handleLike);
-                }
-            });
-            
-            document.querySelectorAll('.post-action.delete[data-post-id]').forEach(btn => {
-                btn.removeEventListener('click', handleDeletePost);
-                btn.addEventListener('click', handleDeletePost);
-            });
-            
-            document.querySelectorAll('.comment-toggle[data-post-id]').forEach(btn => {
-                btn.removeEventListener('click', handleCommentToggle);
-                btn.addEventListener('click', handleCommentToggle);
-            });
-            
-            document.querySelectorAll('.send-comment[data-post-id]').forEach(btn => {
-                btn.removeEventListener('click', handleSendComment);
-                btn.addEventListener('click', handleSendComment);
-            });
-            
-            document.querySelectorAll('.comment-input[data-post-id]').forEach(input => {
-                input.removeEventListener('keypress', handleCommentKeyPress);
-                input.addEventListener('keypress', handleCommentKeyPress);
-            });
-            
-            document.querySelectorAll('.reply-comment-action[data-post-id]').forEach(btn => {
-                btn.removeEventListener('click', handleReplyComment);
-                btn.addEventListener('click', handleReplyComment);
-            });
-            
-            document.querySelectorAll('.delete-comment[data-post-id]').forEach(btn => {
-                btn.removeEventListener('click', handleDeleteComment);
-                btn.addEventListener('click', handleDeleteComment);
-            });
-            
-            document.querySelectorAll('.post-action.share[data-post-id]').forEach(btn => {
-                btn.removeEventListener('click', handleShare);
-                btn.addEventListener('click', handleShare);
-            });
-        }
-
-        function handleLike(e) {
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            const post = posts.find(p => p.id === postId);
-            
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
-                return;
-            }
-            
-            if (!post || !currentUser) {
-                if (!currentUser) window.location.href = LOGIN_URL;
-                return;
-            }
-            
-            const index = post.likes.indexOf(currentUser.username);
-            if (index > -1) {
-                post.likes.splice(index, 1);
-            } else {
-                post.likes.push(currentUser.username);
-                if (post.userId !== currentUser.username) {
-                    addNotification('inbox', '❤️ Suka', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, '#', postId);
-                }
-            }
-            renderPosts();
-            updateProfileStats();
-        }
-
-        function handleDeletePost(e) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus postingan', 'fa-lock');
-                return;
-            }
-            
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
-                posts = posts.filter(p => p.id !== postId);
-                renderPosts();
-                updateBadge();
-                updateProfileStats();
-            }
-        }
-
-        function handleCommentToggle(e) {
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            const commentsSection = document.getElementById(`comments-${postId}`);
-            if (commentsSection) {
-                commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
-            }
-        }
-
-        function handleSendComment(e) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk berkomentar', 'fa-lock');
-                return;
-            }
-            
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            const post = posts.find(p => p.id === postId);
-            if (!post || !currentUser) {
-                if (!currentUser) window.location.href = LOGIN_URL;
-                return;
-            }
-            
-            const input = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
-            if (!input) return;
-            
-            const text = input.value.trim();
-            if (!text) return;
-            
-            const comment = {
-                id: 'comment-' + Date.now(),
-                userId: currentUser.username,
-                userFullName: currentUser.fullName,
-                userGender: currentUser.gender,
-                userProfilePic: currentUser.profilePicture || null,
-                text: text,
-                timestamp: Date.now(),
-                replies: []
-            };
-            
-            const replyToCommentId = input.dataset.replyToCommentId;
-            if (replyToCommentId) {
-                const parentComment = post.comments.find(c => c.id === replyToCommentId);
-                if (parentComment) {
-                    if (!parentComment.replies) parentComment.replies = [];
-                    parentComment.replies.push(comment);
-                    delete input.dataset.replyToCommentId;
-                    input.placeholder = 'Tulis komentar...';
-                }
-            } else {
-                post.comments.push(comment);
-                if (post.userId !== currentUser.username) {
-                    addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas postingan Anda: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`, currentUser.fullName, '#', postId);
-                }
-            }
-            
-            input.value = '';
-            renderPosts();
-            const commentsSection = document.getElementById(`comments-${postId}`);
-            if (commentsSection) {
-                commentsSection.style.display = 'block';
-            }
-            updateProfileStats();
-        }
-
-        function handleCommentKeyPress(e) {
-            if (e.key === 'Enter') {
-                const input = e.currentTarget;
-                const postId = input.dataset.postId;
-                const sendBtn = document.querySelector(`.send-comment[data-post-id="${postId}"]`);
-                if (sendBtn) sendBtn.click();
-            }
-        }
-
-        function handleReplyComment(e) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk membalas komentar', 'fa-lock');
-                return;
-            }
-            
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            const commentId = btn.dataset.commentId;
-            const post = posts.find(p => p.id === postId);
-            if (!post || !currentUser) {
-                if (!currentUser) window.location.href = LOGIN_URL;
-                return;
-            }
-            
-            const comment = post.comments.find(c => c.id === commentId);
-            if (!comment) return;
-            
-            const input = document.querySelector(`.comment-input[data-post-id="${postId}"]`);
-            if (input) {
-                input.dataset.replyToCommentId = commentId;
-                input.placeholder = `Membalas @${comment.userFullName}...`;
-                input.focus();
-            }
-        }
-
-        function handleDeleteComment(e) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus komentar', 'fa-lock');
-                return;
-            }
-            
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            const commentId = btn.dataset.commentId;
-            const replyId = btn.dataset.replyId;
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            if (replyId) {
-                for (const comment of post.comments) {
-                    if (comment.replies) {
-                        const replyIndex = comment.replies.findIndex(r => r.id === replyId);
-                        if (replyIndex > -1) {
-                            comment.replies.splice(replyIndex, 1);
-                            break;
+                if (result.type === 'user') {
+                    const user = result.data;
+                    const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+                    item.innerHTML = `
+                        <div class="search-result-avatar">
+                            <i class="fas ${avatarIcon}"></i>
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${user.name}</div>
+                            <div class="search-result-desc"><i class="fas fa-map-marker-alt"></i> ${user.region} • @${user.username}</div>
+                        </div>
+                        <button onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                            <i class="fas fa-eye"></i> Lihat
+                        </button>
+                    `;
+                } else if (result.type === 'post') {
+                    const post = result.data;
+                    const profileLink = `<a href="#" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;">${post.userFullName}</a>`;
+                    item.innerHTML = `
+                        <div class="search-result-avatar" style="background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.8rem;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${profileLink}</div>
+                            <div class="search-result-desc">${post.text ? post.text.substring(0, 60) + (post.text.length > 60 ? '...' : '') : 'Postingan media'}</div>
+                        </div>
+                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${getTimeAgo(post.timestamp)}</div>
+                    `;
+                    item.addEventListener('click', () => {
+                        searchModal.classList.remove('active');
+                        if (isPreviewMode) {
+                            showPreviewOverlay();
+                            showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat postingan', 'fa-lock');
+                            return;
                         }
-                    }
+                        document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
+                    });
+                } else if (result.type === 'report') {
+                    const report = result.data;
+                    const iconClass = `icon-${report.type}`;
+                    item.innerHTML = `
+                        <div class="search-result-avatar">
+                            <div class="alert-icon ${iconClass}" style="width:36px;height:36px;border-radius:50%;font-size:0.8rem;border:none;">
+                                <i class="fas ${report.icon}"></i>
+                            </div>
+                        </div>
+                        <div class="search-result-info">
+                            <div class="search-result-name">${report.title}</div>
+                            <div class="search-result-desc">${report.desc}</div>
+                        </div>
+                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${report.time}</div>
+                    `;
+                    item.addEventListener('click', () => {
+                        searchModal.classList.remove('active');
+                        if (isPreviewMode) {
+                            showPreviewOverlay();
+                            showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat laporan', 'fa-lock');
+                            return;
+                        }
+                        openDetailModal(report);
+                    });
                 }
-            } else {
-                const commentIndex = post.comments.findIndex(c => c.id === commentId);
-                if (commentIndex > -1) {
-                    post.comments.splice(commentIndex, 1);
-                }
-            }
-            renderPosts();
-            updateProfileStats();
-        }
-
-        function handleShare(e) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk membagikan postingan', 'fa-lock');
-                return;
-            }
-            
-            const btn = e.currentTarget;
-            const postId = btn.dataset.postId;
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'SALINK - Postingan',
-                    text: shareText,
-                    url: window.location.href
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(shareText).then(() => {
-                    alert('📋 Link postingan telah disalin ke clipboard!');
-                }).catch(() => {
-                    prompt('Salin teks ini:', shareText);
-                });
-            }
-            
-            if (currentUser && post.userId !== currentUser.username) {
-                addNotification('inbox', '📤 Postingan Dibagikan', `${currentUser.fullName} membagikan postingan Anda`, currentUser.fullName, '#', postId);
-            }
-        }
-
-        function updateProfileStats() {
-            if (!currentUser) return;
-            const userPosts = posts.filter(p => p.userId === currentUser.username);
-            profileStatPosts.textContent = userPosts.length;
+                
+                searchResults.appendChild(item);
+            });
         }
 
         // ================================================================
@@ -4044,432 +5021,6 @@
         }
 
         // ================================================================
-        // UPDATE UI FUNCTIONS
-        // ================================================================
-        
-        function updateUserUI() {
-            if (!currentUser) {
-                // Preview mode - tampilkan guest
-                sidebarUserName.textContent = 'Guest';
-                sidebarUserEmail.textContent = 'guest@salink.id';
-                sidebarUserAvatar.innerHTML = '<i class="fas fa-user"></i>';
-                hologramProfile.innerHTML = '<i class="fas fa-user"></i>';
-                postProfilePic.innerHTML = '<i class="fas fa-user"></i>';
-                postUserName.textContent = 'Buat Postingan';
-                
-                const userBtnIcon = userBtn.querySelector('i');
-                const userBtnImg = userBtn.querySelector('img');
-                if (userBtnIcon) userBtnIcon.style.display = 'block';
-                if (userBtnImg) userBtnImg.style.display = 'none';
-                
-                logoutNavItem.style.display = 'none';
-                return;
-            }
-            
-            // Full mode
-            sidebarUserName.textContent = currentUser.fullName;
-            sidebarUserEmail.textContent = currentUser.email || currentUser.username + '@salink.id';
-            
-            if (currentUser.profilePicture) {
-                sidebarUserAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
-            } else {
-                sidebarUserAvatar.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
-            }
-            
-            if (currentUser.profilePicture) {
-                hologramProfile.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
-            } else {
-                hologramProfile.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
-            }
-            
-            if (currentUser.profilePicture) {
-                postProfilePic.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
-            } else {
-                postProfilePic.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
-            }
-            postUserName.textContent = currentUser.fullName;
-            
-            const userBtnIcon = userBtn.querySelector('i');
-            const userBtnImg = userBtn.querySelector('img');
-            if (!userBtnImg) {
-                const img = document.createElement('img');
-                img.style.width = '32px';
-                img.style.height = '32px';
-                img.style.borderRadius = '50%';
-                img.style.objectFit = 'cover';
-                img.style.display = 'none';
-                userBtn.appendChild(img);
-            }
-            const userImg = userBtn.querySelector('img');
-            if (currentUser.profilePicture) {
-                userBtnIcon.style.display = 'none';
-                userImg.src = currentUser.profilePicture;
-                userImg.style.display = 'block';
-            } else {
-                userBtnIcon.style.display = 'block';
-                userImg.style.display = 'none';
-            }
-            
-            logoutNavItem.style.display = 'block';
-            
-            if (profilePage.classList.contains('active')) {
-                openProfilePage();
-            }
-        }
-
-        function updateBadge() {
-            const badges = document.querySelectorAll('.badge');
-            const count = posts.length;
-            badges.forEach(badge => {
-                if (badge.id === 'notifBadge' || badge.id === 'notifModalBadge') return;
-                badge.textContent = count > 99 ? '99+' : count;
-                badge.style.display = count > 0 ? 'flex' : 'none';
-            });
-        }
-
-        // ================================================================
-        // SEARCH FUNCTIONS
-        // ================================================================
-        
-        function performSearch(query) {
-            searchResults.innerHTML = '';
-            
-            if (!query || query.length < 2) {
-                searchResults.innerHTML = `
-                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
-                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Cari pengguna, postingan, atau laporan...</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const results = [];
-            
-            const sampleUsers = [
-                { name: 'Bpk. Ahmad', username: 'ahmad', region: 'Jakarta Pusat', gender: 'male' },
-                { name: 'Sdri. Rina', username: 'rina', region: 'Jakarta Selatan', gender: 'female' },
-                { name: 'Bpk. Joko', username: 'joko', region: 'Jakarta Timur', gender: 'male' },
-                { name: 'Sdri. Dewi', username: 'dewi', region: 'Jakarta Barat', gender: 'female' },
-                { name: 'Bpk. Budi', username: 'budi', region: 'Jakarta Utara', gender: 'male' }
-            ];
-            
-            sampleUsers.forEach(user => {
-                if (user.name.toLowerCase().includes(query.toLowerCase()) || 
-                    user.username.toLowerCase().includes(query.toLowerCase()) ||
-                    user.region.toLowerCase().includes(query.toLowerCase())) {
-                    results.push({ type: 'user', data: user });
-                }
-            });
-            
-            posts.forEach(post => {
-                if (post.text && post.text.toLowerCase().includes(query.toLowerCase())) {
-                    results.push({ type: 'post', data: post });
-                }
-            });
-            
-            reports.forEach(report => {
-                if (report.title.toLowerCase().includes(query.toLowerCase()) || 
-                    report.desc.toLowerCase().includes(query.toLowerCase())) {
-                    results.push({ type: 'report', data: report });
-                }
-            });
-            
-            if (results.length === 0) {
-                searchResults.innerHTML = `
-                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
-                        <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Tidak ditemukan hasil untuk "${query}"</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            results.forEach(result => {
-                const item = document.createElement('div');
-                item.className = 'search-result-item';
-                item.dataset.action = 'login';
-                
-                if (result.type === 'user') {
-                    const user = result.data;
-                    const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
-                    item.innerHTML = `
-                        <div class="search-result-avatar">
-                            <i class="fas ${avatarIcon}"></i>
-                        </div>
-                        <div class="search-result-info">
-                            <div class="search-result-name">${user.name}</div>
-                            <div class="search-result-desc"><i class="fas fa-map-marker-alt"></i> ${user.region} • @${user.username}</div>
-                        </div>
-                        <button onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
-                            <i class="fas fa-eye"></i> Lihat
-                        </button>
-                    `;
-                } else if (result.type === 'post') {
-                    const post = result.data;
-                    const profileLink = `<a href="#" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;">${post.userFullName}</a>`;
-                    item.innerHTML = `
-                        <div class="search-result-avatar" style="background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.8rem;">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="search-result-info">
-                            <div class="search-result-name">${profileLink}</div>
-                            <div class="search-result-desc">${post.text ? post.text.substring(0, 60) + (post.text.length > 60 ? '...' : '') : 'Postingan media'}</div>
-                        </div>
-                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${getTimeAgo(post.timestamp)}</div>
-                    `;
-                    item.addEventListener('click', () => {
-                        searchModal.classList.remove('active');
-                        if (isPreviewMode) {
-                            showPreviewOverlay();
-                            showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat postingan', 'fa-lock');
-                            return;
-                        }
-                        document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
-                    });
-                } else if (result.type === 'report') {
-                    const report = result.data;
-                    const iconClass = `icon-${report.type}`;
-                    item.innerHTML = `
-                        <div class="search-result-avatar">
-                            <div class="alert-icon ${iconClass}" style="width:36px;height:36px;border-radius:50%;font-size:0.8rem;border:none;">
-                                <i class="fas ${report.icon}"></i>
-                            </div>
-                        </div>
-                        <div class="search-result-info">
-                            <div class="search-result-name">${report.title}</div>
-                            <div class="search-result-desc">${report.desc}</div>
-                        </div>
-                        <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);">${report.time}</div>
-                    `;
-                    item.addEventListener('click', () => {
-                        searchModal.classList.remove('active');
-                        if (isPreviewMode) {
-                            showPreviewOverlay();
-                            showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat laporan', 'fa-lock');
-                            return;
-                        }
-                        openDetailModal(report);
-                    });
-                }
-                
-                searchResults.appendChild(item);
-            });
-        }
-
-        // ================================================================
-        // HOLOGRAM FUNCTIONS
-        // ================================================================
-        
-        function convertHologramToPost() {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan dari hologram', 'fa-lock');
-                return;
-            }
-            
-            if (!currentUser) {
-                window.location.href = LOGIN_URL;
-                return;
-            }
-            
-            const hologramContent = document.getElementById('hologramContent');
-            const alertType = hologramContent.querySelector('.alert-type');
-            const alertSender = hologramContent.querySelector('.alert-sender');
-            const alertLocation = hologramContent.querySelector('.alert-location');
-            const alertTime = hologramContent.querySelector('.alert-time');
-            
-            if (!alertType || !alertSender) return;
-            
-            const typeText = alertType.textContent.trim();
-            const senderText = alertSender.textContent.replace('Dilaporkan oleh:', '').trim();
-            const locationText = alertLocation ? alertLocation.textContent.trim() : '';
-            const timeText = alertTime ? alertTime.textContent.trim() : '';
-            
-            const postText = `🚨 ${typeText}\n📍 ${locationText}\n👤 ${senderText}\n🕐 ${timeText}`;
-            
-            createPost(postText, null, true, {
-                type: typeText,
-                sender: senderText,
-                location: locationText,
-                time: timeText
-            });
-            
-            emergencyBtns.forEach(btn => {
-                btn.classList.remove('has-notification');
-                btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-            });
-            
-            isHologramPost = true;
-            hologramPostData = { type: typeText, sender: senderText, location: locationText, time: timeText };
-            
-            if (senderText !== currentUser.fullName) {
-                addNotification('inbox', '📡 Hologram Berubah Jadi Postingan', `Laporan ${typeText} dari ${senderText} telah menjadi postingan`, senderText, '#', null);
-            }
-            
-            setTimeout(() => {
-                resetHologramDisplay();
-            }, 5000);
-        }
-
-        function resetHologramDisplay() {
-            const hologramContent = document.getElementById('hologramContent');
-            hologramContent.innerHTML = `
-                <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
-                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
-                    </div>
-                    <div class="alert-type fire">
-                        <i class="fas fa-fire"></i>
-                        <span>KEBAKARAN</span>
-                    </div>
-                </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">Bpk. Ahmad</a></strong></div>
-                <div class="alert-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
-                </div>
-                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                <a href="#" class="mini-map" onclick="event.preventDefault(); if(!isPreviewMode) window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank'); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat lokasi', 'fa-lock'); }">
-                    <i class="fas fa-map"></i>
-                    <span style="margin-left:6px;">Lihat Lokasi</span>
-                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
-                </a>
-                <div class="alert-time">10 menit yang lalu</div>
-            `;
-            
-            isHologramPost = false;
-            hologramPostData = null;
-        }
-
-        function simulateEmergencyNotification(type) {
-            const typeNames = {
-                fire: 'KEBAKARAN',
-                death: 'KEMATIAN',
-                theft: 'PENCURIAN',
-                disaster: 'BENCANA ALAM'
-            };
-            const icons = {
-                fire: 'fa-fire',
-                death: 'fa-skull',
-                theft: 'fa-gem',
-                disaster: 'fa-house-damage'
-            };
-            
-            const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
-            const locations = [
-                'Jl. Sudirman No. 45, Jakarta Selatan',
-                'Jl. Thamrin No. 12, Jakarta Pusat',
-                'Jl. Gatot Subroto No. 23, Jakarta Selatan',
-                'Jl. MH Thamrin No. 1, Jakarta Pusat',
-                'Jl. Pangeran Antasari No. 7, Jakarta Selatan'
-            ];
-            
-            const randomSender = senders[Math.floor(Math.random() * senders.length)];
-            const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-            const now = new Date();
-            const timeString = now.toLocaleString('id-ID', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
-            
-            const hologramContent = document.getElementById('hologramContent');
-            hologramContent.innerHTML = `
-                <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
-                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
-                    </div>
-                    <div class="alert-type ${type}">
-                        <i class="fas ${icons[type]}"></i>
-                        <span>${typeNames[type]}</span>
-                    </div>
-                </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${randomSender}</a></strong></div>
-                <div class="alert-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>${randomLocation}</span>
-                </div>
-                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
-                <a href="#" class="mini-map" onclick="event.preventDefault(); if(!isPreviewMode) window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank'); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat lokasi', 'fa-lock'); }">
-                    <i class="fas fa-map"></i>
-                    <span style="margin-left:6px;">Lihat Lokasi</span>
-                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
-                </a>
-                <div class="alert-time">${timeString}</div>
-            `;
-            
-            const btnMap = {
-                fire: fireBtn,
-                death: deathBtn,
-                theft: theftBtn,
-                disaster: disasterBtn
-            };
-            
-            const btn = btnMap[type];
-            if (btn) {
-                btn.classList.add('has-notification');
-                btn.querySelector('.play-status').textContent = '🔔 Ada Notifikasi!';
-            }
-            
-            if (randomSender !== currentUser?.fullName) {
-                addNotification('inbox', `📢 Laporan ${typeNames[type]}`, `${randomSender} melaporkan ${typeNames[type].toLowerCase()} di ${randomLocation}`, randomSender, '#', null);
-            }
-            
-            reports.unshift({
-                id: reports.length + 1,
-                type: type,
-                icon: icons[type],
-                title: `${typeNames[type]} ${Math.floor(Math.random() * 100)}`,
-                desc: randomLocation,
-                time: 'Baru saja',
-                detail: {
-                    type: typeNames[type],
-                    sender: randomSender,
-                    location: randomLocation,
-                    address: randomLocation,
-                    image: `https://picsum.photos/seed/${type}${Date.now()}/400/200`,
-                    time: timeString
-                }
-            });
-            
-            renderAlerts(reports);
-            
-            hologramDisplay.style.cursor = 'pointer';
-            hologramDisplay.title = 'Klik untuk mengubah menjadi postingan';
-            
-            clearTimeout(alertTimeout);
-            alertTimeout = setTimeout(() => {
-                if (btn) {
-                    btn.classList.remove('has-notification');
-                    btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                }
-                convertHologramToPost();
-            }, 5000);
-        }
-
-        // ================================================================
-        // NAVIGATION FUNCTIONS
-        // ================================================================
-        
-        function showHomePage() {
-            profilePage.classList.remove('active');
-            backHomeBtn.classList.remove('active');
-            profileNavbar.classList.remove('active');
-            document.getElementById('mainContent').style.display = 'block';
-            
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            homeNavLink.classList.add('active');
-            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
-            bottomHomeNav.classList.add('active');
-            
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-        }
-
-        // ================================================================
         // MODE SWITCH
         // ================================================================
         
@@ -4484,6 +5035,13 @@
             postInput.readOnly = false;
             mediaUpload.disabled = false;
             postSubmit.disabled = false;
+            
+            if (profilePostInput) {
+                profilePostInput.readOnly = false;
+                profilePostInput.placeholder = 'Tulis postingan baru...';
+            }
+            if (profileMediaUpload) profileMediaUpload.disabled = false;
+            if (profilePostSubmit) profilePostSubmit.disabled = true;
             
             document.querySelectorAll('.comment-input').forEach(input => {
                 input.readOnly = false;
@@ -4506,6 +5064,13 @@
             mediaUpload.disabled = true;
             postSubmit.disabled = true;
             
+            if (profilePostInput) {
+                profilePostInput.readOnly = true;
+                profilePostInput.placeholder = 'Silakan masuk untuk membuat postingan';
+            }
+            if (profileMediaUpload) profileMediaUpload.disabled = true;
+            if (profilePostSubmit) profilePostSubmit.disabled = true;
+            
             document.querySelectorAll('.comment-input').forEach(input => {
                 input.readOnly = true;
             });
@@ -4517,7 +5082,7 @@
         // EVENT LISTENERS
         // ================================================================
         
-        // App Title - klik untuk buka profil
+        // App Title
         appTitle.addEventListener('click', () => {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -4531,7 +5096,7 @@
             }
         });
         
-        // Preview overlay controls
+        // Preview overlay
         overlayLoginBtn.addEventListener('click', () => {
             hidePreviewOverlay();
             redirectToLogin();
@@ -4547,7 +5112,7 @@
             redirectToLogin();
         });
         
-        // Navigation - Preview mode handler
+        // Navigation
         homeNavLink.addEventListener('click', (e) => {
             e.preventDefault();
             if (isPreviewMode) {
@@ -4568,7 +5133,6 @@
             showHomePage();
         });
         
-        // Bottom nav - Toko (tetap)
         bottomTokoNav.addEventListener('click', (e) => {
             e.preventDefault();
             if (isPreviewMode) {
@@ -4576,10 +5140,9 @@
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses Toko', 'fa-lock');
                 return;
             }
-            alert('🛒 Halaman Toko akan segera hadir!');
+            showToast('🛒 Toko', 'Halaman Toko akan segera hadir!', 'fa-store');
         });
         
-        // Bottom nav - Invite (tetap)
         bottomInviteNav.addEventListener('click', (e) => {
             e.preventDefault();
             if (isPreviewMode) {
@@ -4590,7 +5153,6 @@
             openInviteModal();
         });
         
-        // Bottom nav - Notif (tetap)
         bottomNotifNav.addEventListener('click', (e) => {
             e.preventDefault();
             if (isPreviewMode) {
@@ -4603,7 +5165,6 @@
             document.body.style.overflow = 'hidden';
         });
         
-        // Bottom nav - Profil (tetap)
         bottomProfileNav.addEventListener('click', (e) => {
             e.preventDefault();
             if (isPreviewMode) {
@@ -4618,8 +5179,14 @@
             }
         });
         
-        // Sidebar toggle - di dalam modal profil
+        // Profile sidebar toggle
         profileSidebarToggle.addEventListener('click', toggleSidebar);
+        
+        // Profile invite button
+        profileInviteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openInviteModal();
+        });
         
         // Sidebar close
         sidebarClose.addEventListener('click', () => {
@@ -4641,7 +5208,6 @@
                 switchToPreviewMode();
                 showToast('👋 Logout Berhasil', 'Anda kembali ke mode preview', 'fa-sign-out-alt');
                 showHomePage();
-                // Tutup sidebar jika terbuka
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             }
@@ -4747,9 +5313,15 @@
             if (e.target === allReportsModal) closeAllReportsModal();
         });
         
-        historyModalClose.addEventListener('click', closeHistoryModal);
+        historyModalClose.addEventListener('click', () => {
+            historyModal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
         historyModal.addEventListener('click', (e) => {
-            if (e.target === historyModal) closeHistoryModal();
+            if (e.target === historyModal) {
+                historyModal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         });
         
         settingsModalClose.addEventListener('click', closeSettingsModal);
@@ -4779,7 +5351,7 @@
             if (e.target === temanModal) closeTemanModal();
         });
         
-        // Profile Teman Button (di navbar profil)
+        // Profile Teman Button
         profileTemanBtn.addEventListener('click', (e) => {
             e.preventDefault();
             openTemanModal();
@@ -4793,7 +5365,14 @@
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat riwayat', 'fa-lock');
                 return;
             }
-            openHistoryModal();
+            historyModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            historyModalBody.innerHTML = `
+                <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
+                    <i class="fas fa-history" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                    <p>Riwayat laporan Anda akan muncul di sini</p>
+                </div>
+            `;
         });
         
         // Settings
@@ -4819,11 +5398,45 @@
             
             const hasNotification = document.querySelector('.emergency-btn.has-notification');
             if (hasNotification) {
-                convertHologramToPost();
+                // Convert hologram to post
+                const hologramContent = document.getElementById('hologramContent');
+                const alertType = hologramContent.querySelector('.alert-type');
+                const alertSender = hologramContent.querySelector('.alert-sender');
+                const alertLocation = hologramContent.querySelector('.alert-location');
+                const alertTime = hologramContent.querySelector('.alert-time');
+                
+                if (alertType && alertSender) {
+                    const typeText = alertType.textContent.trim();
+                    const senderText = alertSender.textContent.replace('Dilaporkan oleh:', '').trim();
+                    const locationText = alertLocation ? alertLocation.textContent.trim() : '';
+                    const timeText = alertTime ? alertTime.textContent.trim() : '';
+                    
+                    const postText = `🚨 ${typeText}\n📍 ${locationText}\n👤 ${senderText}\n🕐 ${timeText}`;
+                    createPost(postText, null, true, {
+                        type: 'fire',
+                        location: locationText,
+                        address: ''
+                    }, 'khusus');
+                }
+                
+                emergencyBtns.forEach(btn => {
+                    btn.classList.remove('has-notification');
+                    btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                });
             } else {
                 const types = ['fire', 'death', 'theft', 'disaster'];
                 const randomType = types[Math.floor(Math.random() * types.length)];
-                simulateEmergencyNotification(randomType);
+                const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
+                const locations = [
+                    'Jl. Sudirman No. 45, Jakarta Selatan',
+                    'Jl. Thamrin No. 12, Jakarta Pusat',
+                    'Jl. Gatot Subroto No. 23, Jakarta Selatan',
+                    'Jl. MH Thamrin No. 1, Jakarta Pusat',
+                    'Jl. Pangeran Antasari No. 7, Jakarta Selatan'
+                ];
+                const randomSender = senders[Math.floor(Math.random() * senders.length)];
+                const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+                addToHologram(randomType, randomSender, randomLocation, '');
             }
         });
         
@@ -4841,7 +5454,6 @@
                 if (this.classList.contains('has-notification')) {
                     this.classList.remove('has-notification');
                     this.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                    convertHologramToPost();
                     return;
                 }
                 
@@ -4850,7 +5462,7 @@
             });
         });
         
-        // Post
+        // Post (Main)
         postInput.addEventListener('input', () => {
             postSubmit.disabled = postInput.value.trim() === '' && !mediaUpload.files[0];
         });
@@ -4903,7 +5515,13 @@
             
             if (text === '' && !file) return;
             
-            createPost(text, file, false, null);
+            createPost(text, file, false, null, 'biasa');
+            
+            postInput.value = '';
+            mediaUpload.value = '';
+            mediaPreview.style.display = 'none';
+            mediaPreview.innerHTML = '<span class="remove-media" id="removeMedia">&times;</span>';
+            postSubmit.disabled = true;
         });
         
         // Chart
@@ -4940,14 +5558,129 @@
         });
 
         // ================================================================
+        // REPORTS DATA
+        // ================================================================
+        
+        const reports = [
+            {
+                id: 1,
+                type: 'fire',
+                icon: 'fa-fire',
+                title: 'Kebakaran Rumah Tinggal',
+                desc: 'Jl. Sudirman No. 45, Jakarta Selatan',
+                time: '15m',
+                detail: {
+                    type: 'KEBAKARAN',
+                    sender: 'Bpk. Budi Santoso',
+                    location: 'Jl. Sudirman No. 45, Jakarta Selatan',
+                    address: 'Perumahan Mutiara Indah Blok A No. 12',
+                    image: 'https://picsum.photos/seed/fire/400/200',
+                    time: new Date(Date.now() - 15 * 60000).toLocaleString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    })
+                }
+            },
+            {
+                id: 2,
+                type: 'theft',
+                icon: 'fa-gem',
+                title: 'Pencurian Motor',
+                desc: 'Jl. Thamrin No. 12, Jakarta Pusat',
+                time: '32m',
+                detail: {
+                    type: 'PENCURIAN',
+                    sender: 'Sdri. Rina Wati',
+                    location: 'Jl. Thamrin No. 12, Jakarta Pusat',
+                    address: 'Parkiran Mall Grand Indonesia Lt. 3',
+                    image: 'https://picsum.photos/seed/theft/400/200',
+                    time: new Date(Date.now() - 32 * 60000).toLocaleString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    })
+                }
+            },
+            {
+                id: 3,
+                type: 'disaster',
+                icon: 'fa-house-damage',
+                title: 'Tanah Longsor',
+                desc: 'Jl. Bukit Duri, Tebet, Jakarta Selatan',
+                time: '1h',
+                detail: {
+                    type: 'BENCANA ALAM',
+                    sender: 'Bpk. Agus Priyono',
+                    location: 'Jl. Bukit Duri, Tebet, Jakarta Selatan',
+                    address: 'Perumahan Bukit Hijau Blok C No. 7',
+                    image: 'https://picsum.photos/seed/disaster/400/200',
+                    time: new Date(Date.now() - 60 * 60000).toLocaleString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    })
+                }
+            },
+            {
+                id: 4,
+                type: 'death',
+                icon: 'fa-skull',
+                title: 'Kecelakaan Lalu Lintas',
+                desc: 'Jl. Gatot Subroto, Jakarta Selatan',
+                time: '2h',
+                detail: {
+                    type: 'KEMATIAN',
+                    sender: 'Bpk. Dedi Mulyadi',
+                    location: 'Jl. Gatot Subroto, Jakarta Selatan',
+                    address: 'Simpang Jalan Gatot Subroto - Kuningan',
+                    image: 'https://picsum.photos/seed/accident/400/200',
+                    time: new Date(Date.now() - 120 * 60000).toLocaleString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    })
+                }
+            },
+            {
+                id: 5,
+                type: 'fire',
+                icon: 'fa-fire',
+                title: 'Kebakaran Pabrik',
+                desc: 'Kawasan Industri Pulogadung, Jakarta Timur',
+                time: '3h',
+                detail: {
+                    type: 'KEBAKARAN',
+                    sender: 'Bpk. Hendra Gunawan',
+                    location: 'Kawasan Industri Pulogadung, Jakarta Timur',
+                    address: 'Jl. Industri Raya No. 88, Pulogadung',
+                    image: 'https://picsum.photos/seed/factory/400/200',
+                    time: new Date(Date.now() - 180 * 60000).toLocaleString('id-ID', { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    })
+                }
+            }
+        ];
+
+        // ================================================================
         // INITIALIZE
         // ================================================================
         
-        // Cek mode dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const mode = urlParams.get('mode');
         
-        // Cek user dari localStorage
         const savedUser = localStorage.getItem('salink_user');
         if (savedUser) {
             try {
@@ -4957,10 +5690,10 @@
             }
         }
         
-        // Generate friends
+        const hasSavedPosts = loadPostsFromLocalStorage();
+        
         generateSampleFriends();
         
-        // Tentukan mode
         if (mode === MODE_PREVIEW || !currentUser) {
             isPreviewMode = true;
             switchToPreviewMode();
@@ -4970,7 +5703,6 @@
             updateUserUI();
         }
         
-        // Inisialisasi data
         preloadAllAudio();
         generateSampleNotifications();
         
@@ -4978,7 +5710,7 @@
         updateBadge();
         switchChart('pie');
         
-        if (posts.length === 0) {
+        if (!hasSavedPosts || posts.length === 0) {
             const now = Date.now();
             posts = [
                 {
@@ -5014,8 +5746,9 @@
                             ]
                         }
                     ],
-                    isHologram: false,
-                    hologramData: null
+                    isSpecial: false,
+                    specialData: null,
+                    postType: 'biasa'
                 },
                 {
                     id: 'post-sample2',
@@ -5029,8 +5762,9 @@
                     timestamp: now - 360000,
                     likes: ['ahmad'],
                     comments: [],
-                    isHologram: false,
-                    hologramData: null
+                    isSpecial: false,
+                    specialData: null,
+                    postType: 'biasa'
                 },
                 {
                     id: 'post-sample3',
@@ -5055,19 +5789,33 @@
                             replies: []
                         }
                     ],
-                    isHologram: false,
-                    hologramData: null
+                    isSpecial: false,
+                    specialData: null,
+                    postType: 'biasa'
                 }
             ];
             postIdCounter = 3;
-            renderPosts();
+            savePostsToLocalStorage();
         }
+        
+        renderPosts();
+        setupProfilePostInput();
         
         setTimeout(() => {
             if (!isPreviewMode && currentUser) {
                 const types = ['fire', 'theft', 'disaster'];
                 const randomType = types[Math.floor(Math.random() * types.length)];
-                simulateEmergencyNotification(randomType);
+                const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
+                const locations = [
+                    'Jl. Sudirman No. 45, Jakarta Selatan',
+                    'Jl. Thamrin No. 12, Jakarta Pusat',
+                    'Jl. Gatot Subroto No. 23, Jakarta Selatan',
+                    'Jl. MH Thamrin No. 1, Jakarta Pusat',
+                    'Jl. Pangeran Antasari No. 7, Jakarta Selatan'
+                ];
+                const randomSender = senders[Math.floor(Math.random() * senders.length)];
+                const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+                addToHologram(randomType, randomSender, randomLocation, '');
             }
         }, 5000);
 
@@ -5075,8 +5823,11 @@
         console.log(`📌 Mode: ${isPreviewMode ? 'PREVIEW' : 'FULL'}`);
         console.log(`👤 User: ${currentUser ? currentUser.fullName : 'Guest'}`);
         console.log(`👥 Friends: ${friends.length}`);
-        console.log('ℹ️ Sidebar ada di dalam modal profil (tombol ☰ di samping foto profil)');
-        console.log('ℹ️ 4 menu navbar (Jual, Foto, Dokumentasi, Teman) ada di dalam modal profil');
+        console.log(`📝 Posts: ${posts.length} (disimpan di Local Storage)`);
+        console.log('ℹ️ Sidebar di kanan dengan batas bawah sampai tombol Keluar');
+        console.log('ℹ️ Tombol PESAN di tengah, INVITE di samping kanan');
+        console.log('ℹ️ Postingan Khusus dengan dropdown dan link Google Maps');
+        console.log('ℹ️ Notifikasi dengan nada dering berbeda untuk postingan khusus');
     </script>
 
 </body>
