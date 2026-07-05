@@ -57,7 +57,7 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-        @keyframes slideInRight { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes alarmPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(212, 168, 73, 0.3); } 50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(212, 168, 73, 0.6); } }
         @keyframes alarmRing { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
         @keyframes notifPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
@@ -250,21 +250,21 @@
         /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
-            top: var(--header-height);
-            right: 0;
+            top: calc(var(--header-height) + 3px);
+            left: 0;
             width: var(--sidebar-width);
-            max-height: calc(100vh - var(--header-height) - 20px);
+            max-height: calc(100vh - var(--header-height) - 3px - 20px);
             background: linear-gradient(180deg, var(--brown-dark), var(--dark));
             padding: 0;
             z-index: 1100;
             overflow-y: auto;
-            box-shadow: -15px 0 30px rgba(0, 0, 0, 0.6);
-            border-left: 2px solid var(--gold);
+            box-shadow: 15px 0 30px rgba(0, 0, 0, 0.6);
+            border-right: 2px solid var(--gold);
             display: flex;
             flex-direction: column;
-            transform: translateX(100%);
+            transform: translateX(-100%);
             transition: transform 0.3s ease;
-            border-radius: 0 0 0 12px;
+            border-radius: 0 0 12px 0;
         }
 
         .sidebar::-webkit-scrollbar { width: 3px; }
@@ -275,7 +275,7 @@
         .sidebar-close {
             position: absolute;
             top: 10px;
-            left: 10px;
+            right: 10px;
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -348,7 +348,7 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .nav-link:hover { border-color: var(--gold); transform: translateX(-5px); }
+        .nav-link:hover { border-color: var(--gold); transform: translateX(5px); }
         .nav-link.active {
             background: linear-gradient(135deg, rgba(212, 168, 73, 0.25), rgba(245, 240, 232, 0.1));
             color: var(--gold-light);
@@ -1381,6 +1381,38 @@
             margin-right: 4px;
         }
 
+        /* Profile Navbar - 3 items */
+        .profile-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .profile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 6px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: rgba(245, 240, 232, 0.7);
+            background: rgba(255, 248, 240, 0.03);
+            border: 1px solid transparent;
+            font-size: 0.6rem;
+            gap: 4px;
+        }
+        .profile-nav-item:hover {
+            background: rgba(212, 168, 73, 0.1);
+            border-color: var(--gold);
+            color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        .profile-nav-item i { font-size: 1.4rem; }
+        .profile-nav-item span { font-size: 0.6rem; }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .emergency-grid { gap: 10px; }
@@ -1424,7 +1456,7 @@
             .profile-invite-btn { font-size: 0.65rem; padding: 6px 14px; }
             .profile-actions { gap: 6px; }
             .back-home-btn { padding: 6px 12px; font-size: 0.6rem; bottom: calc(var(--footer-height) + 12px); right: 12px; }
-            .profile-nav-grid { grid-template-columns: repeat(2, 1fr); }
+            .profile-nav-grid { grid-template-columns: repeat(3, 1fr); }
             .profile-sidebar-toggle { width: 30px; height: 30px; font-size: 0.7rem; left: 2px; }
             .post-type-selector select { font-size: 0.65rem; padding: 3px 8px; }
             .post-special-fields .field-label { min-width: 55px; font-size: 0.55rem; }
@@ -1445,7 +1477,7 @@
             .nav-item-bottom i { font-size: 0.95rem; }
             .nav-item-bottom span { font-size: 0.45rem; }
             .social-link { width: 34px; height: 34px; font-size: 0.9rem; }
-            .profile-nav-grid { grid-template-columns: 1fr 1fr; }
+            .profile-nav-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -1474,7 +1506,7 @@
         </div>
     </header>
 
-    <!-- ===== SIDEBAR (di sebelah kanan) ===== -->
+    <!-- ===== SIDEBAR (di sebelah kiri) ===== -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
@@ -1627,7 +1659,7 @@
                         <span>KEBAKARAN</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault();" data-action="login">Bpk. Ahmad</a></strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileUser();" data-action="login">Bpk. Ahmad</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
@@ -1684,7 +1716,7 @@
         <!-- Post Section -->
         <div class="post-section" id="postSection">
             <div class="post-header">
-                <div class="post-profile-pic" id="postProfilePic" data-action="login">
+                <div class="post-profile-pic" id="postProfilePic" data-action="login" onclick="openProfileUser()">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="post-user-info">
@@ -1873,7 +1905,7 @@
 
         <!-- Tombol PESAN di tengah + INVITE -->
         <div class="profile-actions">
-            <a href="https://salink.id/pesan" target="_blank" class="profile-pesan-btn" id="profilePesanBtn">
+            <a href="pesan.html" target="_blank" class="profile-pesan-btn" id="profilePesanBtn">
                 <i class="fas fa-paper-plane"></i> PESAN
             </a>
             <button class="profile-invite-btn" id="profileInviteBtn">
@@ -1881,24 +1913,20 @@
             </button>
         </div>
 
-        <!-- ===== NAVBAR DI DALAM MODAL PROFIL ===== -->
+        <!-- ===== NAVBAR DI DALAM MODAL PROFIL (3 items) ===== -->
         <div class="profile-navbar active" id="profileNavbar">
             <div class="profile-nav-grid">
-                <a href="https://salink.id/jual" target="_blank" class="profile-nav-item">
-                    <i class="fas fa-store"></i>
-                    <span>🛍️ Jual</span>
+                <a href="toko.html" target="_blank" class="profile-nav-item">
+                    <span>🛍️</span>
+                    <span>Jual</span>
                 </a>
                 <a href="https://salink.id/foto" target="_blank" class="profile-nav-item">
-                    <i class="fas fa-image"></i>
-                    <span>🖼️ Foto</span>
-                </a>
-                <a href="https://salink.id/dokumentasi" target="_blank" class="profile-nav-item">
-                    <i class="fas fa-folder"></i>
-                    <span>📁 Dokumentasi</span>
+                    <span>🖼️</span>
+                    <span>Foto</span>
                 </a>
                 <a href="#" class="profile-nav-item" id="profileTemanBtn">
-                    <i class="fas fa-users"></i>
-                    <span>🧑‍🤝‍🧑 Teman</span>
+                    <span>🧑‍🤝‍🧑</span>
+                    <span>Teman</span>
                 </a>
             </div>
         </div>
@@ -1977,7 +2005,7 @@
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <a href="#" class="nav-item-bottom" id="bottomTokoNav" data-action="login">
+        <a href="toko.html" target="_blank" class="nav-item-bottom" id="bottomTokoNav">
             <i class="fas fa-store"></i>
             <span>Toko</span>
         </a>
@@ -2395,6 +2423,19 @@
         }
 
         // ================================================================
+        // PROFILE USER OPEN
+        // ================================================================
+        
+        function openProfileUser() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
+                return;
+            }
+            window.open('profile-user.html', '_blank');
+        }
+
+        // ================================================================
         // AUDIO FUNCTIONS
         // ================================================================
         
@@ -2552,7 +2593,21 @@
                 playNotificationSound(soundKey);
             }
             
+            // Broadcast to all users (simulated)
+            broadcastNotification(notification);
+            
             return notification;
+        }
+
+        function broadcastNotification(notification) {
+            // Simulate sending to all registered users
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            users.forEach(user => {
+                if (user.username !== currentUser?.username) {
+                    // In real app, this would be sent via WebSocket/API
+                    console.log(`📨 Notifikasi dikirim ke ${user.fullName}: ${notification.title}`);
+                }
+            });
         }
 
         function updateNotifBadge() {
@@ -2609,6 +2664,11 @@
                     'disaster': 'fa-house-damage'
                 };
                 
+                // Make sender clickable
+                const senderHtml = notif.sender && notif.sender !== 'Sistem' ? 
+                    `<a href="#" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${notif.sender}</a>` : 
+                    notif.sender;
+                
                 item.innerHTML = `
                     <div style="display:flex;align-items:center;gap:10px;">
                         <div style="width:32px;height:32px;border-radius:50%;background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);">
@@ -2622,7 +2682,7 @@
                                 ${notif.message}
                             </div>
                             <div style="font-size:0.55rem;color:rgba(245,240,232,0.3);margin-top:3px;">
-                                ${getTimeAgo(notif.timestamp)} • ${notif.sender}
+                                ${getTimeAgo(notif.timestamp)} • ${senderHtml}
                                 ${notif.soundKey && notif.soundKey !== 'notifikasi' ? ` • 🔔 ${notif.soundKey.toUpperCase()}` : ''}
                             </div>
                         </div>
@@ -2648,11 +2708,12 @@
         function generateSampleNotifications() {
             const now = Date.now();
             const notifTypes = [
-                { type: 'inbox', title: 'Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat', sound: 'notifikasi' },
-                { type: 'invite', title: 'Undangan', msg: 'Sdri. Rina mengundang Anda berteman', sound: 'notifikasi' },
-                { type: 'report', title: 'Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan', sound: 'notifikasi' },
-                { type: 'comment', title: 'Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda', sound: 'notifikasi' },
-                { type: 'chart', title: 'Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%', sound: 'notifikasi' }
+                { type: 'inbox', title: '📩 Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat', sound: 'notifikasi' },
+                { type: 'invite', title: '📨 Undangan', msg: 'Sdri. Rina mengundang Anda berteman', sound: 'notifikasi' },
+                { type: 'report', title: '📢 Laporan Baru', msg: 'Laporan kebakaran baru di Jakarta Selatan', sound: 'notifikasi' },
+                { type: 'comment', title: '💬 Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda', sound: 'notifikasi' },
+                { type: 'chart', title: '📈 Peningkatan Grafik', msg: 'Statistik laporan meningkat 15%', sound: 'notifikasi' },
+                { type: 'profile', title: '👤 Pengikut Baru', msg: 'Sdri. Dewi mengikuti Anda', sound: 'notifikasi' }
             ];
             
             notifTypes.forEach((nt, index) => {
@@ -2666,7 +2727,7 @@
                     link: '#',
                     postId: null,
                     timestamp: now - timeOffset,
-                    read: index > 2,
+                    read: index > 3,
                     soundKey: nt.sound
                 };
                 notifications.push(notif);
@@ -2699,11 +2760,10 @@
                 });
             });
             
-            // Update follower/following counts
+            // Update follower count
             if (currentUser) {
-                // Set default counts to 0, will be updated from friends
                 profileStatFollowers.textContent = friends.length;
-                profileStatFollowing.textContent = Math.floor(Math.random() * 5) + 1;
+                profileStatFollowing.textContent = Math.floor(Math.random() * 3) + 1;
             }
         }
 
@@ -2729,35 +2789,20 @@
                 const statusColor = friend.status === 'Online' ? '#4CAF50' : '#888';
                 
                 item.innerHTML = `
-                    <div class="friend-avatar">
+                    <div class="friend-avatar" onclick="openProfileUser()">
                         ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
                     </div>
                     <div class="friend-info">
-                        <div class="friend-name">${friend.name}</div>
+                        <div class="friend-name" onclick="openProfileUser()" style="cursor:pointer;color:var(--gold-light);">${friend.name}</div>
                         <div class="friend-status">@${friend.username} • <span style="color:${statusColor};">${friend.status}</span></div>
                     </div>
-                    <button onclick="openFriendProfile('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                    <button onclick="openProfileUser()" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
                         <i class="fas fa-eye"></i> Lihat
                     </button>
                 `;
                 
                 temanModalBody.appendChild(item);
             });
-        }
-
-        function openFriendProfile(username) {
-            temanModal.classList.remove('active');
-            document.body.style.overflow = '';
-            
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            const user = users.find(u => u.username === username);
-            
-            if (user) {
-                showToast('👤 Profil Teman', `Membuka profil ${user.fullName}`, 'fa-user');
-                window.open(`profil.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
-            } else {
-                showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
-            }
         }
 
         function openTemanModal() {
@@ -2895,7 +2940,7 @@
             detailModalBody.innerHTML = `
                 <div class="info-row">
                     <span class="info-label">Pengirim</span>
-                    <span class="info-value"><strong>${detail.sender}</strong></span>
+                    <span class="info-value"><strong><a href="#" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${detail.sender}</a></strong></span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Lokasi</span>
@@ -3035,6 +3080,9 @@
                     
                     // Tambahkan ke hologram
                     addToHologram(specialData.type, currentUser.fullName, specialData.location, specialData.address);
+                    
+                    // Update stats
+                    updateEmergencyStats(specialData.type);
                 } else {
                     addNotification('post', '📝 Postingan Baru', `${currentUser.fullName} membuat postingan baru`, currentUser.fullName, '#', postId, 'notifikasi');
                 }
@@ -3062,6 +3110,15 @@
             }
         }
 
+        function updateEmergencyStats(type) {
+            // Update stat counters
+            const statActive = document.getElementById('statActive');
+            if (statActive) {
+                const current = parseInt(statActive.textContent) || 0;
+                statActive.textContent = current + 1;
+            }
+        }
+
         function renderPosts() {
             postFeed.innerHTML = '';
             const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
@@ -3076,7 +3133,7 @@
                     ? `<img src="${post.userProfilePic}" alt="Profile">` 
                     : (post.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
                 
-                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
+                const profileLink = `<a href="#" class="profile-link" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
                 
                 let mediaHTML = '';
                 if (post.mediaType === 'image') {
@@ -3094,11 +3151,11 @@
                     commentsHTML += `
                         <div class="comment" id="comment-${comment.id}">
                             <div class="comment-main">
-                                <div class="comment-profile-pic">
+                                <div class="comment-profile-pic" onclick="openProfileUser()" style="cursor:pointer;">
                                     ${commentProfilePic}
                                 </div>
                                 <div class="comment-content">
-                                    <div class="comment-user">${comment.userFullName}</div>
+                                    <div class="comment-user" onclick="openProfileUser()" style="cursor:pointer;color:var(--gold-light);">${comment.userFullName}</div>
                                     <div class="comment-text">${comment.text}</div>
                                     <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
                                     <div class="comment-actions">
@@ -3116,11 +3173,11 @@
                                         return `
                                             <div class="reply-comment">
                                                 <div class="comment-main">
-                                                    <div class="comment-profile-pic">
+                                                    <div class="comment-profile-pic" onclick="openProfileUser()" style="cursor:pointer;">
                                                         ${replyProfilePic}
                                                     </div>
                                                     <div class="comment-content">
-                                                        <div class="comment-user">${reply.userFullName}</div>
+                                                        <div class="comment-user" onclick="openProfileUser()" style="cursor:pointer;color:var(--gold-light);">${reply.userFullName}</div>
                                                         <div class="comment-text">${reply.text}</div>
                                                         <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
                                                         ${!isPreviewMode && reply.userId === currentUser?.username ? `
@@ -3144,21 +3201,23 @@
                 
                 postElement.innerHTML = `
                     <div class="post-header">
-                        <div class="post-profile-pic" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }">
+                        <div class="post-profile-pic" onclick="openProfileUser()" style="cursor:pointer;">
                             ${profilePic}
                         </div>
                         <div class="post-user-info">
                             <h4>${profileLink} ${specialBadge}</h4>
                             <small>${new Date(post.timestamp).toLocaleString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })} • ${getTimeAgo(post.timestamp)}</small>
                         </div>
-                        <button class="post-menu-toggle" data-post-id="${post.id}">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <div class="post-menu-dropdown" id="postMenu-${post.id}">
-                            <button class="menu-item edit-post" data-post-id="${post.id}">
-                                <i class="fas fa-edit"></i> Edit Postingan
+                        ${post.userId === currentUser?.username ? `
+                            <button class="post-menu-toggle" data-post-id="${post.id}">
+                                <i class="fas fa-ellipsis-v"></i>
                             </button>
-                        </div>
+                            <div class="post-menu-dropdown" id="postMenu-${post.id}">
+                                <button class="menu-item edit-post" data-post-id="${post.id}">
+                                    <i class="fas fa-edit"></i> Edit Postingan
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="post-content">
                         ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
@@ -3321,7 +3380,7 @@
             
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
-            if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus postingan ini secara permanen?')) {
                 posts = posts.filter(p => p.id !== postId);
                 savePostsToLocalStorage();
                 renderPosts();
@@ -3330,7 +3389,7 @@
                 }
                 updateBadge();
                 updateProfileStats();
-                showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
+                showToast('🗑️ Dihapus Permanen', 'Postingan berhasil dihapus', 'fa-trash');
             }
         }
 
@@ -3580,24 +3639,16 @@
             profileUsername.textContent = `@${currentUser.username || 'username'}`;
             profileBio.textContent = currentUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
             
-            profilePesanBtn.href = 'https://salink.id/pesan';
+            profilePesanBtn.href = 'pesan.html';
             
-            // Update stats - default 0 unless there are followers/following
+            // Update stats - default 0
             const userPosts = posts.filter(p => p.userId === currentUser.username);
             profileStatPosts.textContent = userPosts.length;
             
-            // Follower & Following counts - default 0, updated from friends
-            if (friends.length > 0) {
-                profileStatFollowers.textContent = friends.length;
-            } else {
-                profileStatFollowers.textContent = '0';
-            }
+            // Follower & Following - default 0
+            profileStatFollowers.textContent = friends.length > 0 ? friends.length : '0';
+            profileStatFollowing.textContent = '0';
             
-            // Following - random small number or 0
-            const followingCount = Math.floor(Math.random() * 5);
-            profileStatFollowing.textContent = followingCount > 0 ? followingCount : '0';
-            
-            // Update reported by field
             if (postReportedBy) {
                 postReportedBy.value = currentUser.fullName || 'User';
             }
@@ -3641,21 +3692,23 @@
                     
                     postEl.innerHTML = `
                         <div class="post-header">
-                            <div class="post-profile-pic">
+                            <div class="post-profile-pic" onclick="openProfileUser()" style="cursor:pointer;">
                                 ${profilePic}
                             </div>
                             <div class="post-user-info">
                                 <h4>${post.userFullName} ${specialBadge}</h4>
                                 <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
                             </div>
-                            <button class="post-menu-toggle" data-post-id="${post.id}">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            <div class="post-menu-dropdown" id="postMenu-${post.id}">
-                                <button class="menu-item edit-post" data-post-id="${post.id}">
-                                    <i class="fas fa-edit"></i> Edit Postingan
+                            ${post.userId === currentUser?.username ? `
+                                <button class="post-menu-toggle" data-post-id="${post.id}">
+                                    <i class="fas fa-ellipsis-v"></i>
                                 </button>
-                            </div>
+                                <div class="post-menu-dropdown" id="postMenu-${post.id}">
+                                    <button class="menu-item edit-post" data-post-id="${post.id}">
+                                        <i class="fas fa-edit"></i> Edit Postingan
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="post-content">
                             ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
@@ -3705,11 +3758,11 @@
                                 return `
                                     <div class="comment" id="profile-comment-${comment.id}">
                                         <div class="comment-main">
-                                            <div class="comment-profile-pic">
+                                            <div class="comment-profile-pic" onclick="openProfileUser()" style="cursor:pointer;">
                                                 ${commentProfilePic}
                                             </div>
                                             <div class="comment-content">
-                                                <div class="comment-user">${comment.userFullName}</div>
+                                                <div class="comment-user" onclick="openProfileUser()" style="cursor:pointer;color:var(--gold-light);">${comment.userFullName}</div>
                                                 <div class="comment-text">${comment.text}</div>
                                                 <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
                                                 <div class="comment-actions">
@@ -3727,11 +3780,11 @@
                                                     return `
                                                         <div class="reply-comment">
                                                             <div class="comment-main">
-                                                                <div class="comment-profile-pic">
+                                                                <div class="comment-profile-pic" onclick="openProfileUser()" style="cursor:pointer;">
                                                                     ${replyProfilePic}
                                                                 </div>
                                                                 <div class="comment-content">
-                                                                    <div class="comment-user">${reply.userFullName}</div>
+                                                                    <div class="comment-user" onclick="openProfileUser()" style="cursor:pointer;color:var(--gold-light);">${reply.userFullName}</div>
                                                                     <div class="comment-text">${reply.text}</div>
                                                                     <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
                                                                     ${reply.userId === currentUser?.username ? `
@@ -3868,14 +3921,14 @@
             
             const btn = e.currentTarget;
             const postId = btn.dataset.postId;
-            if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+            if (confirm('Apakah Anda yakin ingin menghapus postingan ini secara permanen?')) {
                 posts = posts.filter(p => p.id !== postId);
                 savePostsToLocalStorage();
                 renderProfilePosts(posts.filter(p => p.userId === currentUser?.username));
                 renderPosts();
                 updateBadge();
                 updateProfileStats();
-                showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
+                showToast('🗑️ Dihapus Permanen', 'Postingan berhasil dihapus', 'fa-trash');
             }
         }
 
@@ -4092,11 +4145,6 @@
             if (!currentUser) return;
             const userPosts = posts.filter(p => p.userId === currentUser.username);
             profileStatPosts.textContent = userPosts.length;
-            
-            // Update followers/following
-            if (friends.length > 0) {
-                profileStatFollowers.textContent = friends.length;
-            }
         }
 
         // ================================================================
@@ -4129,7 +4177,7 @@
             
             hologramContent.innerHTML = `
                 <div class="hologram-top">
-                    <div class="hologram-profile" id="hologramProfile">
+                    <div class="hologram-profile" id="hologramProfile" onclick="openProfileUser()">
                         ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
                     </div>
                     <div class="alert-type ${type}">
@@ -4137,13 +4185,13 @@
                         <span>${typeNames[type]}</span>
                     </div>
                 </div>
-                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${sender}</a></strong></div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${sender}</a></strong></div>
                 <div class="alert-location">
                     <i class="fas fa-map-marker-alt"></i>
                     <span>${location || 'Lokasi tidak diketahui'}</span>
                 </div>
                 <div class="alert-coords">${address || 'Koordinat: -6.1823399, 106.8325873'}</div>
-                <a href="#" class="mini-map" onclick="event.preventDefault(); if(!isPreviewMode) window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank'); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat lokasi', 'fa-lock'); }">
+                <a href="#" class="mini-map" onclick="event.preventDefault(); window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank');">
                     <i class="fas fa-map"></i>
                     <span style="margin-left:6px;">Lihat Lokasi</span>
                     <div class="map-marker" style="top: 50%; left: 30%;"></div>
@@ -4163,16 +4211,89 @@
             if (btn) {
                 btn.classList.add('has-notification');
                 btn.querySelector('.play-status').textContent = '🔔 Ada Notifikasi!';
-                
-                // Auto convert to post after 5 seconds
-                clearTimeout(alertTimeout);
-                alertTimeout = setTimeout(() => {
-                    if (btn) {
-                        btn.classList.remove('has-notification');
-                        btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                    }
-                }, 5000);
             }
+        }
+
+        function convertHologramToPost() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membuat postingan dari hologram', 'fa-lock');
+                return;
+            }
+            
+            if (!currentUser) {
+                window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            const hologramContent = document.getElementById('hologramContent');
+            const alertType = hologramContent.querySelector('.alert-type');
+            const alertSender = hologramContent.querySelector('.alert-sender');
+            const alertLocation = hologramContent.querySelector('.alert-location');
+            const alertCoords = hologramContent.querySelector('.alert-coords');
+            
+            if (!alertType || !alertSender) return;
+            
+            const typeText = alertType.textContent.trim();
+            const senderText = alertSender.textContent.replace('Dilaporkan oleh:', '').trim();
+            const locationText = alertLocation ? alertLocation.textContent.trim() : '';
+            const coordsText = alertCoords ? alertCoords.textContent.trim() : '';
+            
+            // Determine type from text
+            let type = 'fire';
+            if (typeText.includes('KEMATIAN')) type = 'death';
+            else if (typeText.includes('PENCURIAN')) type = 'theft';
+            else if (typeText.includes('BENCANA')) type = 'disaster';
+            
+            const postText = `🚨 ${typeText}\n📍 ${locationText}\n👤 ${senderText}\n${coordsText}`;
+            
+            createPost(postText, null, true, {
+                type: type,
+                location: locationText,
+                address: coordsText
+            }, 'khusus');
+            
+            emergencyBtns.forEach(btn => {
+                btn.classList.remove('has-notification');
+                btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+            });
+            
+            isHologramPost = true;
+            hologramPostData = { type: typeText, sender: senderText, location: locationText, address: coordsText };
+            
+            setTimeout(() => {
+                resetHologramDisplay();
+            }, 5000);
+        }
+
+        function resetHologramDisplay() {
+            const hologramContent = document.getElementById('hologramContent');
+            hologramContent.innerHTML = `
+                <div class="hologram-top">
+                    <div class="hologram-profile" id="hologramProfile" onclick="openProfileUser()">
+                        ${currentUser?.profilePicture ? `<img src="${currentUser.profilePicture}" alt="Profile">` : '<i class="fas fa-user"></i>'}
+                    </div>
+                    <div class="alert-type fire">
+                        <i class="fas fa-fire"></i>
+                        <span>KEBAKARAN</span>
+                    </div>
+                </div>
+                <div class="alert-sender">Dilaporkan oleh: <strong><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">Bpk. Ahmad</a></strong></div>
+                <div class="alert-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Jl. Merdeka No. 123, Jakarta Pusat</span>
+                </div>
+                <div class="alert-coords">Koordinat: -6.1823399, 106.8325873</div>
+                <a href="#" class="mini-map" onclick="event.preventDefault(); window.open('https://www.google.com/maps?q=-6.1823399,106.8325873', '_blank');">
+                    <i class="fas fa-map"></i>
+                    <span style="margin-left:6px;">Lihat Lokasi</span>
+                    <div class="map-marker" style="top: 50%; left: 30%;"></div>
+                </a>
+                <div class="alert-time">10 menit yang lalu</div>
+            `;
+            
+            isHologramPost = false;
+            hologramPostData = null;
         }
 
         // ================================================================
@@ -4204,14 +4325,12 @@
             postMapLink.addEventListener('input', function() {
                 const url = this.value.trim();
                 if (url) {
-                    // Extract location from Google Maps URL
                     const match = url.match(/@([-0-9.]+),([-0-9.]+)/);
                     if (match) {
                         const lat = match[1];
                         const lng = match[2];
                         postLocationAddress.value = `📍 Koordinat: ${lat}, ${lng}`;
                     } else {
-                        // Try to get address from URL
                         const addressMatch = url.match(/place\/([^/@]+)/);
                         if (addressMatch) {
                             const address = decodeURIComponent(addressMatch[1].replace(/\+/g, ' '));
@@ -4408,7 +4527,6 @@
             if (profileMediaUpload) profileMediaUpload.disabled = false;
             if (profilePostSubmit) profilePostSubmit.disabled = true;
             
-            // Update reported by
             if (postReportedBy && currentUser) {
                 postReportedBy.value = currentUser.fullName || 'User';
             }
@@ -4621,13 +4739,13 @@
         }
 
         // ================================================================
-        // INVITE FUNCTIONS
+        // INVITE FUNCTIONS (Menerima Undangan)
         // ================================================================
         
         function openInviteModal() {
             if (isPreviewMode) {
                 showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang pengguna', 'fa-lock');
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat undangan', 'fa-lock');
                 return;
             }
             
@@ -4638,90 +4756,86 @@
             
             inviteModalBody.innerHTML = `
                 <div style="margin-bottom:12px;">
-                    <div style="position:relative;margin-bottom:12px;">
-                        <input type="text" id="inviteSearchInput" placeholder="Cari pengguna..." style="width:100%;padding:8px 12px;background:rgba(255,248,240,0.06);border:1px solid rgba(212,168,73,0.2);border-radius:10px;color:var(--cream);font-size:0.75rem;padding-left:36px;">
-                        <i class="fas fa-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:rgba(245,240,232,0.3);font-size:0.8rem;"></i>
-                    </div>
-                    <p style="font-size:0.7rem;color:rgba(245,240,232,0.5);margin-bottom:8px;">Undang pengguna lain untuk bergabung di SALINK</p>
+                    <p style="font-size:0.7rem;color:rgba(245,240,232,0.5);margin-bottom:8px;">📨 Orang yang mengundang Anda untuk berteman</p>
                 </div>
                 <div id="inviteUserList">
-                    ${renderInviteUsers('')}
+                    ${renderInviteUsers()}
                 </div>
             `;
             
             inviteModal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            const inviteSearchInput = document.getElementById('inviteSearchInput');
-            inviteSearchInput.addEventListener('input', () => {
-                const query = inviteSearchInput.value.trim();
-                document.getElementById('inviteUserList').innerHTML = renderInviteUsers(query);
-            });
         }
 
-        function renderInviteUsers(query) {
+        function renderInviteUsers() {
             const users = [
-                { name: 'Bpk. Ahmad', region: 'Jakarta Pusat', avatar: null, gender: 'male' },
-                { name: 'Sdri. Rina', region: 'Jakarta Selatan', avatar: null, gender: 'female' },
-                { name: 'Bpk. Joko', region: 'Jakarta Timur', avatar: null, gender: 'male' },
-                { name: 'Sdri. Dewi', region: 'Jakarta Barat', avatar: null, gender: 'female' },
-                { name: 'Bpk. Budi', region: 'Jakarta Utara', avatar: null, gender: 'male' },
-                { name: 'Sdri. Siti', region: 'Bandung', avatar: null, gender: 'female' },
-                { name: 'Bpk. Andi', region: 'Surabaya', avatar: null, gender: 'male' },
-                { name: 'Sdri. Maya', region: 'Yogyakarta', avatar: null, gender: 'female' }
+                { name: 'Bpk. Ahmad', region: 'Jakarta Pusat', avatar: null, gender: 'male', status: 'Mengundang Anda' },
+                { name: 'Sdri. Rina', region: 'Jakarta Selatan', avatar: null, gender: 'female', status: 'Mengundang Anda' },
+                { name: 'Bpk. Joko', region: 'Jakarta Timur', avatar: null, gender: 'male', status: 'Mengundang Anda' }
             ];
             
-            const filtered = query ? users.filter(u => 
-                u.name.toLowerCase().includes(query.toLowerCase()) ||
-                u.region.toLowerCase().includes(query.toLowerCase())
-            ) : users;
-            
-            if (filtered.length === 0) {
-                return `
-                    <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
-                        <i class="fas fa-search" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:0.3;"></i>
-                        <p>Tidak ditemukan pengguna</p>
-                    </div>
-                `;
-            }
-            
             let html = '';
-            filtered.forEach((user, index) => {
+            users.forEach((user, index) => {
                 const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
                 html += `
                     <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;background:rgba(61,35,20,0.3);margin-bottom:8px;border:1px solid rgba(212,168,73,0.1);">
-                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--brown-dark);font-size:1rem;overflow:hidden;">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;color:var(--brown-dark);font-size:1rem;overflow:hidden;cursor:pointer;" onclick="openProfileUser()">
                             ${user.avatar ? `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">` : `<i class="fas ${avatarIcon}"></i>`}
                         </div>
                         <div style="flex:1;">
-                            <div style="font-size:0.8rem;color:var(--cream);">${user.name}</div>
-                            <div style="font-size:0.6rem;color:rgba(245,240,232,0.4);"><i class="fas fa-map-marker-alt"></i> ${user.region}</div>
+                            <div style="font-size:0.8rem;color:var(--cream);cursor:pointer;" onclick="openProfileUser()">${user.name}</div>
+                            <div style="font-size:0.6rem;color:rgba(245,240,232,0.4);"><i class="fas fa-map-marker-alt"></i> ${user.region} • ${user.status}</div>
                         </div>
-                        <button onclick="inviteUser('${user.name}')" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--dark);border:none;padding:4px 14px;border-radius:16px;cursor:pointer;font-size:0.65rem;font-weight:600;">
-                            <i class="fas fa-user-plus"></i> Invite
-                        </button>
+                        <div style="display:flex;gap:6px;">
+                            <button onclick="acceptInvite('${user.name}')" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--dark);border:none;padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;font-weight:600;">
+                                <i class="fas fa-check"></i> Terima
+                            </button>
+                            <button onclick="rejectInvite('${user.name}')" style="background:rgba(255,107,53,0.15);color:#ff6b35;border:1px solid rgba(255,107,53,0.3);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                                <i class="fas fa-times"></i> Tolak
+                            </button>
+                        </div>
                     </div>
                 `;
             });
             return html;
         }
 
-        function inviteUser(userName) {
+        function acceptInvite(userName) {
             if (isPreviewMode) {
                 showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang', 'fa-lock');
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menerima undangan', 'fa-lock');
                 return;
             }
             
-            if (!currentUser) return;
+            showToast('✅ Berhasil', `Anda menerima undangan dari ${userName}`, 'fa-user-check');
+            inviteModal.classList.remove('active');
+            document.body.style.overflow = '';
             
-            if (userName !== currentUser.fullName) {
-                addNotification('invite', '📨 Undangan', `${currentUser.fullName} mengundang ${userName} untuk berteman`, currentUser.fullName, '#', null, 'notifikasi');
-                showToast('✅ Terkirim', `Undangan telah dikirim ke ${userName}!`, 'fa-user-plus');
-            } else {
-                showToast('⚠️ Error', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
+            // Add to friends
+            const newFriend = {
+                id: ++friendIdCounter,
+                name: userName,
+                username: userName.toLowerCase().replace(/\s/g, ''),
+                gender: 'male',
+                status: 'Online',
+                avatar: null
+            };
+            friends.push(newFriend);
+            
+            // Update follower count
+            profileStatFollowers.textContent = friends.length;
+            
+            addNotification('inbox', '👤 Teman Baru', `${userName} sekarang menjadi teman Anda`, userName, '#', null, 'notifikasi');
+        }
+
+        function rejectInvite(userName) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menolak undangan', 'fa-lock');
+                return;
             }
             
+            showToast('❌ Ditolak', `Anda menolak undangan dari ${userName}`, 'fa-user-times');
             inviteModal.classList.remove('active');
             document.body.style.overflow = '';
         }
@@ -4822,20 +4936,20 @@
                     const user = result.data;
                     const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
                     item.innerHTML = `
-                        <div class="search-result-avatar">
+                        <div class="search-result-avatar" onclick="openProfileUser()" style="cursor:pointer;">
                             <i class="fas ${avatarIcon}"></i>
                         </div>
                         <div class="search-result-info">
-                            <div class="search-result-name">${user.name}</div>
+                            <div class="search-result-name" onclick="openProfileUser()" style="cursor:pointer;color:var(--gold-light);">${user.name}</div>
                             <div class="search-result-desc"><i class="fas fa-map-marker-alt"></i> ${user.region} • @${user.username}</div>
                         </div>
-                        <button onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                        <button onclick="openProfileUser()" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:2px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
                             <i class="fas fa-eye"></i> Lihat
                         </button>
                     `;
                 } else if (result.type === 'post') {
                     const post = result.data;
-                    const profileLink = `<a href="#" onclick="event.preventDefault(); if(!isPreviewMode) openProfilePage(); else { showPreviewOverlay(); showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock'); }" style="color:var(--gold-light);text-decoration:none;">${post.userFullName}</a>`;
+                    const profileLink = `<a href="#" onclick="event.preventDefault(); openProfileUser();" style="color:var(--gold-light);text-decoration:none;cursor:pointer;">${post.userFullName}</a>`;
                     item.innerHTML = `
                         <div class="search-result-avatar" style="background:rgba(212,168,73,0.15);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.8rem;">
                             <i class="fas fa-file-alt"></i>
@@ -5134,20 +5248,15 @@
         });
         
         bottomTokoNav.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengakses Toko', 'fa-lock');
-                return;
-            }
-            showToast('🛒 Toko', 'Halaman Toko akan segera hadir!', 'fa-store');
+            // Link ke toko.html
+            window.open('toko.html', '_blank');
         });
         
         bottomInviteNav.addEventListener('click', (e) => {
             e.preventDefault();
             if (isPreviewMode) {
                 showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang pengguna', 'fa-lock');
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat undangan', 'fa-lock');
                 return;
             }
             openInviteModal();
@@ -5182,7 +5291,7 @@
         // Profile sidebar toggle
         profileSidebarToggle.addEventListener('click', toggleSidebar);
         
-        // Profile invite button
+        // Profile invite button - now shows incoming invites
         profileInviteBtn.addEventListener('click', (e) => {
             e.preventDefault();
             openInviteModal();
@@ -5386,7 +5495,7 @@
             openSettingsModal();
         });
         
-        // Hologram
+        // Hologram - klik untuk convert ke postingan
         hologramDisplay.addEventListener('click', () => {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -5398,32 +5507,9 @@
             
             const hasNotification = document.querySelector('.emergency-btn.has-notification');
             if (hasNotification) {
-                // Convert hologram to post
-                const hologramContent = document.getElementById('hologramContent');
-                const alertType = hologramContent.querySelector('.alert-type');
-                const alertSender = hologramContent.querySelector('.alert-sender');
-                const alertLocation = hologramContent.querySelector('.alert-location');
-                const alertTime = hologramContent.querySelector('.alert-time');
-                
-                if (alertType && alertSender) {
-                    const typeText = alertType.textContent.trim();
-                    const senderText = alertSender.textContent.replace('Dilaporkan oleh:', '').trim();
-                    const locationText = alertLocation ? alertLocation.textContent.trim() : '';
-                    const timeText = alertTime ? alertTime.textContent.trim() : '';
-                    
-                    const postText = `🚨 ${typeText}\n📍 ${locationText}\n👤 ${senderText}\n🕐 ${timeText}`;
-                    createPost(postText, null, true, {
-                        type: 'fire',
-                        location: locationText,
-                        address: ''
-                    }, 'khusus');
-                }
-                
-                emergencyBtns.forEach(btn => {
-                    btn.classList.remove('has-notification');
-                    btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                });
+                convertHologramToPost();
             } else {
+                // Simulate emergency notification
                 const types = ['fire', 'death', 'theft', 'disaster'];
                 const randomType = types[Math.floor(Math.random() * types.length)];
                 const senders = ['Bpk. Ahmad', 'Sdri. Rina', 'Bpk. Joko', 'Sdri. Dewi', 'Bpk. Budi'];
@@ -5824,10 +5910,14 @@
         console.log(`👤 User: ${currentUser ? currentUser.fullName : 'Guest'}`);
         console.log(`👥 Friends: ${friends.length}`);
         console.log(`📝 Posts: ${posts.length} (disimpan di Local Storage)`);
-        console.log('ℹ️ Sidebar di kanan dengan batas bawah sampai tombol Keluar');
-        console.log('ℹ️ Tombol PESAN di tengah, INVITE di samping kanan');
-        console.log('ℹ️ Postingan Khusus dengan dropdown dan link Google Maps');
-        console.log('ℹ️ Notifikasi dengan nada dering berbeda untuk postingan khusus');
+        console.log('✅ Sidebar di kiri dengan jarak 3px dari header');
+        console.log('✅ Tombol PESAN di tengah, INVITE untuk menerima undangan');
+        console.log('✅ Postingan Khusus dengan dropdown dan link Google Maps');
+        console.log('✅ Hologram klik -> menjadi postingan');
+        console.log('✅ Notifikasi dengan nada dering berbeda');
+        console.log('✅ Semua foto profil & nama bisa diklik ke profile-user.html');
+        console.log('✅ Toko link ke toko.html');
+        console.log('✅ Grafik default 0, update real-time');
     </script>
 
 </body>
