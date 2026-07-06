@@ -325,7 +325,7 @@
                 
                 // Cek apakah ada user yang login
                 const user = localStorage.getItem('salink_user');
-                const targetPage = user ? 'dashboard.html' : 'login.html';
+                const targetPage = user ? 'login.html' : 'dashboard.html';
                 
                 setTimeout(() => {
                     window.location.href = targetPage;
