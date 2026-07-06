@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SALINK - Loading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ================================================================
+           THEME VARIABLES - SAMA DENGAN DASHBOARD
+           ================================================================ */
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent-blue: #58a6ff;
+            --accent-blue-gradient: linear-gradient(135deg, #58a6ff, #1f6feb);
+            --border-color: #30363d;
+            --shadow-color: rgba(0,0,0,0.4);
+        }
+
+        /* ===== LIGHT MODE ===== */
+        [data-theme="light"] {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #e8edf2;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #6a6a8a;
+            --accent-blue: #4facfe;
+            --accent-blue-gradient: linear-gradient(135deg, #4facfe, #00c6fb);
+            --border-color: #d0d7de;
+            --shadow-color: rgba(0,0,0,0.08);
+        }
+
+        /* ================================================================
+           BASE STYLES
+           ================================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ================================================================
+           LOADING CONTAINER
+           ================================================================ */
+        .loading-container {
+            text-align: center;
+            max-width: 380px;
+            width: 100%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ================================================================
+           LOGO
+           ================================================================ */
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: var(--accent-blue-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(88, 166, 255, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .loading-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .loading-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* ================================================================
+           PROGRESS BAR
+           ================================================================ */
+        .progress-wrapper {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 8px;
+            background: var(--accent-blue-gradient);
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* ================================================================
+           PROGRESS TEXT
+           ================================================================ */
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .progress-text .percentage {
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        /* ================================================================
+           STATUS MESSAGE
+           ================================================================ */
+        .status-message {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            min-height: 24px;
+            transition: all 0.3s;
+        }
+
+        .status-message .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        /* ================================================================
+           ICON ANIMATION
+           ================================================================ */
+        .loading-icon {
+            margin-top: 20px;
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            opacity: 0.6;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 480px) {
+            .loading-title {
+                font-size: 1.4rem;
+            }
+
+            .loading-logo {
+                width: 64px;
+                height: 64px;
+                font-size: 2rem;
+            }
+
+            .loading-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .progress-text {
+                font-size: 0.65rem;
+            }
+
+            .status-message {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .loading-title {
+                font-size: 1.2rem;
+            }
+
+            .loading-logo {
+                width: 54px;
+                height: 54px;
+                font-size: 1.6rem;
+            }
+
+            .loading-subtitle {
+                font-size: 0.65rem;
+            }
+
+            .progress-wrapper {
+                padding: 3px;
+            }
+
+            .progress-bar {
+                height: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <!-- Logo -->
+        <div class="loading-logo">
+            <i class="fas fa-bell"></i>
+        </div>
+
+        <!-- Title -->
+        <h1 class="loading-title">SALINK</h1>
+        <p class="loading-subtitle">Sistem Peringatan Darurat Masyarakat</p>
+
+        <!-- Progress Bar -->
+        <div class="progress-wrapper">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Progress Text -->
+        <div class="progress-text">
+            <span id="statusLabel">Memuat...</span>
+            <span class="percentage" id="percentageLabel">0%</span>
+        </div>
+
+        <!-- Status Message -->
+        <div class="status-message" id="statusMessage">
+            <span class="loading-dots">Menyiapkan sistem</span>
+        </div>
+
+        <!-- Loading Icon -->
+        <div class="loading-icon">
+            <i class="fas fa-circle-notch"></i>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // THEME - AMBIL DARI LOCAL STORAGE
+        // ================================================================
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            if (theme === 'light') {
+                html.setAttribute('data-theme', 'light');
+            } else {
+                html.removeAttribute('data-theme');
+            }
+        }
+
+        const savedTheme = localStorage.getItem('salink_theme') || 'dark';
+        applyTheme(savedTheme);
+
+        // ================================================================
+        // LOADING BAR PROGRESS
+        // ================================================================
+        const progressBar = document.getElementById('progressBar');
+        const percentageLabel = document.getElementById('percentageLabel');
+        const statusLabel = document.getElementById('statusLabel');
+        const statusMessage = document.getElementById('statusMessage');
+
+        const statusMessages = [
+            '⚡ Menginisialisasi sistem...',
+            '🔐 Memeriksa keamanan...',
+            '📡 Menghubungkan server...',
+            '📊 Memuat data pengguna...',
+            '🔔 Menyiapkan notifikasi...',
+            '✅ Siap digunakan!'
+        ];
+
+        let progress = 0;
+        let step = 0;
+
+        function updateLoading() {
+            if (progress >= 100) {
+                // Selesai loading
+                statusLabel.textContent = '✅ Selesai';
+                percentageLabel.textContent = '100%';
+                statusMessage.innerHTML = '✨ Sistem siap! Mengalihkan...';
+                
+                // Cek apakah ada user yang login
+                const user = localStorage.getItem('salink_user');
+                const targetPage = user ? 'dashboard.html' : 'login.html';
+                
+                setTimeout(() => {
+                    window.location.href = targetPage;
+                }, 800);
+                return;
+            }
+
+            // Update progress
+            progress += Math.random() * 6 + 1;
+            if (progress > 100) progress = 100;
+
+            progressBar.style.width = progress + '%';
+            percentageLabel.textContent = Math.round(progress) + '%';
+
+            // Update status per step
+            const currentStep = Math.floor(progress / 17);
+            if (currentStep < statusMessages.length && currentStep !== step) {
+                step = currentStep;
+                statusLabel.textContent = statusMessages[step] || 'Memuat...';
+                statusMessage.innerHTML = `<span class="loading-dots">${statusMessages[step] || 'Memuat...'}</span>`;
+            }
+
+            // Kecepatan loading
+            const delay = progress > 90 ? 150 : progress > 70 ? 80 : 50;
+            setTimeout(updateLoading, delay);
+        }
+
+        // ================================================================
+        // MULAI LOADING
+        // ================================================================
+        // Tunggu sebentar sebelum mulai
+        setTimeout(() => {
+            updateLoading();
+        }, 500);
+
+        // ================================================================
+        // CEK KONEKSI INTERNET
+        // ================================================================
+        if (!navigator.onLine) {
+            statusMessage.innerHTML = '⚠️ Tidak ada koneksi internet. Periksa jaringan Anda.';
+            statusMessage.style.color = 'var(--accent-red)';
+        }
+
+        // ================================================================
+        // LOG
+        // ================================================================
+        console.log('🚀 SALINK Loading Page');
+        console.log('📌 Tema:', savedTheme);
+        console.log('📊 Status: Loading...');
+        console.log('👤 User:', localStorage.getItem('salink_user') ? 'Terdeteksi' : 'Belum login');
+    </script>
+</body>
+</html>
