@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SALINK - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ================================================================
+           THEME VARIABLES - SAMA DENGAN DASHBOARD
+           ================================================================ */
+        :root {
+            /* DARK MODE (default) */
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: rgba(22, 27, 34, 0.92);
+            --bg-input: rgba(22, 27, 34, 0.6);
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --border-color: #30363d;
+            --shadow-color: rgba(0,0,0,0.4);
+            --accent-blue: #58a6ff;
+            --accent-blue-dark: #1f6feb;
+            --accent-blue-gradient: linear-gradient(135deg, #58a6ff, #1f6feb);
+            --accent-red: #f85149;
+            --accent-green: #3fb950;
+            --toggle-bg: #30363d;
+            --toggle-thumb: #58a6ff;
+            --input-border: #30363d;
+            --input-focus: #58a6ff;
+            --card-border: rgba(255,255,255,0.06);
+        }
+
+        /* ===== LIGHT MODE ===== */
+        [data-theme="light"] {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #e8edf2;
+            --bg-card: rgba(255, 255, 255, 0.92);
+            --bg-input: rgba(0,0,0,0.04);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #6a6a8a;
+            --border-color: #d0d7de;
+            --shadow-color: rgba(0,0,0,0.08);
+            --accent-blue: #4facfe;
+            --accent-blue-dark: #00c6fb;
+            --accent-blue-gradient: linear-gradient(135deg, #4facfe, #00c6fb);
+            --accent-red: #e31837;
+            --accent-green: #2ea44f;
+            --toggle-bg: #d0d7de;
+            --toggle-thumb: #4facfe;
+            --input-border: #dce1e8;
+            --input-focus: #4facfe;
+            --card-border: rgba(0,0,0,0.04);
+        }
+
+        /* ================================================================
+           BASE STYLES
+           ================================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ================================================================
+           CONTAINER
+           ================================================================ */
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 32px 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px var(--shadow-color);
+            animation: fadeIn 0.5s ease;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ================================================================
+           HEADER
+           ================================================================ */
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .login-logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 12px;
+            background: var(--accent-blue-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(88, 166, 255, 0.3);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .login-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* ================================================================
+           THEME TOGGLE DI LOGIN
+           ================================================================ */
+        .theme-toggle-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--toggle-bg);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .theme-toggle.active { background: rgba(88, 166, 255, 0.3); }
+        .theme-toggle .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--toggle-thumb);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(88, 166, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+        }
+        .theme-toggle.active .toggle-thumb { left: 22px; }
+        .theme-toggle .toggle-thumb i { color: #fff; }
+
+        /* ================================================================
+           TAB SWITCHER
+           ================================================================ */
+        .tab-switcher {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-input);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+
+        /* ================================================================
+           FORM
+           ================================================================ */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .form-group .input-wrapper {
+            position: relative;
+        }
+
+        .form-group .input-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            background: var(--bg-input);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: var(--text-primary);
+        }
+
+        /* ================================================================
+           BUTTONS
+           ================================================================ */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ================================================================
+           CLEAR DATA BUTTON
+           ================================================================ */
+        .clear-data-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-clear-data {
+            flex: 1;
+            padding: 8px 14px;
+            background: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 100px;
+        }
+
+        .btn-clear-data:hover {
+            background: rgba(248, 81, 73, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-clear-data:active {
+            transform: scale(0.95);
+        }
+
+        .btn-clear-data.clear-all {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .btn-clear-data.clear-all:hover {
+            background: rgba(248, 81, 73, 0.2);
+        }
+
+        /* ================================================================
+           MESSAGE / TOAST
+           ================================================================ */
+        .message-container {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-container.show {
+            display: flex;
+        }
+
+        .message-container.success {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(63, 185, 80, 0.2);
+        }
+
+        .message-container.error {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(248, 81, 73, 0.2);
+        }
+
+        .message-container.info {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(88, 166, 255, 0.2);
+        }
+
+        /* ================================================================
+           FOOTER TEXT
+           ================================================================ */
+        .login-footer {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .login-footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ================================================================
+           RESPONSIVE
+           ================================================================ */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 24px 18px;
+            }
+
+            .login-title {
+                font-size: 1.2rem;
+            }
+
+            .login-logo {
+                width: 56px;
+                height: 56px;
+                font-size: 1.5rem;
+            }
+
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+
+            .form-group input {
+                padding: 10px 14px 10px 36px;
+                font-size: 0.8rem;
+            }
+
+            .btn-submit {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            .btn-clear-data {
+                font-size: 0.65rem;
+                padding: 6px 10px;
+                min-width: 80px;
+            }
+
+            .clear-data-section {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-container {
+                padding: 18px 12px;
+            }
+
+            .login-title {
+                font-size: 1rem;
+            }
+
+            .login-logo {
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 20px;
+            }
+            .theme-toggle .toggle-thumb {
+                width: 14px;
+                height: 14px;
+                font-size: 0.45rem;
+            }
+            .theme-toggle.active .toggle-thumb {
+                left: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <!-- Theme Toggle -->
+        <div class="theme-toggle-wrapper">
+            <div class="theme-toggle" id="themeToggle">
+                <div class="toggle-thumb" id="toggleThumb">
+                    <i class="fas fa-moon" id="toggleIcon"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="login-header">
+            <div class="login-logo">
+                <i class="fas fa-bell"></i>
+            </div>
+            <h1 class="login-title">SALINK</h1>
+            <p class="login-subtitle">Sistem Peringatan Darurat Masyarakat</p>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="tab-switcher">
+            <button class="tab-btn active" data-tab="signin" id="tabSignin">
+                <i class="fas fa-sign-in-alt"></i> Masuk
+            </button>
+            <button class="tab-btn" data-tab="signup" id="tabSignup">
+                <i class="fas fa-user-plus"></i> Daftar
+            </button>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- FORM SIGN IN -->
+        <!-- ============================================================ -->
+        <form id="signinForm" class="auth-form">
+            <div class="form-group">
+                <label>Username / Email</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="signinUsername" placeholder="Masukkan username atau email" autocomplete="username">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signinPassword" placeholder="Masukkan password" autocomplete="current-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('signinPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="signinBtn">
+                <i class="fas fa-sign-in-alt"></i> Masuk
+            </button>
+        </form>
+
+        <!-- ============================================================ -->
+        <!-- FORM SIGN UP -->
+        <!-- ============================================================ -->
+        <form id="signupForm" class="auth-form" style="display: none;">
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="signupFullName" placeholder="Masukkan nama lengkap" autocomplete="name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Username</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-at"></i>
+                    <input type="text" id="signupUsername" placeholder="Buat username unik" autocomplete="username">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="signupEmail" placeholder="Masukkan email aktif" autocomplete="email">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupPassword" placeholder="Buat password (min. 6 karakter)" autocomplete="new-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Konfirmasi Password</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-shield-alt"></i>
+                    <input type="password" id="signupConfirmPassword" placeholder="Ulangi password" autocomplete="new-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="signupBtn">
+                <i class="fas fa-user-plus"></i> Daftar Sekarang
+            </button>
+        </form>
+
+        <!-- ============================================================ -->
+        <!-- MESSAGE CONTAINER -->
+        <!-- ============================================================ -->
+        <div class="message-container" id="messageContainer"></div>
+
+        <!-- ============================================================ -->
+        <!-- CLEAR DATA BUTTONS -->
+        <!-- ============================================================ -->
+        <div class="clear-data-section">
+            <button class="btn-clear-data" onclick="clearUserData()">
+                <i class="fas fa-user-slash"></i> Hapus User Saya
+            </button>
+            <button class="btn-clear-data clear-all" onclick="clearAllData()">
+                <i class="fas fa-trash-alt"></i> Reset Semua Data
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>&copy; 2026 SALINK. Sistem Peringatan Darurat Masyarakat</p>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // THEME TOGGLE - SAMA PERSIS DENGAN DASHBOARD
+        // ================================================================
+        let currentTheme = localStorage.getItem('salink_theme') || 'dark';
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (theme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.classList.add('active');
+                toggleIcon.className = 'fas fa-sun';
+            } else {
+                html.removeAttribute('data-theme');
+                themeToggle.classList.remove('active');
+                toggleIcon.className = 'fas fa-moon';
+            }
+            localStorage.setItem('salink_theme', theme);
+            currentTheme = theme;
+        }
+
+        applyTheme(currentTheme);
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        // ================================================================
+        // TOGGLE PASSWORD VISIBILITY
+        // ================================================================
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        // ================================================================
+        // TAB SWITCHER
+        // ================================================================
+        const tabSignin = document.getElementById('tabSignin');
+        const tabSignup = document.getElementById('tabSignup');
+        const signinForm = document.getElementById('signinForm');
+        const signupForm = document.getElementById('signupForm');
+        const messageContainer = document.getElementById('messageContainer');
+
+        function switchTab(tab) {
+            tabSignin.classList.toggle('active', tab === 'signin');
+            tabSignup.classList.toggle('active', tab === 'signup');
+            signinForm.style.display = tab === 'signin' ? 'block' : 'none';
+            signupForm.style.display = tab === 'signup' ? 'block' : 'none';
+            hideMessage();
+        }
+
+        tabSignin.addEventListener('click', () => switchTab('signin'));
+        tabSignup.addEventListener('click', () => switchTab('signup'));
+
+        // ================================================================
+        // MESSAGE FUNCTIONS
+        // ================================================================
+        function showMessage(message, type = 'info') {
+            messageContainer.textContent = message;
+            messageContainer.className = `message-container show ${type}`;
+        }
+
+        function hideMessage() {
+            messageContainer.className = 'message-container';
+            messageContainer.textContent = '';
+        }
+
+        // ================================================================
+        // VALIDATION
+        // ================================================================
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validateUsername(username) {
+            return /^[a-zA-Z0-9_]{3,20}$/.test(username);
+        }
+
+        // ================================================================
+        // SIGN IN
+        // ================================================================
+        document.getElementById('signinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('signinUsername').value.trim();
+            const password = document.getElementById('signinPassword').value.trim();
+
+            if (!username || !password) {
+                showMessage('⚠️ Harap isi semua field!', 'error');
+                return;
+            }
+
+            // Ambil data user dari localStorage
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            
+            // Cari user berdasarkan username atau email
+            const user = users.find(u => 
+                (u.username === username || u.email === username) && u.password === password
+            );
+
+            if (user) {
+                // Simpan user yang login
+                localStorage.setItem('salink_user', JSON.stringify(user));
+                showMessage('✅ Login berhasil! Mengalihkan...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 800);
+            } else {
+                // Cek apakah username ada
+                const userExists = users.find(u => u.username === username || u.email === username);
+                if (userExists) {
+                    showMessage('❌ Password salah! Silakan coba lagi.', 'error');
+                } else {
+                    showMessage('❌ Username atau email tidak ditemukan!', 'error');
+                }
+            }
+        });
+
+        // ================================================================
+        // SIGN UP
+        // ================================================================
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fullName = document.getElementById('signupFullName').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const confirmPassword = document.getElementById('signupConfirmPassword').value.trim();
+
+            // Validasi
+            if (!fullName || !username || !email || !password || !confirmPassword) {
+                showMessage('⚠️ Harap isi semua field!', 'error');
+                return;
+            }
+
+            if (!validateUsername(username)) {
+                showMessage('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showMessage('⚠️ Email tidak valid!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('⚠️ Password minimal 6 karakter!', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('⚠️ Password dan konfirmasi password tidak sama!', 'error');
+                return;
+            }
+
+            // Ambil data user dari localStorage
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+
+            // Cek duplikat username
+            if (users.find(u => u.username === username)) {
+                showMessage('⚠️ Username sudah digunakan!', 'error');
+                return;
+            }
+
+            // Cek duplikat email
+            if (users.find(u => u.email === email)) {
+                showMessage('⚠️ Email sudah terdaftar!', 'error');
+                return;
+            }
+
+            // Buat user baru
+            const newUser = {
+                fullName: fullName,
+                username: username,
+                email: email,
+                password: password,
+                gender: 'male',
+                phone: '',
+                country: 'Indonesia',
+                province: '',
+                city: '',
+                district: '',
+                village: '',
+                address: '',
+                bio: '',
+                mapLink: '',
+                profilePicture: null,
+                joinedDate: new Date().toLocaleString('id-ID', { 
+                    weekday: 'long',
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+
+            users.push(newUser);
+            localStorage.setItem('salink_users', JSON.stringify(users));
+
+            // Auto login
+            localStorage.setItem('salink_user', JSON.stringify(newUser));
+
+            showMessage('✅ Pendaftaran berhasil! Mengalihkan...', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 800);
+        });
+
+        // ================================================================
+        // CLEAR DATA FUNCTIONS
+        // ================================================================
+        function clearUserData() {
+            if (confirm('⚠️ Hapus data user yang sedang login? Data user lain tetap tersimpan.')) {
+                localStorage.removeItem('salink_user');
+                showMessage('✅ Data user Anda berhasil dihapus!', 'success');
+                
+                // Refresh form
+                document.getElementById('signinUsername').value = '';
+                document.getElementById('signinPassword').value = '';
+                document.getElementById('signupFullName').value = '';
+                document.getElementById('signupUsername').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signupConfirmPassword').value = '';
+                
+                setTimeout(() => {
+                    hideMessage();
+                }, 3000);
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ YAKIN ingin menghapus SEMUA data? Ini akan mereset semua pengaturan, user, dan postingan!')) {
+                // Hapus semua data aplikasi
+                localStorage.removeItem('salink_user');
+                localStorage.removeItem('salink_users');
+                localStorage.removeItem('salink_posts');
+                localStorage.removeItem('salink_theme');
+                localStorage.removeItem('salink_installed');
+                
+                showMessage('✅ Semua data berhasil direset ke default!', 'success');
+                
+                // Refresh form
+                document.getElementById('signinUsername').value = '';
+                document.getElementById('signinPassword').value = '';
+                document.getElementById('signupFullName').value = '';
+                document.getElementById('signupUsername').value = '';
+                document.getElementById('signupEmail').value = '';
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signupConfirmPassword').value = '';
+                
+                // Reset theme ke dark
+                applyTheme('dark');
+                
+                setTimeout(() => {
+                    hideMessage();
+                    showMessage('🔄 Halaman akan refresh dalam 2 detik...', 'info');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                }, 2000);
+            }
+        }
+
+        // ================================================================
+        // ENTER KEY SUPPORT
+        // ================================================================
+        document.querySelectorAll('.auth-form input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const form = this.closest('.auth-form');
+                    if (form) {
+                        form.dispatchEvent(new Event('submit'));
+                    }
+                }
+            });
+        });
+
+        // ================================================================
+        // CEK APAKAH SUDAH LOGIN
+        // ================================================================
+        const loggedInUser = localStorage.getItem('salink_user');
+        if (loggedInUser) {
+            try {
+                const user = JSON.parse(loggedInUser);
+                // Tampilkan pesan jika sudah login
+                setTimeout(() => {
+                    showMessage(`👋 Selamat datang kembali, ${user.fullName}! Mengalihkan...`, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                }, 500);
+            } catch (e) {
+                localStorage.removeItem('salink_user');
+            }
+        }
+
+        console.log('🔐 SALINK Login Page');
+        console.log('📌 Tema:', currentTheme);
+        console.log('🗑️ Tombol "Hapus Data" tersedia di bawah form');
+        console.log('📊 Data tersimpan di Local Storage:');
+        console.log('  - salink_user: data user aktif');
+        console.log('  - salink_users: daftar semua user');
+        console.log('  - salink_posts: daftar postingan');
+        console.log('  - salink_theme: tema yang dipilih');
+    </script>
+</body>
+</html>
