@@ -92,17 +92,14 @@
            ================================================================ */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
         @keyframes shiver { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-8deg); } 40% { transform: rotate(8deg); } 60% { transform: rotate(-6deg); } 80% { transform: rotate(6deg); } }
-        @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-        @keyframes socialFloat { 0%, 100% { transform: translateY(0px); box-shadow: 0 4px 15px rgba(88,166,255,0.2); } 50% { transform: translateY(-8px); box-shadow: 0 8px 30px rgba(88,166,255,0.4); } }
-        @keyframes socialZoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
         @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
+        @keyframes socialFloat { 0%, 100% { transform: translateY(0px); box-shadow: 0 4px 15px rgba(88,166,255,0.2); } 50% { transform: translateY(-8px); box-shadow: 0 8px 30px rgba(88,166,255,0.4); } }
 
         /* ================================================================
-           HEADER - SAMA DENGAN DASHBOARD
+           HEADER
            ================================================================ */
         .app-bar {
             position: fixed;
@@ -130,6 +127,7 @@
             color: var(--text-primary);
             font-size: 1rem;
             cursor: pointer;
+            text-decoration: none;
         }
         .app-title .bell-icon { font-size: 1.2rem; color: var(--accent-blue); animation: shiver 2s ease-in-out infinite; }
         .app-title span { font-size: 1rem; }
@@ -159,7 +157,7 @@
         .user-btn i { font-size: 1rem; }
 
         /* ================================================================
-           THEME TOGGLE - SAMA PERSIS DENGAN DASHBOARD
+           THEME TOGGLE
            ================================================================ */
         .theme-toggle {
             position: relative;
@@ -188,11 +186,11 @@
             justify-content: center;
             font-size: 0.55rem;
         }
-        .theme-toggle.active .toggle-thumb { left: 22px; background: var(--toggle-thumb); }
+        .theme-toggle.active .toggle-thumb { left: 22px; }
         .theme-toggle .toggle-thumb i { color: #fff; }
 
         /* ================================================================
-           BOTTOM NAVIGATION - SAMA DENGAN DASHBOARD
+           BOTTOM NAVIGATION
            ================================================================ */
         .bottom-nav {
             position: fixed;
@@ -235,6 +233,8 @@
         .nav-item-bottom.active { color: var(--accent-blue); }
         .nav-item-bottom.active i { transform: translateY(-2px); text-shadow: 0 0 20px rgba(88, 166, 255, 0.3); }
         .nav-item-bottom:hover { color: var(--accent-blue); }
+        .nav-item-bottom.disabled { opacity: 0.4; cursor: not-allowed; }
+        .nav-item-bottom.disabled:hover { color: var(--text-muted); }
 
         /* ================================================================
            MAIN CONTENT
@@ -256,8 +256,7 @@
         }
         .profile-avatar-large:hover { transform: scale(1.03); }
         .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-name { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: all 0.3s; }
-        .profile-name:hover { color: var(--accent-blue); }
+        .profile-name { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); cursor: default; }
         .profile-username { font-size: 0.8rem; color: var(--text-muted); cursor: default; }
         .profile-bio { font-size: 0.75rem; color: var(--text-secondary); margin-top: 6px; cursor: default; }
 
@@ -274,13 +273,15 @@
             display: inline-flex; align-items: center; gap: 6px; background: var(--accent-blue-gradient); color: #fff; border: none; padding: 8px 24px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3); transition: all 0.3s; text-decoration: none;
         }
         .profile-pesan-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(88, 166, 255, 0.4); }
+        .profile-pesan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
         .profile-invite-btn {
             display: inline-flex; align-items: center; gap: 6px; background: var(--bg-input); color: var(--accent-blue); border: 1px solid var(--accent-blue); padding: 8px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.3s; text-decoration: none;
         }
         .profile-invite-btn:hover { background: var(--bg-card); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(88, 166, 255, 0.1); }
+        .profile-invite-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
         /* ================================================================
-           PROFILE NAVBAR - HANYA TEMAN & BIODATA (READ ONLY)
+           PROFILE NAVBAR - READ ONLY
            ================================================================ */
         .profile-navbar { display: block; margin-bottom: 12px; }
         .profile-nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--bg-card); padding: 8px; border-radius: 12px; border: 1px solid var(--border-color); }
@@ -290,7 +291,7 @@
         .profile-nav-item:hover { background: var(--bg-card); border-color: var(--accent-blue); color: var(--accent-blue); transform: translateY(-2px); }
         .profile-nav-item span:first-child { font-size: 1.4rem; }
         .profile-nav-item span:last-child { font-size: 0.6rem; }
-        .profile-nav-item.disabled { opacity: 0.5; cursor: not-allowed; }
+        .profile-nav-item.disabled { opacity: 0.4; cursor: not-allowed; }
         .profile-nav-item.disabled:hover { transform: none; border-color: transparent; background: var(--bg-input); color: var(--text-muted); }
 
         /* ================================================================
@@ -369,6 +370,7 @@
         .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
         .post-action.share { color: var(--text-muted); }
         .post-action.share:hover { color: #4cc9f0; }
+        .post-action.delete { display: none; }
 
         .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
         .comment { display: flex; flex-direction: column; margin-bottom: 8px; padding: 6px 8px; background: var(--bg-input); border-radius: 8px; transition: background 0.3s ease; }
@@ -460,21 +462,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: var(--bg-input);
             border: 2px solid var(--border-color);
             color: var(--text-primary);
             text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 1.3rem;
+            transition: all 0.4s;
             position: relative;
             box-shadow: 0 4px 15px var(--shadow-light);
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.5;
         }
         .social-link:hover { transform: none; }
+        .social-link .social-tooltip {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            background: var(--modal-bg);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.55rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
 
         /* ================================================================
            FOOTER
@@ -514,7 +532,7 @@
         .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
 
         .modal-content {
-            background: var(--modal-bg);
+            background: var(--bg-secondary);
             border-radius: 20px;
             max-width: 500px;
             width: 100%;
@@ -531,16 +549,6 @@
         .modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         .modal-content::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
 
-        .modal-content .modal-body-scroll {
-            overflow-y: auto;
-            max-height: calc(85vh - 140px);
-            padding-right: 4px;
-            margin-right: -4px;
-        }
-        .modal-content .modal-body-scroll::-webkit-scrollbar { width: 3px; }
-        .modal-content .modal-body-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        .modal-content .modal-body-scroll::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -551,7 +559,7 @@
             flex-shrink: 0;
             position: sticky;
             top: 0;
-            background: var(--modal-bg);
+            background: var(--bg-secondary);
             z-index: 2;
             border-radius: 18px 18px 0 0;
         }
@@ -565,7 +573,7 @@
             flex-shrink: 0;
             position: sticky;
             bottom: 0;
-            background: var(--modal-bg);
+            background: var(--bg-secondary);
             z-index: 2;
             border-radius: 0 0 18px 18px;
             padding-bottom: 4px;
@@ -655,7 +663,7 @@
             width: 90%;
         }
         .toast {
-            background: var(--modal-bg);
+            background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 12px 16px;
@@ -676,6 +684,47 @@
         .toast .toast-close:hover { color: var(--text-primary); }
 
         /* ================================================================
+           PREVIEW OVERLAY
+           ================================================================ */
+        .preview-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .preview-overlay.active { display: flex; animation: fadeIn 0.4s ease; }
+        .preview-overlay-content {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            max-width: 400px;
+            width: 100%;
+            padding: 30px 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px var(--shadow-color);
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+        .preview-overlay-content .overlay-icon { width: 70px; height: 70px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent-blue-gradient); box-shadow: 0 0 30px rgba(88, 166, 255, 0.3); }
+        .preview-overlay-content .overlay-icon i { font-size: 2rem; color: #fff; }
+        .preview-overlay-content h2 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text-primary); }
+        .preview-overlay-content p { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+        .overlay-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .overlay-buttons button { padding: 10px 24px; border-radius: 10px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.3s; min-width: 120px; }
+        .overlay-buttons .btn-login { background: var(--accent-blue-gradient); color: #fff; box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3); }
+        .overlay-buttons .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(88, 166, 255, 0.4); }
+        .overlay-buttons .btn-cancel { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .overlay-buttons .btn-cancel:hover { background: var(--bg-card); }
+
+        /* ================================================================
            RESPONSIVE
            ================================================================ */
         @media (max-width: 480px) {
@@ -689,7 +738,7 @@
             .profile-avatar-large { width: 70px; height: 70px; font-size: 2rem; }
             .profile-name { font-size: 1rem; }
             .profile-nav-grid { grid-template-columns: repeat(4, 1fr); }
-            .social-link { width: 38px; height: 38px; font-size: 1rem; }
+            .social-link { width: 42px; height: 42px; font-size: 1.1rem; }
             .social-links { gap: 12px; padding: 10px 0; }
             .app-footer { padding: 12px 10px; }
             .bio-data-content { grid-template-columns: 1fr; }
@@ -704,7 +753,7 @@
             .nav-item-bottom { min-width: 38px; padding: 2px 3px; }
             .nav-item-bottom i { font-size: 0.95rem; }
             .nav-item-bottom span { font-size: 0.45rem; }
-            .social-link { width: 34px; height: 34px; font-size: 0.9rem; }
+            .social-link { width: 38px; height: 38px; font-size: 1rem; }
             .theme-toggle { width: 36px; height: 20px; }
             .theme-toggle .toggle-thumb { width: 14px; height: 14px; font-size: 0.45rem; }
             .theme-toggle.active .toggle-thumb { left: 18px; }
@@ -715,10 +764,10 @@
 
     <!-- ===== HEADER ===== -->
     <header class="app-bar">
-        <div class="app-title" id="appTitle">
+        <a href="dashboard.html" class="app-title" id="appTitle">
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
-        </div>
+        </a>
         <div class="header-center">
             <div class="theme-toggle" id="themeToggle">
                 <div class="toggle-thumb" id="toggleThumb">
@@ -727,11 +776,30 @@
             </div>
         </div>
         <div class="header-right">
-            <div class="user-btn" id="userBtn">
+            <a href="dashboard.html" class="user-btn" id="userBtn">
                 <i class="fas fa-user"></i>
-            </div>
+            </a>
         </div>
     </header>
+
+    <!-- ===== PREVIEW OVERLAY ===== -->
+    <div class="preview-overlay" id="previewOverlay">
+        <div class="preview-overlay-content">
+            <div class="overlay-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2>Mode Preview</h2>
+            <p>Anda sedang melihat profil dalam mode baca. Untuk dapat berinteraksi penuh, silakan masuk atau daftar terlebih dahulu.</p>
+            <div class="overlay-buttons">
+                <button class="btn-login" id="overlayLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+                </button>
+                <button class="btn-cancel" id="overlayCancelBtn">
+                    <i class="fas fa-times"></i> Tutup
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content" id="mainContent">
@@ -764,10 +832,10 @@
 
         <!-- Profile Actions - PESAN & INVITE -->
         <div class="profile-actions">
-            <button class="profile-pesan-btn" id="profilePesanBtn">
+            <button class="profile-pesan-btn" id="profilePesanBtn" disabled>
                 <i class="fas fa-paper-plane"></i> PESAN
             </button>
-            <button class="profile-invite-btn" id="profileInviteBtn">
+            <button class="profile-invite-btn" id="profileInviteBtn" disabled>
                 <i class="fas fa-user-plus"></i> INVITE
             </button>
         </div>
@@ -835,19 +903,19 @@
             <i class="fas fa-home"></i>
             <span>Home</span>
         </a>
-        <div class="nav-item-bottom disabled" style="opacity:0.5;cursor:not-allowed;">
+        <div class="nav-item-bottom disabled">
             <i class="fas fa-store"></i>
             <span>Toko</span>
         </div>
-        <div class="nav-item-bottom disabled" style="opacity:0.5;cursor:not-allowed;">
+        <div class="nav-item-bottom disabled">
             <i class="fas fa-user-plus"></i>
             <span>Invite</span>
         </div>
-        <div class="nav-item-bottom disabled" style="opacity:0.5;cursor:not-allowed;">
+        <div class="nav-item-bottom disabled">
             <i class="fas fa-bell"></i>
             <span>Notif</span>
         </div>
-        <a href="#" class="nav-item-bottom active">
+        <a href="#" class="nav-item-bottom active" id="bottomProfileNav">
             <i class="fas fa-user"></i>
             <span>Profil</span>
         </a>
@@ -947,7 +1015,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body modal-body-scroll" id="biodataModalBody"></div>
+            <div class="modal-body" id="biodataModalBody"></div>
             <div class="modal-footer">
                 <button class="btn-close-modal" onclick="closeBiodataModal()">Tutup</button>
             </div>
@@ -956,16 +1024,94 @@
 
     <script>
         // ================================================================
-        // DATA PROFIL USER - DIAMBIL DARI URL PARAMETER
+        // KONFIGURASI
         // ================================================================
         
+        let currentUser = null;
         let profileUser = null;
-        let currentViewer = null;
         let posts = [];
         let friends = [];
-        let notificationIdCounter = 0;
+        let toastTimeout = null;
+        let isPreviewMode = true;
 
-        // Fungsi untuk mengambil data dari localStorage
+        // ================================================================
+        // THEME TOGGLE
+        // ================================================================
+        
+        let currentTheme = localStorage.getItem('salink_theme') || 'dark';
+
+        function applyTheme(theme) {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const metaThemeColor = document.getElementById('themeColorMeta');
+            
+            if (theme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeToggle.classList.add('active');
+                toggleIcon.className = 'fas fa-sun';
+                if (metaThemeColor) metaThemeColor.content = '#f0f4f8';
+            } else {
+                html.removeAttribute('data-theme');
+                themeToggle.classList.remove('active');
+                toggleIcon.className = 'fas fa-moon';
+                if (metaThemeColor) metaThemeColor.content = '#0d1117';
+            }
+            localStorage.setItem('salink_theme', theme);
+            currentTheme = theme;
+        }
+
+        applyTheme(currentTheme);
+
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        // ================================================================
+        // TOAST SYSTEM
+        // ================================================================
+        
+        function showToast(title, message, icon = 'fa-info-circle') {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            clearTimeout(toastTimeout);
+            
+            const container = document.getElementById('toastContainer') || (() => {
+                const c = document.createElement('div');
+                c.id = 'toastContainer';
+                c.className = 'toast-container';
+                document.body.appendChild(c);
+                return c;
+            })();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="fas ${icon}"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close"><i class="fas fa-times"></i></button>
+            `;
+            
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            });
+            
+            container.appendChild(toast);
+            
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }, 5000);
+        }
+
+        // ================================================================
+        // GET DATA FUNCTIONS
+        // ================================================================
+        
         function getUsers() {
             try {
                 return JSON.parse(localStorage.getItem('salink_users') || '[]');
@@ -990,16 +1136,44 @@
             }
         }
 
-        function saveNotifications(notif) {
+        function getFriends() {
             try {
-                const existing = getNotifications();
-                existing.push(notif);
-                localStorage.setItem('salink_notifications', JSON.stringify(existing));
-            } catch (e) {}
+                const saved = localStorage.getItem('salink_friends');
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+                return [];
+            } catch (e) {
+                return [];
+            }
         }
 
         // ================================================================
-        // LOAD DATA DARI URL PARAMETER
+        // TIME AGO
+        // ================================================================
+        
+        function getTimeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            const weeks = Math.floor(days / 7);
+            const months = Math.floor(days / 30);
+            const years = Math.floor(days / 365);
+            
+            if (seconds < 60) return 'Baru saja';
+            if (minutes < 60) return `${minutes} menit yang lalu`;
+            if (minutes < 120) return '1 jam yang lalu';
+            if (hours < 24) return `${hours} jam yang lalu`;
+            if (days < 7) return `${days} hari yang lalu`;
+            if (weeks < 4) return `${weeks} minggu yang lalu`;
+            if (months < 12) return `${months} bulan yang lalu`;
+            return `${years} tahun yang lalu`;
+        }
+
+        // ================================================================
+        // LOAD PROFILE DATA
         // ================================================================
         
         function loadProfileFromURL() {
@@ -1067,122 +1241,20 @@
         }
 
         // ================================================================
-        // LOAD CURRENT VIEWER
+        // LOAD CURRENT USER
         // ================================================================
         
-        function loadCurrentViewer() {
+        function loadCurrentUser() {
             try {
                 const saved = localStorage.getItem('salink_user');
                 if (saved) {
-                    currentViewer = JSON.parse(saved);
-                }
-            } catch (e) {}
-        }
-
-        // ================================================================
-        // THEME TOGGLE - SAMA DENGAN DASHBOARD
-        // ================================================================
-        
-        let currentTheme = localStorage.getItem('salink_theme') || 'dark';
-
-        function applyTheme(theme) {
-            const html = document.documentElement;
-            const themeToggle = document.getElementById('themeToggle');
-            const toggleIcon = document.getElementById('toggleIcon');
-            const metaThemeColor = document.getElementById('themeColorMeta');
-            
-            if (theme === 'light') {
-                html.setAttribute('data-theme', 'light');
-                themeToggle.classList.add('active');
-                toggleIcon.className = 'fas fa-sun';
-                if (metaThemeColor) metaThemeColor.content = '#f0f4f8';
-            } else {
-                html.removeAttribute('data-theme');
-                themeToggle.classList.remove('active');
-                toggleIcon.className = 'fas fa-moon';
-                if (metaThemeColor) metaThemeColor.content = '#0d1117';
-            }
-            localStorage.setItem('salink_theme', theme);
-            currentTheme = theme;
-        }
-
-        applyTheme(currentTheme);
-
-        document.getElementById('themeToggle').addEventListener('click', function() {
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            applyTheme(newTheme);
-        });
-
-        // ================================================================
-        // TOAST SYSTEM
-        // ================================================================
-        
-        let toastTimeout = null;
-
-        function showToast(title, message, icon = 'fa-info-circle') {
-            document.querySelectorAll('.toast').forEach(t => t.remove());
-            clearTimeout(toastTimeout);
-            
-            const container = document.getElementById('toastContainer') || (() => {
-                const c = document.createElement('div');
-                c.id = 'toastContainer';
-                c.className = 'toast-container';
-                document.body.appendChild(c);
-                return c;
-            })();
-            
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `
-                <div class="toast-icon"><i class="fas ${icon}"></i></div>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-                <button class="toast-close"><i class="fas fa-times"></i></button>
-            `;
-            
-            toast.querySelector('.toast-close').addEventListener('click', () => {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 400);
-            });
-            
-            container.appendChild(toast);
-            
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 400);
-            }, 5000);
-        }
-
-        // ================================================================
-        // NAVIGATION
-        // ================================================================
-        
-        function goToDashboard() {
-            window.location.href = 'dashboard.html';
-        }
-
-        function openProfileUser(username) {
-            if (profileUser && username === profileUser.username) {
-                showToast('ℹ️ Info', 'Anda sedang melihat profil ini', 'fa-info-circle');
-                return;
-            }
-            
-            const users = getUsers();
-            let user = users.find(u => u.username === username);
-            
-            if (user) {
-                window.open(`profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
-            } else if (username) {
-                user = users.find(u => u.fullName === username);
-                if (user) {
-                    window.open(`profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
+                    currentUser = JSON.parse(saved);
+                    isPreviewMode = false;
                 } else {
-                    showToast('⚠️ Error', 'User tidak ditemukan', 'fa-exclamation-triangle');
+                    isPreviewMode = true;
                 }
-            } else {
-                showToast('⚠️ Error', 'Username tidak valid', 'fa-exclamation-triangle');
+            } catch (e) {
+                isPreviewMode = true;
             }
         }
 
@@ -1224,6 +1296,9 @@
             
             // Update user button
             updateUserBtn();
+            
+            // Update action buttons
+            updateActionButtons();
         }
 
         // ================================================================
@@ -1241,6 +1316,7 @@
                         friends = parsed;
                     }
                 } else {
+                    // Sample friends
                     const sampleFriends = [
                         { id: 1, owner: profileUser?.username || 'user', name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
                         { id: 2, owner: profileUser?.username || 'user', name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
@@ -1293,7 +1369,7 @@
                     mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
                 }
                 
-                const isLiked = currentViewer && post.likes && post.likes.includes(currentViewer.username);
+                const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
                 const specialBadge = post.isSpecial ? `<span style="background:rgba(88,166,255,0.15);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--accent-blue);margin-left:6px;">🚨 ${post.specialData?.type || 'Khusus'}</span>` : '';
                 
                 postEl.innerHTML = `
@@ -1385,8 +1461,8 @@
                         }).join('') : ''}
                     </div>
                     <div class="add-comment">
-                        <input type="text" class="comment-input" placeholder="Tulis komentar..." id="comment-input-${post.id}" ${currentViewer ? '' : 'disabled'}>
-                        <button class="send-comment" onclick="sendComment('${post.id}')" ${currentViewer ? '' : 'disabled'}>
+                        <input type="text" class="comment-input" placeholder="Tulis komentar..." id="comment-input-${post.id}" ${currentUser ? '' : 'disabled'}>
+                        <button class="send-comment" onclick="sendComment('${post.id}')" ${currentUser ? '' : 'disabled'}>
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
@@ -1408,7 +1484,8 @@
         }
 
         function showReplyInput(postId, commentId) {
-            if (!currentViewer) {
+            if (!currentUser) {
+                showPreviewOverlay();
                 showToast('🔒 Privasi', 'Silakan masuk untuk membalas komentar', 'fa-lock');
                 return;
             }
@@ -1448,7 +1525,8 @@
         }
 
         function sendComment(postId) {
-            if (!currentViewer) {
+            if (!currentUser) {
+                showPreviewOverlay();
                 showToast('🔒 Privasi', 'Silakan masuk untuk berkomentar', 'fa-lock');
                 return;
             }
@@ -1463,10 +1541,10 @@
             
             const comment = {
                 id: 'comment-' + Date.now(),
-                userId: currentViewer.username,
-                userFullName: currentViewer.fullName,
-                userGender: currentViewer.gender,
-                userProfilePic: currentViewer.profilePicture || null,
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
                 text: text,
                 timestamp: Date.now(),
                 replies: []
@@ -1478,13 +1556,14 @@
             savePostsToLocalStorage();
             renderProfilePosts();
             
-            sendNotification('comment', '💬 Komentar Baru', `${currentViewer.fullName} mengomentari postingan Anda`, currentViewer.fullName, postId);
+            sendNotification('comment', '💬 Komentar Baru', `${currentUser.fullName} mengomentari postingan Anda`, currentUser.fullName, postId);
             
             showToast('✅ Berhasil', 'Komentar terkirim!', 'fa-check-circle');
         }
 
         function sendReply(postId, commentId) {
-            if (!currentViewer) {
+            if (!currentUser) {
+                showPreviewOverlay();
                 showToast('🔒 Privasi', 'Silakan masuk untuk membalas', 'fa-lock');
                 return;
             }
@@ -1503,10 +1582,10 @@
             
             const reply = {
                 id: 'reply-' + Date.now(),
-                userId: currentViewer.username,
-                userFullName: currentViewer.fullName,
-                userGender: currentViewer.gender,
-                userProfilePic: currentViewer.profilePicture || null,
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
                 text: text,
                 timestamp: Date.now()
             };
@@ -1517,13 +1596,14 @@
             savePostsToLocalStorage();
             renderProfilePosts();
             
-            sendNotification('reply', '💬 Balasan Komentar', `${currentViewer.fullName} membalas komentar Anda`, currentViewer.fullName, postId);
+            sendNotification('reply', '💬 Balasan Komentar', `${currentUser.fullName} membalas komentar Anda`, currentUser.fullName, postId);
             
             showToast('✅ Berhasil', 'Balasan terkirim!', 'fa-check-circle');
         }
 
         function handleLike(postId) {
-            if (!currentViewer) {
+            if (!currentUser) {
+                showPreviewOverlay();
                 showToast('🔒 Privasi', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
                 return;
             }
@@ -1534,10 +1614,10 @@
             const post = posts[postIndex];
             if (!post.likes) post.likes = [];
             
-            const likeIndex = post.likes.indexOf(currentViewer.username);
+            const likeIndex = post.likes.indexOf(currentUser.username);
             if (likeIndex === -1) {
-                post.likes.push(currentViewer.username);
-                sendNotification('like', '❤️ Suka', `${currentViewer.fullName} menyukai postingan Anda`, currentViewer.fullName, postId);
+                post.likes.push(currentUser.username);
+                sendNotification('like', '❤️ Suka', `${currentUser.fullName} menyukai postingan Anda`, currentUser.fullName, postId);
             } else {
                 post.likes.splice(likeIndex, 1);
             }
@@ -1590,8 +1670,8 @@
                 type: type,
                 title: title,
                 message: message,
-                sender: sender || currentViewer?.fullName || 'Pengunjung',
-                senderUsername: currentViewer?.username || 'pengunjung',
+                sender: sender || currentUser?.fullName || 'Pengunjung',
+                senderUsername: currentUser?.username || 'pengunjung',
                 recipient: profileUser.username,
                 postId: postId || null,
                 timestamp: Date.now(),
@@ -1599,32 +1679,16 @@
                 soundKey: 'notifikasi'
             };
             
-            saveNotifications(notification);
+            saveNotificationToStorage(notification);
             console.log('📨 Notifikasi dikirim ke', profileUser.fullName, ':', title);
         }
 
-        // ================================================================
-        // GET TIME AGO
-        // ================================================================
-        
-        function getTimeAgo(timestamp) {
-            const diff = Date.now() - timestamp;
-            const seconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-            const weeks = Math.floor(days / 7);
-            const months = Math.floor(days / 30);
-            const years = Math.floor(days / 365);
-            
-            if (seconds < 60) return 'Baru saja';
-            if (minutes < 60) return `${minutes} menit yang lalu`;
-            if (minutes < 120) return '1 jam yang lalu';
-            if (hours < 24) return `${hours} jam yang lalu`;
-            if (days < 7) return `${days} hari yang lalu`;
-            if (weeks < 4) return `${weeks} minggu yang lalu`;
-            if (months < 12) return `${months} bulan yang lalu`;
-            return `${years} tahun yang lalu`;
+        function saveNotificationToStorage(notification) {
+            try {
+                const existing = getNotifications();
+                existing.push(notification);
+                localStorage.setItem('salink_notifications', JSON.stringify(existing));
+            } catch (e) {}
         }
 
         // ================================================================
@@ -1633,14 +1697,106 @@
         
         function updateUserBtn() {
             const userBtn = document.getElementById('userBtn');
-            if (currentViewer && currentViewer.profilePicture) {
-                userBtn.innerHTML = `<img src="${currentViewer.profilePicture}" alt="Profile">`;
-            } else if (currentViewer) {
-                userBtn.innerHTML = currentViewer.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            if (currentUser && currentUser.profilePicture) {
+                userBtn.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
+            } else if (currentUser) {
+                userBtn.innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
             } else {
                 userBtn.innerHTML = '<i class="fas fa-user"></i>';
             }
         }
+
+        // ================================================================
+        // UPDATE ACTION BUTTONS (PESAN & INVITE)
+        // ================================================================
+        
+        function updateActionButtons() {
+            const pesanBtn = document.getElementById('profilePesanBtn');
+            const inviteBtn = document.getElementById('profileInviteBtn');
+            
+            if (currentUser && profileUser && currentUser.username !== profileUser.username) {
+                // User lain melihat profil - aktif
+                pesanBtn.disabled = false;
+                inviteBtn.disabled = false;
+                pesanBtn.style.opacity = '1';
+                inviteBtn.style.opacity = '1';
+                pesanBtn.style.cursor = 'pointer';
+                inviteBtn.style.cursor = 'pointer';
+            } else if (currentUser && profileUser && currentUser.username === profileUser.username) {
+                // Pemilik profil melihat profil sendiri - nonaktif
+                pesanBtn.disabled = true;
+                inviteBtn.disabled = true;
+                pesanBtn.style.opacity = '0.5';
+                inviteBtn.style.opacity = '0.5';
+                pesanBtn.style.cursor = 'not-allowed';
+                inviteBtn.style.cursor = 'not-allowed';
+                pesanBtn.title = 'Anda tidak dapat mengirim pesan ke diri sendiri';
+                inviteBtn.title = 'Anda tidak dapat mengundang diri sendiri';
+            } else {
+                // Tidak login - nonaktif
+                pesanBtn.disabled = true;
+                inviteBtn.disabled = true;
+                pesanBtn.style.opacity = '0.5';
+                inviteBtn.style.opacity = '0.5';
+                pesanBtn.style.cursor = 'not-allowed';
+                inviteBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // ================================================================
+        // OPEN PROFILE USER
+        // ================================================================
+        
+        function openProfileUser(username) {
+            if (profileUser && username === profileUser.username) {
+                showToast('ℹ️ Info', 'Anda sedang melihat profil ini', 'fa-info-circle');
+                return;
+            }
+            
+            const users = getUsers();
+            let user = users.find(u => u.username === username);
+            
+            if (user) {
+                window.location.href = `profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`;
+            } else if (username) {
+                user = users.find(u => u.fullName === username);
+                if (user) {
+                    window.location.href = `profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`;
+                } else {
+                    showToast('⚠️ Error', 'User tidak ditemukan', 'fa-exclamation-triangle');
+                }
+            } else {
+                showToast('⚠️ Error', 'Username tidak valid', 'fa-exclamation-triangle');
+            }
+        }
+
+        // ================================================================
+        // PREVIEW OVERLAY
+        // ================================================================
+        
+        function showPreviewOverlay() {
+            document.getElementById('previewOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hidePreviewOverlay() {
+            document.getElementById('previewOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function redirectToLogin() {
+            window.location.href = 'login.html?redirect=profile';
+        }
+
+        document.getElementById('overlayLoginBtn').addEventListener('click', function() {
+            hidePreviewOverlay();
+            redirectToLogin();
+        });
+        
+        document.getElementById('overlayCancelBtn').addEventListener('click', hidePreviewOverlay);
+        document.getElementById('previewOverlay').addEventListener('click', function(e) {
+            if (e.target === this) hidePreviewOverlay();
+        });
 
         // ================================================================
         // MODAL FUNCTIONS
@@ -1913,6 +2069,11 @@
                 showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
                 return;
             }
+            if (!currentUser) {
+                showPreviewOverlay();
+                showToast('🔒 Privasi', 'Silakan masuk untuk melihat daftar teman', 'fa-lock');
+                return;
+            }
             openTemanModal();
         });
         
@@ -1920,6 +2081,11 @@
             e.preventDefault();
             if (!profileUser) {
                 showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
+                return;
+            }
+            if (!currentUser) {
+                showPreviewOverlay();
+                showToast('🔒 Privasi', 'Silakan masuk untuk melihat biodata', 'fa-lock');
                 return;
             }
             openBiodataModal();
@@ -1931,7 +2097,8 @@
         
         document.getElementById('profilePesanBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!currentViewer) {
+            if (!currentUser) {
+                showPreviewOverlay();
                 showToast('🔒 Privasi', 'Silakan masuk untuk mengirim pesan', 'fa-lock');
                 return;
             }
@@ -1939,7 +2106,7 @@
                 showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
                 return;
             }
-            if (currentViewer.username === profileUser.username) {
+            if (currentUser.username === profileUser.username) {
                 showToast('ℹ️ Info', 'Anda tidak dapat mengirim pesan ke diri sendiri', 'fa-info-circle');
                 return;
             }
@@ -1948,7 +2115,8 @@
         
         document.getElementById('profileInviteBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            if (!currentViewer) {
+            if (!currentUser) {
+                showPreviewOverlay();
                 showToast('🔒 Privasi', 'Silakan masuk untuk mengirim undangan', 'fa-lock');
                 return;
             }
@@ -1956,47 +2124,52 @@
                 showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
                 return;
             }
-            if (currentViewer.username === profileUser.username) {
+            if (currentUser.username === profileUser.username) {
                 showToast('ℹ️ Info', 'Anda tidak dapat mengundang diri sendiri', 'fa-info-circle');
                 return;
             }
             
-            sendNotification('invite', '📨 Undangan Berteman', `${currentViewer.fullName} ingin berteman dengan Anda`, currentViewer.fullName, null);
+            sendNotification('invite', '📨 Undangan Berteman', `${currentUser.fullName} ingin berteman dengan Anda`, currentUser.fullName, null);
             
             showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${profileUser.fullName}!`, 'fa-user-plus');
         });
 
         // ================================================================
-        // APP TITLE - Kembali ke dashboard
+        // BOTTOM NAV - PROFILE
         // ================================================================
         
-        document.getElementById('appTitle').addEventListener('click', function() {
-            goToDashboard();
-        });
-
-        // ================================================================
-        // USER BUTTON - Kembali ke dashboard
-        // ================================================================
-        
-        document.getElementById('userBtn').addEventListener('click', function() {
-            goToDashboard();
+        document.getElementById('bottomProfileNav').addEventListener('click', function(e) {
+            e.preventDefault();
+            // Refresh halaman profil
+            location.reload();
         });
 
         // ================================================================
         // INIT
         // ================================================================
         
-        loadCurrentViewer();
+        loadCurrentUser();
         loadProfileFromURL();
         renderProfile();
         updateUserBtn();
         
+        // Jika preview mode dan ada interaksi yang butuh login, tampilkan overlay
+        if (isPreviewMode) {
+            // Tampilkan preview badge di header? Tidak perlu, tapi kita tampilkan overlay jika klik tombol interaktif
+            document.querySelectorAll('.profile-stat-item, .profile-nav-item:not(.disabled), .post-action, .send-comment, .comment-input').forEach(el => {
+                if (el.getAttribute('onclick') && !el.getAttribute('onclick').includes('showPreviewOverlay')) {
+                    const originalClick = el.getAttribute('onclick');
+                    el.setAttribute('onclick', `if(!currentUser){showPreviewOverlay();showToast('🔒 Mode Preview','Silakan masuk untuk berinteraksi','fa-lock');return;} ${originalClick}`);
+                }
+            });
+        }
+        
         console.log('👤 Profile User Page - SALINK (Read Only)');
         console.log(`📌 Profil: ${profileUser?.fullName || 'Tidak ditemukan'}`);
-        console.log(`👀 Viewer: ${currentViewer?.fullName || 'Guest'}`);
+        console.log(`👀 Viewer: ${currentUser?.fullName || 'Guest'}`);
         console.log(`📝 Posts: ${posts.length}`);
         console.log(`👥 Friends: ${friends.length}`);
-        console.log('🔒 Mode: Read Only (Privasi)');
+        console.log(`🔒 Mode: ${isPreviewMode ? 'PREVIEW' : 'FULL'}`);
         console.log('✅ Fitur interaksi (Like, Komentar) hanya untuk pengunjung yang login');
         console.log('📨 Notifikasi akan dikirim ke pemilik profil saat ada interaksi');
         console.log('❌ Fitur yang DISEMBUNYIKAN: Buat Postingan, Sidebar, Search, Jual, Notif, Invite (bottom nav)');
