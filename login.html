@@ -77,16 +77,29 @@
            ================================================================ */
         .login-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             background: var(--bg-card);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 20px;
-            padding: 32px 28px;
+            padding: 28px 24px;
             border: 1px solid var(--border-color);
             box-shadow: 0 20px 60px var(--shadow-color);
             animation: fadeIn 0.5s ease;
             transition: background 0.3s ease, border-color 0.3s ease;
+            max-height: 98vh;
+            overflow-y: auto;
+        }
+
+        .login-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .login-container::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        .login-container::-webkit-scrollbar-thumb {
+            background: var(--accent-blue);
+            border-radius: 4px;
         }
 
         @keyframes fadeIn {
@@ -99,32 +112,32 @@
            ================================================================ */
         .login-header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
 
         .login-logo {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 12px;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 10px;
             background: var(--accent-blue-gradient);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #fff;
             box-shadow: 0 0 30px rgba(88, 166, 255, 0.3);
         }
 
         .login-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .login-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
         }
 
@@ -134,7 +147,7 @@
         .theme-toggle-wrapper {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .theme-toggle {
@@ -176,7 +189,7 @@
             background: var(--bg-input);
             border-radius: 12px;
             padding: 4px;
-            margin-bottom: 24px;
+            margin-bottom: 18px;
             border: 1px solid var(--border-color);
         }
 
@@ -188,7 +201,7 @@
             background: transparent;
             color: var(--text-muted);
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -204,19 +217,28 @@
             background: var(--bg-card);
         }
 
+        .tab-btn i {
+            margin-right: 6px;
+        }
+
         /* ================================================================
            FORM
            ================================================================ */
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
             color: var(--text-secondary);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+        }
+
+        .form-group label .required {
+            color: var(--accent-red);
+            margin-left: 2px;
         }
 
         .form-group .input-wrapper {
@@ -229,22 +251,39 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
-            padding: 12px 16px 12px 40px;
+            padding: 10px 14px 10px 38px;
             background: var(--bg-input);
             border: 1px solid var(--input-border);
             border-radius: 10px;
             color: var(--text-primary);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: all 0.3s;
             outline: none;
+            appearance: none;
+            -webkit-appearance: none;
         }
 
-        .form-group input:focus {
+        .form-group select {
+            padding-right: 32px;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e7681' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .form-group select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: var(--input-focus);
             box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
         }
@@ -253,11 +292,231 @@
             color: var(--text-muted);
         }
 
-        .form-group input:disabled {
+        .form-group input:disabled,
+        .form-group select:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
+        .form-group input.error,
+        .form-group select.error {
+            border-color: var(--accent-red);
+        }
+
+        .form-group input.success,
+        .form-group select.success {
+            border-color: var(--accent-green);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* ================================================================
+           GENDER OPTIONS
+           ================================================================ */
+        .gender-options {
+            display: flex;
+            gap: 10px;
+        }
+        .gender-option {
+            flex: 1;
+        }
+        .gender-option input {
+            display: none;
+        }
+        .gender-option label {
+            display: block;
+            padding: 8px 12px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.75rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        .gender-option input:checked+label {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border-color: var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+        .gender-option label:hover {
+            border-color: var(--accent-blue);
+        }
+
+        /* ================================================================
+           ADDRESS SECTION - E-KTP
+           ================================================================ */
+        .address-section {
+            background: var(--bg-input);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .address-section .address-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .address-section .address-label i {
+            color: var(--accent-blue);
+        }
+
+        .address-section .address-label .hint {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+
+        .address-section .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .address-section .form-group input,
+        .address-section .form-group select {
+            padding-left: 12px;
+        }
+
+        .address-section .form-group .input-wrapper i {
+            display: none;
+        }
+
+        /* ================================================================
+           MAP LINK UPLOAD
+           ================================================================ */
+        .map-upload-container {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 12px;
+            background: var(--bg-input);
+            transition: all 0.3s;
+        }
+
+        .map-upload-container:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+        }
+
+        .map-upload-container .input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .map-upload-container .input-group .map-icon {
+            color: var(--accent-blue);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .map-upload-container .input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            outline: none;
+        }
+
+        .map-upload-container .input-group input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .map-upload-container .input-group .clear-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 4px;
+            display: none;
+            transition: all 0.3s;
+        }
+        .map-upload-container .input-group .clear-btn:hover {
+            color: var(--accent-red);
+        }
+        .map-upload-container .input-group .clear-btn.show {
+            display: block;
+        }
+
+        .map-preview {
+            display: none;
+            margin-top: 8px;
+            padding: 8px 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .map-preview.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .map-preview .map-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: var(--accent-green);
+        }
+
+        .map-preview .map-info i {
+            font-size: 0.8rem;
+        }
+
+        .map-preview .map-link {
+            font-size: 0.6rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            word-break: break-all;
+            display: block;
+            margin-top: 3px;
+        }
+        .map-preview .map-link:hover {
+            text-decoration: underline;
+        }
+
+        .map-hint {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .map-hint a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+        .map-hint a:hover {
+            text-decoration: underline;
+        }
+
+        .map-hint ol {
+            margin: 3px 0 0 14px;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+        }
+
+        /* ================================================================
+           PASSWORD TOGGLE
+           ================================================================ */
         .password-toggle {
             position: absolute;
             right: 12px;
@@ -276,20 +535,65 @@
         }
 
         /* ================================================================
+           PROFILE UPLOAD
+           ================================================================ */
+        .profile-upload {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-preview {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent-blue);
+            margin: 0 auto 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-blue-gradient);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-preview:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-blue);
+        }
+
+        .profile-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-preview i {
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .upload-hint {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+        }
+
+        /* ================================================================
            BUTTONS
            ================================================================ */
         .btn-submit {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: var(--accent-blue-gradient);
             color: #fff;
             border: none;
             border-radius: 12px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+            margin-top: 4px;
         }
 
         .btn-submit:hover {
@@ -307,12 +611,16 @@
             transform: none !important;
         }
 
+        .btn-submit i {
+            margin-right: 6px;
+        }
+
         /* ================================================================
-           CLEAR DATA BUTTON
+           CLEAR DATA BUTTONS
            ================================================================ */
         .clear-data-section {
-            margin-top: 16px;
-            padding-top: 16px;
+            margin-top: 14px;
+            padding-top: 14px;
             border-top: 1px solid var(--border-color);
             display: flex;
             gap: 8px;
@@ -326,7 +634,7 @@
             border: 1px solid var(--accent-red);
             color: var(--accent-red);
             border-radius: 8px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
@@ -359,10 +667,10 @@
            MESSAGE / TOAST
            ================================================================ */
         .message-container {
-            margin-top: 12px;
+            margin-top: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             display: none;
             align-items: center;
             gap: 8px;
@@ -391,12 +699,80 @@
         }
 
         /* ================================================================
-           FOOTER TEXT
+           ERROR MESSAGE
+           ================================================================ */
+        .error-msg {
+            color: var(--accent-red);
+            font-size: 0.6rem;
+            margin-top: 3px;
+            display: none;
+        }
+        .error-msg.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* ================================================================
+           FORGOT PASSWORD & SWITCH LINKS
+           ================================================================ */
+        .forgot-link {
+            text-align: right;
+            margin-top: 2px;
+        }
+        .forgot-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.65rem;
+            transition: color 0.3s;
+        }
+        .forgot-link a:hover {
+            color: var(--accent-blue);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .switch-link a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 4px 0 10px 0;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .remember-me input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        /* ================================================================
+           FOOTER
            ================================================================ */
         .login-footer {
             text-align: center;
-            margin-top: 16px;
-            font-size: 0.7rem;
+            margin-top: 14px;
+            font-size: 0.6rem;
             color: var(--text-muted);
         }
 
@@ -405,7 +781,6 @@
             text-decoration: none;
             transition: all 0.3s;
         }
-
         .login-footer a:hover {
             text-decoration: underline;
         }
@@ -415,7 +790,8 @@
            ================================================================ */
         @media (max-width: 480px) {
             .login-container {
-                padding: 24px 18px;
+                padding: 20px 14px;
+                max-height: 100vh;
             }
 
             .login-title {
@@ -423,54 +799,64 @@
             }
 
             .login-logo {
-                width: 56px;
-                height: 56px;
+                width: 54px;
+                height: 54px;
                 font-size: 1.5rem;
             }
 
             .tab-btn {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
                 padding: 8px 12px;
             }
 
-            .form-group input {
-                padding: 10px 14px 10px 36px;
-                font-size: 0.8rem;
+            .form-group input,
+            .form-group select {
+                padding: 8px 12px 8px 34px;
+                font-size: 0.75rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-row-3 {
+                grid-template-columns: 1fr;
+                gap: 0;
             }
 
             .btn-submit {
-                padding: 12px;
-                font-size: 0.85rem;
+                padding: 10px;
+                font-size: 0.8rem;
             }
 
             .btn-clear-data {
-                font-size: 0.65rem;
+                font-size: 0.6rem;
                 padding: 6px 10px;
-                min-width: 80px;
+                min-width: 70px;
             }
 
             .clear-data-section {
                 flex-direction: column;
             }
-        }
 
-        @media (max-width: 380px) {
-            .login-container {
-                padding: 18px 12px;
+            .gender-options {
+                flex-direction: column;
+                gap: 6px;
             }
 
-            .login-title {
-                font-size: 1rem;
+            .login-options {
+                flex-direction: column;
+                gap: 4px;
+                align-items: flex-start;
             }
 
-            .login-logo {
-                width: 48px;
-                height: 48px;
-                font-size: 1.2rem;
+            .address-section {
+                padding: 10px;
             }
 
             .theme-toggle {
-                width: 36px;
+                width: 38px;
                 height: 20px;
             }
             .theme-toggle .toggle-thumb {
@@ -480,6 +866,51 @@
             }
             .theme-toggle.active .toggle-thumb {
                 left: 18px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .login-container {
+                padding: 14px 10px;
+            }
+
+            .login-title {
+                font-size: 1rem;
+            }
+
+            .login-logo {
+                width: 46px;
+                height: 46px;
+                font-size: 1.2rem;
+            }
+
+            .tab-btn {
+                font-size: 0.65rem;
+                padding: 6px 8px;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 6px 10px 6px 30px;
+                font-size: 0.7rem;
+            }
+
+            .btn-submit {
+                padding: 8px;
+                font-size: 0.75rem;
+            }
+
+            .theme-toggle {
+                width: 34px;
+                height: 18px;
+            }
+            .theme-toggle .toggle-thumb {
+                width: 12px;
+                height: 12px;
+                font-size: 0.4rem;
+            }
+            .theme-toggle.active .toggle-thumb {
+                left: 16px;
             }
         }
     </style>
@@ -537,64 +968,267 @@
                 </div>
             </div>
 
+            <div class="login-options">
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe">
+                    <span>Ingat saya</span>
+                </label>
+                <div class="forgot-link">
+                    <a href="#" id="forgotPassword">Lupa password?</a>
+                </div>
+            </div>
+
             <button type="submit" class="btn-submit" id="signinBtn">
                 <i class="fas fa-sign-in-alt"></i> Masuk
             </button>
+
+            <div class="switch-link">
+                Belum punya akun? <a href="#" id="switchToRegister">Daftar sekarang</a>
+            </div>
         </form>
 
         <!-- ============================================================ -->
-        <!-- FORM SIGN UP -->
+        <!-- FORM SIGN UP - DENGAN ALAMAT LENGKAP E-KTP -->
         <!-- ============================================================ -->
         <form id="signupForm" class="auth-form" style="display: none;">
+            <!-- Foto Profil -->
+            <div class="profile-upload">
+                <div class="profile-preview" id="profilePreview" onclick="document.getElementById('profileInput').click()">
+                    <i class="fas fa-user"></i>
+                </div>
+                <input type="file" id="profileInput" accept="image/*" style="display:none;">
+                <p class="upload-hint">Klik untuk upload foto profil</p>
+            </div>
+
+            <!-- Data Diri -->
             <div class="form-group">
-                <label>Nama Lengkap</label>
+                <label>Nama Lengkap <span class="required">*</span></label>
                 <div class="input-wrapper">
                     <i class="fas fa-user"></i>
-                    <input type="text" id="signupFullName" placeholder="Masukkan nama lengkap" autocomplete="name">
+                    <input type="text" id="signupFullName" placeholder="Sesuai dengan E-KTP" autocomplete="name">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Username</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-at"></i>
-                    <input type="text" id="signupUsername" placeholder="Buat username unik" autocomplete="username">
+                <label>Jenis Kelamin <span class="required">*</span></label>
+                <div class="gender-options">
+                    <div class="gender-option">
+                        <input type="radio" name="gender" id="regMale" value="male" checked>
+                        <label for="regMale"><i class="fas fa-male"></i> Laki-laki</label>
+                    </div>
+                    <div class="gender-option">
+                        <input type="radio" name="gender" id="regFemale" value="female">
+                        <label for="regFemale"><i class="fas fa-female"></i> Perempuan</label>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Email</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="signupEmail" placeholder="Masukkan email aktif" autocomplete="email">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="signupEmail" placeholder="email@anda.com" autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>No WhatsApp <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="signupPhone" placeholder="08xxxxxxxxxx" autocomplete="tel">
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <div class="input-wrapper">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="signupPassword" placeholder="Buat password (min. 6 karakter)" autocomplete="new-password">
-                    <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
+            <!-- ========================================================== -->
+            <!-- ALAMAT SESUAI E-KTP -->
+            <!-- ========================================================== -->
+            <div class="address-section">
+                <div class="address-label">
+                    <i class="fas fa-id-card"></i>
+                    <span>Alamat Sesuai E-KTP</span>
+                    <span class="hint">(Harus sesuai dengan data KTP)</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Negara <span class="required">*</span></label>
+                    <select id="signupCountry">
+                        <option value="">Pilih Negara</option>
+                        <option value="Indonesia" selected>Indonesia</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="Singapore">Singapore</option>
+                        <option value="Brunei">Brunei</option>
+                        <option value="Timor Leste">Timor Leste</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Provinsi <span class="required">*</span></label>
+                        <select id="signupProvince">
+                            <option value="">Pilih Provinsi</option>
+                            <option value="Aceh">Aceh</option>
+                            <option value="Sumatera Utara">Sumatera Utara</option>
+                            <option value="Sumatera Barat">Sumatera Barat</option>
+                            <option value="Riau">Riau</option>
+                            <option value="Kepulauan Riau">Kepulauan Riau</option>
+                            <option value="Jambi">Jambi</option>
+                            <option value="Sumatera Selatan">Sumatera Selatan</option>
+                            <option value="Bengkulu">Bengkulu</option>
+                            <option value="Lampung">Lampung</option>
+                            <option value="Bangka Belitung">Bangka Belitung</option>
+                            <option value="DKI Jakarta">DKI Jakarta</option>
+                            <option value="Jawa Barat">Jawa Barat</option>
+                            <option value="Jawa Tengah">Jawa Tengah</option>
+                            <option value="DI Yogyakarta">DI Yogyakarta</option>
+                            <option value="Jawa Timur">Jawa Timur</option>
+                            <option value="Banten">Banten</option>
+                            <option value="Bali">Bali</option>
+                            <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                            <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                            <option value="Kalimantan Barat">Kalimantan Barat</option>
+                            <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                            <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                            <option value="Kalimantan Timur">Kalimantan Timur</option>
+                            <option value="Kalimantan Utara">Kalimantan Utara</option>
+                            <option value="Sulawesi Utara">Sulawesi Utara</option>
+                            <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                            <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                            <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                            <option value="Sulawesi Barat">Sulawesi Barat</option>
+                            <option value="Gorontalo">Gorontalo</option>
+                            <option value="Maluku">Maluku</option>
+                            <option value="Maluku Utara">Maluku Utara</option>
+                            <option value="Papua">Papua</option>
+                            <option value="Papua Barat">Papua Barat</option>
+                            <option value="Papua Selatan">Papua Selatan</option>
+                            <option value="Papua Tengah">Papua Tengah</option>
+                            <option value="Papua Pegunungan">Papua Pegunungan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Kabupaten/Kota <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-city"></i>
+                            <input type="text" id="signupCity" placeholder="Kabupaten/Kota">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Kecamatan <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-map"></i>
+                            <input type="text" id="signupDistrict" placeholder="Kecamatan">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Kelurahan/Desa <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-home"></i>
+                            <input type="text" id="signupVillage" placeholder="Kelurahan/Desa">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Kode Pos</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-mailbox"></i>
+                            <input type="text" id="signupPostalCode" placeholder="Kode Pos">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Detail Alamat <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-location-dot"></i>
+                        <input type="text" id="signupDetailAddress" placeholder="Nomor rumah, RT/RW, blok, dll">
+                    </div>
                 </div>
             </div>
 
+            <!-- ========================================================== -->
+            <!-- LINK GOOGLE MAPS -->
+            <!-- ========================================================== -->
             <div class="form-group">
-                <label>Konfirmasi Password</label>
+                <label>📍 Link Google Maps <span class="required">*</span></label>
+                <p style="font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;">
+                    <i class="fas fa-info-circle"></i> Masukkan link Google Maps lokasi tempat tinggal Anda
+                </p>
+
+                <div class="map-upload-container">
+                    <div class="input-group">
+                        <span class="map-icon"><i class="fas fa-map-marker-alt"></i></span>
+                        <input type="url" id="signupMapLink" placeholder="https://maps.app.goo.gl/...">
+                        <button type="button" class="clear-btn" id="clearMapBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div class="map-preview" id="mapPreview">
+                        <div class="map-info">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="mapStatusText">✅ Link Google Maps terupload</span>
+                        </div>
+                        <a href="#" target="_blank" class="map-link" id="mapLinkDisplay">Buka di Google Maps</a>
+                    </div>
+                </div>
+
+                <div class="map-hint">
+                    <i class="fas fa-lightbulb"></i>
+                    Cara mendapatkan link:
+                    <ol>
+                        <li>Buka <a href="https://maps.google.com" target="_blank">Google Maps</a></li>
+                        <li>Cari lokasi Anda → klik "Bagikan" → "Salin link"</li>
+                        <li>Paste link di kolom di atas (format: <strong>maps.app.goo.gl/...</strong>)</li>
+                    </ol>
+                </div>
+
+                <div id="regMapError" class="error-msg">⚠️ Silakan masukkan link Google Maps yang valid!</div>
+            </div>
+
+            <!-- Username & Password -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Username <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-at"></i>
+                        <input type="text" id="signupUsername" placeholder="Buat username unik" autocomplete="username">
+                    </div>
+                    <div id="regUsernameError" class="error-msg">Username sudah digunakan!</div>
+                </div>
+                <div class="form-group">
+                    <label>Password <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="signupPassword" placeholder="Min. 6 karakter" autocomplete="new-password">
+                        <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div style="font-size:0.5rem;color:var(--text-muted);margin-top:2px;">
+                        <i class="fas fa-info-circle"></i> Minimal 6 karakter, diawali huruf kapital dan diakhiri angka
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bio -->
+            <div class="form-group">
+                <label>Bio (Opsional)</label>
                 <div class="input-wrapper">
-                    <i class="fas fa-shield-alt"></i>
-                    <input type="password" id="signupConfirmPassword" placeholder="Ulangi password" autocomplete="new-password">
-                    <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                    <i class="fas fa-pen"></i>
+                    <input type="text" id="signupBio" placeholder="Ceritakan tentang Anda...">
                 </div>
             </div>
 
             <button type="submit" class="btn-submit" id="signupBtn">
                 <i class="fas fa-user-plus"></i> Daftar Sekarang
             </button>
+
+            <div class="switch-link">
+                Sudah punya akun? <a href="#" id="switchToLogin">Masuk disini</a>
+            </div>
         </form>
 
         <!-- ============================================================ -->
@@ -686,6 +1320,16 @@
         tabSignin.addEventListener('click', () => switchTab('signin'));
         tabSignup.addEventListener('click', () => switchTab('signup'));
 
+        // Switch links
+        document.getElementById('switchToRegister').addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('signup');
+        });
+        document.getElementById('switchToLogin').addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('signin');
+        });
+
         // ================================================================
         // MESSAGE FUNCTIONS
         // ================================================================
@@ -710,6 +1354,82 @@
             return /^[a-zA-Z0-9_]{3,20}$/.test(username);
         }
 
+        function isValidGoogleMapsLink(url) {
+            if (!url || url.trim() === '') return false;
+            const patterns = [
+                /maps\.google\.com/,
+                /maps\.app\.goo\.gl/,
+                /google\.com\/maps/,
+                /goo\.gl\/maps/
+            ];
+            return patterns.some(pattern => pattern.test(url));
+        }
+
+        // ================================================================
+        // MAP LINK PREVIEW
+        // ================================================================
+        const mapLinkInput = document.getElementById('signupMapLink');
+        const mapPreview = document.getElementById('mapPreview');
+        const mapStatusText = document.getElementById('mapStatusText');
+        const mapLinkDisplay = document.getElementById('mapLinkDisplay');
+        const clearMapBtn = document.getElementById('clearMapBtn');
+        const regMapError = document.getElementById('regMapError');
+
+        function updateMapPreview() {
+            const url = mapLinkInput.value.trim();
+
+            if (url === '') {
+                mapPreview.classList.remove('show');
+                clearMapBtn.classList.remove('show');
+                regMapError.classList.remove('show');
+                return;
+            }
+
+            if (isValidGoogleMapsLink(url)) {
+                mapPreview.classList.add('show');
+                clearMapBtn.classList.add('show');
+                mapStatusText.textContent = '✅ Link Google Maps terupload';
+                mapLinkDisplay.href = url;
+                mapLinkDisplay.textContent = url.length > 50 ? url.substring(0, 50) + '...' : url;
+                regMapError.classList.remove('show');
+            } else {
+                mapPreview.classList.remove('show');
+                clearMapBtn.classList.add('show');
+                regMapError.textContent = '⚠️ Link tidak valid! Pastikan link dari Google Maps';
+                regMapError.classList.add('show');
+            }
+        }
+
+        mapLinkInput.addEventListener('input', updateMapPreview);
+        mapLinkInput.addEventListener('change', updateMapPreview);
+        mapLinkInput.addEventListener('paste', function() {
+            setTimeout(updateMapPreview, 100);
+        });
+
+        clearMapBtn.addEventListener('click', function() {
+            mapLinkInput.value = '';
+            mapPreview.classList.remove('show');
+            clearMapBtn.classList.remove('show');
+            regMapError.classList.remove('show');
+            mapLinkInput.focus();
+        });
+
+        // ================================================================
+        // PROFILE PICTURE UPLOAD
+        // ================================================================
+        document.getElementById('profileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const preview = document.getElementById('profilePreview');
+                    preview.innerHTML = `<img src="${ev.target.result}" alt="Profile">`;
+                    preview.dataset.image = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         // ================================================================
         // SIGN IN
         // ================================================================
@@ -724,24 +1444,22 @@
                 return;
             }
 
-            // Ambil data user dari localStorage
             const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            
-            // Cari user berdasarkan username atau email
             const user = users.find(u => 
                 (u.username === username || u.email === username) && u.password === password
             );
 
             if (user) {
-                // Simpan user yang login
                 localStorage.setItem('salink_user', JSON.stringify(user));
+                if (document.getElementById('rememberMe').checked) {
+                    localStorage.setItem('salink_remember', 'true');
+                }
                 showMessage('✅ Login berhasil! Mengalihkan...', 'success');
                 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 800);
             } else {
-                // Cek apakah username ada
                 const userExists = users.find(u => u.username === username || u.email === username);
                 if (userExists) {
                     showMessage('❌ Password salah! Silakan coba lagi.', 'error');
@@ -752,75 +1470,93 @@
         });
 
         // ================================================================
-        // SIGN UP
+        // SIGN UP - DENGAN DATA ALAMAT LENGKAP
         // ================================================================
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
+            // Ambil semua nilai
             const fullName = document.getElementById('signupFullName').value.trim();
-            const username = document.getElementById('signupUsername').value.trim();
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || 'male';
             const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
             const password = document.getElementById('signupPassword').value.trim();
-            const confirmPassword = document.getElementById('signupConfirmPassword').value.trim();
+            const bio = document.getElementById('signupBio').value.trim() || `Halo! Saya ${fullName}`;
+            const profilePicture = document.getElementById('profilePreview').dataset.image || '';
+
+            // Alamat E-KTP
+            const country = document.getElementById('signupCountry').value;
+            const province = document.getElementById('signupProvince').value;
+            const city = document.getElementById('signupCity').value.trim();
+            const district = document.getElementById('signupDistrict').value.trim();
+            const village = document.getElementById('signupVillage').value.trim();
+            const postalCode = document.getElementById('signupPostalCode').value.trim();
+            const detailAddress = document.getElementById('signupDetailAddress').value.trim();
+            const mapLink = document.getElementById('signupMapLink').value.trim();
 
             // Validasi
-            if (!fullName || !username || !email || !password || !confirmPassword) {
-                showMessage('⚠️ Harap isi semua field!', 'error');
-                return;
-            }
+            let isValid = true;
 
-            if (!validateUsername(username)) {
-                showMessage('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
-                return;
-            }
+            if (!fullName) { showMessage('⚠️ Nama lengkap harus diisi!', 'error');
+                isValid = false; }
+            else if (!email || !validateEmail(email)) { showMessage('⚠️ Email tidak valid!', 'error');
+                isValid = false; }
+            else if (!phone || phone.length < 10) { showMessage('⚠️ Nomor WhatsApp tidak valid!', 'error');
+                isValid = false; }
+            else if (!username || !validateUsername(username)) { showMessage('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
+                isValid = false; }
+            else if (!password || password.length < 6) { showMessage('⚠️ Password minimal 6 karakter!', 'error');
+                isValid = false; }
+            else if (!country) { showMessage('⚠️ Negara harus dipilih!', 'error');
+                isValid = false; }
+            else if (!province) { showMessage('⚠️ Provinsi harus dipilih!', 'error');
+                isValid = false; }
+            else if (!city) { showMessage('⚠️ Kabupaten/Kota harus diisi!', 'error');
+                isValid = false; }
+            else if (!district) { showMessage('⚠️ Kecamatan harus diisi!', 'error');
+                isValid = false; }
+            else if (!village) { showMessage('⚠️ Kelurahan/Desa harus diisi!', 'error');
+                isValid = false; }
+            else if (!detailAddress) { showMessage('⚠️ Detail alamat harus diisi!', 'error');
+                isValid = false; }
+            else if (!mapLink || !isValidGoogleMapsLink(mapLink)) { showMessage('⚠️ Link Google Maps tidak valid!', 'error');
+                isValid = false; }
 
-            if (!validateEmail(email)) {
-                showMessage('⚠️ Email tidak valid!', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                showMessage('⚠️ Password minimal 6 karakter!', 'error');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showMessage('⚠️ Password dan konfirmasi password tidak sama!', 'error');
-                return;
-            }
-
-            // Ambil data user dari localStorage
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            if (!isValid) return;
 
             // Cek duplikat username
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
             if (users.find(u => u.username === username)) {
+                document.getElementById('regUsernameError').classList.add('show');
                 showMessage('⚠️ Username sudah digunakan!', 'error');
                 return;
             }
 
-            // Cek duplikat email
             if (users.find(u => u.email === email)) {
                 showMessage('⚠️ Email sudah terdaftar!', 'error');
                 return;
             }
 
-            // Buat user baru
+            // Buat user baru dengan data lengkap
             const newUser = {
                 fullName: fullName,
                 username: username,
                 email: email,
+                phone: phone,
                 password: password,
-                gender: 'male',
-                phone: '',
-                country: 'Indonesia',
-                province: '',
-                city: '',
-                district: '',
-                village: '',
-                address: '',
-                bio: '',
-                mapLink: '',
-                profilePicture: null,
+                gender: gender,
+                bio: bio,
+                profilePicture: profilePicture,
+                country: country,
+                province: province,
+                city: city,
+                district: district,
+                village: village,
+                postalCode: postalCode,
+                detailAddress: detailAddress,
+                address: [detailAddress, village, district, city, province, country].filter(Boolean).join(', '),
+                mapLink: mapLink,
                 joinedDate: new Date().toLocaleString('id-ID', { 
                     weekday: 'long',
                     day: 'numeric', 
@@ -833,8 +1569,6 @@
 
             users.push(newUser);
             localStorage.setItem('salink_users', JSON.stringify(users));
-
-            // Auto login
             localStorage.setItem('salink_user', JSON.stringify(newUser));
 
             showMessage('✅ Pendaftaran berhasil! Mengalihkan...', 'success');
@@ -845,6 +1579,14 @@
         });
 
         // ================================================================
+        // FORGOT PASSWORD
+        // ================================================================
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            showMessage('🔄 Fitur reset password akan segera hadir! Hubungi admin.', 'info');
+        });
+
+        // ================================================================
         // CLEAR DATA FUNCTIONS
         // ================================================================
         function clearUserData() {
@@ -852,14 +1594,8 @@
                 localStorage.removeItem('salink_user');
                 showMessage('✅ Data user Anda berhasil dihapus!', 'success');
                 
-                // Refresh form
                 document.getElementById('signinUsername').value = '';
                 document.getElementById('signinPassword').value = '';
-                document.getElementById('signupFullName').value = '';
-                document.getElementById('signupUsername').value = '';
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupConfirmPassword').value = '';
                 
                 setTimeout(() => {
                     hideMessage();
@@ -869,25 +1605,19 @@
 
         function clearAllData() {
             if (confirm('⚠️ YAKIN ingin menghapus SEMUA data? Ini akan mereset semua pengaturan, user, dan postingan!')) {
-                // Hapus semua data aplikasi
                 localStorage.removeItem('salink_user');
                 localStorage.removeItem('salink_users');
                 localStorage.removeItem('salink_posts');
                 localStorage.removeItem('salink_theme');
                 localStorage.removeItem('salink_installed');
+                localStorage.removeItem('salink_remember');
                 
                 showMessage('✅ Semua data berhasil direset ke default!', 'success');
                 
-                // Refresh form
-                document.getElementById('signinUsername').value = '';
-                document.getElementById('signinPassword').value = '';
-                document.getElementById('signupFullName').value = '';
-                document.getElementById('signupUsername').value = '';
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupConfirmPassword').value = '';
+                // Reset form
+                document.querySelectorAll('input').forEach(inp => inp.value = '');
+                document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
                 
-                // Reset theme ke dark
                 applyTheme('dark');
                 
                 setTimeout(() => {
@@ -921,7 +1651,6 @@
         if (loggedInUser) {
             try {
                 const user = JSON.parse(loggedInUser);
-                // Tampilkan pesan jika sudah login
                 setTimeout(() => {
                     showMessage(`👋 Selamat datang kembali, ${user.fullName}! Mengalihkan...`, 'success');
                     setTimeout(() => {
@@ -933,12 +1662,11 @@
             }
         }
 
-        console.log('🔐 SALINK Login Page');
+        console.log('🔐 SALINK Login Page - Dengan Alamat E-KTP');
         console.log('📌 Tema:', currentTheme);
-        console.log('🗑️ Tombol "Hapus Data" tersedia di bawah form');
         console.log('📊 Data tersimpan di Local Storage:');
         console.log('  - salink_user: data user aktif');
-        console.log('  - salink_users: daftar semua user');
+        console.log('  - salink_users: daftar semua user (dengan alamat lengkap)');
         console.log('  - salink_posts: daftar postingan');
         console.log('  - salink_theme: tema yang dipilih');
     </script>
