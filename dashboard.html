@@ -218,40 +218,97 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 16px;
+            padding: 0 12px;
             z-index: 1000;
             box-shadow: var(--neumorph-shadow);
             border-bottom: 2px solid var(--gold);
             transition: background 0.3s ease;
         }
-        .app-title { display: flex; align-items: center; gap: 10px; font-weight: 600; background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.2rem; cursor: pointer; }
-        .app-title .bell-icon { font-size: 1.4rem; color: var(--gold); -webkit-text-fill-color: var(--gold); animation: shiver 2s ease-in-out infinite; }
-        .user-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(61, 35, 20, 0.3); border: 1px solid var(--gold); color: var(--gold); cursor: pointer; box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e; flex-shrink: 0; position: relative; transition: all 0.3s; }
-        .user-btn:active { box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e; transform: scale(0.95); }
-        .user-btn img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-        .search-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(61, 35, 20, 0.3); border: 1px solid var(--gold); color: var(--gold); cursor: pointer; box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e; flex-shrink: 0; margin-right: 8px; transition: all 0.3s; }
-        .search-btn:active { box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e; transform: scale(0.95); }
-        .header-right { display: flex; align-items: center; gap: 6px; }
-
-        /* ===== THEME TOGGLE ===== */
-        .theme-toggle-wrapper {
+        .app-title { display: flex; align-items: center; gap: 8px; font-weight: 600; background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1rem; cursor: pointer; }
+        .app-title .bell-icon { font-size: 1.2rem; color: var(--gold); -webkit-text-fill-color: var(--gold); animation: shiver 2s ease-in-out infinite; }
+        .app-title span { font-size: 1rem; }
+        
+        .header-center {
             display: flex;
-            justify-content: flex-end;
             align-items: center;
-            padding: 8px 14px 4px;
-            margin-top: 4px;
-            gap: 10px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            gap: 8px;
         }
-        .theme-toggle-wrapper .theme-label { font-size: 0.6rem; color: var(--text-secondary); opacity: 0.6; }
-        .theme-toggle { position: relative; width: 44px; height: 24px; background: rgba(61, 35, 20, 0.4); border-radius: 12px; cursor: pointer; transition: all 0.3s; border: 1px solid var(--gold); flex-shrink: 0; }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(61, 35, 20, 0.3);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        .user-btn:active { box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e; transform: scale(0.95); }
+        .user-btn img { width: 100%; height: 100%; object-fit: cover; }
+        .user-btn i { font-size: 1rem; }
+
+        .search-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(61, 35, 20, 0.3);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .search-btn:active { box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e; transform: scale(0.95); }
+        .search-btn i { font-size: 1rem; }
+
+        /* ===== THEME TOGGLE DI HEADER ===== */
+        .theme-toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: rgba(61, 35, 20, 0.4);
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--gold);
+            flex-shrink: 0;
+        }
         .theme-toggle.active { background: rgba(212, 168, 73, 0.3); }
-        .theme-toggle .toggle-thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--gold); transition: all 0.3s; box-shadow: 0 2px 8px rgba(212, 168, 73, 0.3); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; }
-        .theme-toggle.active .toggle-thumb { left: 22px; background: var(--gold-light); }
+        .theme-toggle .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--gold);
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(212, 168, 73, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+        }
+        .theme-toggle.active .toggle-thumb { left: 20px; background: var(--gold-light); }
         .theme-toggle .toggle-thumb i { color: var(--dark); }
-        .theme-toggle-wrapper .theme-icon { font-size: 0.8rem; color: var(--gold); opacity: 0.6; }
 
         /* ===== PREVIEW MODE BADGE ===== */
         .preview-badge {
@@ -664,7 +721,18 @@
         .hologram-content { padding: 10px 14px; display: flex; flex-direction: column; position: relative; z-index: 2; }
         .hologram-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
         .hologram-profile {
-            width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold), var(--gold-light)); cursor: pointer; transition: all 0.3s;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            cursor: pointer;
+            transition: all 0.3s;
         }
         .hologram-profile:hover { transform: scale(1.05); border-color: var(--gold-light); }
         .hologram-profile img { width: 100%; height: 100%; object-fit: cover; }
@@ -761,7 +829,19 @@
 
         .post-header { display: flex; align-items: center; margin-bottom: 12px; }
         .post-profile-pic {
-            width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; margin-right: 10px; overflow: hidden; flex-shrink: 0; border: 2px solid var(--gold); cursor: pointer; transition: all 0.3s;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid var(--gold);
+            cursor: pointer;
+            transition: all 0.3s;
         }
         .post-profile-pic:hover { transform: scale(1.05); }
         .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
@@ -872,7 +952,16 @@
         .comment { display: flex; flex-direction: column; margin-bottom: 8px; padding: 6px 8px; background: rgba(255, 248, 240, 0.03); border-radius: 8px; transition: background 0.3s ease; }
         .comment-main { display: flex; align-items: flex-start; gap: 8px; }
         .comment-profile-pic {
-            width: 26px; height: 26px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
         }
         .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         .comment-profile-pic i { font-size: 0.65rem; color: var(--brown-dark); }
@@ -922,7 +1011,16 @@
         .alert-card:hover { background: rgba(61, 35, 20, 0.8); transform: translateY(-3px); box-shadow: 0 10px 25px var(--shadow-color); border-color: var(--gold-light); animation: float 2s ease-in-out infinite; }
         .alert-card:active { animation: zoomOut 0.3s ease; }
         .alert-icon {
-            width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); border: 1px solid var(--gold);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--gold);
         }
         .icon-fire { background: rgba(255, 107, 53, 0.15); color: #ff6b35; border-color: rgba(255, 107, 53, 0.3); }
         .icon-theft { background: rgba(212, 168, 73, 0.15); color: var(--gold-light); border-color: rgba(212, 168, 73, 0.3); }
@@ -1337,8 +1435,9 @@
             .modal-content { padding: 16px 14px; max-height: 90vh; }
             .modal-title { font-size: 0.9rem; }
             .modal-image { height: 100px; }
-            .app-title { font-size: 0.95rem; }
+            .app-title { font-size: 0.9rem; }
             .app-title .bell-icon { font-size: 1rem; }
+            .app-title span { font-size: 0.9rem; }
             .nav-item-bottom { min-width: 45px; padding: 3px 4px; }
             .nav-item-bottom i { font-size: 1.1rem; }
             .nav-item-bottom span { font-size: 0.55rem; }
@@ -1377,7 +1476,9 @@
             .floating-notification .notif-content .notif-title { font-size: 0.7rem; }
             .floating-notification .notif-content .notif-message { font-size: 0.6rem; }
             .floating-notification .notif-action { font-size: 0.6rem; padding: 3px 12px; }
-            .theme-toggle-wrapper { padding: 4px 10px 2px; }
+            .theme-toggle { width: 34px; height: 18px; }
+            .theme-toggle .toggle-thumb { width: 14px; height: 14px; font-size: 0.45rem; }
+            .theme-toggle.active .toggle-thumb { left: 17px; }
             .page-title { font-size: 1.1rem; }
         }
 
@@ -1396,6 +1497,9 @@
             .nav-item-bottom span { font-size: 0.45rem; }
             .social-link { width: 34px; height: 34px; font-size: 0.9rem; }
             .profile-nav-grid { grid-template-columns: repeat(4, 1fr); }
+            .theme-toggle { width: 30px; height: 16px; }
+            .theme-toggle .toggle-thumb { width: 12px; height: 12px; font-size: 0.4rem; }
+            .theme-toggle.active .toggle-thumb { left: 15px; }
         }
     </style>
 </head>
@@ -1443,26 +1547,22 @@
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
         </div>
-        <div class="header-right">
+        <div class="header-center">
             <button class="search-btn" id="searchBtn">
                 <i class="fas fa-search"></i>
             </button>
+            <div class="theme-toggle" id="themeToggle">
+                <div class="toggle-thumb" id="toggleThumb">
+                    <i class="fas fa-moon" id="toggleIcon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
             <button class="user-btn" id="userBtn">
                 <i class="fas fa-user"></i>
             </button>
         </div>
     </header>
-
-    <!-- ===== THEME TOGGLE ===== -->
-    <div class="theme-toggle-wrapper">
-        <span class="theme-icon" id="themeIcon">🌙</span>
-        <div class="theme-toggle" id="themeToggle">
-            <div class="toggle-thumb" id="toggleThumb">
-                <i class="fas fa-moon" id="toggleIcon"></i>
-            </div>
-        </div>
-        <span class="theme-label" id="themeLabel">Dark</span>
-    </div>
 
     <!-- ===== SIDEBAR OVERLAY ===== -->
     <div class="sidebar-overlay-bg" id="sidebarOverlay"></div>
@@ -2204,8 +2304,6 @@
             const themeToggle = document.getElementById('themeToggle');
             const toggleThumb = document.getElementById('toggleThumb');
             const toggleIcon = document.getElementById('toggleIcon');
-            const themeIcon = document.getElementById('themeIcon');
-            const themeLabel = document.getElementById('themeLabel');
             const metaThemeColor = document.getElementById('themeColorMeta');
             
             if (currentTheme === 'dark') {
@@ -2213,8 +2311,6 @@
                 html.setAttribute('data-theme', 'light');
                 themeToggle.classList.add('active');
                 toggleIcon.className = 'fas fa-sun';
-                themeIcon.textContent = '☀️';
-                themeLabel.textContent = 'Light';
                 if (metaThemeColor) metaThemeColor.content = '#f5f0e8';
                 localStorage.setItem('salink_theme', 'light');
             } else {
@@ -2222,8 +2318,6 @@
                 html.removeAttribute('data-theme');
                 themeToggle.classList.remove('active');
                 toggleIcon.className = 'fas fa-moon';
-                themeIcon.textContent = '🌙';
-                themeLabel.textContent = 'Dark';
                 if (metaThemeColor) metaThemeColor.content = '#3d2314';
                 localStorage.setItem('salink_theme', 'dark');
             }
@@ -2236,8 +2330,6 @@
                 document.documentElement.setAttribute('data-theme', 'light');
                 document.getElementById('themeToggle').classList.add('active');
                 document.getElementById('toggleIcon').className = 'fas fa-sun';
-                document.getElementById('themeIcon').textContent = '☀️';
-                document.getElementById('themeLabel').textContent = 'Light';
                 const metaThemeColor = document.getElementById('themeColorMeta');
                 if (metaThemeColor) metaThemeColor.content = '#f5f0e8';
             }
@@ -2310,6 +2402,7 @@
             const actionBtn = document.getElementById('floatingAction');
             const closeBtn = document.getElementById('floatingClose');
             
+            // Clear previous intervals and timeouts
             if (floatingInterval) {
                 clearInterval(floatingInterval);
                 floatingInterval = null;
@@ -2321,9 +2414,11 @@
             
             isFloatingDismissed = false;
             
+            // Reset classes
             floating.className = 'floating-notification';
             icon.className = 'notif-icon';
             
+            // Set icon based on type
             if (type === 'emergency') {
                 icon.classList.add('emergency');
                 icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
@@ -2335,10 +2430,12 @@
                 icon.innerHTML = '<i class="fas fa-bell"></i>';
             }
             
+            // Set content
             titleEl.textContent = title;
             messageEl.textContent = message;
             subtitleEl.textContent = subtitle || '';
             
+            // Set action button
             if (actionText && actionCallback) {
                 actionBtn.style.display = 'block';
                 actionBtn.textContent = actionText;
@@ -2347,6 +2444,7 @@
                 } else {
                     actionBtn.className = 'notif-action';
                 }
+                // Remove old listeners
                 const newActionBtn = actionBtn.cloneNode(true);
                 actionBtn.parentNode.replaceChild(newActionBtn, actionBtn);
                 newActionBtn.addEventListener('click', (e) => {
@@ -2357,33 +2455,38 @@
                 actionBtn.style.display = 'none';
             }
             
+            // Close button
             closeBtn.onclick = (e) => {
                 e.stopPropagation();
                 hideFloatingNotification();
             };
             
+            // Click on notification body
             floating.onclick = (e) => {
                 if (e.target.closest('.notif-close') || e.target.closest('.notif-action')) return;
                 if (actionCallback) actionCallback();
             };
             
+            // Show notification
             floating.classList.add('active');
             isFloatingShowing = true;
             
-            let duration = 10000;
-            let intervalDuration = 10000;
+            // Determine duration and interval based on type
+            let duration = 10000; // default 10 detik
+            let intervalDuration = 10000; // default 10 detik
             
             if (type === 'emergency') {
-                duration = 15000;
-                intervalDuration = 15000;
+                duration = 15000; // 15 detik
+                intervalDuration = 15000; // 15 detik
             } else if (type === 'install') {
-                duration = 10000;
-                intervalDuration = 10000;
+                duration = 10000; // 10 detik
+                intervalDuration = 10000; // 10 detik
             } else {
-                duration = 10000;
-                intervalDuration = 10000;
+                duration = 10000; // 10 detik
+                intervalDuration = 10000; // 10 detik
             }
             
+            // Store data for interval
             floatingData = {
                 type: type,
                 title: title,
@@ -2396,10 +2499,12 @@
                 intervalDuration: intervalDuration
             };
             
+            // Auto-hide after duration
             floatingTimeout = setTimeout(() => {
                 hideFloatingNotification();
             }, duration);
             
+            // Set interval to show again if not dismissed
             floatingInterval = setInterval(() => {
                 if (!isFloatingDismissed && !isFloatingShowing && floatingData) {
                     showFloatingNotification(
@@ -2802,10 +2907,12 @@
             notifications.unshift(notification);
             updateNotifBadge();
             
+            // Play sound
             if (!(sender && currentUser && sender === currentUser.fullName)) {
                 playNotificationSound(soundKey);
             }
             
+            // If emergency notification, show full screen overlay
             if (type === 'fire' || type === 'death' || type === 'theft' || type === 'disaster') {
                 const label = notifLabelMap[type] || 'KEBAKARAN';
                 showFloatingNotification(
@@ -2845,7 +2952,18 @@
                 );
             }
             
+            broadcastNotification(notification);
+            
             return notification;
+        }
+
+        function broadcastNotification(notification) {
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            users.forEach(user => {
+                if (user.username !== currentUser?.username) {
+                    console.log(`📨 Notifikasi dikirim ke ${user.fullName}: ${notification.title}`);
+                }
+            });
         }
 
         function updateNotifBadge() {
@@ -3500,7 +3618,7 @@
         }
 
         // ================================================================
-        // SETTINGS MODAL - LENGKAP DENGAN SEMUA DATA
+        // SETTINGS MODAL
         // ================================================================
         
         function openSettingsModal() {
@@ -5273,7 +5391,7 @@
             if (currentUser.profilePicture) {
                 document.getElementById('hologramProfile').innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
-                document.getElementById('hologramProfile').innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+                document.getElementById('hologramProfile').innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male></i>';
             }
             
             if (currentUser.profilePicture) {
@@ -5287,9 +5405,8 @@
             const userBtnImg = document.getElementById('userBtn').querySelector('img');
             if (!userBtnImg) {
                 const img = document.createElement('img');
-                img.style.width = '32px';
-                img.style.height = '32px';
-                img.style.borderRadius = '50%';
+                img.style.width = '100%';
+                img.style.height = '100%';
                 img.style.objectFit = 'cover';
                 img.style.display = 'none';
                 document.getElementById('userBtn').appendChild(img);
@@ -5422,6 +5539,121 @@
             document.getElementById('pieChartContainer').style.display = type === 'pie' ? 'flex' : 'none';
             document.getElementById('barChartContainer').classList.toggle('active', type === 'bar');
             document.getElementById('lineChartContainer').classList.toggle('active', type === 'line');
+            
+            // Render bar chart with all data
+            if (type === 'bar') {
+                renderBarChart();
+            } else if (type === 'line') {
+                renderLineChart();
+            }
+        }
+
+        function renderBarChart() {
+            const data = {
+                fire: [12, 18, 8, 15, 10, 20, 14],
+                theft: [6, 10, 4, 8, 5, 12, 9],
+                disaster: [3, 5, 2, 4, 3, 7, 5],
+                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
+            };
+            
+            const maxValue = Math.max(...data.fire, ...data.theft, ...data.disaster);
+            const chart = document.getElementById('barChart');
+            chart.innerHTML = '';
+            
+            data.labels.forEach((label, index) => {
+                const fireHeight = maxValue > 0 ? (data.fire[index] / maxValue * 100) : 0;
+                const theftHeight = maxValue > 0 ? (data.theft[index] / maxValue * 100) : 0;
+                const disasterHeight = maxValue > 0 ? (data.disaster[index] / maxValue * 100) : 0;
+                
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.innerHTML = `
+                    <div class="bar-value">${data.fire[index]}</div>
+                    <div class="bar fire" style="height:${fireHeight}%;"></div>
+                    <div class="bar-value">${data.theft[index]}</div>
+                    <div class="bar theft" style="height:${theftHeight}%;"></div>
+                    <div class="bar-value">${data.disaster[index]}</div>
+                    <div class="bar disaster" style="height:${disasterHeight}%;"></div>
+                    <div class="bar-label">${label}</div>
+                `;
+                chart.appendChild(item);
+            });
+        }
+
+        function renderLineChart() {
+            const data = {
+                fire: [12, 18, 8, 15, 10, 20, 14],
+                theft: [6, 10, 4, 8, 5, 12, 9],
+                disaster: [3, 5, 2, 4, 3, 7, 5],
+                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
+            };
+            
+            const maxValue = Math.max(...data.fire, ...data.theft, ...data.disaster);
+            const chart = document.getElementById('lineChart');
+            chart.innerHTML = '';
+            
+            const colors = ['#ff6b35', '#f0d080', '#4fc3f7'];
+            const datasets = [
+                { name: 'fire', values: data.fire, color: colors[0] },
+                { name: 'theft', values: data.theft, color: colors[1] },
+                { name: 'disaster', values: data.disaster, color: colors[2] }
+            ];
+            
+            const chartWrapper = document.createElement('div');
+            chartWrapper.style.cssText = 'width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:20px;position:relative;';
+            
+            const yAxis = document.createElement('div');
+            yAxis.style.cssText = 'display:flex;justify-content:space-between;position:absolute;top:0;left:0;right:0;height:100%;flex-direction:column;padding:0 5px;pointer-events:none;';
+            for (let i = 5; i >= 0; i--) {
+                const label = document.createElement('div');
+                label.style.cssText = `font-size:0.4rem;color:rgba(245,240,232,0.2);text-align:right;height:${100/6}%;display:flex;align-items:center;justify-content:flex-end;border-top:${i === 0 ? 'none' : '1px solid rgba(212,168,73,0.05)'};`;
+                label.textContent = Math.round(maxValue * i / 5);
+                yAxis.appendChild(label);
+            }
+            chartWrapper.appendChild(yAxis);
+            
+            const pointsContainer = document.createElement('div');
+            pointsContainer.style.cssText = 'display:flex;justify-content:space-around;align-items:flex-end;height:100%;position:relative;padding:0 5px;';
+            
+            data.labels.forEach((label, index) => {
+                const col = document.createElement('div');
+                col.style.cssText = 'display:flex;flex-direction:column;align-items:center;flex:1;';
+                
+                datasets.forEach(dataset => {
+                    const value = dataset.values[index];
+                    const height = maxValue > 0 ? (value / maxValue * 90) : 0;
+                    
+                    const dot = document.createElement('div');
+                    dot.style.cssText = `
+                        width:6px;height:6px;border-radius:50%;
+                        background:${dataset.color};
+                        margin-bottom:2px;
+                        box-shadow:0 0 8px ${dataset.color}40;
+                        cursor:pointer;
+                        transition:all 0.3s;
+                    `;
+                    dot.title = `${dataset.name}: ${value}`;
+                    dot.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.5)';
+                        this.style.boxShadow = `0 0 15px ${dataset.color}80`;
+                    });
+                    dot.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                        this.style.boxShadow = `0 0 8px ${dataset.color}40`;
+                    });
+                    col.appendChild(dot);
+                });
+                
+                const labelEl = document.createElement('div');
+                labelEl.style.cssText = 'font-size:0.45rem;color:rgba(245,240,232,0.4);margin-top:4px;';
+                labelEl.textContent = label;
+                col.appendChild(labelEl);
+                
+                pointsContainer.appendChild(col);
+            });
+            
+            chartWrapper.appendChild(pointsContainer);
+            chart.appendChild(chartWrapper);
         }
 
         // ================================================================
@@ -5483,29 +5715,6 @@
         }
 
         // ================================================================
-        // SWITCH TO PREVIEW
-        // ================================================================
-        
-        function switchToPreview() {
-            isPreviewMode = true;
-            document.getElementById('previewBadge').classList.add('active');
-            
-            document.querySelectorAll('[data-action="login"]').forEach(el => {
-                el.dataset.action = 'login';
-            });
-            
-            document.getElementById('postInput').readOnly = true;
-            document.getElementById('mediaUpload').disabled = true;
-            document.getElementById('postSubmit').disabled = true;
-            
-            document.querySelectorAll('.comment-input').forEach(input => {
-                input.readOnly = true;
-            });
-            
-            updateUserUI();
-        }
-
-        // ================================================================
         // CONFIRMATION FUNCTIONS
         // ================================================================
         
@@ -5518,7 +5727,7 @@
             
             document.getElementById('confirmationTitle').textContent = `Konfirmasi Panggilan`;
             document.getElementById('confirmationMessage').textContent = `Apakah Anda yakin ingin menghubungi ${contactName} (${contactNumber})?`;
-            pendingContact = { name: contactName, number: contactNumber };
+            pendingAction = { name: contactName, number: contactNumber };
             document.getElementById('confirmationModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -5526,7 +5735,7 @@
         function closeConfirmationModal() {
             document.getElementById('confirmationModal').classList.remove('active');
             document.body.style.overflow = '';
-            pendingContact = null;
+            pendingAction = null;
         }
 
         // ================================================================
@@ -5547,7 +5756,7 @@
                 return;
             }
             
-            // Search logic here (simplified)
+            // Search logic
             results.innerHTML = `
                 <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
                     <i class="fas fa-search" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:0.3;"></i>
@@ -5735,7 +5944,6 @@
         // Render alerts
         renderAlerts(reports);
         updateBadge();
-        switchChart('pie');
         
         // Load sample posts if needed
         if (!hasSavedPosts || posts.length === 0) {
@@ -5943,7 +6151,7 @@
             if (confirm('Apakah Anda yakin ingin keluar?')) {
                 currentUser = null;
                 localStorage.removeItem('salink_user');
-                switchToPreview();
+                switchToPreviewMode();
                 showToast('👋 Logout Berhasil', 'Anda kembali ke mode preview', 'fa-sign-out-alt');
                 showHomePage();
                 closeSidebar();
@@ -6090,8 +6298,8 @@
         
         // Confirm
         document.getElementById('confirmYes').addEventListener('click', function() {
-            if (pendingContact) {
-                window.open(`tel:${pendingContact.number}`, '_blank');
+            if (pendingAction) {
+                window.open(`tel:${pendingAction.number}`, '_blank');
                 closeConfirmationModal();
             }
         });
@@ -6253,9 +6461,11 @@
                     return;
                 }
                 
+                // If there's a notification, convert to post
                 if (this.classList.contains('has-notification')) {
                     this.classList.remove('has-notification');
                     this.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
+                    
                     // Convert hologram to post
                     const hologramContent = document.getElementById('hologramContent');
                     const alertType = hologramContent.querySelector('.alert-type');
@@ -6284,6 +6494,7 @@
                     return;
                 }
                 
+                // If currently playing, stop it
                 if (currentlyPlaying === this) {
                     const soundKey = this.dataset.sound;
                     const audio = audioObjects[soundKey];
@@ -6426,6 +6637,9 @@
                 }, 600);
             }
         });
+        
+        // Switch to Pie chart initially
+        switchChart('pie');
     </script>
 </body>
 </html>
