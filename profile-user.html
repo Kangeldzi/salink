@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SALINK - Profil Pengguna</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3d2314" id="themeColorMeta">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SALINK">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ================================================================
-           ALL STYLES
+           ALL STYLES - SAMA DENGAN DASHBOARD
            ================================================================ */
         :root {
             --brown-dark: #3d2314;
@@ -21,6 +29,7 @@
             --dark: #1a1008;
             --darker: #0d0805;
             --card-bg: rgba(255, 248, 240, 0.08);
+            --sidebar-width: 290px;
             --neumorph-shadow: 8px 8px 16px #0a0604, -8px -8px 16px #2a1a0e;
             --header-height: 60px;
             --footer-height: 65px;
@@ -37,11 +46,46 @@
             --input-border: rgba(212, 168, 73, 0.2);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ===== LIGHT MODE ===== */
+        [data-theme="light"] {
+            --bg-primary: #f5f0e8;
+            --bg-secondary: #e8e0d6;
+            --bg-card: rgba(255, 248, 240, 0.8);
+            --text-primary: #1a1008;
+            --text-secondary: rgba(26, 16, 8, 0.7);
+            --border-color: #8d6b4b;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+            --input-bg: rgba(0, 0, 0, 0.04);
+            --input-border: rgba(141, 107, 75, 0.2);
+            --neumorph-shadow: 8px 8px 16px #d0c8be, -8px -8px 16px #ffffff;
         }
+        [data-theme="light"] .app-bar { background: rgba(255, 248, 240, 0.8); }
+        [data-theme="light"] .bottom-nav { background: rgba(255, 248, 240, 0.8); }
+        [data-theme="light"] .sidebar { background: linear-gradient(180deg, #f5f0e8, #e8e0d6); }
+        [data-theme="light"] .post-section { background: rgba(255, 248, 240, 0.6); }
+        [data-theme="light"] .stat-card { background: rgba(255, 248, 240, 0.6); }
+        [data-theme="light"] .hologram-display { background: rgba(200, 190, 180, 0.5); }
+        [data-theme="light"] .modal-content { background: linear-gradient(145deg, #f5f0e8, #e8e0d6); }
+        [data-theme="light"] .post { background: rgba(0, 0, 0, 0.03); }
+        [data-theme="light"] .post-action { color: rgba(26, 16, 8, 0.6); }
+        [data-theme="light"] .post-action:hover { background: rgba(0, 0, 0, 0.05); }
+        [data-theme="light"] .comment { background: rgba(0, 0, 0, 0.03); }
+        [data-theme="light"] .profile-stats { background: rgba(255, 248, 240, 0.6); }
+        [data-theme="light"] .profile-navbar { background: rgba(255, 248, 240, 0.6); }
+        [data-theme="light"] .social-links { background: rgba(255, 248, 240, 0.6); }
+        [data-theme="light"] .friend-item { background: rgba(0, 0, 0, 0.04); }
+        [data-theme="light"] .profile-pesan-btn { background: linear-gradient(135deg, #8d6b4b, #6b3a2a); color: #fff; }
+        [data-theme="light"] .profile-invite-btn { background: rgba(141, 107, 75, 0.15); color: #6b3a2a; border-color: #6b3a2a; }
+        [data-theme="light"] .profile-name { color: #6b3a2a; }
+        [data-theme="light"] .profile-stat-number { color: #6b3a2a; }
+        [data-theme="light"] .profile-bio { color: rgba(26, 16, 8, 0.8); }
+        [data-theme="light"] .app-footer { background: rgba(255, 248, 240, 0.6); }
+        [data-theme="light"] .app-footer a { color: #6b3a2a; }
+        [data-theme="light"] .post-user-info h4 { color: #6b3a2a; }
+        [data-theme="light"] .post-user-info h4 .profile-link { color: #6b3a2a; }
+        [data-theme="light"] .comment-user { color: #6b3a2a; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -57,22 +101,18 @@
         ::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
-        /* ===== ANIMATIONS ===== */
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
         @keyframes shiver { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-8deg); } 40% { transform: rotate(8deg); } 60% { transform: rotate(-6deg); } 80% { transform: rotate(6deg); } }
         @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
-        @keyframes notifPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
         @keyframes socialFloat { 0%, 100% { transform: translateY(0px); box-shadow: 0 4px 15px rgba(212,168,73,0.2); } 50% { transform: translateY(-8px); box-shadow: 0 8px 30px rgba(212,168,73,0.4); } }
         @keyframes socialZoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
-        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
         @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
-        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
 
-        /* ===== HEADER / APP BAR ===== */
+        /* ===== HEADER ===== */
         .app-bar {
             position: fixed;
             top: 0;
@@ -84,35 +124,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 16px;
+            padding: 0 12px;
             z-index: 1000;
             box-shadow: var(--neumorph-shadow);
             border-bottom: 2px solid var(--gold);
+            transition: background 0.3s ease;
         }
+        .app-title { display: flex; align-items: center; gap: 8px; font-weight: 600; background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1rem; cursor: pointer; }
+        .app-title .bell-icon { font-size: 1.2rem; color: var(--gold); -webkit-text-fill-color: var(--gold); animation: shiver 2s ease-in-out infinite; }
+        .app-title span { font-size: 1rem; }
+        
+        .header-center { display: flex; align-items: center; gap: 8px; }
+        .header-right { display: flex; align-items: center; gap: 6px; }
 
-        .app-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            background: linear-gradient(to right, var(--gold), var(--gold-light), var(--cream));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .app-title .bell-icon {
-            font-size: 1.4rem;
-            color: var(--gold);
-            -webkit-text-fill-color: var(--gold);
-            animation: shiver 2s ease-in-out infinite;
-        }
-
-        .back-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+        .user-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -122,46 +150,86 @@
             cursor: pointer;
             box-shadow: 5px 5px 10px #0a0604, -5px -5px 10px #2a1a0e;
             flex-shrink: 0;
+            position: relative;
             transition: all 0.3s;
-            text-decoration: none;
+            overflow: hidden;
         }
-        .back-btn:hover {
-            background: rgba(212, 168, 73, 0.2);
-            transform: scale(1.05);
-        }
-        .back-btn:active {
-            box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e;
-            transform: scale(0.95);
-        }
+        .user-btn:active { box-shadow: inset 5px 5px 10px #0a0604, inset -5px -5px 10px #2a1a0e; transform: scale(0.95); }
+        .user-btn img { width: 100%; height: 100%; object-fit: cover; }
+        .user-btn i { font-size: 1rem; }
 
-        .header-right {
+        .theme-toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: rgba(61, 35, 20, 0.4);
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--gold);
+            flex-shrink: 0;
+        }
+        .theme-toggle.active { background: rgba(212, 168, 73, 0.3); }
+        .theme-toggle .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--gold);
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(212, 168, 73, 0.3);
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            font-size: 0.5rem;
         }
+        .theme-toggle.active .toggle-thumb { left: 20px; background: var(--gold-light); }
+        .theme-toggle .toggle-thumb i { color: var(--dark); }
 
-        /* ===== PREVIEW MODE BADGE ===== */
-        .preview-badge {
+        /* ===== BOTTOM NAVIGATION ===== */
+        .bottom-nav {
             position: fixed;
-            top: var(--header-height);
+            bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(90deg, rgba(212, 168, 73, 0.2), rgba(212, 168, 73, 0.1));
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 6px 16px;
-            text-align: center;
-            z-index: 999;
-            border-bottom: 1px solid var(--gold);
-            font-size: 0.7rem;
-            color: var(--gold-light);
-            display: none;
+            height: var(--footer-height);
+            background: rgba(61, 35, 20, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 2px solid var(--gold);
+            z-index: 1000;
+            padding: 0 4px;
+            box-shadow: 0 -5px 20px var(--shadow-color);
+            transition: background 0.3s ease;
         }
-
-        .preview-badge i { margin-right: 8px; animation: shiver 2s ease-in-out infinite; }
-        .preview-badge .login-link { color: var(--gold); font-weight: 600; cursor: pointer; text-decoration: underline; transition: all 0.3s; }
-        .preview-badge .login-link:hover { color: var(--gold-light); }
-        .preview-badge.active { display: block; animation: slideUp 0.4s ease; }
+        .nav-item-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: rgba(245, 240, 232, 0.6);
+            border: none;
+            background: transparent;
+            position: relative;
+            min-width: 50px;
+            font-size: 11px;
+        }
+        .nav-item-bottom i { font-size: 1.4rem; transition: all 0.3s; }
+        .nav-item-bottom span { font-size: 0.65rem; font-weight: 500; transition: all 0.3s; }
+        .nav-item-bottom.active { color: var(--gold-light); }
+        .nav-item-bottom.active i { transform: translateY(-2px); text-shadow: 0 0 20px rgba(212, 168, 73, 0.3); }
+        .nav-item-bottom:hover { color: var(--gold); }
 
         /* ===== MAIN CONTENT ===== */
         .main-content {
@@ -172,172 +240,45 @@
             min-height: 100vh;
         }
 
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            bottom: calc(var(--footer-height) + 20px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            max-width: 400px;
-            width: 90%;
-        }
-        .toast {
-            background: linear-gradient(145deg, rgba(61, 35, 20, 0.98), rgba(13, 8, 5, 0.98));
-            border: 1px solid var(--gold);
-            border-radius: 12px;
-            padding: 12px 16px;
-            box-shadow: 0 10px 30px var(--shadow-color);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: toastIn 0.4s ease;
-            margin-bottom: 8px;
-            transition: background 0.3s ease;
-        }
-        .toast.hide { animation: toastOut 0.4s ease forwards; }
-        .toast .toast-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(212, 168, 73, 0.15); color: var(--gold); }
-        .toast .toast-content { flex: 1; }
-        .toast .toast-title { font-size: 0.75rem; font-weight: 600; color: var(--gold-light); }
-        .toast .toast-message { font-size: 0.7rem; color: var(--text-secondary); }
-        .toast .toast-close { background: none; border: none; color: rgba(245, 240, 232, 0.3); cursor: pointer; font-size: 0.8rem; padding: 4px; transition: all 0.3s; }
-        .toast .toast-close:hover { color: var(--cream); }
-
         /* ===== PROFILE PAGE ===== */
-        .profile-page {
-            padding: 20px 0;
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
+        .profile-header { text-align: center; margin-bottom: 20px; position: relative; }
         .profile-avatar-large {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            border: 3px solid var(--gold);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            font-size: 2.5rem;
-            color: var(--brown-dark);
-            cursor: pointer;
-            transition: all 0.3s;
+            width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 12px; border: 3px solid var(--gold); overflow: hidden; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--gold), var(--gold-light)); font-size: 2.5rem; color: var(--brown-dark); cursor: pointer; transition: all 0.3s;
         }
         .profile-avatar-large:hover { transform: scale(1.03); }
         .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-avatar-large i { font-size: 2.5rem; }
-
-        .profile-name { 
-            font-size: 1.2rem; 
-            font-weight: 600; 
-            color: var(--gold-light); 
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .profile-name { font-size: 1.2rem; font-weight: 600; color: var(--gold-light); cursor: pointer; transition: all 0.3s; }
         .profile-name:hover { color: var(--cream); }
-        .profile-username { 
-            font-size: 0.8rem; 
-            color: rgba(245, 240, 232, 0.5); 
-            cursor: default;
-        }
-        .profile-bio { 
-            font-size: 0.75rem; 
-            color: var(--text-primary); 
-            margin-top: 6px; 
-            opacity: 0.8;
-            cursor: default;
-        }
+        .profile-username { font-size: 0.8rem; color: rgba(245, 240, 232, 0.5); cursor: default; }
+        .profile-bio { font-size: 0.75rem; color: var(--text-primary); margin-top: 6px; opacity: 0.8; cursor: default; }
 
         .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 16px 0 10px;
-            background: var(--bg-card);
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(212, 168, 73, 0.1);
-            position: relative;
-            transition: background 0.3s ease;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 10px; background: var(--bg-card); padding: 12px; border-radius: 12px; border: 1px solid rgba(212, 168, 73, 0.1); transition: background 0.3s ease;
         }
-        .profile-stat-item { 
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            padding: 4px;
-            border-radius: 8px;
-        }
-        .profile-stat-item:hover {
-            background: rgba(212, 168, 73, 0.1);
-        }
-        .profile-stat-number { 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            color: var(--gold-light); 
-            display: block; 
-        }
-        .profile-stat-label { 
-            font-size: 0.55rem; 
-            color: rgba(245, 240, 232, 0.5); 
-        }
+        .profile-stat-item { text-align: center; cursor: pointer; transition: all 0.3s; padding: 4px; border-radius: 8px; }
+        .profile-stat-item:hover { background: rgba(212, 168, 73, 0.1); }
+        .profile-stat-number { font-size: 1.1rem; font-weight: 700; color: var(--gold-light); display: block; }
+        .profile-stat-label { font-size: 0.55rem; color: rgba(245, 240, 232, 0.5); }
 
-        /* Tombol PESAN di tengah */
-        .profile-actions {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 5px 0 12px;
-            flex-wrap: wrap;
-        }
+        .profile-actions { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 5px 0 12px; flex-wrap: wrap; }
         .profile-pesan-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            color: var(--dark);
-            border: none;
-            padding: 8px 24px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3);
-            transition: all 0.3s;
-            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--dark); border: none; padding: 8px 24px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3); transition: all 0.3s; text-decoration: none;
         }
-        .profile-pesan-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4);
-        }
-
+        .profile-pesan-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 168, 73, 0.4); }
         .profile-invite-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(212, 168, 73, 0.15);
-            color: var(--gold-light);
-            border: 1px solid var(--gold);
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(212, 168, 73, 0.15); color: var(--gold-light); border: 1px solid var(--gold); padding: 8px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.3s; text-decoration: none;
         }
-        .profile-invite-btn:hover {
-            background: rgba(212, 168, 73, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(212, 168, 73, 0.2);
+        .profile-invite-btn:hover { background: rgba(212, 168, 73, 0.25); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(212, 168, 73, 0.2); }
+
+        .profile-navbar { display: none; margin-bottom: 12px; }
+        .profile-navbar.active { display: block; }
+        .profile-nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: var(--bg-card); padding: 8px; border-radius: 12px; border: 1px solid rgba(212, 168, 73, 0.1); }
+        .profile-nav-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 6px; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-decoration: none; color: rgba(245, 240, 232, 0.7); background: rgba(255, 248, 240, 0.03); border: 1px solid transparent; font-size: 0.6rem; gap: 4px;
         }
+        .profile-nav-item:hover { background: rgba(212, 168, 73, 0.1); border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
+        .profile-nav-item span:first-child { font-size: 1.4rem; }
+        .profile-nav-item span:last-child { font-size: 0.6rem; }
 
         /* ===== POST SECTION ===== */
         .post-section {
@@ -376,24 +317,11 @@
         .post-profile-pic:hover { transform: scale(1.05); }
         .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         .post-profile-pic i { color: var(--brown-dark); font-size: 0.85rem; }
-        .post-user-info h4 { 
-            font-size: 0.85rem; 
-            color: var(--gold-light);
-        }
-        .post-user-info h4 .profile-link { 
-            color: var(--gold-light); 
-            text-decoration: none; 
-            cursor: pointer; 
-            transition: all 0.3s; 
-        }
+        .post-user-info h4 { font-size: 0.85rem; color: var(--gold-light); }
+        .post-user-info h4 .profile-link { color: var(--gold-light); text-decoration: none; cursor: pointer; transition: all 0.3s; }
         .post-user-info h4 .profile-link:hover { text-decoration: underline; color: var(--cream); }
-        .post-user-info small { 
-            font-size: 0.55rem; 
-            color: rgba(245, 240, 232, 0.4); 
-        }
+        .post-user-info small { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); }
 
-        .post-feed { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
-        .post { background: rgba(255, 248, 240, 0.03); border-radius: 10px; padding: 14px; border: 1px solid rgba(212, 168, 73, 0.1); position: relative; transition: background 0.3s ease; }
         .post-content { margin: 8px 0; }
         .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--text-primary); }
         .post-media { margin: 8px 0; }
@@ -423,12 +351,9 @@
         .post-action i { font-size: 0.8rem; }
         .post-action.liked { color: #ff6b35; }
         .post-action.liked i { color: #ff6b35; }
-        .post-action.liked .fa-heart { animation: heartBeat 0.3s ease; }
         .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
         .post-action.share { color: rgba(76, 201, 240, 0.6); }
         .post-action.share:hover { color: #4cc9f0; }
-        .post-action.comment-toggle { color: rgba(76, 201, 240, 0.6); }
-        .post-action.comment-toggle:hover { color: #4cc9f0; }
 
         .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
         .comment { display: flex; flex-direction: column; margin-bottom: 8px; padding: 6px 8px; background: rgba(255, 248, 240, 0.03); border-radius: 8px; transition: background 0.3s ease; }
@@ -451,21 +376,13 @@
         .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         .comment-profile-pic i { font-size: 0.65rem; color: var(--brown-dark); }
         .comment-content { flex: 1; }
-        .comment-user { 
-            font-weight: 600; 
-            font-size: 0.65rem; 
-            color: var(--gold-light);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .comment-user { font-weight: 600; font-size: 0.65rem; color: var(--gold-light); cursor: pointer; transition: all 0.3s; }
         .comment-user:hover { text-decoration: underline; color: var(--cream); }
         .comment-text { font-size: 0.7rem; color: var(--text-primary); margin: 2px 0; }
         .comment-time { font-size: 0.5rem; color: rgba(245, 240, 232, 0.35); }
         .comment-actions { display: flex; gap: 10px; margin-top: 4px; }
         .comment-action { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); cursor: pointer; transition: all 0.3s; }
         .comment-action:hover { color: var(--gold-light); }
-        .comment-action.delete-comment { color: rgba(255, 107, 53, 0.4); }
-        .comment-action.delete-comment:hover { color: #ff6b35; }
         .comment-replies { margin-left: 34px; margin-top: 6px; border-left: 2px solid rgba(212, 168, 73, 0.15); padding-left: 10px; }
         .reply-comment { margin-bottom: 6px; padding: 4px 6px; background: rgba(255, 248, 240, 0.02); border-radius: 6px; }
         .reply-comment .comment-main { display: flex; align-items: flex-start; gap: 6px; }
@@ -475,260 +392,6 @@
         .reply-comment .comment-user:hover { text-decoration: underline; color: var(--cream); }
         .reply-comment .comment-text { font-size: 0.65rem; }
         .reply-comment .comment-time { font-size: 0.45rem; }
-
-        .add-comment { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
-        .comment-input { 
-            flex: 1; 
-            background: var(--input-bg); 
-            border: 1px solid var(--input-border); 
-            border-radius: 18px; 
-            padding: 6px 12px; 
-            color: var(--text-primary); 
-            font-size: 0.65rem; 
-            transition: all 0.3s;
-            min-height: 32px;
-        }
-        .comment-input:focus { outline: none; border-color: var(--gold); }
-        .comment-input::placeholder { color: rgba(245, 240, 232, 0.3); }
-        .send-comment { 
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark)); 
-            border: none; 
-            width: 28px; 
-            height: 28px; 
-            border-radius: 50%; 
-            color: var(--dark); 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 0.65rem; 
-            flex-shrink: 0;
-            transition: all 0.3s;
-        }
-        .send-comment:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3); }
-        .send-comment:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        /* ===== PROFILE NAVBAR ===== */
-        .profile-navbar {
-            margin-top: 12px;
-            padding: 8px 0;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid rgba(212, 168, 73, 0.1);
-            transition: background 0.3s ease;
-        }
-
-        .profile-nav-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-
-        .profile-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 6px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: rgba(245, 240, 232, 0.7);
-            background: rgba(255, 248, 240, 0.03);
-            border: 1px solid transparent;
-            font-size: 0.6rem;
-            gap: 4px;
-        }
-        .profile-nav-item:hover {
-            background: rgba(212, 168, 73, 0.1);
-            border-color: var(--gold);
-            color: var(--gold-light);
-            transform: translateY(-2px);
-        }
-        .profile-nav-item span:first-child { font-size: 1.4rem; }
-        .profile-nav-item span:last-child { font-size: 0.6rem; }
-
-        /* ===== MODALS ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-
-        .modal-content {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 20px 18px;
-            border: 2px solid var(--gold);
-            box-shadow: 0 30px 60px var(--shadow-color), 0 0 40px rgba(212, 168, 73, 0.1);
-            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin: 0 auto;
-            transition: background 0.3s ease;
-        }
-
-        .modal-content::-webkit-scrollbar { width: 3px; }
-        .modal-content::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
-        .modal-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--gold);
-            flex-shrink: 0;
-        }
-        .modal-title {
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(to right, var(--gold), var(--gold-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .modal-title .badge-count {
-            background: rgba(212, 168, 73, 0.2);
-            color: var(--gold-light);
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-        }
-        .modal-close { 
-            background: rgba(255, 255, 255, 0.05); 
-            border: none; 
-            color: var(--text-primary); 
-            width: 30px; 
-            height: 30px; 
-            border-radius: 50%; 
-            font-size: 0.9rem; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: all 0.3s; 
-            border: 1px solid rgba(212, 168, 73, 0.2); 
-        }
-        .modal-close:hover { background: rgba(255, 107, 53, 0.2); transform: rotate(90deg); }
-
-        .modal-body { 
-            color: var(--text-primary); 
-            font-size: 0.75rem; 
-            overflow-y: auto; 
-            flex: 1; 
-            padding: 0 2px;
-        }
-
-        .modal-footer {
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(212, 168, 73, 0.1);
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-        .modal-footer .btn-close-modal {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-primary);
-            border: 1px solid rgba(212, 168, 73, 0.2);
-            border-radius: 5px;
-            padding: 8px 30px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        .modal-footer .btn-close-modal:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--gold);
-        }
-
-        .friend-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 10px;
-            background: rgba(61, 35, 20, 0.3);
-            margin-bottom: 8px;
-            border: 1px solid rgba(212, 168, 73, 0.1);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        .friend-item:hover { background: rgba(61, 35, 20, 0.5); border-color: var(--gold-light); }
-        .friend-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--brown-dark);
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .friend-avatar:hover { transform: scale(1.05); }
-        .friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .friend-info { flex: 1; }
-        .friend-name { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; cursor: pointer; transition: all 0.3s; }
-        .friend-name:hover { color: var(--gold-light); }
-        .friend-status { font-size: 0.6rem; color: rgba(245, 240, 232, 0.4); }
-
-        .report-list-item {
-            background: rgba(61, 35, 20, 0.3);
-            border-radius: 10px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(212, 168, 73, 0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .report-list-item:hover { border-color: var(--gold-light); background: rgba(61, 35, 20, 0.5); }
-        .report-list-item .alert-icon { width: 32px; height: 32px; font-size: 0.8rem; flex-shrink: 0; background: rgba(212, 168, 73, 0.1); border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); }
-        .report-list-item .report-info { flex: 1; min-width: 0; }
-        .report-list-item .report-title { font-size: 0.8rem; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .report-list-item .report-desc { font-size: 0.65rem; color: var(--text-secondary); }
-        .report-list-item .report-time { font-size: 0.6rem; color: var(--gold); flex-shrink: 0; }
-
-        /* ===== FOOTER ===== */
-        .app-footer {
-            background: var(--bg-card);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 14px 16px;
-            text-align: center;
-            border-top: 1px solid var(--gold);
-            margin-top: 16px;
-            border-radius: 12px;
-            transition: background 0.3s ease;
-        }
-        .app-footer a { color: var(--gold); text-decoration: none; font-size: 9px; transition: all 0.3s; }
-        .app-footer a:hover { color: var(--gold-light); }
 
         /* ===== SOCIAL LINKS ===== */
         .social-links {
@@ -768,159 +431,436 @@
         .social-link.youtube:hover { color: #ff0000; border-color: #ff0000; box-shadow: 0 8px 30px rgba(255, 0, 0, 0.3); }
         .social-link.portfolio:hover { color: #4fc3f7; border-color: #4fc3f7; box-shadow: 0 8px 30px rgba(79, 195, 247, 0.3); }
 
+        /* ===== FOOTER ===== */
+        .app-footer {
+            background: var(--bg-card);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 14px 16px;
+            text-align: center;
+            border-top: 1px solid var(--gold);
+            margin-top: 16px;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+        .app-footer a { color: var(--gold); text-decoration: none; font-size: 9px; transition: all 0.3s; }
+        .app-footer a:hover { color: var(--gold-light); }
+
+        /* ===== MODALS ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px 18px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 30px 60px var(--shadow-color), 0 0 40px rgba(212, 168, 73, 0.1);
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0 auto;
+            transition: background 0.3s ease;
+        }
+        .modal-content .modal-body-scroll {
+            overflow-y: auto;
+            max-height: calc(85vh - 140px);
+            padding-right: 4px;
+            margin-right: -4px;
+        }
+        .modal-content .modal-body-scroll::-webkit-scrollbar { width: 3px; }
+        .modal-content .modal-body-scroll::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.2); border-radius: 3px; }
+        .modal-content .modal-body-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold);
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 2;
+            border-radius: 18px 18px 0 0;
+        }
+        .modal-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(212, 168, 73, 0.1);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-shrink: 0;
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-primary);
+            z-index: 2;
+            border-radius: 0 0 18px 18px;
+            padding-bottom: 4px;
+        }
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(to right, var(--gold), var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-title .badge-count {
+            background: rgba(212, 168, 73, 0.2);
+            color: var(--gold-light);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+        .modal-close { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: none; 
+            color: var(--text-primary); 
+            width: 30px; 
+            height: 30px; 
+            border-radius: 50%; 
+            font-size: 0.9rem; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.3s; 
+            border: 1px solid rgba(212, 168, 73, 0.2); 
+        }
+        .modal-close:hover { background: rgba(255, 107, 53, 0.2); transform: rotate(90deg); }
+        .modal-footer .btn-close-modal {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            border-radius: 5px;
+            padding: 8px 30px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .modal-footer .btn-close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--gold);
+        }
+
+        /* ===== FRIEND ITEM ===== */
+        .friend-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; background: rgba(61, 35, 20, 0.3); margin-bottom: 8px; border: 1px solid rgba(212, 168, 73, 0.1); transition: all 0.3s; cursor: pointer;
+        }
+        .friend-item:hover { background: rgba(61, 35, 20, 0.5); border-color: var(--gold-light); }
+        .friend-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); display: flex; align-items: center; justify-content: center; color: var(--brown-dark); font-size: 1.2rem; flex-shrink: 0; overflow: hidden; cursor: pointer;
+        }
+        .friend-avatar:hover { transform: scale(1.05); }
+        .friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .friend-info { flex: 1; }
+        .friend-name { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; cursor: pointer; transition: all 0.3s; }
+        .friend-name:hover { color: var(--gold-light); }
+        .friend-status { font-size: 0.6rem; color: rgba(245, 240, 232, 0.4); }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: calc(var(--footer-height) + 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            max-width: 400px;
+            width: 90%;
+        }
+        .toast {
+            background: linear-gradient(145deg, rgba(61, 35, 20, 0.98), rgba(13, 8, 5, 0.98));
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastIn 0.4s ease;
+            margin-bottom: 8px;
+            transition: background 0.3s ease;
+        }
+        .toast.hide { animation: toastOut 0.4s ease forwards; }
+        .toast .toast-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(212, 168, 73, 0.15); color: var(--gold); }
+        .toast .toast-content { flex: 1; }
+        .toast .toast-title { font-size: 0.75rem; font-weight: 600; color: var(--gold-light); }
+        .toast .toast-message { font-size: 0.7rem; color: var(--text-secondary); }
+        .toast .toast-close { background: none; border: none; color: rgba(245, 240, 232, 0.3); cursor: pointer; font-size: 0.8rem; padding: 4px; transition: all 0.3s; }
+        .toast .toast-close:hover { color: var(--cream); }
+
+        /* ===== BIO DATA ===== */
+        .bio-data-content { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 0; }
+        .bio-data-item {
+            background: rgba(255, 248, 240, 0.03); border-radius: 8px; padding: 8px 10px; border: 1px solid rgba(212, 168, 73, 0.1);
+        }
+        .bio-data-item .bio-label { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); display: block; }
+        .bio-data-item .bio-value { font-size: 0.75rem; color: var(--gold-light); font-weight: 500; margin-top: 2px; word-break: break-word; }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .main-content { padding: calc(var(--header-height) + 10px) 10px calc(var(--footer-height) + 10px); }
             .modal-content { padding: 16px 14px; max-height: 90vh; }
             .modal-title { font-size: 0.9rem; }
-            .app-title { font-size: 0.95rem; }
-            .app-title .bell-icon { font-size: 1rem; }
-            .profile-nav-grid { grid-template-columns: repeat(3, 1fr); }
-            .profile-pesan-btn { font-size: 0.65rem; padding: 6px 16px; }
-            .profile-invite-btn { font-size: 0.65rem; padding: 6px 14px; }
-            .profile-actions { gap: 6px; }
-            .post-actions { gap: 8px; }
-            .post-action { font-size: 0.6rem; padding: 2px 4px; }
-            .comment-main { gap: 6px; }
-            .comment-profile-pic { width: 22px; height: 22px; }
+            .app-title { font-size: 0.9rem; }
+            .nav-item-bottom { min-width: 45px; padding: 3px 4px; }
+            .nav-item-bottom i { font-size: 1.1rem; }
+            .nav-item-bottom span { font-size: 0.55rem; }
+            .profile-avatar-large { width: 70px; height: 70px; font-size: 2rem; }
+            .profile-name { font-size: 1rem; }
+            .profile-nav-grid { grid-template-columns: repeat(4, 1fr); }
             .social-link { width: 38px; height: 38px; font-size: 1rem; }
             .social-links { gap: 12px; padding: 10px 0; }
             .app-footer { padding: 12px 10px; }
-            .add-comment { flex-wrap: wrap; }
-            .comment-input { font-size: 0.6rem; padding: 4px 10px; }
-            .send-comment { width: 24px; height: 24px; font-size: 0.6rem; }
+            .bio-data-content { grid-template-columns: 1fr; }
+            .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px; }
+            .theme-toggle { width: 34px; height: 18px; }
+            .theme-toggle .toggle-thumb { width: 14px; height: 14px; font-size: 0.45rem; }
+            .theme-toggle.active .toggle-thumb { left: 17px; }
         }
 
         @media (max-width: 380px) {
-            .profile-nav-grid { grid-template-columns: repeat(3, 1fr); }
+            .profile-nav-grid { grid-template-columns: repeat(4, 1fr); }
+            .nav-item-bottom { min-width: 38px; padding: 2px 3px; }
+            .nav-item-bottom i { font-size: 0.95rem; }
+            .nav-item-bottom span { font-size: 0.45rem; }
             .social-link { width: 34px; height: 34px; font-size: 0.9rem; }
+            .theme-toggle { width: 30px; height: 16px; }
+            .theme-toggle .toggle-thumb { width: 12px; height: 12px; font-size: 0.4rem; }
+            .theme-toggle.active .toggle-thumb { left: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== PREVIEW MODE BADGE ===== -->
-    <div class="preview-badge" id="previewBadge">
-        <i class="fas fa-eye"></i>
-        <span>Mode Preview - Anda melihat profil dalam mode baca. </span>
-        <span class="login-link" id="badgeLoginLink">Masuk untuk berinteraksi</span>
-    </div>
-
     <!-- ===== HEADER ===== -->
     <header class="app-bar">
-        <div class="app-title" id="appTitle">
+        <div class="app-title" id="appTitle" onclick="goToDashboard()">
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
         </div>
+        <div class="header-center">
+            <div class="theme-toggle" id="themeToggle">
+                <div class="toggle-thumb" id="toggleThumb">
+                    <i class="fas fa-moon" id="toggleIcon"></i>
+                </div>
+            </div>
+        </div>
         <div class="header-right">
-            <a href="dashboard.html" class="back-btn" id="backBtn" title="Kembali">
-                <i class="fas fa-arrow-left"></i>
-            </a>
+            <div class="user-btn" id="userBtn">
+                <i class="fas fa-user"></i>
+            </div>
         </div>
     </header>
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content" id="mainContent">
-        <div class="profile-page" id="profilePage">
-            <div class="profile-header">
-                <div class="profile-avatar-large" id="profileAvatarLarge" onclick="openProfileUser(targetUser?.username)">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="profile-name" id="profileName" onclick="openProfileUser(targetUser?.username)">Nama Pengguna</div>
-                <div class="profile-username" id="profileUsername">@username</div>
-                <div class="profile-bio" id="profileBio">Bergabung di SALINK untuk keamanan bersama</div>
+        
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar-large" id="profileAvatarLarge">
+                <i class="fas fa-user"></i>
             </div>
-            
-            <div class="profile-stats">
-                <div class="profile-stat-item" onclick="openPostinganModal()">
-                    <span class="profile-stat-number" id="profileStatPosts">0</span>
-                    <span class="profile-stat-label">Postingan</span>
-                </div>
-                <div class="profile-stat-item" onclick="openPengikutModal()">
-                    <span class="profile-stat-number" id="profileStatFollowers">0</span>
-                    <span class="profile-stat-label">Pengikut</span>
-                </div>
-                <div class="profile-stat-item" onclick="openMengikutiModal()">
-                    <span class="profile-stat-number" id="profileStatFollowing">0</span>
-                    <span class="profile-stat-label">Mengikuti</span>
-                </div>
+            <div class="profile-name" id="profileName">Nama Pengguna</div>
+            <div class="profile-username" id="profileUsername">@username</div>
+            <div class="profile-bio" id="profileBio">Bergabung di SALINK untuk keamanan bersama</div>
+        </div>
+        
+        <!-- Profile Stats -->
+        <div class="profile-stats">
+            <div class="profile-stat-item" onclick="openPostinganModal()">
+                <span class="profile-stat-number" id="profileStatPosts">0</span>
+                <span class="profile-stat-label">Postingan</span>
             </div>
+            <div class="profile-stat-item" onclick="openPengikutModal()">
+                <span class="profile-stat-number" id="profileStatFollowers">0</span>
+                <span class="profile-stat-label">Pengikut</span>
+            </div>
+            <div class="profile-stat-item" onclick="openMengikutiModal()">
+                <span class="profile-stat-number" id="profileStatFollowing">0</span>
+                <span class="profile-stat-label">Mengikuti</span>
+            </div>
+        </div>
 
-            <!-- Tombol PESAN di tengah + INVITE -->
-            <div class="profile-actions">
-                <a href="pesan.html" target="_blank" class="profile-pesan-btn" id="profilePesanBtn">
-                    <i class="fas fa-paper-plane"></i> PESAN
-                </a>
-                <button class="profile-invite-btn" id="profileInviteBtn">
-                    <i class="fas fa-user-plus"></i> INVITE
-                </button>
-            </div>
+        <!-- Profile Actions -->
+        <div class="profile-actions">
+            <a href="#" class="profile-pesan-btn" id="profilePesanBtn">
+                <i class="fas fa-paper-plane"></i> PESAN
+            </a>
+            <a href="#" class="profile-invite-btn" id="profileInviteBtn">
+                <i class="fas fa-user-plus"></i> INVITE
+            </a>
+        </div>
 
-            <!-- ===== NAVBAR (3 items) ===== -->
-            <div class="profile-navbar" id="profileNavbar">
-                <div class="profile-nav-grid">
-                    <a href="#" class="profile-nav-item" onclick="showToast('📷 Foto', 'Halaman foto akan segera hadir', 'fa-image')">
-                        <span>🖼️</span>
-                        <span>Foto</span>
-                    </a>
-                    <a href="#" class="profile-nav-item" id="profileTemanBtn">
-                        <span>🧑‍🤝‍🧑</span>
-                        <span>Teman</span>
-                    </a>
-                    <a href="#" class="profile-nav-item" onclick="showToast('📊 Statistik', 'Statistik profil pengguna', 'fa-chart-bar')">
-                        <span>📊</span>
-                        <span>Statistik</span>
-                    </a>
-                </div>
+        <!-- Navbar -->
+        <div class="profile-navbar active" id="profileNavbar">
+            <div class="profile-nav-grid">
+                <a href="#" class="profile-nav-item" onclick="showToast('ℹ️ Info', 'Fitur ini hanya tersedia untuk pemilik profil', 'fa-info-circle')">
+                    <span>🛍️</span>
+                    <span>Jual</span>
+                </a>
+                <a href="#" class="profile-nav-item" onclick="showToast('ℹ️ Info', 'Fitur ini hanya tersedia untuk pemilik profil', 'fa-info-circle')">
+                    <span>🖼️</span>
+                    <span>Foto</span>
+                </a>
+                <a href="#" class="profile-nav-item" id="profileTemanBtn">
+                    <span>🧑‍🤝‍🧑</span>
+                    <span>Teman</span>
+                </a>
+                <a href="#" class="profile-nav-item" id="profileBiodataBtn">
+                    <span>🕵🏻</span>
+                    <span>Biodata</span>
+                </a>
             </div>
+        </div>
 
-            <!-- ===== POSTINGAN ===== -->
-            <div class="post-section" style="margin-top:12px;">
-                <h4 style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;">📄 Postingan</h4>
-                <div id="profilePosts"></div>
-            </div>
+        <!-- Postingan Section -->
+        <div class="post-section" style="margin-top:12px;">
+            <h4 style="color:var(--gold-light);font-size:0.9rem;margin-bottom:10px;">📄 Postingan</h4>
+            <div id="profilePosts"></div>
+        </div>
 
-            <!-- Footer -->
-            <div class="app-footer">
-                <div style="max-width:600px;margin:0 auto;color:rgba(245,240,232,0.6);font-size:9px;">
-                    <p style="font-weight:500;color:var(--gold-light);font-size:10px;margin-bottom:6px;">SALINK - Sistem Peringatan Darurat Masyarakat</p>
-                    <div style="display:flex;justify-content:center;gap:12px;margin-top:6px;flex-wrap:wrap;">
-                        <a href="#">Tentang Kami</a>
-                        <a href="#">Kebijakan Privasi</a>
-                        <a href="#">Syarat & Ketentuan</a>
-                        <a href="#">Kontak</a>
-                    </div>
-                    <p style="margin-top:8px;font-size:9px;color:rgba(245,240,232,0.4);">&copy; 2026 SALINK. Semua hak dilindungi.</p>
-                </div>
-            </div>
+        <!-- Social Links -->
+        <div class="social-links">
+            <a href="#" class="social-link facebook" onclick="showToast('ℹ️ Info', 'Social link tidak tersedia untuk pengunjung', 'fa-info-circle')">
+                <span class="social-tooltip">Facebook</span>
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link tiktok" onclick="showToast('ℹ️ Info', 'Social link tidak tersedia untuk pengunjung', 'fa-info-circle')">
+                <span class="social-tooltip">TikTok</span>
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="#" class="social-link youtube" onclick="showToast('ℹ️ Info', 'Social link tidak tersedia untuk pengunjung', 'fa-info-circle')">
+                <span class="social-tooltip">YouTube</span>
+                <i class="fab fa-youtube"></i>
+            </a>
+            <a href="#" class="social-link portfolio" onclick="showToast('ℹ️ Info', 'Social link tidak tersedia untuk pengunjung', 'fa-info-circle')">
+                <span class="social-tooltip">Portofolio</span>
+                <i class="fas fa-briefcase"></i>
+            </a>
+        </div>
 
-            <!-- Social Media Links -->
-            <div class="social-links">
-                <a href="https://www.facebook.com/share/ZZZ7RYBWbxiF7S1t/?mibextid=qi2Omg" target="_blank" class="social-link facebook" title="Facebook">
-                    <span class="social-tooltip">Facebook</span>
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://www.tiktok.com/@kang_l.01?_r=1&_t=ZS-97atOlBoJjM" target="_blank" class="social-link tiktok" title="TikTok">
-                    <span class="social-tooltip">TikTok</span>
-                    <i class="fab fa-tiktok"></i>
-                </a>
-                <a href="https://www.youtube.com/channel/UCqWjymCh1tyLa50nyn687PA" target="_blank" class="social-link youtube" title="YouTube">
-                    <span class="social-tooltip">YouTube</span>
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <a href="https://bio-data-pi-three.vercel.app/" target="_blank" class="social-link portfolio" title="Portofolio">
-                    <span class="social-tooltip">Portofolio</span>
-                    <i class="fas fa-briefcase"></i>
-                </a>
+        <!-- Footer -->
+        <div class="app-footer">
+            <div style="max-width:600px;margin:0 auto;color:rgba(245,240,232,0.6);font-size:9px;">
+                <p style="font-weight:500;color:var(--gold-light);font-size:10px;margin-bottom:6px;">SALINK - Sistem Peringatan Darurat Masyarakat</p>
+                <p style="margin-top:8px;font-size:9px;color:rgba(245,240,232,0.4);">&copy; 2026 SALINK. Semua hak dilindungi.</p>
             </div>
         </div>
     </main>
 
+    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item-bottom" onclick="goToDashboard()">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item-bottom" onclick="showToast('ℹ️ Info', 'Fitur ini hanya tersedia untuk pemilik profil', 'fa-info-circle')">
+            <i class="fas fa-store"></i>
+            <span>Toko</span>
+        </a>
+        <a href="#" class="nav-item-bottom" onclick="showToast('ℹ️ Info', 'Fitur ini hanya tersedia untuk pemilik profil', 'fa-info-circle')">
+            <i class="fas fa-user-plus"></i>
+            <span>Invite</span>
+        </a>
+        <a href="#" class="nav-item-bottom" onclick="showToast('ℹ️ Info', 'Fitur ini hanya tersedia untuk pemilik profil', 'fa-info-circle')">
+            <i class="fas fa-bell"></i>
+            <span>Notif</span>
+        </a>
+        <a href="#" class="nav-item-bottom active">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
     <!-- ===== MODALS ===== -->
     
+    <!-- Postingan Modal -->
+    <div class="modal-overlay" id="postinganModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-file-alt"></i>
+                    <span>📄 Postingan</span>
+                    <span class="badge-count" id="postinganCount">0</span>
+                </div>
+                <button class="modal-close" id="postinganModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="postinganModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closePostinganModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pengikut Modal -->
+    <div class="modal-overlay" id="pengikutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-friends"></i>
+                    <span>👥 Pengikut</span>
+                    <span class="badge-count" id="pengikutCount">0</span>
+                </div>
+                <button class="modal-close" id="pengikutModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="pengikutModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closePengikutModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mengikuti Modal -->
+    <div class="modal-overlay" id="mengikutiModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-user-plus"></i>
+                    <span>📌 Mengikuti</span>
+                    <span class="badge-count" id="mengikutiCount">0</span>
+                </div>
+                <button class="modal-close" id="mengikutiModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="mengikutiModalBody"></div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closeMengikutiModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Teman Modal -->
     <div class="modal-overlay" id="temanModal">
-        <div class="modal-content" style="max-width:480px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fas fa-users"></i>
@@ -938,122 +878,201 @@
         </div>
     </div>
 
-    <!-- Postingan Modal -->
-    <div class="modal-overlay" id="postinganModal">
-        <div class="modal-content" style="max-width:480px;">
+    <!-- Biodata Modal -->
+    <div class="modal-overlay" id="biodataModal">
+        <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
-                    <i class="fas fa-file-alt"></i>
-                    <span>📄 Semua Postingan</span>
-                    <span class="badge-count" id="postinganCount">0</span>
+                    <i class="fas fa-id-card"></i>
+                    <span>🕵🏻 Biodata Profil</span>
                 </div>
-                <button class="modal-close" id="postinganModalClose">
+                <button class="modal-close" id="biodataModalClose">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body" id="postinganModalBody"></div>
+            <div class="modal-body modal-body-scroll" id="biodataModalBody"></div>
             <div class="modal-footer">
-                <button class="btn-close-modal" onclick="closePostinganModal()">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pengikut Modal -->
-    <div class="modal-overlay" id="pengikutModal">
-        <div class="modal-content" style="max-width:480px;">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fas fa-user-friends"></i>
-                    <span>👥 Daftar Pengikut</span>
-                    <span class="badge-count" id="pengikutCount">0</span>
-                </div>
-                <button class="modal-close" id="pengikutModalClose">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="pengikutModalBody"></div>
-            <div class="modal-footer">
-                <button class="btn-close-modal" onclick="closePengikutModal()">Tutup</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mengikuti Modal -->
-    <div class="modal-overlay" id="mengikutiModal">
-        <div class="modal-content" style="max-width:480px;">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="fas fa-user-plus"></i>
-                    <span>👤 Mengikuti</span>
-                    <span class="badge-count" id="mengikutiCount">0</span>
-                </div>
-                <button class="modal-close" id="mengikutiModalClose">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="mengikutiModalBody"></div>
-            <div class="modal-footer">
-                <button class="btn-close-modal" onclick="closeMengikutiModal()">Tutup</button>
+                <button class="btn-close-modal" onclick="closeBiodataModal()">Tutup</button>
             </div>
         </div>
     </div>
 
     <script>
         // ================================================================
-        // KONFIGURASI & STATE
+        // DATA PROFIL USER - DIAMBIL DARI URL PARAMETER
         // ================================================================
         
-        let currentUser = null;
-        let targetUser = null;
+        let profileUser = null;
+        let currentViewer = null;
         let posts = [];
         let friends = [];
-        let toastTimeout = null;
+        let notificationIdCounter = 0;
+
+        // Fungsi untuk mengambil data dari localStorage
+        function getUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('salink_users') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function getPosts() {
+            try {
+                return JSON.parse(localStorage.getItem('salink_posts') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function getNotifications() {
+            try {
+                return JSON.parse(localStorage.getItem('salink_notifications') || '[]');
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveNotifications(notif) {
+            try {
+                const existing = getNotifications();
+                existing.push(notif);
+                localStorage.setItem('salink_notifications', JSON.stringify(existing));
+            } catch (e) {}
+        }
 
         // ================================================================
-        // DOM ELEMENTS
+        // LOAD DATA DARI URL PARAMETER
         // ================================================================
         
-        const profileAvatarLarge = document.getElementById('profileAvatarLarge');
-        const profileName = document.getElementById('profileName');
-        const profileUsername = document.getElementById('profileUsername');
-        const profileBio = document.getElementById('profileBio');
-        const profileStatPosts = document.getElementById('profileStatPosts');
-        const profileStatFollowers = document.getElementById('profileStatFollowers');
-        const profileStatFollowing = document.getElementById('profileStatFollowing');
-        const profilePosts = document.getElementById('profilePosts');
-        const profilePesanBtn = document.getElementById('profilePesanBtn');
-        const profileInviteBtn = document.getElementById('profileInviteBtn');
-        const profileTemanBtn = document.getElementById('profileTemanBtn');
-        const backBtn = document.getElementById('backBtn');
+        function loadProfileFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userData = urlParams.get('user');
+            
+            if (userData) {
+                try {
+                    const decoded = decodeURIComponent(userData);
+                    const parsed = JSON.parse(decoded);
+                    
+                    // Validasi data
+                    if (parsed && parsed.username) {
+                        profileUser = parsed;
+                        console.log('✅ Profil user loaded from URL:', profileUser.fullName);
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn('Gagal parsing data user dari URL:', e);
+                }
+            }
+            
+            // Jika gagal, coba cari dari localStorage berdasarkan username
+            const username = urlParams.get('username');
+            if (username) {
+                const users = getUsers();
+                const found = users.find(u => u.username === username);
+                if (found) {
+                    profileUser = found;
+                    console.log('✅ Profil user loaded from localStorage:', profileUser.fullName);
+                    return true;
+                }
+            }
+            
+            // Jika masih gagal, coba ambil dari localStorage current user
+            try {
+                const savedUser = localStorage.getItem('salink_user');
+                if (savedUser) {
+                    profileUser = JSON.parse(savedUser);
+                    console.log('✅ Profil user loaded from current user:', profileUser.fullName);
+                    return true;
+                }
+            } catch (e) {}
+            
+            // Fallback: data dummy
+            profileUser = {
+                username: 'user',
+                fullName: 'Pengguna',
+                gender: 'male',
+                email: 'user@salink.id',
+                phone: '08123456789',
+                country: 'Indonesia',
+                province: 'DKI Jakarta',
+                city: 'Jakarta Selatan',
+                district: 'Setiabudi',
+                village: 'Karet Kuningan',
+                address: 'Jl. H. R. Rasuna Said GAMA TOWER FL 8',
+                bio: 'Bergabung di SALINK untuk keamanan bersama',
+                joinedDate: new Date().toLocaleString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+                profilePicture: null,
+                mapLink: '',
+                password: '••••••••'
+            };
+            console.log('⚠️ Menggunakan data profil default');
+            return false;
+        }
+
+        // ================================================================
+        // LOAD CURRENT VIEWER
+        // ================================================================
         
-        const temanModal = document.getElementById('temanModal');
-        const temanModalClose = document.getElementById('temanModalClose');
-        const temanModalBody = document.getElementById('temanModalBody');
-        const totalTemanCount = document.getElementById('totalTemanCount');
+        function loadCurrentViewer() {
+            try {
+                const saved = localStorage.getItem('salink_user');
+                if (saved) {
+                    currentViewer = JSON.parse(saved);
+                }
+            } catch (e) {}
+        }
+
+        // ================================================================
+        // THEME TOGGLE
+        // ================================================================
         
-        const postinganModal = document.getElementById('postinganModal');
-        const postinganModalClose = document.getElementById('postinganModalClose');
-        const postinganModalBody = document.getElementById('postinganModalBody');
-        const postinganCount = document.getElementById('postinganCount');
-        
-        const pengikutModal = document.getElementById('pengikutModal');
-        const pengikutModalClose = document.getElementById('pengikutModalClose');
-        const pengikutModalBody = document.getElementById('pengikutModalBody');
-        const pengikutCount = document.getElementById('pengikutCount');
-        
-        const mengikutiModal = document.getElementById('mengikutiModal');
-        const mengikutiModalClose = document.getElementById('mengikutiModalClose');
-        const mengikutiModalBody = document.getElementById('mengikutiModalBody');
-        const mengikutiCount = document.getElementById('mengikutiCount');
+        let currentTheme = 'dark';
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const toggleThumb = document.getElementById('toggleThumb');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const metaThemeColor = document.getElementById('themeColorMeta');
+            
+            if (currentTheme === 'dark') {
+                currentTheme = 'light';
+                html.setAttribute('data-theme', 'light');
+                themeToggle.classList.add('active');
+                toggleIcon.className = 'fas fa-sun';
+                if (metaThemeColor) metaThemeColor.content = '#f5f0e8';
+                localStorage.setItem('salink_theme', 'light');
+            } else {
+                currentTheme = 'dark';
+                html.removeAttribute('data-theme');
+                themeToggle.classList.remove('active');
+                toggleIcon.className = 'fas fa-moon';
+                if (metaThemeColor) metaThemeColor.content = '#3d2314';
+                localStorage.setItem('salink_theme', 'dark');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('salink_theme');
+            if (savedTheme === 'light') {
+                currentTheme = 'light';
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.getElementById('themeToggle').classList.add('active');
+                document.getElementById('toggleIcon').className = 'fas fa-sun';
+                const metaThemeColor = document.getElementById('themeColorMeta');
+                if (metaThemeColor) metaThemeColor.content = '#f5f0e8';
+            }
+        }
 
         // ================================================================
         // TOAST SYSTEM
         // ================================================================
         
+        let toastTimeout = null;
+
         function showToast(title, message, icon = 'fa-info-circle') {
-            const oldToasts = document.querySelectorAll('.toast');
-            oldToasts.forEach(t => t.remove());
-            
+            document.querySelectorAll('.toast').forEach(t => t.remove());
             clearTimeout(toastTimeout);
             
             const container = document.getElementById('toastContainer') || (() => {
@@ -1067,9 +1086,7 @@
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerHTML = `
-                <div class="toast-icon">
-                    <i class="fas ${icon}"></i>
-                </div>
+                <div class="toast-icon"><i class="fas ${icon}"></i></div>
                 <div class="toast-content">
                     <div class="toast-title">${title}</div>
                     <div class="toast-message">${message}</div>
@@ -1091,103 +1108,36 @@
         }
 
         // ================================================================
-        // LOAD USER DATA FROM LOCAL STORAGE
+        // NAVIGATION
         // ================================================================
         
-        function loadUserData() {
-            // Get current user from localStorage
-            const savedUser = localStorage.getItem('salink_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                } catch (e) {
-                    localStorage.removeItem('salink_user');
-                }
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function openProfileUser(username) {
+            // Jika username sama dengan profil yang sedang dilihat, tidak melakukan apa-apa
+            if (profileUser && username === profileUser.username) {
+                showToast('ℹ️ Info', 'Anda sedang melihat profil ini', 'fa-info-circle');
+                return;
             }
             
-            // Get target user from URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const userData = urlParams.get('user');
+            // Cari data user berdasarkan username
+            const users = getUsers();
+            let user = users.find(u => u.username === username);
             
-            if (userData) {
-                try {
-                    targetUser = JSON.parse(decodeURIComponent(userData));
-                } catch (e) {
-                    // If parsing fails, try to find user by username
-                    const username = userData;
-                    const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-                    targetUser = users.find(u => u.username === username);
-                }
-            }
-            
-            // If no target user, use current user or create guest
-            if (!targetUser) {
-                if (currentUser) {
-                    targetUser = currentUser;
+            if (user) {
+                window.open(`profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
+            } else if (username) {
+                // Coba cari berdasarkan fullName
+                user = users.find(u => u.fullName === username);
+                if (user) {
+                    window.open(`profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
                 } else {
-                    targetUser = {
-                        fullName: 'Pengguna',
-                        username: 'pengguna',
-                        gender: 'male',
-                        bio: 'Bergabung di SALINK untuk keamanan bersama',
-                        profilePicture: null,
-                        joinedDate: new Date().toLocaleString('id-ID', { 
-                            weekday: 'long', 
-                            day: 'numeric', 
-                            month: 'long', 
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })
-                    };
+                    showToast('⚠️ Error', 'User tidak ditemukan', 'fa-exclamation-triangle');
                 }
-            }
-            
-            // Load posts
-            loadPosts();
-            
-            // Load friends
-            loadFriends();
-            
-            // Render profile
-            renderProfile();
-        }
-
-        function loadPosts() {
-            try {
-                const saved = localStorage.getItem('salink_posts');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) {
-                        posts = parsed;
-                    }
-                }
-            } catch (e) {
-                console.warn('Gagal memuat posts dari localStorage:', e);
-            }
-        }
-
-        function loadFriends() {
-            try {
-                const saved = localStorage.getItem('salink_friends');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) {
-                        friends = parsed;
-                    }
-                }
-            } catch (e) {
-                console.warn('Gagal memuat friends dari localStorage:', e);
-            }
-            
-            // If no friends, generate sample
-            if (friends.length === 0) {
-                friends = [
-                    { id: 1, name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
-                    { id: 2, name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
-                    { id: 3, name: 'Bpk. Joko', username: 'joko', gender: 'male', status: 'Online' },
-                    { id: 4, name: 'Sdri. Dewi', username: 'dewi', gender: 'female', status: 'Online' }
-                ];
+            } else {
+                showToast('⚠️ Error', 'Username tidak valid', 'fa-exclamation-triangle');
             }
         }
 
@@ -1196,43 +1146,87 @@
         // ================================================================
         
         function renderProfile() {
-            if (!targetUser) return;
+            if (!profileUser) {
+                loadProfileFromURL();
+                if (!profileUser) return;
+            }
             
             // Avatar
-            if (targetUser.profilePicture) {
-                profileAvatarLarge.innerHTML = `<img src="${targetUser.profilePicture}" alt="Profile">`;
+            const avatarEl = document.getElementById('profileAvatarLarge');
+            if (profileUser.profilePicture) {
+                avatarEl.innerHTML = `<img src="${profileUser.profilePicture}" alt="Profile">`;
             } else {
-                profileAvatarLarge.innerHTML = targetUser.gender === 'female' ? 
-                    '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+                avatarEl.innerHTML = profileUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
             }
             
             // Name & Bio
-            profileName.textContent = targetUser.fullName || 'Nama Pengguna';
-            profileUsername.textContent = `@${targetUser.username || 'username'}`;
-            profileBio.textContent = targetUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
+            document.getElementById('profileName').textContent = profileUser.fullName || 'Nama Pengguna';
+            document.getElementById('profileUsername').textContent = `@${profileUser.username || 'username'}`;
+            document.getElementById('profileBio').textContent = profileUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
             
-            // Stats - hanya postingan dari target user
-            const userPosts = posts.filter(p => p.userId === targetUser.username);
-            profileStatPosts.textContent = userPosts.length;
-            profileStatFollowers.textContent = friends.length > 0 ? friends.length : '0';
-            profileStatFollowing.textContent = Math.floor(Math.random() * 3) + 1;
+            // Load posts dari user ini
+            const allPosts = getPosts();
+            posts = allPosts.filter(p => p.userId === profileUser.username);
             
-            // Pesan button
-            profilePesanBtn.href = 'pesan.html';
+            // Update stats
+            document.getElementById('profileStatPosts').textContent = posts.length;
             
-            // Render posts with interactive features
-            renderPosts(userPosts);
+            // Load friends
+            loadFriends();
+            
+            // Render posts
+            renderProfilePosts();
+            
+            // Update user button
+            updateUserBtn();
         }
 
         // ================================================================
-        // RENDER POSTS - LIKE & KOMENTAR AKTIF (INTERAKTIF)
+        // LOAD FRIENDS
         // ================================================================
         
-        function renderPosts(userPosts) {
-            profilePosts.innerHTML = '';
+        function loadFriends() {
+            try {
+                const saved = localStorage.getItem('salink_friends');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // Filter friends yang terkait dengan profileUser
+                    if (profileUser) {
+                        friends = parsed.filter(f => f.owner === profileUser.username);
+                    } else {
+                        friends = parsed;
+                    }
+                } else {
+                    // Generate sample friends
+                    const sampleFriends = [
+                        { id: 1, owner: profileUser?.username || 'user', name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
+                        { id: 2, owner: profileUser?.username || 'user', name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
+                        { id: 3, owner: profileUser?.username || 'user', name: 'Bpk. Joko', username: 'joko', gender: 'male', status: 'Online' },
+                        { id: 4, owner: profileUser?.username || 'user', name: 'Sdri. Dewi', username: 'dewi', gender: 'female', status: 'Online' }
+                    ];
+                    friends = sampleFriends;
+                    localStorage.setItem('salink_friends', JSON.stringify(sampleFriends));
+                }
+            } catch (e) {
+                friends = [];
+            }
             
-            if (userPosts.length === 0) {
-                profilePosts.innerHTML = `
+            // Update follower count
+            const followerCount = friends.filter(f => f.owner === profileUser?.username).length;
+            document.getElementById('profileStatFollowers').textContent = followerCount;
+            document.getElementById('profileStatFollowing').textContent = Math.floor(Math.random() * 3) + 1;
+        }
+
+        // ================================================================
+        // RENDER POSTS
+        // ================================================================
+        
+        function renderProfilePosts() {
+            const container = document.getElementById('profilePosts');
+            container.innerHTML = '';
+            
+            if (posts.length === 0) {
+                container.innerHTML = `
                     <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.4);font-size:0.75rem;">
                         <i class="fas fa-file-alt" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
                         <p>Belum ada postingan</p>
@@ -1241,11 +1235,10 @@
                 return;
             }
             
-            userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
+            posts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
                 const postEl = document.createElement('div');
                 postEl.className = 'post';
                 postEl.style.marginBottom = '10px';
-                postEl.id = `post-${post.id}`;
                 
                 const profilePic = post.userProfilePic 
                     ? `<img src="${post.userProfilePic}" alt="Profile">` 
@@ -1258,78 +1251,16 @@
                     mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
                 }
                 
-                const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
-                const specialBadge = post.isSpecial ? `<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">🚨 ${post.specialData?.type ? post.specialData.type.toUpperCase() : 'Khusus'}</span>` : '';
-                
-                // Build comments HTML
-                let commentsHTML = '';
-                if (post.comments && post.comments.length > 0) {
-                    post.comments.forEach(comment => {
-                        const commentProfilePic = comment.userProfilePic 
-                            ? `<img src="${comment.userProfilePic}" alt="Profile">` 
-                            : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                        
-                        let repliesHTML = '';
-                        if (comment.replies && comment.replies.length > 0) {
-                            repliesHTML = `
-                                <div class="comment-replies">
-                                    ${comment.replies.map(reply => {
-                                        const replyProfilePic = reply.userProfilePic 
-                                            ? `<img src="${reply.userProfilePic}" alt="Profile">` 
-                                            : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                                        return `
-                                            <div class="reply-comment">
-                                                <div class="comment-main">
-                                                    <div class="comment-profile-pic" onclick="openProfileUser('${reply.userId}')">
-                                                        ${replyProfilePic}
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        <div class="comment-user" onclick="openProfileUser('${reply.userId}')">${reply.userFullName}</div>
-                                                        <div class="comment-text">${reply.text}</div>
-                                                        <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                        ${reply.userId === currentUser?.username ? `
-                                                            <div class="comment-actions">
-                                                                <span class="comment-action delete-comment" onclick="deleteComment('${post.id}', '${comment.id}', '${reply.id}')">Hapus</span>
-                                                            </div>
-                                                        ` : ''}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            `;
-                        }
-                        
-                        commentsHTML += `
-                            <div class="comment" id="comment-${comment.id}">
-                                <div class="comment-main">
-                                    <div class="comment-profile-pic" onclick="openProfileUser('${comment.userId}')">
-                                        ${commentProfilePic}
-                                    </div>
-                                    <div class="comment-content">
-                                        <div class="comment-user" onclick="openProfileUser('${comment.userId}')">${comment.userFullName}</div>
-                                        <div class="comment-text">${comment.text}</div>
-                                        <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
-                                        <div class="comment-actions">
-                                            <span class="comment-action reply-comment-action" onclick="replyComment('${post.id}', '${comment.id}')">Balas</span>
-                                            ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" onclick="deleteComment('${post.id}', '${comment.id}')">Hapus</span>` : ''}
-                                        </div>
-                                    </div>
-                                </div>
-                                ${repliesHTML}
-                            </div>
-                        `;
-                    });
-                }
+                const isLiked = currentViewer && post.likes && post.likes.includes(currentViewer.username);
+                const specialBadge = post.isSpecial ? `<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">🚨 ${notifLabelMap[post.specialData?.type] || 'Khusus'}</span>` : '';
                 
                 postEl.innerHTML = `
                     <div class="post-header">
-                        <div class="post-profile-pic" onclick="openProfileUser('${post.userId}')">
+                        <div class="post-profile-pic" onclick="openProfileUser('${post.userId}')" style="cursor:pointer;">
                             ${profilePic}
                         </div>
                         <div class="post-user-info">
-                            <h4><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileUser('${post.userId}');">${post.userFullName}</a> ${specialBadge}</h4>
+                            <h4>${post.userFullName} ${specialBadge}</h4>
                             <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
                         </div>
                     </div>
@@ -1339,20 +1270,22 @@
                         ${post.isSpecial && post.specialData ? `
                             <div style="margin-top:6px;padding:6px 10px;background:rgba(212,168,73,0.05);border-radius:6px;border-left:3px solid var(--gold);">
                                 <div style="font-size:0.65rem;color:var(--gold-light);">
-                                    <span>📍</span>
-                                    <strong>${post.specialData.location || 'Lokasi tidak diketahui'}</strong>
+                                    <span>${notifIconMap[post.specialData.type] || '🚨'}</span>
+                                    <strong>${notifLabelMap[post.specialData.type] || 'Khusus'}</strong>
                                 </div>
-                                ${post.specialData.address ? `<div style="font-size:0.55rem;color:rgba(245,240,232,0.4);">📌 ${post.specialData.address}</div>` : ''}
+                                <div style="font-size:0.6rem;color:rgba(245,240,232,0.6);">
+                                    📍 ${post.specialData.location || 'Lokasi tidak diketahui'}
+                                </div>
                             </div>
                         ` : ''}
                     </div>
                     <div class="post-actions">
-                        <div class="post-action ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+                        <div class="post-action ${isLiked ? 'liked' : ''}" onclick="handleLike('${post.id}')">
                             <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
                             <span>Suka</span>
                             <span class="like-count">${post.likes && post.likes.length > 0 ? post.likes.length : ''}</span>
                         </div>
-                        <div class="post-action comment-toggle" onclick="toggleComments('${post.id}')">
+                        <div class="post-action" onclick="toggleComments('${post.id}')">
                             <i class="far fa-comment"></i>
                             <span>Komentar</span>
                             <span>(${post.comments ? post.comments.length : 0})</span>
@@ -1362,243 +1295,319 @@
                             <span>Bagikan</span>
                         </div>
                     </div>
-                    <div class="comments-section" id="comments-${post.id}" style="display:none;">
-                        ${commentsHTML}
-                        <div class="add-comment">
-                            <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Tulis komentar..." data-post-id="${post.id}" ${!currentUser ? 'disabled' : ''}>
-                            <button class="send-comment" onclick="sendComment('${post.id}')" ${!currentUser ? 'disabled' : ''}>
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
+                    <div class="comments-section" id="profile-comments-${post.id}" style="display:none;">
+                        ${post.comments ? post.comments.map(comment => {
+                            const commentProfilePic = comment.userProfilePic 
+                                ? `<img src="${comment.userProfilePic}" alt="Profile">` 
+                                : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                            return `
+                                <div class="comment" id="profile-comment-${comment.id}">
+                                    <div class="comment-main">
+                                        <div class="comment-profile-pic" onclick="openProfileUser('${comment.userId}')" style="cursor:pointer;">
+                                            ${commentProfilePic}
+                                        </div>
+                                        <div class="comment-content">
+                                            <div class="comment-user" onclick="openProfileUser('${comment.userId}')" style="cursor:pointer;color:var(--gold-light);">${comment.userFullName}</div>
+                                            <div class="comment-text">${comment.text}</div>
+                                            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                                            <div class="comment-actions">
+                                                <span class="comment-action reply-comment-action" onclick="showReplyInput('${post.id}', '${comment.id}')">Balas</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ${comment.replies && comment.replies.length > 0 ? `
+                                        <div class="comment-replies">
+                                            ${comment.replies.map(reply => {
+                                                const replyProfilePic = reply.userProfilePic 
+                                                    ? `<img src="${reply.userProfilePic}" alt="Profile">` 
+                                                    : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                                return `
+                                                    <div class="reply-comment">
+                                                        <div class="comment-main">
+                                                            <div class="comment-profile-pic" onclick="openProfileUser('${reply.userId}')" style="cursor:pointer;">
+                                                                ${replyProfilePic}
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                <div class="comment-user" onclick="openProfileUser('${reply.userId}')" style="cursor:pointer;color:var(--gold-light);">${reply.userFullName}</div>
+                                                                <div class="comment-text">${reply.text}</div>
+                                                                <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('') : ''}
+                    </div>
+                    <div class="add-comment" style="margin-top:6px;">
+                        <input type="text" class="comment-input" placeholder="Tulis komentar..." id="comment-input-${post.id}" ${currentViewer ? '' : 'readonly'}>
+                        <button class="send-comment" onclick="sendComment('${post.id}')" ${currentViewer ? '' : 'disabled'}>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 `;
                 
-                profilePosts.appendChild(postEl);
+                container.appendChild(postEl);
             });
         }
 
         // ================================================================
-        // INTERAKSI POSTINGAN - LIKE
-        // ================================================================
-        
-        function toggleLike(postId) {
-            if (!currentUser) {
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
-                return;
-            }
-            
-            // Cari post di posts global
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            const index = post.likes.indexOf(currentUser.username);
-            if (index > -1) {
-                post.likes.splice(index, 1);
-            } else {
-                post.likes.push(currentUser.username);
-                // Send notification to post owner
-                if (post.userId !== currentUser.username) {
-                    addNotification('like', `${currentUser.fullName} menyukai postingan Anda`, post.userId, post.id);
-                }
-            }
-            
-            // Save to localStorage
-            savePosts();
-            
-            // Re-render posts
-            const userPosts = posts.filter(p => p.userId === targetUser.username);
-            renderPosts(userPosts);
-        }
-
-        // ================================================================
-        // INTERAKSI POSTINGAN - KOMENTAR
+        // COMMENT & LIKE FUNCTIONS
         // ================================================================
         
         function toggleComments(postId) {
-            const commentsSection = document.getElementById(`comments-${postId}`);
+            const commentsSection = document.getElementById(`profile-comments-${postId}`);
             if (commentsSection) {
                 commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
-                if (commentsSection.style.display === 'block') {
-                    const input = document.getElementById(`comment-input-${postId}`);
-                    if (input) input.focus();
-                }
             }
         }
 
+        function showReplyInput(postId, commentId) {
+            if (!currentViewer) {
+                showToast('🔒 Privasi', 'Silakan masuk untuk membalas komentar', 'fa-lock');
+                return;
+            }
+            
+            // Cari post
+            const postIndex = posts.findIndex(p => p.id === postId);
+            if (postIndex === -1) return;
+            
+            const post = posts[postIndex];
+            const commentIndex = post.comments.findIndex(c => c.id === commentId);
+            if (commentIndex === -1) return;
+            
+            // Buat input reply
+            const commentEl = document.getElementById(`profile-comment-${commentId}`);
+            if (!commentEl) return;
+            
+            // Cek apakah sudah ada reply input
+            const existingReply = commentEl.querySelector('.reply-input-container');
+            if (existingReply) {
+                existingReply.remove();
+                return;
+            }
+            
+            const replyContainer = document.createElement('div');
+            replyContainer.className = 'reply-input-container';
+            replyContainer.style.cssText = 'display:flex;gap:6px;margin-top:6px;align-items:center;';
+            replyContainer.innerHTML = `
+                <input type="text" class="comment-input" placeholder="Tulis balasan..." id="reply-input-${commentId}" style="flex:1;font-size:0.65rem;padding:4px 10px;">
+                <button class="send-comment" onclick="sendReply('${postId}', '${commentId}')" style="width:26px;height:26px;font-size:0.6rem;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+                <button onclick="this.parentElement.remove()" style="background:none;border:none;color:rgba(245,240,232,0.3);cursor:pointer;font-size:0.7rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            commentEl.appendChild(replyContainer);
+            const input = document.getElementById(`reply-input-${commentId}`);
+            if (input) input.focus();
+        }
+
         function sendComment(postId) {
-            if (!currentUser) {
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk berkomentar', 'fa-lock');
+            if (!currentViewer) {
+                showToast('🔒 Privasi', 'Silakan masuk untuk berkomentar', 'fa-lock');
                 return;
             }
             
             const input = document.getElementById(`comment-input-${postId}`);
             if (!input) return;
-            
             const text = input.value.trim();
             if (!text) return;
             
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
+            // Cari post
+            const postIndex = posts.findIndex(p => p.id === postId);
+            if (postIndex === -1) return;
             
             const comment = {
-                id: 'comment-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
-                userId: currentUser.username,
-                userFullName: currentUser.fullName,
-                userGender: currentUser.gender,
-                userProfilePic: currentUser.profilePicture || null,
+                id: 'comment-' + Date.now(),
+                userId: currentViewer.username,
+                userFullName: currentViewer.fullName,
+                userGender: currentViewer.gender,
+                userProfilePic: currentViewer.profilePicture || null,
                 text: text,
                 timestamp: Date.now(),
                 replies: []
             };
             
-            // Check if replying to a comment
-            const replyToCommentId = input.dataset.replyToCommentId;
-            if (replyToCommentId) {
-                const parentComment = post.comments.find(c => c.id === replyToCommentId);
-                if (parentComment) {
-                    if (!parentComment.replies) parentComment.replies = [];
-                    parentComment.replies.push(comment);
-                    delete input.dataset.replyToCommentId;
-                    input.placeholder = 'Tulis komentar...';
-                }
-            } else {
-                post.comments.push(comment);
-                // Send notification to post owner
-                if (post.userId !== currentUser.username) {
-                    addNotification('comment', `${currentUser.fullName} mengomentari postingan Anda: "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, post.userId, post.id);
-                }
-            }
+            if (!posts[postIndex].comments) posts[postIndex].comments = [];
+            posts[postIndex].comments.push(comment);
             
-            input.value = '';
-            savePosts();
+            // Simpan ke localStorage
+            savePostsToLocalStorage();
             
-            // Re-render posts
-            const userPosts = posts.filter(p => p.userId === targetUser.username);
-            renderPosts(userPosts);
+            // Render ulang
+            renderProfilePosts();
             
-            // Show comments section
-            const commentsSection = document.getElementById(`comments-${postId}`);
-            if (commentsSection) commentsSection.style.display = 'block';
+            // Kirim notifikasi ke pemilik postingan
+            sendNotification('comment', '💬 Komentar Baru', `${currentViewer.fullName} mengomentari postingan Anda`, currentViewer.fullName, postId);
+            
+            showToast('✅ Berhasil', 'Komentar terkirim!', 'fa-check-circle');
         }
 
-        function replyComment(postId, commentId) {
-            if (!currentUser) {
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk membalas komentar', 'fa-lock');
+        function sendReply(postId, commentId) {
+            if (!currentViewer) {
+                showToast('🔒 Privasi', 'Silakan masuk untuk membalas', 'fa-lock');
                 return;
             }
             
-            const input = document.getElementById(`comment-input-${postId}`);
+            const input = document.getElementById(`reply-input-${commentId}`);
             if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
             
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
+            // Cari post
+            const postIndex = posts.findIndex(p => p.id === postId);
+            if (postIndex === -1) return;
             
-            const comment = post.comments.find(c => c.id === commentId);
-            if (!comment) return;
+            const post = posts[postIndex];
+            const commentIndex = post.comments.findIndex(c => c.id === commentId);
+            if (commentIndex === -1) return;
             
-            input.dataset.replyToCommentId = commentId;
-            input.placeholder = `Membalas @${comment.userFullName}...`;
-            input.focus();
+            const reply = {
+                id: 'reply-' + Date.now(),
+                userId: currentViewer.username,
+                userFullName: currentViewer.fullName,
+                userGender: currentViewer.gender,
+                userProfilePic: currentViewer.profilePicture || null,
+                text: text,
+                timestamp: Date.now()
+            };
+            
+            if (!post.comments[commentIndex].replies) post.comments[commentIndex].replies = [];
+            post.comments[commentIndex].replies.push(reply);
+            
+            savePostsToLocalStorage();
+            renderProfilePosts();
+            
+            // Kirim notifikasi
+            sendNotification('comment', '💬 Balasan Komentar', `${currentViewer.fullName} membalas komentar Anda`, currentViewer.fullName, postId);
+            
+            showToast('✅ Berhasil', 'Balasan terkirim!', 'fa-check-circle');
         }
 
-        function deleteComment(postId, commentId, replyId) {
-            if (!currentUser) {
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus komentar', 'fa-lock');
+        function handleLike(postId) {
+            if (!currentViewer) {
+                showToast('🔒 Privasi', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
                 return;
             }
             
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
+            const postIndex = posts.findIndex(p => p.id === postId);
+            if (postIndex === -1) return;
             
-            if (replyId) {
-                // Delete reply
-                for (const comment of post.comments) {
-                    if (comment.replies) {
-                        const replyIndex = comment.replies.findIndex(r => r.id === replyId);
-                        if (replyIndex > -1) {
-                            comment.replies.splice(replyIndex, 1);
-                            break;
-                        }
-                    }
-                }
+            const post = posts[postIndex];
+            if (!post.likes) post.likes = [];
+            
+            const likeIndex = post.likes.indexOf(currentViewer.username);
+            if (likeIndex === -1) {
+                post.likes.push(currentViewer.username);
+                // Kirim notifikasi
+                sendNotification('like', '❤️ Suka', `${currentViewer.fullName} menyukai postingan Anda`, currentViewer.fullName, postId);
             } else {
-                // Delete comment
-                const commentIndex = post.comments.findIndex(c => c.id === commentId);
-                if (commentIndex > -1) {
-                    post.comments.splice(commentIndex, 1);
-                }
+                post.likes.splice(likeIndex, 1);
             }
             
-            savePosts();
-            
-            // Re-render posts
-            const userPosts = posts.filter(p => p.userId === targetUser.username);
-            renderPosts(userPosts);
+            savePostsToLocalStorage();
+            renderProfilePosts();
         }
 
         function sharePost(postId) {
-            if (!currentUser) {
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk membagikan postingan', 'fa-lock');
-                return;
-            }
-            
-            const post = posts.find(p => p.id === postId);
-            if (!post) return;
-            
-            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
-            
+            const url = window.location.href;
             if (navigator.share) {
                 navigator.share({
-                    title: 'SALINK - Postingan',
-                    text: shareText,
-                    url: window.location.href
+                    title: 'Postingan di SALINK',
+                    text: 'Lihat postingan ini di SALINK',
+                    url: url + '?post=' + postId
                 }).catch(() => {});
             } else {
-                navigator.clipboard.writeText(shareText).then(() => {
-                    showToast('📋 Disalin', 'Link postingan disalin ke clipboard', 'fa-clipboard');
+                navigator.clipboard.writeText(url + '?post=' + postId).then(() => {
+                    showToast('✅ Berhasil', 'Link postingan disalin!', 'fa-copy');
                 }).catch(() => {
-                    prompt('Salin teks ini:', shareText);
+                    showToast('ℹ️ Info', 'Salin link: ' + url + '?post=' + postId, 'fa-link');
                 });
             }
         }
 
-        // ================================================================
-        // NOTIFICATION FUNCTIONS
-        // ================================================================
-        
-        function addNotification(type, message, targetUserId, postId) {
-            // Get existing notifications
-            let notifications = JSON.parse(localStorage.getItem('salink_notifications') || '[]');
-            
-            notifications.unshift({
-                id: Date.now() + Math.random() * 1000,
-                type: type,
-                title: type === 'like' ? '❤️ Suka' : '💬 Komentar',
-                message: message,
-                sender: currentUser.fullName,
-                senderUsername: currentUser.username,
-                postId: postId || null,
-                timestamp: Date.now(),
-                read: false
-            });
-            
-            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+        function savePostsToLocalStorage() {
+            try {
+                const allPosts = getPosts();
+                // Update posts yang sudah ada
+                posts.forEach(post => {
+                    const index = allPosts.findIndex(p => p.id === post.id);
+                    if (index !== -1) {
+                        allPosts[index] = post;
+                    } else {
+                        allPosts.push(post);
+                    }
+                });
+                localStorage.setItem('salink_posts', JSON.stringify(allPosts));
+            } catch (e) {}
         }
 
         // ================================================================
-        // SAVE POSTS
+        // NOTIFICATION MAPS
         // ================================================================
         
-        function savePosts() {
-            try {
-                localStorage.setItem('salink_posts', JSON.stringify(posts));
-            } catch (e) {
-                console.warn('Gagal menyimpan posts:', e);
+        const notifIconMap = {
+            'fire': '🔥',
+            'death': '💀',
+            'theft': '💎',
+            'disaster': '🌪️'
+        };
+
+        const notifLabelMap = {
+            'fire': 'KEBAKARAN',
+            'death': 'KEMATIAN',
+            'theft': 'PENCURIAN',
+            'disaster': 'BENCANA'
+        };
+
+        // ================================================================
+        // SEND NOTIFICATION
+        // ================================================================
+        
+        function sendNotification(type, title, message, sender, postId) {
+            if (!profileUser) return;
+            
+            const notification = {
+                id: 'notif-' + Date.now(),
+                type: type,
+                title: title,
+                message: message,
+                sender: sender || currentViewer?.fullName || 'Pengunjung',
+                senderUsername: currentViewer?.username || 'pengunjung',
+                recipient: profileUser.username,
+                postId: postId || null,
+                timestamp: Date.now(),
+                read: false,
+                soundKey: 'notifikasi'
+            };
+            
+            saveNotifications(notification);
+            console.log('📨 Notifikasi dikirim ke', profileUser.fullName, ':', title);
+        }
+
+        // ================================================================
+        // UPDATE USER BUTTON
+        // ================================================================
+        
+        function updateUserBtn() {
+            const userBtn = document.getElementById('userBtn');
+            if (currentViewer && currentViewer.profilePicture) {
+                userBtn.innerHTML = `<img src="${currentViewer.profilePicture}" alt="Profile">`;
+            } else if (currentViewer) {
+                userBtn.innerHTML = currentViewer.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            } else {
+                userBtn.innerHTML = '<i class="fas fa-user"></i>';
             }
         }
 
         // ================================================================
-        // HELPER FUNCTIONS
+        // GET TIME AGO
         // ================================================================
         
         function getTimeAgo(timestamp) {
@@ -1625,354 +1634,359 @@
         // MODAL FUNCTIONS
         // ================================================================
         
-        function renderTemanModal() {
-            temanModalBody.innerHTML = '';
-            totalTemanCount.textContent = friends.length;
-            
-            if (friends.length === 0) {
-                temanModalBody.innerHTML = `
-                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
-                        <i class="fas fa-users" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada teman</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            friends.forEach(friend => {
-                const item = document.createElement('div');
-                item.className = 'friend-item';
-                
-                const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
-                const statusColor = friend.status === 'Online' ? '#4CAF50' : '#888';
-                
-                item.innerHTML = `
-                    <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
-                        ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
-                    </div>
-                    <div class="friend-info">
-                        <div class="friend-name" onclick="openProfileUser('${friend.username}')">${friend.name}</div>
-                        <div class="friend-status">@${friend.username} • <span style="color:${statusColor};">${friend.status}</span></div>
-                    </div>
-                    <button onclick="openProfileUser('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
-                        <i class="fas fa-eye"></i> Lihat
-                    </button>
-                `;
-                
-                temanModalBody.appendChild(item);
-            });
-        }
-
-        function openTemanModal() {
-            renderTemanModal();
-            temanModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeTemanModal() {
-            temanModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
         function openPostinganModal() {
-            const userPosts = posts.filter(p => p.userId === targetUser.username);
-            postinganModalBody.innerHTML = '';
-            postinganCount.textContent = userPosts.length;
+            const modalBody = document.getElementById('postinganModalBody');
+            const countEl = document.getElementById('postinganCount');
             
-            if (userPosts.length === 0) {
-                postinganModalBody.innerHTML = `
+            modalBody.innerHTML = '';
+            countEl.textContent = posts.length;
+            
+            if (posts.length === 0) {
+                modalBody.innerHTML = `
                     <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
                         <i class="fas fa-file-alt" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
                         <p>Belum ada postingan</p>
                     </div>
                 `;
             } else {
-                userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
+                posts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
                     const item = document.createElement('div');
-                    item.className = 'report-list-item';
-                    
-                    const specialBadge = post.isSpecial ? `🚨 ${post.specialData?.type ? post.specialData.type.toUpperCase() : 'Khusus'}` : '📝 Biasa';
-                    
+                    item.className = 'friend-item';
+                    const specialBadge = post.isSpecial ? `🚨 ${notifLabelMap[post.specialData?.type] || 'Khusus'}` : '📝 Biasa';
                     item.innerHTML = `
-                        <div class="alert-icon">
+                        <div class="friend-avatar" style="width:32px;height:32px;font-size:0.8rem;">
                             <i class="fas fa-file-alt"></i>
                         </div>
-                        <div class="report-info">
-                            <div class="report-title">${post.text ? post.text.substring(0, 50) + (post.text.length > 50 ? '...' : '') : 'Postingan media'}</div>
-                            <div class="report-desc">${specialBadge} • ${getTimeAgo(post.timestamp)}</div>
+                        <div class="friend-info">
+                            <div class="friend-name" style="font-size:0.75rem;">${post.text ? post.text.substring(0, 50) + (post.text.length > 50 ? '...' : '') : 'Postingan media'}</div>
+                            <div class="friend-status">${specialBadge} • ${getTimeAgo(post.timestamp)}</div>
                         </div>
-                        <div class="report-time">${new Date(post.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</div>
+                        <div style="font-size:0.6rem;color:rgba(245,240,232,0.4);">${new Date(post.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</div>
                     `;
-                    
-                    postinganModalBody.appendChild(item);
+                    modalBody.appendChild(item);
                 });
             }
             
-            postinganModal.classList.add('active');
+            document.getElementById('postinganModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closePostinganModal() {
-            postinganModal.classList.remove('active');
+            document.getElementById('postinganModal').classList.remove('active');
             document.body.style.overflow = '';
         }
 
         function openPengikutModal() {
-            pengikutModalBody.innerHTML = '';
-            const followerCount = friends.length > 0 ? friends.length : 0;
-            pengikutCount.textContent = followerCount;
+            const modalBody = document.getElementById('pengikutModalBody');
+            const countEl = document.getElementById('pengikutCount');
             
-            if (followerCount === 0) {
-                pengikutModalBody.innerHTML = `
+            modalBody.innerHTML = '';
+            const followerList = friends.filter(f => f.owner === profileUser?.username);
+            countEl.textContent = followerList.length;
+            
+            if (followerList.length === 0) {
+                modalBody.innerHTML = `
                     <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
                         <i class="fas fa-user-friends" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
                         <p>Belum ada pengikut</p>
                     </div>
                 `;
             } else {
-                friends.slice(0, 10).forEach(friend => {
+                followerList.forEach(friend => {
                     const item = document.createElement('div');
                     item.className = 'friend-item';
-                    
                     const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
-                    
                     item.innerHTML = `
                         <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
                             ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
                         </div>
                         <div class="friend-info">
-                            <div class="friend-name" onclick="openProfileUser('${friend.username}')">${friend.name}</div>
+                            <div class="friend-name" onclick="openProfileUser('${friend.username}')" style="cursor:pointer;color:var(--gold-light);">${friend.name}</div>
+                            <div class="friend-status">@${friend.username} • <span style="color:${friend.status === 'Online' ? '#4CAF50' : '#888'};">${friend.status}</span></div>
+                        </div>
+                        <button onclick="openProfileUser('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                            <i class="fas fa-eye"></i> Lihat
+                        </button>
+                    `;
+                    modalBody.appendChild(item);
+                });
+            }
+            
+            document.getElementById('pengikutModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePengikutModal() {
+            document.getElementById('pengikutModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openMengikutiModal() {
+            const modalBody = document.getElementById('mengikutiModalBody');
+            const countEl = document.getElementById('mengikutiCount');
+            
+            modalBody.innerHTML = '';
+            const followingList = friends.filter(f => f.owner === profileUser?.username);
+            const followingCount = Math.min(followingList.length, 3);
+            countEl.textContent = followingCount;
+            
+            if (followingCount === 0) {
+                modalBody.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-user-plus" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum mengikuti siapa pun</p>
+                    </div>
+                `;
+            } else {
+                followingList.slice(0, followingCount).forEach(friend => {
+                    const item = document.createElement('div');
+                    item.className = 'friend-item';
+                    const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
+                    item.innerHTML = `
+                        <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
+                            ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name" onclick="openProfileUser('${friend.username}')" style="cursor:pointer;color:var(--gold-light);">${friend.name}</div>
                             <div class="friend-status">@${friend.username}</div>
                         </div>
                         <button onclick="openProfileUser('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
                             <i class="fas fa-eye"></i> Lihat
                         </button>
                     `;
-                    
-                    pengikutModalBody.appendChild(item);
+                    modalBody.appendChild(item);
                 });
             }
             
-            pengikutModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePengikutModal() {
-            pengikutModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        function openMengikutiModal() {
-            mengikutiModalBody.innerHTML = '';
-            const followingCount = Math.floor(Math.random() * 3) + 1;
-            mengikutiCount.textContent = followingCount;
-            
-            const followingUsers = [
-                { name: 'Bpk. Budi', username: 'budi', gender: 'male' },
-                { name: 'Sdri. Siti', username: 'siti', gender: 'female' }
-            ];
-            
-            mengikutiModalBody.innerHTML = `
-                <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
-                    <i class="fas fa-user-plus" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                    <p>${followingCount} orang diikuti</p>
-                </div>
-                ${followingUsers.slice(0, followingCount).map(user => {
-                    const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
-                    return `
-                        <div class="friend-item" onclick="openProfileUser('${user.username}')">
-                            <div class="friend-avatar">
-                                <i class="fas ${avatarIcon}"></i>
-                            </div>
-                            <div class="friend-info">
-                                <div class="friend-name">${user.name}</div>
-                                <div class="friend-status">@${user.username}</div>
-                            </div>
-                            <button style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
-                                <i class="fas fa-eye"></i> Lihat
-                            </button>
-                        </div>
-                    `;
-                }).join('')}
-            `;
-            
-            mengikutiModal.classList.add('active');
+            document.getElementById('mengikutiModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeMengikutiModal() {
-            mengikutiModal.classList.remove('active');
+            document.getElementById('mengikutiModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openTemanModal() {
+            const modalBody = document.getElementById('temanModalBody');
+            const countEl = document.getElementById('totalTemanCount');
+            
+            modalBody.innerHTML = '';
+            const friendList = friends.filter(f => f.owner === profileUser?.username);
+            countEl.textContent = friendList.length;
+            
+            if (friendList.length === 0) {
+                modalBody.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-users" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum ada teman</p>
+                    </div>
+                `;
+            } else {
+                friendList.forEach(friend => {
+                    const item = document.createElement('div');
+                    item.className = 'friend-item';
+                    const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
+                    const statusColor = friend.status === 'Online' ? '#4CAF50' : '#888';
+                    item.innerHTML = `
+                        <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
+                            ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
+                        </div>
+                        <div class="friend-info">
+                            <div class="friend-name" onclick="openProfileUser('${friend.username}')" style="cursor:pointer;color:var(--gold-light);">${friend.name}</div>
+                            <div class="friend-status">@${friend.username} • <span style="color:${statusColor};">${friend.status}</span></div>
+                        </div>
+                        <button onclick="openProfileUser('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
+                            <i class="fas fa-eye"></i> Lihat
+                        </button>
+                    `;
+                    modalBody.appendChild(item);
+                });
+            }
+            
+            document.getElementById('temanModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTemanModal() {
+            document.getElementById('temanModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openBiodataModal() {
+            const modalBody = document.getElementById('biodataModalBody');
+            
+            if (!profileUser) {
+                modalBody.innerHTML = `
+                    <div style="text-align:center;padding:20px 0;color:rgba(245,240,232,0.6);">
+                        <i class="fas fa-user" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Data profil tidak tersedia</p>
+                    </div>
+                `;
+            } else {
+                const bioData = {
+                    'Nama Lengkap': profileUser.fullName || '-',
+                    'Jenis Kelamin': profileUser.gender === 'female' ? 'Perempuan' : profileUser.gender === 'male' ? 'Laki-laki' : '-',
+                    'Username': profileUser.username || '-',
+                    'Email': profileUser.email || '-',
+                    'No WhatsApp': profileUser.phone || '-',
+                    'Negara': profileUser.country || '-',
+                    'Provinsi': profileUser.province || '-',
+                    'Kabupaten/Kota': profileUser.city || '-',
+                    'Kecamatan': profileUser.district || '-',
+                    'Desa/Kelurahan': profileUser.village || '-',
+                    'Alamat Lengkap': profileUser.address || '-',
+                    'Bio': profileUser.bio || '-',
+                    'Bergabung': profileUser.joinedDate || new Date().toLocaleString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+                };
+                
+                let html = '<div class="bio-data-content">';
+                Object.keys(bioData).forEach(key => {
+                    html += `
+                        <div class="bio-data-item">
+                            <span class="bio-label">${key}</span>
+                            <span class="bio-value">${bioData[key]}</span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                modalBody.innerHTML = html;
+            }
+            
+            document.getElementById('biodataModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBiodataModal() {
+            document.getElementById('biodataModal').classList.remove('active');
             document.body.style.overflow = '';
         }
 
         // ================================================================
-        // OPEN PROFILE USER
+        // MODAL CLOSE EVENTS
         // ================================================================
         
-        function openProfileUser(username) {
-            if (!username) return;
-            
-            // Cari data user
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            let user = users.find(u => u.username === username);
-            
-            // Jika tidak ditemukan, cari berdasarkan fullName
-            if (!user) {
-                user = users.find(u => u.fullName === username);
-            }
-            
-            if (user) {
-                window.open(`profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
-            } else {
-                showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
-            }
-        }
-
-        // ================================================================
-        // INVITE FUNCTION
-        // ================================================================
+        document.getElementById('postinganModalClose').addEventListener('click', closePostinganModal);
+        document.getElementById('postinganModal').addEventListener('click', function(e) {
+            if (e.target === this) closePostinganModal();
+        });
         
-        function sendInvite() {
-            if (!currentUser) {
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengirim undangan', 'fa-lock');
-                return;
-            }
-            
-            if (currentUser.username === targetUser.username) {
-                showToast('⚠️ Info', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
-                return;
-            }
-            
-            showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${targetUser.fullName}!`, 'fa-user-plus');
-            
-            // Add notification for target user
-            const notifications = JSON.parse(localStorage.getItem('salink_notifications') || '[]');
-            notifications.unshift({
-                id: Date.now() + Math.random() * 1000,
-                type: 'invite',
-                title: '📨 Permintaan Berteman',
-                message: `${currentUser.fullName} ingin berteman dengan Anda`,
-                sender: currentUser.fullName,
-                senderUsername: currentUser.username,
-                timestamp: Date.now(),
-                read: false
-            });
-            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-        }
-
-        // ================================================================
-        // KEYBOARD EVENT - ENTER UNTUK KOMENTAR
-        // ================================================================
+        document.getElementById('pengikutModalClose').addEventListener('click', closePengikutModal);
+        document.getElementById('pengikutModal').addEventListener('click', function(e) {
+            if (e.target === this) closePengikutModal();
+        });
         
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                const target = e.target;
-                if (target.classList && target.classList.contains('comment-input')) {
-                    const postId = target.dataset.postId;
-                    if (postId) {
-                        sendComment(postId);
-                    }
-                }
-            }
+        document.getElementById('mengikutiModalClose').addEventListener('click', closeMengikutiModal);
+        document.getElementById('mengikutiModal').addEventListener('click', function(e) {
+            if (e.target === this) closeMengikutiModal();
+        });
+        
+        document.getElementById('temanModalClose').addEventListener('click', closeTemanModal);
+        document.getElementById('temanModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTemanModal();
+        });
+        
+        document.getElementById('biodataModalClose').addEventListener('click', closeBiodataModal);
+        document.getElementById('biodataModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBiodataModal();
         });
 
         // ================================================================
-        // EVENT LISTENERS
+        // PROFILE BUTTON EVENTS
         // ================================================================
         
-        // Back button
-        backBtn.addEventListener('click', function(e) {
+        document.getElementById('profileTemanBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            window.location.href = 'dashboard.html';
-        });
-        
-        // Teman button
-        profileTemanBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+            if (!profileUser) {
+                showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
+                return;
+            }
             openTemanModal();
         });
         
-        // Invite button
-        profileInviteBtn.addEventListener('click', function(e) {
+        document.getElementById('profileBiodataBtn').addEventListener('click', function(e) {
             e.preventDefault();
-            sendInvite();
-        });
-        
-        // Modal close buttons
-        temanModalClose.addEventListener('click', closeTemanModal);
-        temanModal.addEventListener('click', function(e) {
-            if (e.target === temanModal) closeTemanModal();
-        });
-        
-        postinganModalClose.addEventListener('click', closePostinganModal);
-        postinganModal.addEventListener('click', function(e) {
-            if (e.target === postinganModal) closePostinganModal();
-        });
-        
-        pengikutModalClose.addEventListener('click', closePengikutModal);
-        pengikutModal.addEventListener('click', function(e) {
-            if (e.target === pengikutModal) closePengikutModal();
-        });
-        
-        mengikutiModalClose.addEventListener('click', closeMengikutiModal);
-        mengikutiModal.addEventListener('click', function(e) {
-            if (e.target === mengikutiModal) closeMengikutiModal();
-        });
-
-        // ================================================================
-        // RIPPLE EFFECT
-        // ================================================================
-        
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.profile-stat-item') || e.target.closest('.friend-item') || e.target.closest('.post-action')) {
-                const btn = e.target.closest('.profile-stat-item') || e.target.closest('.friend-item') || e.target.closest('.post-action');
-                if (!btn) return;
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple';
-                ripple.style.cssText = `
-                    position: absolute;
-                    border-radius: 50%;
-                    background: rgba(212, 168, 73, 0.3);
-                    transform: scale(0);
-                    animation: ripple 0.6s linear;
-                    pointer-events: none;
-                    left: ${x}px;
-                    top: ${y}px;
-                    width: 20px;
-                    height: 20px;
-                    margin-left: -10px;
-                    margin-top: -10px;
-                `;
-                
-                btn.style.position = 'relative';
-                btn.style.overflow = 'hidden';
-                btn.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
+            if (!profileUser) {
+                showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
+                return;
             }
+            openBiodataModal();
         });
 
         // ================================================================
-        // INITIALIZE
+        // PESAN & INVITE BUTTON
         // ================================================================
         
-        // Load user data
-        loadUserData();
+        document.getElementById('profilePesanBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!currentViewer) {
+                showToast('🔒 Privasi', 'Silakan masuk untuk mengirim pesan', 'fa-lock');
+                return;
+            }
+            if (!profileUser) {
+                showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
+                return;
+            }
+            if (currentViewer.username === profileUser.username) {
+                showToast('ℹ️ Info', 'Anda tidak dapat mengirim pesan ke diri sendiri', 'fa-info-circle');
+                return;
+            }
+            showToast('📨 Pesan', `Pesan akan dikirim ke ${profileUser.fullName}`, 'fa-paper-plane');
+        });
+        
+        document.getElementById('profileInviteBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!currentViewer) {
+                showToast('🔒 Privasi', 'Silakan masuk untuk mengirim undangan', 'fa-lock');
+                return;
+            }
+            if (!profileUser) {
+                showToast('⚠️ Error', 'Data profil tidak ditemukan', 'fa-exclamation-triangle');
+                return;
+            }
+            if (currentViewer.username === profileUser.username) {
+                showToast('ℹ️ Info', 'Anda tidak dapat mengundang diri sendiri', 'fa-info-circle');
+                return;
+            }
+            
+            // Kirim notifikasi ke pemilik profil
+            sendNotification('invite', '📨 Undangan Berteman', `${currentViewer.fullName} ingin berteman dengan Anda`, currentViewer.fullName, null);
+            
+            showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${profileUser.fullName}!`, 'fa-user-plus');
+        });
 
-        console.log('👤 Profile User Page - Interactive Mode');
-        console.log(`📌 Target User: ${targetUser ? targetUser.fullName : 'Not Found'}`);
-        console.log(`👤 Current User: ${currentUser ? currentUser.fullName : 'Guest'}`);
+        // ================================================================
+        // USER BUTTON - Kembali ke dashboard
+        // ================================================================
+        
+        document.getElementById('userBtn').addEventListener('click', function() {
+            goToDashboard();
+        });
+
+        // ================================================================
+        // THEME TOGGLE
+        // ================================================================
+        
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // ================================================================
+        // INIT
+        // ================================================================
+        
+        loadTheme();
+        loadCurrentViewer();
+        loadProfileFromURL();
+        renderProfile();
+        updateUserBtn();
+        
+        console.log('👤 Profile User Page - SALINK');
+        console.log(`📌 Profil: ${profileUser?.fullName || 'Tidak ditemukan'}`);
+        console.log(`👀 Viewer: ${currentViewer?.fullName || 'Guest'}`);
         console.log(`📝 Posts: ${posts.length}`);
         console.log(`👥 Friends: ${friends.length}`);
-        console.log('❤️ Like & Komentar: AKTIF (Interaktif)');
-        console.log('📌 Preview Mode: ' + (document.getElementById('previewBadge').classList.contains('active') ? 'AKTIF' : 'TIDAK AKTIF'));
+        console.log('🔒 Mode: Read Only (Privasi)');
+        console.log('✅ Fitur interaksi (Like, Komentar) hanya untuk pengunjung yang login');
+        console.log('📨 Notifikasi akan dikirim ke pemilik profil saat ada interaksi');
     </script>
-
 </body>
 </html>
