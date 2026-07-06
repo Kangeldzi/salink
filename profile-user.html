@@ -26,6 +26,15 @@
             --footer-height: 65px;
             --danger: #ff6b35;
             --success: #4CAF50;
+            --bg-primary: #0d0805;
+            --bg-secondary: #1a1008;
+            --bg-card: rgba(61, 35, 20, 0.6);
+            --text-primary: #f5f0e8;
+            --text-secondary: rgba(245, 240, 232, 0.7);
+            --border-color: var(--gold);
+            --shadow-color: rgba(0, 0, 0, 0.6);
+            --input-bg: rgba(255, 248, 240, 0.06);
+            --input-border: rgba(212, 168, 73, 0.2);
         }
 
         * {
@@ -36,11 +45,12 @@
 
         body {
             font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--darker), var(--brown-dark));
-            color: var(--cream);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         ::-webkit-scrollbar { width: 3px; }
@@ -60,6 +70,7 @@
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
         @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
 
         /* ===== HEADER / APP BAR ===== */
         .app-bar {
@@ -176,18 +187,19 @@
             border: 1px solid var(--gold);
             border-radius: 12px;
             padding: 12px 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px var(--shadow-color);
             display: flex;
             align-items: center;
             gap: 12px;
             animation: toastIn 0.4s ease;
             margin-bottom: 8px;
+            transition: background 0.3s ease;
         }
         .toast.hide { animation: toastOut 0.4s ease forwards; }
         .toast .toast-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: rgba(212, 168, 73, 0.15); color: var(--gold); }
         .toast .toast-content { flex: 1; }
         .toast .toast-title { font-size: 0.75rem; font-weight: 600; color: var(--gold-light); }
-        .toast .toast-message { font-size: 0.7rem; color: rgba(245, 240, 232, 0.7); }
+        .toast .toast-message { font-size: 0.7rem; color: var(--text-secondary); }
         .toast .toast-close { background: none; border: none; color: rgba(245, 240, 232, 0.3); cursor: pointer; font-size: 0.8rem; padding: 4px; transition: all 0.3s; }
         .toast .toast-close:hover { color: var(--cream); }
 
@@ -215,8 +227,10 @@
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
             font-size: 2.5rem;
             color: var(--brown-dark);
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+        .profile-avatar-large:hover { transform: scale(1.03); }
         .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
         .profile-avatar-large i { font-size: 2.5rem; }
 
@@ -224,8 +238,10 @@
             font-size: 1.2rem; 
             font-weight: 600; 
             color: var(--gold-light); 
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+        .profile-name:hover { color: var(--cream); }
         .profile-username { 
             font-size: 0.8rem; 
             color: rgba(245, 240, 232, 0.5); 
@@ -233,7 +249,7 @@
         }
         .profile-bio { 
             font-size: 0.75rem; 
-            color: var(--cream); 
+            color: var(--text-primary); 
             margin-top: 6px; 
             opacity: 0.8;
             cursor: default;
@@ -244,11 +260,12 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin: 16px 0 10px;
-            background: rgba(61, 35, 20, 0.3);
+            background: var(--bg-card);
             padding: 12px;
             border-radius: 12px;
             border: 1px solid rgba(212, 168, 73, 0.1);
             position: relative;
+            transition: background 0.3s ease;
         }
         .profile-stat-item { 
             text-align: center;
@@ -322,10 +339,10 @@
             box-shadow: 0 4px 15px rgba(212, 168, 73, 0.2);
         }
 
-        /* ===== POST SECTION (Read Only) ===== */
+        /* ===== POST SECTION ===== */
         .post-section {
             margin-top: 16px;
-            background: rgba(61, 35, 20, 0.5);
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
@@ -334,6 +351,7 @@
             box-shadow: var(--neumorph-shadow);
             max-height: 500px;
             overflow-y: auto;
+            transition: background 0.3s ease;
         }
         .post-section::-webkit-scrollbar { width: 3px; }
         .post-section::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
@@ -352,24 +370,32 @@
             overflow: hidden;
             flex-shrink: 0;
             border: 2px solid var(--gold);
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+        .post-profile-pic:hover { transform: scale(1.05); }
         .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         .post-profile-pic i { color: var(--brown-dark); font-size: 0.85rem; }
         .post-user-info h4 { 
             font-size: 0.85rem; 
             color: var(--gold-light);
-            cursor: default;
         }
+        .post-user-info h4 .profile-link { 
+            color: var(--gold-light); 
+            text-decoration: none; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+        }
+        .post-user-info h4 .profile-link:hover { text-decoration: underline; color: var(--cream); }
         .post-user-info small { 
             font-size: 0.55rem; 
             color: rgba(245, 240, 232, 0.4); 
         }
 
         .post-feed { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
-        .post { background: rgba(255, 248, 240, 0.03); border-radius: 10px; padding: 14px; border: 1px solid rgba(212, 168, 73, 0.1); position: relative; }
+        .post { background: rgba(255, 248, 240, 0.03); border-radius: 10px; padding: 14px; border: 1px solid rgba(212, 168, 73, 0.1); position: relative; transition: background 0.3s ease; }
         .post-content { margin: 8px 0; }
-        .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--cream); }
+        .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--text-primary); }
         .post-media { margin: 8px 0; }
         .post-media img, .post-media video { max-width: 100%; max-height: 220px; border-radius: 8px; }
 
@@ -386,19 +412,26 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            color: rgba(245, 240, 232, 0.6);
+            cursor: pointer;
+            color: var(--text-secondary);
             font-size: 0.65rem;
+            transition: all 0.3s;
             padding: 3px 6px;
             border-radius: 6px;
-            cursor: default;
         }
+        .post-action:hover { color: var(--gold-light); background: rgba(255, 255, 255, 0.05); }
         .post-action i { font-size: 0.8rem; }
         .post-action.liked { color: #ff6b35; }
         .post-action.liked i { color: #ff6b35; }
+        .post-action.liked .fa-heart { animation: heartBeat 0.3s ease; }
         .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
+        .post-action.share { color: rgba(76, 201, 240, 0.6); }
+        .post-action.share:hover { color: #4cc9f0; }
+        .post-action.comment-toggle { color: rgba(76, 201, 240, 0.6); }
+        .post-action.comment-toggle:hover { color: #4cc9f0; }
 
         .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
-        .comment { display: flex; flex-direction: column; margin-bottom: 8px; padding: 6px 8px; background: rgba(255, 248, 240, 0.03); border-radius: 8px; }
+        .comment { display: flex; flex-direction: column; margin-bottom: 8px; padding: 6px 8px; background: rgba(255, 248, 240, 0.03); border-radius: 8px; transition: background 0.3s ease; }
         .comment-main { display: flex; align-items: flex-start; gap: 8px; }
         .comment-profile-pic {
             width: 26px;
@@ -411,8 +444,10 @@
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.3s;
         }
+        .comment-profile-pic:hover { transform: scale(1.05); }
         .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
         .comment-profile-pic i { font-size: 0.65rem; color: var(--brown-dark); }
         .comment-content { flex: 1; }
@@ -420,27 +455,67 @@
             font-weight: 600; 
             font-size: 0.65rem; 
             color: var(--gold-light);
-            cursor: default;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .comment-text { font-size: 0.7rem; color: var(--cream); margin: 2px 0; }
+        .comment-user:hover { text-decoration: underline; color: var(--cream); }
+        .comment-text { font-size: 0.7rem; color: var(--text-primary); margin: 2px 0; }
         .comment-time { font-size: 0.5rem; color: rgba(245, 240, 232, 0.35); }
         .comment-actions { display: flex; gap: 10px; margin-top: 4px; }
-        .comment-action { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); cursor: default; }
+        .comment-action { font-size: 0.55rem; color: rgba(245, 240, 232, 0.4); cursor: pointer; transition: all 0.3s; }
+        .comment-action:hover { color: var(--gold-light); }
+        .comment-action.delete-comment { color: rgba(255, 107, 53, 0.4); }
+        .comment-action.delete-comment:hover { color: #ff6b35; }
         .comment-replies { margin-left: 34px; margin-top: 6px; border-left: 2px solid rgba(212, 168, 73, 0.15); padding-left: 10px; }
         .reply-comment { margin-bottom: 6px; padding: 4px 6px; background: rgba(255, 248, 240, 0.02); border-radius: 6px; }
         .reply-comment .comment-main { display: flex; align-items: flex-start; gap: 6px; }
-        .reply-comment .comment-profile-pic { width: 20px; height: 20px; }
-        .reply-comment .comment-user { font-size: 0.6rem; }
+        .reply-comment .comment-profile-pic { width: 20px; height: 20px; cursor: pointer; }
+        .reply-comment .comment-profile-pic:hover { transform: scale(1.05); }
+        .reply-comment .comment-user { font-size: 0.6rem; cursor: pointer; }
+        .reply-comment .comment-user:hover { text-decoration: underline; color: var(--cream); }
         .reply-comment .comment-text { font-size: 0.65rem; }
         .reply-comment .comment-time { font-size: 0.45rem; }
 
-        /* ===== PROFILE NAVBAR (Read Only) ===== */
+        .add-comment { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+        .comment-input { 
+            flex: 1; 
+            background: var(--input-bg); 
+            border: 1px solid var(--input-border); 
+            border-radius: 18px; 
+            padding: 6px 12px; 
+            color: var(--text-primary); 
+            font-size: 0.65rem; 
+            transition: all 0.3s;
+            min-height: 32px;
+        }
+        .comment-input:focus { outline: none; border-color: var(--gold); }
+        .comment-input::placeholder { color: rgba(245, 240, 232, 0.3); }
+        .send-comment { 
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark)); 
+            border: none; 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            color: var(--dark); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 0.65rem; 
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .send-comment:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(212, 168, 73, 0.3); }
+        .send-comment:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ===== PROFILE NAVBAR ===== */
         .profile-navbar {
             margin-top: 12px;
             padding: 8px 0;
-            background: rgba(61, 35, 20, 0.3);
+            background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid rgba(212, 168, 73, 0.1);
+            transition: background 0.3s ease;
         }
 
         .profile-nav-grid {
@@ -493,7 +568,7 @@
         .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
 
         .modal-content {
-            background: linear-gradient(145deg, rgba(61, 35, 20, 0.98), rgba(13, 8, 5, 0.98));
+            background: var(--bg-primary);
             border-radius: 20px;
             max-width: 480px;
             width: 100%;
@@ -501,10 +576,16 @@
             overflow-y: auto;
             padding: 20px 18px;
             border: 2px solid var(--gold);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 168, 73, 0.1);
+            box-shadow: 0 30px 60px var(--shadow-color), 0 0 40px rgba(212, 168, 73, 0.1);
             animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             margin: 0 auto;
+            transition: background 0.3s ease;
         }
+
+        .modal-content::-webkit-scrollbar { width: 3px; }
+        .modal-content::-webkit-scrollbar-track { background: rgba(61, 35, 20, 0.3); }
+        .modal-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -534,7 +615,7 @@
         .modal-close { 
             background: rgba(255, 255, 255, 0.05); 
             border: none; 
-            color: var(--cream); 
+            color: var(--text-primary); 
             width: 30px; 
             height: 30px; 
             border-radius: 50%; 
@@ -546,16 +627,14 @@
             transition: all 0.3s; 
             border: 1px solid rgba(212, 168, 73, 0.2); 
         }
-        .modal-close:hover { 
-            background: rgba(255, 107, 53, 0.2); 
-            transform: rotate(90deg); 
-        }
+        .modal-close:hover { background: rgba(255, 107, 53, 0.2); transform: rotate(90deg); }
 
         .modal-body { 
-            color: var(--cream); 
+            color: var(--text-primary); 
             font-size: 0.75rem; 
             overflow-y: auto; 
             flex: 1; 
+            padding: 0 2px;
         }
 
         .modal-footer {
@@ -569,7 +648,7 @@
         }
         .modal-footer .btn-close-modal {
             background: rgba(255, 255, 255, 0.05);
-            color: var(--cream);
+            color: var(--text-primary);
             border: 1px solid rgba(212, 168, 73, 0.2);
             border-radius: 5px;
             padding: 8px 30px;
@@ -608,15 +687,37 @@
             font-size: 1.2rem;
             flex-shrink: 0;
             overflow: hidden;
+            cursor: pointer;
         }
+        .friend-avatar:hover { transform: scale(1.05); }
         .friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .friend-info { flex: 1; }
-        .friend-name { font-size: 0.8rem; color: var(--cream); font-weight: 500; }
+        .friend-name { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; cursor: pointer; transition: all 0.3s; }
+        .friend-name:hover { color: var(--gold-light); }
         .friend-status { font-size: 0.6rem; color: rgba(245, 240, 232, 0.4); }
+
+        .report-list-item {
+            background: rgba(61, 35, 20, 0.3);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(212, 168, 73, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .report-list-item:hover { border-color: var(--gold-light); background: rgba(61, 35, 20, 0.5); }
+        .report-list-item .alert-icon { width: 32px; height: 32px; font-size: 0.8rem; flex-shrink: 0; background: rgba(212, 168, 73, 0.1); border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); }
+        .report-list-item .report-info { flex: 1; min-width: 0; }
+        .report-list-item .report-title { font-size: 0.8rem; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .report-list-item .report-desc { font-size: 0.65rem; color: var(--text-secondary); }
+        .report-list-item .report-time { font-size: 0.6rem; color: var(--gold); flex-shrink: 0; }
 
         /* ===== FOOTER ===== */
         .app-footer {
-            background: rgba(61, 35, 20, 0.2);
+            background: var(--bg-card);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             padding: 14px 16px;
@@ -624,6 +725,7 @@
             border-top: 1px solid var(--gold);
             margin-top: 16px;
             border-radius: 12px;
+            transition: background 0.3s ease;
         }
         .app-footer a { color: var(--gold); text-decoration: none; font-size: 9px; transition: all 0.3s; }
         .app-footer a:hover { color: var(--gold-light); }
@@ -635,10 +737,11 @@
             gap: 16px;
             padding: 12px 0 8px;
             flex-wrap: wrap;
-            background: rgba(61, 35, 20, 0.3);
+            background: var(--bg-card);
             border-radius: 12px;
             margin-top: 12px;
             border: 1px solid rgba(212, 168, 73, 0.1);
+            transition: background 0.3s ease;
         }
         .social-link {
             display: flex;
@@ -654,7 +757,7 @@
             font-size: 1.2rem;
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
         .social-link:hover { transform: translateY(-6px) scale(1.08); box-shadow: 0 8px 30px rgba(212, 168, 73, 0.3); border-color: var(--gold-light); animation: socialFloat 0.6s ease-in-out infinite; }
         .social-link:active { animation: socialZoomOut 0.4s ease; }
@@ -683,6 +786,9 @@
             .social-link { width: 38px; height: 38px; font-size: 1rem; }
             .social-links { gap: 12px; padding: 10px 0; }
             .app-footer { padding: 12px 10px; }
+            .add-comment { flex-wrap: wrap; }
+            .comment-input { font-size: 0.6rem; padding: 4px 10px; }
+            .send-comment { width: 24px; height: 24px; font-size: 0.6rem; }
         }
 
         @media (max-width: 380px) {
@@ -717,10 +823,10 @@
     <main class="main-content" id="mainContent">
         <div class="profile-page" id="profilePage">
             <div class="profile-header">
-                <div class="profile-avatar-large" id="profileAvatarLarge">
+                <div class="profile-avatar-large" id="profileAvatarLarge" onclick="openProfileUser(targetUser?.username)">
                     <i class="fas fa-user"></i>
                 </div>
-                <div class="profile-name" id="profileName">Nama Pengguna</div>
+                <div class="profile-name" id="profileName" onclick="openProfileUser(targetUser?.username)">Nama Pengguna</div>
                 <div class="profile-username" id="profileUsername">@username</div>
                 <div class="profile-bio" id="profileBio">Bergabung di SALINK untuk keamanan bersama</div>
             </div>
@@ -750,7 +856,7 @@
                 </button>
             </div>
 
-            <!-- ===== NAVBAR (3 items - Read Only) ===== -->
+            <!-- ===== NAVBAR (3 items) ===== -->
             <div class="profile-navbar" id="profileNavbar">
                 <div class="profile-nav-grid">
                     <a href="#" class="profile-nav-item" onclick="showToast('📷 Foto', 'Halaman foto akan segera hadir', 'fa-image')">
@@ -1114,12 +1220,12 @@
             // Pesan button
             profilePesanBtn.href = 'pesan.html';
             
-            // Render posts
+            // Render posts with interactive features
             renderPosts(userPosts);
         }
 
         // ================================================================
-        // RENDER POSTS (Read Only)
+        // RENDER POSTS - LIKE & KOMENTAR AKTIF (INTERAKTIF)
         // ================================================================
         
         function renderPosts(userPosts) {
@@ -1139,6 +1245,7 @@
                 const postEl = document.createElement('div');
                 postEl.className = 'post';
                 postEl.style.marginBottom = '10px';
+                postEl.id = `post-${post.id}`;
                 
                 const profilePic = post.userProfilePic 
                     ? `<img src="${post.userProfilePic}" alt="Profile">` 
@@ -1154,13 +1261,75 @@
                 const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
                 const specialBadge = post.isSpecial ? `<span style="background:rgba(212,168,73,0.2);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--gold);margin-left:6px;">🚨 ${post.specialData?.type ? post.specialData.type.toUpperCase() : 'Khusus'}</span>` : '';
                 
+                // Build comments HTML
+                let commentsHTML = '';
+                if (post.comments && post.comments.length > 0) {
+                    post.comments.forEach(comment => {
+                        const commentProfilePic = comment.userProfilePic 
+                            ? `<img src="${comment.userProfilePic}" alt="Profile">` 
+                            : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                        
+                        let repliesHTML = '';
+                        if (comment.replies && comment.replies.length > 0) {
+                            repliesHTML = `
+                                <div class="comment-replies">
+                                    ${comment.replies.map(reply => {
+                                        const replyProfilePic = reply.userProfilePic 
+                                            ? `<img src="${reply.userProfilePic}" alt="Profile">` 
+                                            : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
+                                        return `
+                                            <div class="reply-comment">
+                                                <div class="comment-main">
+                                                    <div class="comment-profile-pic" onclick="openProfileUser('${reply.userId}')">
+                                                        ${replyProfilePic}
+                                                    </div>
+                                                    <div class="comment-content">
+                                                        <div class="comment-user" onclick="openProfileUser('${reply.userId}')">${reply.userFullName}</div>
+                                                        <div class="comment-text">${reply.text}</div>
+                                                        <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
+                                                        ${reply.userId === currentUser?.username ? `
+                                                            <div class="comment-actions">
+                                                                <span class="comment-action delete-comment" onclick="deleteComment('${post.id}', '${comment.id}', '${reply.id}')">Hapus</span>
+                                                            </div>
+                                                        ` : ''}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            `;
+                        }
+                        
+                        commentsHTML += `
+                            <div class="comment" id="comment-${comment.id}">
+                                <div class="comment-main">
+                                    <div class="comment-profile-pic" onclick="openProfileUser('${comment.userId}')">
+                                        ${commentProfilePic}
+                                    </div>
+                                    <div class="comment-content">
+                                        <div class="comment-user" onclick="openProfileUser('${comment.userId}')">${comment.userFullName}</div>
+                                        <div class="comment-text">${comment.text}</div>
+                                        <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
+                                        <div class="comment-actions">
+                                            <span class="comment-action reply-comment-action" onclick="replyComment('${post.id}', '${comment.id}')">Balas</span>
+                                            ${comment.userId === currentUser?.username ? `<span class="comment-action delete-comment" onclick="deleteComment('${post.id}', '${comment.id}')">Hapus</span>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                                ${repliesHTML}
+                            </div>
+                        `;
+                    });
+                }
+                
                 postEl.innerHTML = `
                     <div class="post-header">
-                        <div class="post-profile-pic">
+                        <div class="post-profile-pic" onclick="openProfileUser('${post.userId}')">
                             ${profilePic}
                         </div>
                         <div class="post-user-info">
-                            <h4>${post.userFullName} ${specialBadge}</h4>
+                            <h4><a href="#" class="profile-link" onclick="event.preventDefault(); openProfileUser('${post.userId}');">${post.userFullName}</a> ${specialBadge}</h4>
                             <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
                         </div>
                     </div>
@@ -1178,69 +1347,254 @@
                         ` : ''}
                     </div>
                     <div class="post-actions">
-                        <div class="post-action ${isLiked ? 'liked' : ''}">
+                        <div class="post-action ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
                             <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
                             <span>Suka</span>
                             <span class="like-count">${post.likes && post.likes.length > 0 ? post.likes.length : ''}</span>
                         </div>
-                        <div class="post-action">
+                        <div class="post-action comment-toggle" onclick="toggleComments('${post.id}')">
                             <i class="far fa-comment"></i>
                             <span>Komentar</span>
                             <span>(${post.comments ? post.comments.length : 0})</span>
                         </div>
-                        <div class="post-action share">
+                        <div class="post-action share" onclick="sharePost('${post.id}')">
                             <i class="fas fa-share-alt"></i>
                             <span>Bagikan</span>
                         </div>
                     </div>
-                    <div class="comments-section">
-                        ${post.comments ? post.comments.map(comment => {
-                            const commentProfilePic = comment.userProfilePic 
-                                ? `<img src="${comment.userProfilePic}" alt="Profile">` 
-                                : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                            return `
-                                <div class="comment">
-                                    <div class="comment-main">
-                                        <div class="comment-profile-pic">
-                                            ${commentProfilePic}
-                                        </div>
-                                        <div class="comment-content">
-                                            <div class="comment-user">${comment.userFullName}</div>
-                                            <div class="comment-text">${comment.text}</div>
-                                            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
-                                        </div>
-                                    </div>
-                                    ${comment.replies && comment.replies.length > 0 ? `
-                                        <div class="comment-replies">
-                                            ${comment.replies.map(reply => {
-                                                const replyProfilePic = reply.userProfilePic 
-                                                    ? `<img src="${reply.userProfilePic}" alt="Profile">` 
-                                                    : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                                                return `
-                                                    <div class="reply-comment">
-                                                        <div class="comment-main">
-                                                            <div class="comment-profile-pic">
-                                                                ${replyProfilePic}
-                                                            </div>
-                                                            <div class="comment-content">
-                                                                <div class="comment-user">${reply.userFullName}</div>
-                                                                <div class="comment-text">${reply.text}</div>
-                                                                <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                `;
-                                            }).join('')}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `;
-                        }).join('') : ''}
+                    <div class="comments-section" id="comments-${post.id}" style="display:none;">
+                        ${commentsHTML}
+                        <div class="add-comment">
+                            <input type="text" class="comment-input" id="comment-input-${post.id}" placeholder="Tulis komentar..." data-post-id="${post.id}" ${!currentUser ? 'disabled' : ''}>
+                            <button class="send-comment" onclick="sendComment('${post.id}')" ${!currentUser ? 'disabled' : ''}>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
                 
                 profilePosts.appendChild(postEl);
             });
+        }
+
+        // ================================================================
+        // INTERAKSI POSTINGAN - LIKE
+        // ================================================================
+        
+        function toggleLike(postId) {
+            if (!currentUser) {
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
+                return;
+            }
+            
+            // Cari post di posts global
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const index = post.likes.indexOf(currentUser.username);
+            if (index > -1) {
+                post.likes.splice(index, 1);
+            } else {
+                post.likes.push(currentUser.username);
+                // Send notification to post owner
+                if (post.userId !== currentUser.username) {
+                    addNotification('like', `${currentUser.fullName} menyukai postingan Anda`, post.userId, post.id);
+                }
+            }
+            
+            // Save to localStorage
+            savePosts();
+            
+            // Re-render posts
+            const userPosts = posts.filter(p => p.userId === targetUser.username);
+            renderPosts(userPosts);
+        }
+
+        // ================================================================
+        // INTERAKSI POSTINGAN - KOMENTAR
+        // ================================================================
+        
+        function toggleComments(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (commentsSection) {
+                commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+                if (commentsSection.style.display === 'block') {
+                    const input = document.getElementById(`comment-input-${postId}`);
+                    if (input) input.focus();
+                }
+            }
+        }
+
+        function sendComment(postId) {
+            if (!currentUser) {
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk berkomentar', 'fa-lock');
+                return;
+            }
+            
+            const input = document.getElementById(`comment-input-${postId}`);
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const comment = {
+                id: 'comment-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+                userId: currentUser.username,
+                userFullName: currentUser.fullName,
+                userGender: currentUser.gender,
+                userProfilePic: currentUser.profilePicture || null,
+                text: text,
+                timestamp: Date.now(),
+                replies: []
+            };
+            
+            // Check if replying to a comment
+            const replyToCommentId = input.dataset.replyToCommentId;
+            if (replyToCommentId) {
+                const parentComment = post.comments.find(c => c.id === replyToCommentId);
+                if (parentComment) {
+                    if (!parentComment.replies) parentComment.replies = [];
+                    parentComment.replies.push(comment);
+                    delete input.dataset.replyToCommentId;
+                    input.placeholder = 'Tulis komentar...';
+                }
+            } else {
+                post.comments.push(comment);
+                // Send notification to post owner
+                if (post.userId !== currentUser.username) {
+                    addNotification('comment', `${currentUser.fullName} mengomentari postingan Anda: "${text.substring(0, 30)}${text.length > 30 ? '...' : ''}"`, post.userId, post.id);
+                }
+            }
+            
+            input.value = '';
+            savePosts();
+            
+            // Re-render posts
+            const userPosts = posts.filter(p => p.userId === targetUser.username);
+            renderPosts(userPosts);
+            
+            // Show comments section
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (commentsSection) commentsSection.style.display = 'block';
+        }
+
+        function replyComment(postId, commentId) {
+            if (!currentUser) {
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membalas komentar', 'fa-lock');
+                return;
+            }
+            
+            const input = document.getElementById(`comment-input-${postId}`);
+            if (!input) return;
+            
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const comment = post.comments.find(c => c.id === commentId);
+            if (!comment) return;
+            
+            input.dataset.replyToCommentId = commentId;
+            input.placeholder = `Membalas @${comment.userFullName}...`;
+            input.focus();
+        }
+
+        function deleteComment(postId, commentId, replyId) {
+            if (!currentUser) {
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk menghapus komentar', 'fa-lock');
+                return;
+            }
+            
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            if (replyId) {
+                // Delete reply
+                for (const comment of post.comments) {
+                    if (comment.replies) {
+                        const replyIndex = comment.replies.findIndex(r => r.id === replyId);
+                        if (replyIndex > -1) {
+                            comment.replies.splice(replyIndex, 1);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // Delete comment
+                const commentIndex = post.comments.findIndex(c => c.id === commentId);
+                if (commentIndex > -1) {
+                    post.comments.splice(commentIndex, 1);
+                }
+            }
+            
+            savePosts();
+            
+            // Re-render posts
+            const userPosts = posts.filter(p => p.userId === targetUser.username);
+            renderPosts(userPosts);
+        }
+
+        function sharePost(postId) {
+            if (!currentUser) {
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk membagikan postingan', 'fa-lock');
+                return;
+            }
+            
+            const post = posts.find(p => p.id === postId);
+            if (!post) return;
+            
+            const shareText = `📢 ${post.userFullName}: ${post.text || 'Membagikan postingan'}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SALINK - Postingan',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showToast('📋 Disalin', 'Link postingan disalin ke clipboard', 'fa-clipboard');
+                }).catch(() => {
+                    prompt('Salin teks ini:', shareText);
+                });
+            }
+        }
+
+        // ================================================================
+        // NOTIFICATION FUNCTIONS
+        // ================================================================
+        
+        function addNotification(type, message, targetUserId, postId) {
+            // Get existing notifications
+            let notifications = JSON.parse(localStorage.getItem('salink_notifications') || '[]');
+            
+            notifications.unshift({
+                id: Date.now() + Math.random() * 1000,
+                type: type,
+                title: type === 'like' ? '❤️ Suka' : '💬 Komentar',
+                message: message,
+                sender: currentUser.fullName,
+                senderUsername: currentUser.username,
+                postId: postId || null,
+                timestamp: Date.now(),
+                read: false
+            });
+            
+            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+        }
+
+        // ================================================================
+        // SAVE POSTS
+        // ================================================================
+        
+        function savePosts() {
+            try {
+                localStorage.setItem('salink_posts', JSON.stringify(posts));
+            } catch (e) {
+                console.warn('Gagal menyimpan posts:', e);
+            }
         }
 
         // ================================================================
@@ -1271,7 +1625,6 @@
         // MODAL FUNCTIONS
         // ================================================================
         
-        // ===== TEMAN MODAL =====
         function renderTemanModal() {
             temanModalBody.innerHTML = '';
             totalTemanCount.textContent = friends.length;
@@ -1294,11 +1647,11 @@
                 const statusColor = friend.status === 'Online' ? '#4CAF50' : '#888';
                 
                 item.innerHTML = `
-                    <div class="friend-avatar">
+                    <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
                         ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
                     </div>
                     <div class="friend-info">
-                        <div class="friend-name">${friend.name}</div>
+                        <div class="friend-name" onclick="openProfileUser('${friend.username}')">${friend.name}</div>
                         <div class="friend-status">@${friend.username} • <span style="color:${statusColor};">${friend.status}</span></div>
                     </div>
                     <button onclick="openProfileUser('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
@@ -1321,7 +1674,6 @@
             document.body.style.overflow = '';
         }
 
-        // ===== POSTINGAN MODAL =====
         function openPostinganModal() {
             const userPosts = posts.filter(p => p.userId === targetUser.username);
             postinganModalBody.innerHTML = '';
@@ -1338,12 +1690,11 @@
                 userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
                     const item = document.createElement('div');
                     item.className = 'report-list-item';
-                    item.style.cursor = 'default';
                     
                     const specialBadge = post.isSpecial ? `🚨 ${post.specialData?.type ? post.specialData.type.toUpperCase() : 'Khusus'}` : '📝 Biasa';
                     
                     item.innerHTML = `
-                        <div class="alert-icon" style="width:32px;height:32px;font-size:0.8rem;flex-shrink:0;background:rgba(212,168,73,0.1);border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);">
+                        <div class="alert-icon">
                             <i class="fas fa-file-alt"></i>
                         </div>
                         <div class="report-info">
@@ -1366,7 +1717,6 @@
             document.body.style.overflow = '';
         }
 
-        // ===== PENGIKUT MODAL =====
         function openPengikutModal() {
             pengikutModalBody.innerHTML = '';
             const followerCount = friends.length > 0 ? friends.length : 0;
@@ -1387,11 +1737,11 @@
                     const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
                     
                     item.innerHTML = `
-                        <div class="friend-avatar">
+                        <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
                             ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
                         </div>
                         <div class="friend-info">
-                            <div class="friend-name">${friend.name}</div>
+                            <div class="friend-name" onclick="openProfileUser('${friend.username}')">${friend.name}</div>
                             <div class="friend-status">@${friend.username}</div>
                         </div>
                         <button onclick="openProfileUser('${friend.username}')" style="background:rgba(212,168,73,0.15);color:var(--gold);border:1px solid var(--gold);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
@@ -1412,7 +1762,6 @@
             document.body.style.overflow = '';
         }
 
-        // ===== MENGIKUTI MODAL =====
         function openMengikutiModal() {
             mengikutiModalBody.innerHTML = '';
             const followingCount = Math.floor(Math.random() * 3) + 1;
@@ -1461,9 +1810,16 @@
         // ================================================================
         
         function openProfileUser(username) {
-            // Find user data
+            if (!username) return;
+            
+            // Cari data user
             const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            const user = users.find(u => u.username === username);
+            let user = users.find(u => u.username === username);
+            
+            // Jika tidak ditemukan, cari berdasarkan fullName
+            if (!user) {
+                user = users.find(u => u.fullName === username);
+            }
             
             if (user) {
                 window.open(`profile-user.html?user=${encodeURIComponent(JSON.stringify(user))}`, '_blank');
@@ -1487,13 +1843,12 @@
                 return;
             }
             
-            // Send invite notification
             showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${targetUser.fullName}!`, 'fa-user-plus');
             
             // Add notification for target user
             const notifications = JSON.parse(localStorage.getItem('salink_notifications') || '[]');
             notifications.unshift({
-                id: Date.now(),
+                id: Date.now() + Math.random() * 1000,
                 type: 'invite',
                 title: '📨 Permintaan Berteman',
                 message: `${currentUser.fullName} ingin berteman dengan Anda`,
@@ -1504,6 +1859,22 @@
             });
             localStorage.setItem('salink_notifications', JSON.stringify(notifications));
         }
+
+        // ================================================================
+        // KEYBOARD EVENT - ENTER UNTUK KOMENTAR
+        // ================================================================
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const target = e.target;
+                if (target.classList && target.classList.contains('comment-input')) {
+                    const postId = target.dataset.postId;
+                    if (postId) {
+                        sendComment(postId);
+                    }
+                }
+            }
+        });
 
         // ================================================================
         // EVENT LISTENERS
@@ -1547,32 +1918,21 @@
         mengikutiModal.addEventListener('click', function(e) {
             if (e.target === mengikutiModal) closeMengikutiModal();
         });
-        
-        // Click on avatar to view profile (redirect to self)
-        profileAvatarLarge.addEventListener('click', function() {
-            if (targetUser && targetUser.username) {
-                openProfileUser(targetUser.username);
-            }
-        });
-        profileName.addEventListener('click', function() {
-            if (targetUser && targetUser.username) {
-                openProfileUser(targetUser.username);
-            }
-        });
 
         // ================================================================
         // RIPPLE EFFECT
         // ================================================================
         
         document.addEventListener('click', function(e) {
-            if (e.target.closest('.profile-stat-item') || e.target.closest('.friend-item')) {
-                const btn = e.target.closest('.profile-stat-item') || e.target.closest('.friend-item');
+            if (e.target.closest('.profile-stat-item') || e.target.closest('.friend-item') || e.target.closest('.post-action')) {
+                const btn = e.target.closest('.profile-stat-item') || e.target.closest('.friend-item') || e.target.closest('.post-action');
+                if (!btn) return;
                 const rect = btn.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 
                 const ripple = document.createElement('span');
-                ripple.classList.add('ripple');
+                ripple.className = 'ripple';
                 ripple.style.cssText = `
                     position: absolute;
                     border-radius: 50%;
@@ -1605,12 +1965,13 @@
         // Load user data
         loadUserData();
 
-        console.log('👤 Profile User Page');
+        console.log('👤 Profile User Page - Interactive Mode');
         console.log(`📌 Target User: ${targetUser ? targetUser.fullName : 'Not Found'}`);
         console.log(`👤 Current User: ${currentUser ? currentUser.fullName : 'Guest'}`);
         console.log(`📝 Posts: ${posts.length}`);
         console.log(`👥 Friends: ${friends.length}`);
-        console.log('🔒 Mode: Read Only (Privasi)');
+        console.log('❤️ Like & Komentar: AKTIF (Interaktif)');
+        console.log('📌 Preview Mode: ' + (document.getElementById('previewBadge').classList.contains('active') ? 'AKTIF' : 'TIDAK AKTIF'));
     </script>
 
 </body>
