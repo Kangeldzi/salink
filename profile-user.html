@@ -1403,23 +1403,86 @@
         }
 
         // ================================================================
-        // LOAD DATA FROM URL
+        // GET USER BY USERNAME
         // ================================================================
-        function loadProfileData() {
-            // Ambil data dari URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const userData = urlParams.get('user');
+        function getUserByUsername(username) {
+            if (!username) return null;
             
-            if (userData) {
-                try {
-                    profileUser = JSON.parse(decodeURIComponent(userData));
-                } catch (e) {
-                    console.error('Gagal parse user data:', e);
+            // Cari dari data users yang tersimpan
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            let user = users.find(u => u.username === username);
+            
+            // Jika tidak ditemukan, coba dari currentUser
+            if (!user) {
+                const savedUser = localStorage.getItem('salink_user');
+                if (savedUser) {
+                    try {
+                        const current = JSON.parse(savedUser);
+                        if (current.username === username) {
+                            user = current;
+                        }
+                    } catch (e) {}
                 }
             }
             
-            // Jika tidak ada data dari URL, coba dari localStorage
-            if (!profileUser) {
+            // Jika masih tidak ditemukan, buat data dummy
+            if (!user) {
+                user = {
+                    fullName: username,
+                    username: username,
+                    email: `${username}@salink.id`,
+                    gender: 'male',
+                    phone: '',
+                    country: 'Indonesia',
+                    province: '',
+                    city: '',
+                    district: '',
+                    village: '',
+                    address: '',
+                    bio: `Profil pengguna ${username}`,
+                    profilePicture: null,
+                    joinedDate: new Date().toLocaleString('id-ID', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }),
+                    mapLink: ''
+                };
+            }
+            
+            return user;
+        }
+
+        // ================================================================
+        // LOAD PROFILE DATA
+        // ================================================================
+        function loadProfileData() {
+            // Ambil username dari URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            
+            if (username) {
+                // Cari user berdasarkan username
+                const user = getUserByUsername(username);
+                if (user) {
+                    profileUser = user;
+                } else {
+                    // Jika tidak ditemukan, gunakan data dari currentUser
+                    const savedUser = localStorage.getItem('salink_user');
+                    if (savedUser) {
+                        try {
+                            profileUser = JSON.parse(savedUser);
+                            showToast('ℹ️ Info', 'Pengguna tidak ditemukan, menampilkan profil Anda', 'fa-info-circle');
+                        } catch (e) {
+                            showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
+                        }
+                    }
+                }
+            } else {
+                // Jika tidak ada parameter username, coba dari localStorage
                 const savedUser = localStorage.getItem('salink_user');
                 if (savedUser) {
                     try {
@@ -1573,6 +1636,23 @@
             
             // Render posts
             renderProfilePosts(userPosts);
+        }
+
+        // ================================================================
+        // OPEN PROFILE USER (Navigasi ke halaman ini lagi)
+        // ================================================================
+        function openProfileUser(username) {
+            if (!username) {
+                if (currentUser) {
+                    window.open(`profile-user.html?username=${currentUser.username}`, '_blank');
+                } else {
+                    window.open('profile-user.html', '_blank');
+                }
+                return;
+            }
+            
+            // Redirect ke profile-user.html dengan parameter username
+            window.open(`profile-user.html?username=${encodeURIComponent(username)}`, '_blank');
         }
 
         // ================================================================
@@ -1880,27 +1960,6 @@
                     }
                 });
             });
-        }
-
-        // ================================================================
-        // OPEN PROFILE USER (Navigasi ke halaman ini lagi)
-        // ================================================================
-        function openProfileUser(username) {
-            if (!username) return;
-            
-            // Cari user dari localStorage
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            let user = users.find(u => u.username === username);
-            if (!user) user = users.find(u => u.fullName === username);
-            
-            if (user) {
-                // Buka halaman ini dengan parameter user
-                const encoded = encodeURIComponent(JSON.stringify(user));
-                window.open(`profile-user.html?user=${encoded}`, '_blank');
-            } else {
-                // Jika tidak ditemukan, buka dengan username
-                window.open(`profile-user.html?username=${username}`, '_blank');
-            }
         }
 
         // ================================================================
