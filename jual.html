@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard Admin - TeslaSmart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* ========== LIGHT MODE ========== */
+        body.light-mode {
+            background: #f0f4f8;
+            color: #1a1a2e;
+        }
+
+        body.light-mode .header {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+
+        body.light-mode .card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        body.light-mode .form-input,
+        body.light-mode .form-select,
+        body.light-mode .form-textarea {
+            background: #f5f7fa;
+            border: 1px solid #dce1e8;
+            color: #1a1a2e;
+        }
+
+        body.light-mode .form-input:focus,
+        body.light-mode .form-select:focus,
+        body.light-mode .form-textarea:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.15);
+        }
+
+        body.light-mode .btn-primary {
+            background: linear-gradient(135deg, #4facfe, #00c6fb);
+            color: white;
+        }
+
+        body.light-mode .btn-primary:hover {
+            background: linear-gradient(135deg, #3d8fd6, #00a8cc);
+            transform: translateY(-2px);
+        }
+
+        body.light-mode .btn-success {
+            background: #25D366;
+            color: white;
+        }
+
+        body.light-mode .btn-success:hover {
+            background: #20b859;
+            transform: translateY(-2px);
+        }
+
+        body.light-mode .btn-danger {
+            background: #e31837;
+            color: white;
+        }
+
+        body.light-mode .btn-danger:hover {
+            background: #c41230;
+            transform: translateY(-2px);
+        }
+
+        body.light-mode .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        body.light-mode .btn-warning:hover {
+            background: #e68900;
+            transform: translateY(-2px);
+        }
+
+        body.light-mode .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        body.light-mode .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        body.light-mode .table {
+            background: white;
+            border-radius: 12px;
+        }
+
+        body.light-mode .table th {
+            background: #f0f4f8;
+            color: #1a1a2e;
+        }
+
+        body.light-mode .table td {
+            border-bottom: 1px solid #e8ecf0;
+        }
+
+        body.light-mode .table tr:hover {
+            background: #f8f9fa;
+        }
+
+        body.light-mode .checkbox-group label {
+            color: #1a1a2e;
+        }
+
+        body.light-mode .preview-card {
+            background: #f8f9fa;
+            border: 2px dashed #dce1e8;
+        }
+
+        /* ========== DARK MODE ========== */
+        body.dark-mode {
+            background: #0d1117;
+            color: #e6edf3;
+        }
+
+        body.dark-mode .header {
+            background: linear-gradient(135deg, #161b22, #0d1117);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+        }
+
+        body.dark-mode .card {
+            background: rgba(22, 27, 34, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .form-input,
+        body.dark-mode .form-select,
+        body.dark-mode .form-textarea {
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #e6edf3;
+        }
+
+        body.dark-mode .form-input:focus,
+        body.dark-mode .form-select:focus,
+        body.dark-mode .form-textarea:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+
+        body.dark-mode .form-input::placeholder,
+        body.dark-mode .form-textarea::placeholder {
+            color: #6e7681;
+        }
+
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #58a6ff, #1f6feb);
+            color: white;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background: linear-gradient(135deg, #4790e0, #1a5fc4);
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .btn-success {
+            background: #25D366;
+            color: white;
+        }
+
+        body.dark-mode .btn-success:hover {
+            background: #20b859;
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .btn-danger {
+            background: #f85149;
+            color: white;
+        }
+
+        body.dark-mode .btn-danger:hover {
+            background: #da3633;
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .btn-warning {
+            background: #d29922;
+            color: white;
+        }
+
+        body.dark-mode .btn-warning:hover {
+            background: #bb8009;
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .table {
+            background: #161b22;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .table th {
+            background: #21262d;
+            color: #e6edf3;
+        }
+
+        body.dark-mode .table td {
+            border-bottom: 1px solid #30363d;
+        }
+
+        body.dark-mode .table tr:hover {
+            background: #21262d;
+        }
+
+        body.dark-mode .checkbox-group label {
+            color: #e6edf3;
+        }
+
+        body.dark-mode .preview-card {
+            background: #161b22;
+            border: 2px dashed #30363d;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-left .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .header-left h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .header-left .subtitle {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .theme-toggle {
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid #dce1e8;
+            cursor: pointer;
+            background: transparent;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body.dark-mode .theme-toggle {
+            border-color: #30363d;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.8;
+        }
+
+        /* ========== CONTAINER ========== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ========== CARDS ========== */
+        .card {
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .badge-count {
+            background: #4facfe;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        body.dark-mode .card-title .badge-count {
+            background: #58a6ff;
+        }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .tab-btn {
+            background: rgba(255,255,255,0.05);
+            color: #e6edf3;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4facfe, #00c6fb);
+            color: white;
+        }
+
+        body.dark-mode .tab-btn.active {
+            background: linear-gradient(135deg, #58a6ff, #1f6feb);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .tab-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ========== FORM STYLES ========== */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .form-group .label-desc {
+            font-size: 12px;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 400;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 2px solid #dce1e8;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .checkbox-group label {
+            border-color: #30363d;
+        }
+
+        .checkbox-group label:hover {
+            border-color: #4facfe;
+        }
+
+        body.dark-mode .checkbox-group label:hover {
+            border-color: #58a6ff;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: #4facfe;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        body.dark-mode .checkbox-group input[type="checkbox"] {
+            accent-color: #58a6ff;
+        }
+
+        .checkbox-group label.checked {
+            border-color: #4facfe;
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        body.dark-mode .checkbox-group label.checked {
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        /* ========== TABLE ========== */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .table .product-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .table .action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .table .action-btns .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        /* ========== PREVIEW ========== */
+        .preview-card {
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .preview-card .preview-image {
+            width: 100%;
+            max-width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 0 auto 12px;
+        }
+
+        .preview-card .preview-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .preview-card .preview-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e31837;
+            margin: 4px 0;
+        }
+
+        body.dark-mode .preview-card .preview-price {
+            color: #f85149;
+        }
+
+        .preview-card .preview-original {
+            font-size: 14px;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        body.dark-mode .preview-card .preview-original {
+            color: #6e7681;
+        }
+
+        .preview-card .preview-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            background: #e31837;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 0;
+        }
+
+        /* ========== IMAGE UPLOAD PREVIEW ========== */
+        .image-preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .image-preview-grid .img-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #dce1e8;
+            position: relative;
+        }
+
+        body.dark-mode .image-preview-grid .img-item {
+            border-color: #30363d;
+        }
+
+        .image-preview-grid .img-item .remove-img {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e31837;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-preview-grid .img-item .remove-img:hover {
+            transform: scale(1.1);
+        }
+
+        /* ========== STATUS BADGE ========== */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.ada {
+            background: #25D366;
+            color: white;
+        }
+
+        .status-badge.habis {
+            background: #e31837;
+            color: white;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .form-row,
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 12px 16px;
+            }
+
+            .header-left h1 {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .tabs {
+                gap: 4px;
+            }
+
+            .tab-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .checkbox-group label {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+
+            .table th,
+            .table td {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-left .logo {
+                width: 32px;
+                height: 32px;
+            }
+
+            .header-left h1 {
+                font-size: 14px;
+            }
+
+            .header-left .subtitle {
+                font-size: 10px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 12px;
+            }
+
+            .image-preview-grid .img-item {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* ========== TOAST NOTIFICATION ========== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            background: #25D366;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: #e31837;
+        }
+
+        .toast.warning {
+            background: #ff9800;
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4facfe;
+            border-radius: 10px;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: #58a6ff;
+        }
+
+        /* ========== EMPTY STATE ========== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-left">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiFfiSs6PYvU-L8NcOwn4c8LAYUSDu_MWAJLKaGxGUuwcaiRNrz_GB_O-3wBcCFLiGL2HNBKcQDvtmTRFXTlINEW3CTFfFHNQFEM1Rksc9caVAVvdxDS4it9zb6R9qhdzAjNnwHMdCFRZZ92JuRX7pchYf0aKngwYCYN59kEUc9wGf8-4aJA9NE05aqFlA/s3000/1000104355.png" alt="Logo" class="logo" id="headerLogo">
+            <div>
+                <h1>📊 Dashboard Admin</h1>
+                <div class="subtitle">Kelola Produk Toko TeslaSmart</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <span id="productCount" style="font-size:14px; font-weight:600;">0 Produk</span>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="themeIcon">☀️</span>
+                <span id="themeText">Light</span>
+            </button>
+            <button class="btn btn-secondary" onclick="window.open('toko.html', '_blank')">
+                🏪 Lihat Toko
+            </button>
+        </div>
+    </header>
+
+    <!-- ========== CONTAINER ========== -->
+    <div class="container">
+        <!-- ========== TABS ========== -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('form')">📝 Tambah Produk</button>
+            <button class="tab-btn" onclick="switchTab('list')">📋 Daftar Produk</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Pengaturan Toko</button>
+        </div>
+
+        <!-- ========== TAB 1: FORM ========== -->
+        <div class="tab-content active" id="tab-form">
+            <div class="card">
+                <div class="card-title">
+                    📝 Form Input Produk
+                    <span class="badge-count" id="formProductCount">0 Produk</span>
+                </div>
+
+                <!-- ===== FORM ===== -->
+                <form id="productForm" onsubmit="saveProduct(event)">
+                    <!-- Row 1: Kategori & ID -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📂 Kategori <span style="color:red;">*</span></label>
+                            <select class="form-select" id="category" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="Sembako">🛒 Sembako</option>
+                                <option value="Pakaian">👕 Pakaian</option>
+                                <option value="Makanan">🍜 Makanan</option>
+                                <option value="Jasa">🔧 Jasa</option>
+                                <option value="Produk Digital">🖥️ Produk Digital</option>
+                                <option value="Elektronik">📱 Elektronik</option>
+                                <option value="Pulsa">📞 Pulsa/Quota</option>
+                                <option value="Properti">🏠 Properti</option>
+                                <option value="Kendaraan">🚗 Kendaraan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🔑 ID/Kode Unik <span style="color:red;">*</span></label>
+                            <input type="text" class="form-input" id="productId" placeholder="ID Unik (contoh: PROD-001)" required>
+                            <small style="opacity:0.6; font-size:11px;">Bisa diisi manual atau otomatis</small>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Status & Nama Produk -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📦 Status Stok <span style="color:red;">*</span></label>
+                            <select class="form-select" id="status" required>
+                                <option value="Ada">✅ Ada</option>
+                                <option value="Habis">❌ Habis</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🏷️ Nama Produk <span style="color:red;">*</span></label>
+                            <input type="text" class="form-input" id="productName" placeholder="Nama Produk" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Badge & Platform -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>🏷️ Badge/Label <span style="color:red;">*</span></label>
+                            <select class="form-select" id="badge" required>
+                                <option value="Promo">Promo</option>
+                                <option value="Flash Sale">Flash Sale</option>
+                                <option value="Best">Best</option>
+                                <option value="Rental">Rental</option>
+                                <option value="Pro">Pro</option>
+                                <option value="Edu">Edu</option>
+                                <option value="Jasa">Jasa</option>
+                                <option value="New">New</option>
+                                <option value="Hot">Hot</option>
+                                <option value="Best Seller">Best Seller</option>
+                                <option value="Super Deal">Super Deal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📱 Platform <span style="color:red;">*</span></label>
+                            <select class="form-select" id="platform" required>
+                                <option value="🛒">🛒 Tokopedia</option>
+                                <option value="🎵">🎵 TikTok Shop</option>
+                                <option value="📱">📱 Shopee</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Harga & Diskon -->
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>💰 Harga Jual (Rp) <span style="color:red;">*</span></label>
+                            <input type="number" class="form-input" id="price" placeholder="0" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>💲 Harga Asli (Rp)</label>
+                            <input type="number" class="form-input" id="originalPrice" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>🏷️ Diskon</label>
+                            <select class="form-select" id="discountType">
+                                <option value="persen">% Persen</option>
+                                <option value="rp">Rp Rupiah</option>
+                            </select>
+                            <input type="number" class="form-input" id="discountValue" placeholder="0" min="0" style="margin-top:6px;">
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Berat -->
+                    <div class="form-group">
+                        <label>⚖️ Berat (Gram)</label>
+                        <div class="checkbox-group" id="weightOptions">
+                            <label><input type="checkbox" value="100"> 100 gr</label>
+                            <label><input type="checkbox" value="200"> 200 gr</label>
+                            <label><input type="checkbox" value="300"> 300 gr</label>
+                            <label><input type="checkbox" value="400"> 400 gr</label>
+                            <label><input type="checkbox" value="500"> 500 gr</label>
+                            <label><input type="checkbox" value="1000"> 1 Kg</label>
+                            <label><input type="checkbox" value="1500"> 1,5 Kg</label>
+                            <label><input type="checkbox" value="2000"> 2 Kg</label>
+                            <label><input type="checkbox" value="2500"> 2,5 Kg</label>
+                            <label><input type="checkbox" value="3000"> 3 Kg</label>
+                            <label><input type="checkbox" value="3500"> 3,5 Kg</label>
+                            <label><input type="checkbox" value="4000"> 4 Kg</label>
+                            <label><input type="checkbox" value="4500"> 4,5 Kg</label>
+                            <label><input type="checkbox" value="5000"> 5 Kg</label>
+                            <label><input type="checkbox" value="custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="weightCustom" placeholder="Masukkan berat custom (contoh: 750)" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 6: Size -->
+                    <div class="form-group">
+                        <label>📏 Size/Ukuran <span class="label-desc">(Khusus Pakaian & Sepatu)</span></label>
+                        <div class="checkbox-group" id="sizeOptions">
+                            <label><input type="checkbox" value="S"> S</label>
+                            <label><input type="checkbox" value="M"> M</label>
+                            <label><input type="checkbox" value="L"> L</label>
+                            <label><input type="checkbox" value="XL"> XL</label>
+                            <label><input type="checkbox" value="XXL"> XXL</label>
+                            <label><input type="checkbox" value="XXXL"> XXXL</label>
+                            <label><input type="checkbox" value="37"> 37</label>
+                            <label><input type="checkbox" value="38"> 38</label>
+                            <label><input type="checkbox" value="39"> 39</label>
+                            <label><input type="checkbox" value="40"> 40</label>
+                            <label><input type="checkbox" value="41"> 41</label>
+                            <label><input type="checkbox" value="42"> 42</label>
+                            <label><input type="checkbox" value="43"> 43</label>
+                            <label><input type="checkbox" value="44"> 44</label>
+                            <label><input type="checkbox" value="45"> 45</label>
+                            <label><input type="checkbox" value="custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="sizeCustom" placeholder="Masukkan ukuran custom (contoh: 46, 2XL, dll)" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 7: Warna -->
+                    <div class="form-group">
+                        <label>🎨 Warna</label>
+                        <div class="checkbox-group" id="colorOptions">
+                            <label><input type="checkbox" value="Putih"> Putih</label>
+                            <label><input type="checkbox" value="Hitam"> Hitam</label>
+                            <label><input type="checkbox" value="Merah"> Merah</label>
+                            <label><input type="checkbox" value="Hijau"> Hijau</label>
+                            <label><input type="checkbox" value="Biru"> Biru</label>
+                            <label><input type="checkbox" value="Kuning"> Kuning</label>
+                            <label><input type="checkbox" value="Pink"> Pink</label>
+                            <label><input type="checkbox" value="Ungu"> Ungu</label>
+                            <label><input type="checkbox" value="Coklat"> Coklat</label>
+                            <label><input type="checkbox" value="Krem"> Krem</label>
+                            <label><input type="checkbox" value="Gold"> Gold</label>
+                            <label><input type="checkbox" value="Silver"> Silver</label>
+                            <label><input type="checkbox" value="Custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="colorCustom" placeholder="Masukkan warna custom" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 8: Type (Opsional) -->
+                    <div class="form-group">
+                        <label>📌 Type Opsional <span class="label-desc">(Khusus Trophy/Piala)</span></label>
+                        <div class="checkbox-group" id="typeOptions">
+                            <label><input type="checkbox" value="Hadiah Juara 1"> Hadiah Juara 1</label>
+                            <label><input type="checkbox" value="Hadiah Juara 2"> Hadiah Juara 2</label>
+                            <label><input type="checkbox" value="Hadiah Juara 3"> Hadiah Juara 3</label>
+                            <label><input type="checkbox" value="Best Player (Patung)"> Best Player (Patung)</label>
+                            <label><input type="checkbox" value="Top Score (Sepatu)"> Top Score (Sepatu)</label>
+                            <label><input type="checkbox" value="Best Keeper (Sarung Tangan)"> Best Keeper (Sarung Tangan)</label>
+                            <label><input type="checkbox" value="Medali"> Medali</label>
+                            <label><input type="checkbox" value="Sertifikat"> Sertifikat</label>
+                            <label><input type="checkbox" value="Custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="typeCustom" placeholder="Masukkan type custom" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 9: Pengiriman -->
+                    <div class="form-group">
+                        <label>🚚 Opsi Pengiriman <span style="color:red;">*</span></label>
+                        <div class="checkbox-group" id="shippingOptions">
+                            <label><input type="checkbox" value="Ambil Sendiri"> Ambil Sendiri</label>
+                            <label><input type="checkbox" value="Diantar Kurir"> Diantar Kurir</label>
+                            <label><input type="checkbox" value="Grab/Gojek"> Grab/Gojek</label>
+                            <label><input type="checkbox" value="Digital (Email/Download)"> Digital (Email/Download)</label>
+                        </div>
+                    </div>
+
+                    <!-- Row 10: Upload Foto -->
+                    <div class="form-group">
+                        <label>📸 Upload Foto Produk <span style="color:red;">*</span> <span class="label-desc">(Bisa upload lebih dari 20 foto)</span></label>
+                        <input type="file" class="form-input" id="productImages" accept="image/*" multiple>
+                        <div class="image-preview-grid" id="imagePreviewGrid"></div>
+                        <small style="opacity:0.6; font-size:11px;">Upload minimal 1 foto. Format: JPG, PNG, WEBP</small>
+                    </div>
+
+                    <!-- Row 11: Deskripsi -->
+                    <div class="form-group">
+                        <label>📝 Deskripsi Produk <span style="color:red;">*</span> <span class="label-desc">(Maksimal 5000 karakter)</span></label>
+                        <textarea class="form-textarea" id="description" placeholder="Deskripsi lengkap produk..." maxlength="5000" required></textarea>
+                        <small style="opacity:0.6; font-size:11px;" id="charCount">0 / 5000 karakter</small>
+                    </div>
+
+                    <!-- Row 12: No WhatsApp -->
+                    <div class="form-group">
+                        <label>📱 No WhatsApp Admin <span style="color:red;">*</span></label>
+                        <input type="tel" class="form-input" id="adminWA" placeholder="6285218483129" required>
+                        <small style="opacity:0.6; font-size:11px;">Format: 6285218483129 (tanpa +)</small>
+                    </div>
+
+                    <!-- Button Group -->
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success">💾 Simpan Produk</button>
+                        <button type="reset" class="btn btn-secondary" onclick="resetForm()">🔄 Reset Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ===== PREVIEW LIVE ===== -->
+            <div class="card">
+                <div class="card-title">👁️ Preview Live Produk</div>
+                <div class="preview-card" id="livePreview">
+                    <img src="" alt="Preview" class="preview-image" id="previewImage" style="display:none;">
+                    <div class="preview-badge" id="previewBadge">Promo</div>
+                    <div class="preview-name" id="previewName">Nama Produk</div>
+                    <div class="preview-original" id="previewOriginal">Rp 100.000</div>
+                    <div class="preview-price" id="previewPrice">Rp 75.000</div>
+                    <div style="font-size:12px; opacity:0.6; margin-top:8px;" id="previewStatus">✅ Ada</div>
+                    <div style="font-size:12px; opacity:0.6;" id="previewCategory">📂 Kategori</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TAB 2: LIST PRODUK ========== -->
+        <div class="tab-content" id="tab-list">
+            <div class="card">
+                <div class="card-title">
+                    📋 Daftar Produk
+                    <span class="badge-count" id="listProductCount">0 Produk</span>
+                </div>
+
+                <div class="btn-group" style="margin-bottom:16px;">
+                    <button class="btn btn-primary" onclick="exportData('json')">📤 Export JSON</button>
+                    <button class="btn btn-primary" onclick="exportData('csv')">📤 Export CSV</button>
+                    <button class="btn btn-warning" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
+                    <input type="file" id="importFile" accept=".json,.csv" style="display:none;" onchange="importData(event)">
+                    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Hapus Semua</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Foto</th>
+                                <th>ID</th>
+                                <th>Nama Produk</th>
+                                <th>Kategori</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📦</div>
+                    <h3>Belum Ada Produk</h3>
+                    <p>Mulai tambahkan produk pertama Anda!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TAB 3: SETTINGS ========== -->
+        <div class="tab-content" id="tab-settings">
+            <div class="card">
+                <div class="card-title">⚙️ Pengaturan Toko</div>
+
+                <form id="settingsForm" onsubmit="saveSettings(event)">
+                    <div class="form-group">
+                        <label>🖼️ Upload Logo Toko</label>
+                        <input type="file" class="form-input" id="storeLogo" accept="image/*" onchange="previewLogo(event)">
+                        <div style="margin-top:8px;">
+                            <img id="logoPreview" src="" alt="Logo Preview" style="max-width:100px; max-height:100px; border-radius:12px; display:none;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏪 Nama Toko <span style="color:red;">*</span></label>
+                        <input type="text" class="form-input" id="storeName" placeholder="Nama Toko" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📍 Alamat Lengkap Toko <span style="color:red;">*</span></label>
+                        <textarea class="form-textarea" id="storeAddress" placeholder="Alamat lengkap toko" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🗺️ Link Google Maps</label>
+                        <input type="text" class="form-input" id="storeMap" placeholder="Masukkan link embed Google Maps">
+                        <small style="opacity:0.6; font-size:11px;">Masukkan link embed dari Google Maps</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📱 No WhatsApp Admin <span style="color:red;">*</span></label>
+                        <input type="tel" class="form-input" id="settingsWA" placeholder="6285218483129" required>
+                        <small style="opacity:0.6; font-size:11px;">Format: 6285218483129 (tanpa +)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎵 Link TikTok Shop</label>
+                        <input type="url" class="form-input" id="tiktokLink" placeholder="https://www.tiktok.com/@...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>🛒 Link Shopee / Tokopedia / Lazada / Bukalapak</label>
+                        <input type="url" class="form-input" id="shopeeLink" placeholder="https://shopee.co.id/...">
+                        <small style="opacity:0.6; font-size:11px;">Link akan otomatis mengisi tombol Shopee di toko</small>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success">💾 Simpan Pengaturan</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔄 Sinkronisasi</div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="syncToToko()">🔄 Sinkronkan ke Toko</button>
+                    <button class="btn btn-secondary" onclick="exportAllData()">📦 Export Semua Data</button>
+                </div>
+                <p style="margin-top:12px; font-size:13px; opacity:0.7;">
+                    Sinkronisasi akan menyimpan semua data produk dan pengaturan ke LocalStorage.
+                    Data akan otomatis terbaca oleh file <strong>toko.html</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TOAST ========== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ============================================================
+        // 1. DATA STORE
+        // ============================================================
+        let products = [];
+        let editingId = null;
+        let imageFiles = [];
+
+        // ============================================================
+        // 2. INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            loadSettings();
+            updateUI();
+            setupAutoID();
+            setupPreviewListeners();
+            setupDescriptionCounter();
+            setupCustomInputs();
+        });
+
+        // ============================================================
+        // 3. LOAD & SAVE DATA
+        // ============================================================
+        function loadProducts() {
+            const stored = localStorage.getItem('teslasmart_products');
+            if (stored) {
+                try {
+                    products = JSON.parse(stored);
+                } catch (e) {
+                    products = [];
+                }
+            }
+            // Fallback data if empty
+            if (products.length === 0) {
+                products = getDefaultProducts();
+                saveProducts();
+            }
+        }
+
+        function saveProducts() {
+            localStorage.setItem('teslasmart_products', JSON.stringify(products));
+            // Also sync to toko.html format
+            syncToToko();
+        }
+
+        function getDefaultProducts() {
+            return [
+                {
+                    id: "PROD-001",
+                    name: "Kelapa Tua & Muda",
+                    category: "Sembako",
+                    status: "Ada",
+                    badge: "Promo",
+                    platform: "🛒",
+                    price: 8500,
+                    originalPrice: 10000,
+                    discountType: "persen",
+                    discountValue: 0,
+                    weight: [100, 200, 300, 400, 500, 1000, 1500, 2000, 2500, 3000],
+                    size: [],
+                    color: [],
+                    type: [],
+                    shipping: ["Ambil Sendiri", "Diantar Kurir", "Grab/Gojek"],
+                    images: ["https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgM83TQFoSunDOxuJnI0oyEy_KJGZaHCw8tI1TXsSAuSnPwGUDI3XxulMtKZoyU3BmwnP7RxAZPTi8NESf0DIMy8FIlVjGobPDikVuuzTHF5xpivl3dn3Ig24QmIePG4p0z8wiiAopdRnsN7F2DCqeK98hWPn1NOFD4_Pp45BkcluKiJ2r9xPXFBRgkDjc/s1280/1000868264.jpg"],
+                    description: "Kami Menjual Kelapa Tua Berkhasiat dan Kelapa Muda Segar (Deweugan) Berkualitas."
+                }
+            ];
+        }
+
+        function loadSettings() {
+            const stored = localStorage.getItem('teslasmart_settings');
+            if (stored) {
+                try {
+                    const settings = JSON.parse(stored);
+                    document.getElementById('storeName').value = settings.storeName || '';
+                    document.getElementById('storeAddress').value = settings.storeAddress || '';
+                    document.getElementById('storeMap').value = settings.storeMap || '';
+                    document.getElementById('settingsWA').value = settings.adminWA || '6285218483129';
+                    document.getElementById('tiktokLink').value = settings.tiktokLink || '';
+                    document.getElementById('shopeeLink').value = settings.shopeeLink || '';
+                    if (settings.logo) {
+                        document.getElementById('logoPreview').src = settings.logo;
+                        document.getElementById('logoPreview').style.display = 'block';
+                        document.getElementById('headerLogo').src = settings.logo;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        function saveSettingsForm() {
+            const settings = {
+                storeName: document.getElementById('storeName').value,
+                storeAddress: document.getElementById('storeAddress').value,
+                storeMap: document.getElementById('storeMap').value,
+                adminWA: document.getElementById('settingsWA').value,
+                tiktokLink: document.getElementById('tiktokLink').value,
+                shopeeLink: document.getElementById('shopeeLink').value,
+                logo: document.getElementById('logoPreview').src || ''
+            };
+            localStorage.setItem('teslasmart_settings', JSON.stringify(settings));
+            // Also save to main WA for form
+            document.getElementById('adminWA').value = settings.adminWA;
+            showToast('✅ Pengaturan berhasil disimpan!');
+            return settings;
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            saveSettingsForm();
+        }
+
+        // ============================================================
+        // 4. UI UPDATE
+        // ============================================================
+        function updateUI() {
+            const count = products.length;
+            document.getElementById('productCount').textContent = count + ' Produk';
+            document.getElementById('formProductCount').textContent = count + ' Produk';
+            document.getElementById('listProductCount').textContent = count + ' Produk';
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('productTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = products.map((p, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>
+                        <img src="${p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/50'}" 
+                             alt="${p.name}" class="product-thumb">
+                    </td>
+                    <td><strong>${p.id}</strong></td>
+                    <td>${p.name}</td>
+                    <td>${p.category}</td>
+                    <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+                    <td><span class="status-badge ${p.status === 'Ada' ? 'ada' : 'habis'}">${p.status}</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-primary" onclick="editProduct('${p.id}')">✏️</button>
+                            <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ============================================================
+        // 5. FORM OPERATIONS
+        // ============================================================
+        function setupAutoID() {
+            const idInput = document.getElementById('productId');
+            if (!idInput.value) {
+                const count = products.length + 1;
+                idInput.value = 'PROD-' + String(count).padStart(3, '0');
+            }
+        }
+
+        function setupDescriptionCounter() {
+            const desc = document.getElementById('description');
+            desc.addEventListener('input', function() {
+                const count = this.value.length;
+                document.getElementById('charCount').textContent = `${count} / 5000 karakter`;
+            });
+        }
+
+        function setupCustomInputs() {
+            // Weight custom
+            document.querySelectorAll('#weightOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('weightCustom');
+                    if (this.value === 'custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+
+            // Size custom
+            document.querySelectorAll('#sizeOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('sizeCustom');
+                    if (this.value === 'custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+
+            // Color custom
+            document.querySelectorAll('#colorOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('colorCustom');
+                    if (this.value === 'Custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'Custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+
+            // Type custom
+            document.querySelectorAll('#typeOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('typeCustom');
+                    if (this.value === 'Custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'Custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+        }
+
+        function setupPreviewListeners() {
+            const fields = ['productName', 'price', 'originalPrice', 'category', 'status', 'badge'];
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updatePreview);
+                    el.addEventListener('change', updatePreview);
+                }
+            });
+
+            // File input for images
+            document.getElementById('productImages').addEventListener('change', function(e) {
+                const files = e.target.files;
+                const grid = document.getElementById('imagePreviewGrid');
+                grid.innerHTML = '';
+                imageFiles = [];
+
+                Array.from(files).forEach((file, index) => {
+                    if (index < 20) {
+                        imageFiles.push(file);
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const div = document.createElement('div');
+                            div.style.position = 'relative';
+                            div.style.display = 'inline-block';
+                            div.innerHTML = `
+                                <img src="${ev.target.result}" class="img-item">
+                                <button class="remove-img" onclick="removeImage(${index})">×</button>
+                            `;
+                            grid.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Update preview
+                if (imageFiles.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewImage').src = e.target.result;
+                        document.getElementById('previewImage').style.display = 'block';
+                    };
+                    reader.readAsDataURL(imageFiles[0]);
+                }
+                updatePreview();
+            });
+
+            // Description
+            document.getElementById('description').addEventListener('input', updatePreview);
+        }
+
+        function removeImage(index) {
+            imageFiles.splice(index, 1);
+            const grid = document.getElementById('imagePreviewGrid');
+            grid.innerHTML = '';
+            imageFiles.forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="img-item">
+                        <button class="remove-img" onclick="removeImage(${i})">×</button>
+                    `;
+                    grid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            if (imageFiles.length === 0) {
+                document.getElementById('previewImage').style.display = 'none';
+            }
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('productName').value || 'Nama Produk';
+            const price = parseInt(document.getElementById('price').value) || 0;
+            const originalPrice = parseInt(document.getElementById('originalPrice').value) || 0;
+            const category = document.getElementById('category').value || 'Kategori';
+            const status = document.getElementById('status').value || 'Ada';
+            const badge = document.getElementById('badge').value || 'Promo';
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewPrice').textContent = 'Rp ' + price.toLocaleString('id-ID');
+            document.getElementById('previewOriginal').textContent = originalPrice > 0 ? 'Rp ' + originalPrice.toLocaleString('id-ID') : '';
+            document.getElementById('previewCategory').textContent = '📂 ' + category;
+            document.getElementById('previewStatus').textContent = status === 'Ada' ? '✅ Ada' : '❌ Habis';
+            document.getElementById('previewBadge').textContent = badge;
+            document.getElementById('previewBadge').style.display = 'inline-block';
+        }
+
+        // ============================================================
+        // 6. SAVE PRODUCT
+        // ============================================================
+        function saveProduct(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const id = document.getElementById('productId').value.trim();
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('category').value;
+            const status = document.getElementById('status').value;
+            const badge = document.getElementById('badge').value;
+            const platform = document.getElementById('platform').value;
+            const price = parseInt(document.getElementById('price').value) || 0;
+            const originalPrice = parseInt(document.getElementById('originalPrice').value) || 0;
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = parseInt(document.getElementById('discountValue').value) || 0;
+            const description = document.getElementById('description').value.trim();
+
+            // Validate required fields
+            if (!id || !name || !category || !price || !description) {
+                showToast('⚠️ Mohon lengkapi semua field yang wajib diisi!', 'warning');
+                return;
+            }
+
+            if (imageFiles.length === 0 && !editingId) {
+                showToast('⚠️ Mohon upload minimal 1 foto produk!', 'warning');
+                return;
+            }
+
+            // Collect checkbox values
+            const getCheckedValues = (containerId) => {
+                const values = [];
+                document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`).forEach(cb => {
+                    if (cb.value !== 'custom' && cb.value !== 'Custom') {
+                        values.push(cb.value);
+                    }
+                });
+                return values;
+            };
+
+            const weight = getCheckedValues('weightOptions');
+            const size = getCheckedValues('sizeOptions');
+            const color = getCheckedValues('colorOptions');
+            const type = getCheckedValues('typeOptions');
+            const shipping = getCheckedValues('shippingOptions');
+
+            // Add custom values
+            const weightCustom = document.getElementById('weightCustom').value.trim();
+            if (weightCustom) weight.push(weightCustom);
+
+            const sizeCustom = document.getElementById('sizeCustom').value.trim();
+            if (sizeCustom) size.push(sizeCustom);
+
+            const colorCustom = document.getElementById('colorCustom').value.trim();
+            if (colorCustom) color.push(colorCustom);
+
+            const typeCustom = document.getElementById('typeCustom').value.trim();
+            if (typeCustom) type.push(typeCustom);
+
+            // Process images
+            const imageUrls = [];
+            if (editingId) {
+                // For edit, keep existing images + new ones
+                const existing = products.find(p => p.id === editingId);
+                if (existing && existing.images) {
+                    imageUrls.push(...existing.images);
+                }
+            }
+
+            // Convert file to base64 for storage (in real app, you'd upload to server)
+            const processImages = () => {
+                return new Promise((resolve) => {
+                    if (imageFiles.length === 0) {
+                        resolve(imageUrls);
+                        return;
+                    }
+                    let loaded = 0;
+                    imageFiles.forEach((file, index) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imageUrls.push(e.target.result);
+                            loaded++;
+                            if (loaded === imageFiles.length) {
+                                resolve(imageUrls);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                });
+            };
+
+            processImages().then((finalImages) => {
+                // Calculate discount
+                let discount = 0;
+                if (discountType === 'persen' && discountValue > 0) {
+                    discount = discountValue;
+                }
+
+                const productData = {
+                    id,
+                    name,
+                    category,
+                    status,
+                    badge,
+                    platform,
+                    price,
+                    originalPrice,
+                    discount,
+                    discountType,
+                    discountValue,
+                    weight,
+                    size,
+                    color,
+                    type,
+                    shipping,
+                    images: finalImages,
+                    description
+                };
+
+                if (editingId) {
+                    // Update existing
+                    const index = products.findIndex(p => p.id === editingId);
+                    if (index !== -1) {
+                        // Keep old images if no new images uploaded
+                        if (imageFiles.length === 0 && products[index].images) {
+                            productData.images = products[index].images;
+                        }
+                        products[index] = productData;
+                    }
+                    editingId = null;
+                    showToast('✅ Produk berhasil diperbarui!');
+                } else {
+                    // Add new
+                    products.push(productData);
+                    showToast('✅ Produk berhasil ditambahkan!');
+                }
+
+                saveProducts();
+                resetForm();
+                updateUI();
+                setupAutoID();
+                document.getElementById('productImages').value = '';
+                document.getElementById('imagePreviewGrid').innerHTML = '';
+                imageFiles = [];
+            });
+        }
+
+        // ============================================================
+        // 7. EDIT & DELETE PRODUCT
+        // ============================================================
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            editingId = id;
+
+            // Fill form
+            document.getElementById('productId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('category').value = product.category;
+            document.getElementById('status').value = product.status;
+            document.getElementById('badge').value = product.badge;
+            document.getElementById('platform').value = product.platform;
+            document.getElementById('price').value = product.price;
+            document.getElementById('originalPrice').value = product.originalPrice || 0;
+            document.getElementById('discountType').value = product.discountType || 'persen';
+            document.getElementById('discountValue').value = product.discountValue || 0;
+            document.getElementById('description').value = product.description;
+
+            // Check checkboxes
+            const checkValues = (containerId, values) => {
+                document.querySelectorAll(`#${containerId} input[type="checkbox"]`).forEach(cb => {
+                    if (values.includes(cb.value)) {
+                        cb.checked = true;
+                    } else if (cb.value === 'custom' || cb.value === 'Custom') {
+                        // Handle custom
+                    }
+                });
+            };
+
+            checkValues('weightOptions', product.weight || []);
+            checkValues('sizeOptions', product.size || []);
+            checkValues('colorOptions', product.color || []);
+            checkValues('typeOptions', product.type || []);
+            checkValues('shippingOptions', product.shipping || []);
+
+            // Show images
+            if (product.images && product.images.length > 0) {
+                const grid = document.getElementById('imagePreviewGrid');
+                grid.innerHTML = '';
+                product.images.forEach((img, idx) => {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.innerHTML = `
+                        <img src="${img}" class="img-item">
+                        <button class="remove-img" onclick="removeExistingImage(${idx})">×</button>
+                    `;
+                    grid.appendChild(div);
+                });
+                document.getElementById('previewImage').src = product.images[0];
+                document.getElementById('previewImage').style.display = 'block';
+            }
+
+            // Update preview
+            updatePreview();
+
+            // Switch to form tab
+            switchTab('form');
+            document.querySelector('.btn-success').textContent = '✏️ Update Produk';
+            document.querySelector('.btn-secondary').textContent = '❌ Batal Edit';
+            document.querySelector('.btn-secondary').onclick = function() {
+                resetForm();
+                this.textContent = '🔄 Reset Form';
+                this.onclick = function() { resetForm(); };
+            };
+
+            showToast('✏️ Edit produk: ' + product.name);
+        }
+
+        function removeExistingImage(index) {
+            if (!editingId) return;
+            const product = products.find(p => p.id === editingId);
+            if (product && product.images) {
+                product.images.splice(index, 1);
+                saveProducts();
+                // Re-render preview
+                const grid = document.getElementById('imagePreviewGrid');
+                grid.innerHTML = '';
+                product.images.forEach((img, idx) => {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.innerHTML = `
+                        <img src="${img}" class="img-item">
+                        <button class="remove-img" onclick="removeExistingImage(${idx})">×</button>
+                    `;
+                    grid.appendChild(div);
+                });
+                if (product.images.length > 0) {
+                    document.getElementById('previewImage').src = product.images[0];
+                    document.getElementById('previewImage').style.display = 'block';
+                } else {
+                    document.getElementById('previewImage').style.display = 'none';
+                }
+                showToast('🗑️ Gambar dihapus');
+            }
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('🗑️ Apakah Anda yakin ingin menghapus produk ini?')) return;
+            products = products.filter(p => p.id !== id);
+            saveProducts();
+            updateUI();
+            showToast('🗑️ Produk berhasil dihapus!');
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            editingId = null;
+            document.querySelector('.btn-success').textContent = '💾 Simpan Produk';
+            document.querySelector('.btn-secondary').textContent = '🔄 Reset Form';
+            document.querySelector('.btn-secondary').onclick = function() { resetForm(); };
+            document.getElementById('imagePreviewGrid').innerHTML = '';
+            document.getElementById('previewImage').style.display = 'none';
+            imageFiles = [];
+            document.getElementById('weightCustom').style.display = 'none';
+            document.getElementById('sizeCustom').style.display = 'none';
+            document.getElementById('colorCustom').style.display = 'none';
+            document.getElementById('typeCustom').style.display = 'none';
+            document.getElementById('weightCustom').value = '';
+            document.getElementById('sizeCustom').value = '';
+            document.getElementById('colorCustom').value = '';
+            document.getElementById('typeCustom').value = '';
+            document.getElementById('charCount').textContent = '0 / 5000 karakter';
+            setupAutoID();
+            updatePreview();
+            showToast('🔄 Form telah direset');
+        }
+
+        // ============================================================
+        // 8. EXPORT & IMPORT
+        // ============================================================
+        function exportData(format) {
+            if (products.length === 0) {
+                showToast('⚠️ Tidak ada data untuk diexport!', 'warning');
+                return;
+            }
+
+            let data, filename, mimeType;
+            if (format === 'json') {
+                data = JSON.stringify(products, null, 2);
+                filename = 'produk_teslasmart.json';
+                mimeType = 'application/json';
+            } else {
+                // CSV
+                const headers = ['id', 'name', 'category', 'status', 'badge', 'platform', 'price', 'originalPrice', 'discount', 'description'];
+                const rows = products.map(p => [
+                    p.id, p.name, p.category, p.status, p.badge, p.platform,
+                    p.price, p.originalPrice || 0, p.discount || 0,
+                    `"${p.description.replace(/"/g, '""')}"`
+                ]);
+                data = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+                filename = 'produk_teslasmart.csv';
+                mimeType = 'text/csv';
+            }
+
+            const blob = new Blob([data], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast(`📤 Data berhasil diexport sebagai ${format.toUpperCase()}`);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let importedData;
+                    if (file.name.endsWith('.json')) {
+                        importedData = JSON.parse(e.target.result);
+                    } else {
+                        // CSV
+                        const lines = e.target.result.split('\n');
+                        const headers = lines[0].split(',');
+                        importedData = lines.slice(1).filter(l => l.trim()).map(line => {
+                            const values = line.split(',');
+                            const obj = {};
+                            headers.forEach((h, i) => {
+                                const val = values[i] || '';
+                                if (h === 'price' || h === 'originalPrice' || h === 'discount') {
+                                    obj[h] = parseInt(val) || 0;
+                                } else if (h === 'description') {
+                                    obj[h] = val.replace(/^"|"$/g, '').replace(/""/g, '"');
+                                } else {
+                                    obj[h] = val;
+                                }
+                            });
+                            return obj;
+                        });
+                    }
+
+                    if (!Array.isArray(importedData) || importedData.length === 0) {
+                        showToast('⚠️ Data tidak valid atau kosong!', 'error');
+                        return;
+                    }
+
+                    if (!confirm(`📥 Import ${importedData.length} produk?`)) return;
+
+                    // Add imported products, avoid duplicates by ID
+                    let added = 0;
+                    importedData.forEach(newProduct => {
+                        if (newProduct.id && !products.find(p => p.id === newProduct.id)) {
+                            // Ensure required fields
+                            if (!newProduct.images) newProduct.images = ['https://via.placeholder.com/400'];
+                            if (!newProduct.status) newProduct.status = 'Ada';
+                            if (!newProduct.category) newProduct.category = 'Sembako';
+                            if (!newProduct.badge) newProduct.badge = 'Promo';
+                            if (!newProduct.platform) newProduct.platform = '🛒';
+                            if (!newProduct.shipping) newProduct.shipping = ['Ambil Sendiri', 'Diantar Kurir'];
+                            products.push(newProduct);
+                            added++;
+                        }
+                    });
+
+                    saveProducts();
+                    updateUI();
+                    showToast(`📥 Berhasil import ${added} produk!`);
+                } catch (err) {
+                    showToast('⚠️ Gagal import data: ' + err.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function exportAllData() {
+            const allData = {
+                products: products,
+                settings: JSON.parse(localStorage.getItem('teslasmart_settings') || '{}'),
+                exportedAt: new Date().toISOString()
+            };
+            const data = JSON.stringify(allData, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'teslasmart_full_backup.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📦 Semua data berhasil diexport!');
+        }
+
+        function clearAllData() {
+            if (!confirm('⚠️ PERINGATAN: Ini akan menghapus SEMUA data produk! Lanjutkan?')) return;
+            if (!confirm('😱 Yakin sekali? Data tidak bisa dikembalikan!')) return;
+            products = [];
+            saveProducts();
+            updateUI();
+            showToast('🗑️ Semua data telah dihapus!');
+        }
+
+        // ============================================================
+        // 9. SYNC TO TOKO.HTML
+        // ============================================================
+        function syncToToko() {
+            // Save products
+            saveProducts();
+
+            // Save settings
+            const settings = saveSettingsForm();
+
+            // Store a flag that data is ready
+            localStorage.setItem('teslasmart_synced', 'true');
+            localStorage.setItem('teslasmart_last_sync', new Date().toISOString());
+
+            showToast('🔄 Data berhasil disinkronkan ke Toko!');
+
+            // Also update the toko.html if it's open in another tab
+            // by dispatching a storage event
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'teslasmart_synced',
+                newValue: 'true'
+            }));
+        }
+
+        // ============================================================
+        // 10. UI HELPERS
+        // ============================================================
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                icon.textContent = '🌙';
+                text.textContent = 'Dark';
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                icon.textContent = '☀️';
+                text.textContent = 'Light';
+            }
+        }
+
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('logoPreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('headerLogo').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            if (type === 'error') toast.classList.add('error');
+            if (type === 'warning') toast.classList.add('warning');
+            toast.classList.add('show');
+
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================================
+        // 11. KEYBOARD SHORTCUTS
+        // ============================================================
+        document.addEventListener('keydown', function(e) {
+            // Ctrl + S to save
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('productForm').dispatchEvent(new Event('submit'));
+            }
+            // Escape to close
+            if (e.key === 'Escape') {
+                // Close any modals or reset
+            }
+        });
+
+        // ============================================================
+        // 12. AUTO SYNC ON STORAGE CHANGE
+        // ============================================================
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'teslasmart_products') {
+                loadProducts();
+                updateUI();
+            }
+        });
+
+        // ============================================================
+        // 13. INITIAL SETUP
+        // ============================================================
+        // Load default settings if not exist
+        if (!localStorage.getItem('teslasmart_settings')) {
+            const defaultSettings = {
+                storeName: 'TeslaSmart',
+                storeAddress: 'Jl. KH. Abdul Hamid Km 15 Desa Ciasmara, Kecamatan Pamijahan, Kabupaten Bogor, Kode POS 16810',
+                storeMap: 'https://maps.google.com/maps?width=600&height=250&hl=en&q=Kantor%20KUD%20Asmara%20Tani%20Desa%20Ciasmara%20Kecamatan%20Pamijahan&t=k&z=14&ie=UTF8&iwloc=B&output=embed',
+                adminWA: '6285218483129',
+                tiktokLink: 'https://www.tiktok.com/@teslasmart.online?_r=1&_t=ZS-94Ivv3hLiSe',
+                shopeeLink: '',
+                logo: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiFfiSs6PYvU-L8NcOwn4c8LAYUSDu_MWAJLKaGxGUuwcaiRNrz_GB_O-3wBcCFLiGL2HNBKcQDvtmTRFXTlINEW3CTFfFHNQFEM1Rksc9caVAVvdxDS4it9zb6R9qhdzAjNnwHMdCFRZZ92JuRX7pchYf0aKngwYCYN59kEUc9wGf8-4aJA9NE05aqFlA/s3000/1000104355.png'
+            };
+            localStorage.setItem('teslasmart_settings', JSON.stringify(defaultSettings));
+            loadSettings();
+        }
+
+        console.log('🚀 Dashboard Admin TeslaSmart siap digunakan!');
+        console.log('📦 Total produk:', products.length);
+        console.log('💡 Tips: Gunakan Ctrl+S untuk menyimpan produk dengan cepat');
+    </script>
+</body>
+</html>
