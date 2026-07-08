@@ -1178,7 +1178,7 @@
 
         <!-- ===== PROFILE ACTIONS ===== -->
         <div class="profile-actions">
-            <a href="pesan-masuk.html" class="profile-pesan-btn" id="profilePesanBtn">
+            <a href="#" class="profile-pesan-btn" id="profilePesanBtn">
                 <i class="fas fa-paper-plane"></i> PESAN
             </a>
             <button class="profile-invite-btn" id="profileInviteBtn">
@@ -2235,6 +2235,8 @@
             const username = profileUser.username;
             const name = profileUser.fullName;
             
+            console.log('📨 Tombol PESAN diklik, redirect ke pesan-masuk.html dengan:', { username, name });
+            
             if (username) {
                 window.location.href = `pesan-masuk.html?to=${encodeURIComponent(username)}&name=${encodeURIComponent(name || username)}`;
             } else {
@@ -2313,13 +2315,26 @@
                 sendInvite();
             });
             
-            // ===== TOMBOL PESAN - Redirect ke pesan-masuk.html =====
+            // ================================================================
+            // TOMBOL PESAN - REDIRECT DENGAN PARAMETER (SOLUSI 1)
+            // ================================================================
             const pesanBtn = document.getElementById('profilePesanBtn');
             if (pesanBtn) {
-                pesanBtn.addEventListener('click', function(e) {
+                console.log('✅ Tombol PESAN ditemukan, memasang event listener...');
+                
+                // Hapus event listener lama dengan clone
+                const newPesanBtn = pesanBtn.cloneNode(true);
+                pesanBtn.parentNode.replaceChild(newPesanBtn, pesanBtn);
+                
+                // Pasang event listener baru
+                newPesanBtn.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔄 Tombol PESAN diklik!');
                     openPesan();
                 });
+            } else {
+                console.error('❌ Tombol PESAN tidak ditemukan!');
             }
             
             console.log('👤 Profile User Page Loaded');
