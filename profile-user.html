@@ -1178,7 +1178,7 @@
 
         <!-- ===== PROFILE ACTIONS ===== -->
         <div class="profile-actions">
-            <a href="pesan.html" target="_blank" class="profile-pesan-btn" id="profilePesanBtn">
+            <a href="#" class="profile-pesan-btn" id="profilePesanBtn">
                 <i class="fas fa-paper-plane"></i> PESAN
             </a>
             <button class="profile-invite-btn" id="profileInviteBtn">
@@ -2224,6 +2224,25 @@
         }
 
         // ================================================================
+        // BUKA PESAN - Redirect ke pesan-masuk.html dengan parameter
+        // ================================================================
+        function openPesan() {
+            if (!profileUser) {
+                showToast('⚠️ Error', 'Profil tidak ditemukan', 'fa-exclamation-triangle');
+                return;
+            }
+            
+            const username = profileUser.username;
+            const name = profileUser.fullName;
+            
+            if (username) {
+                window.location.href = `pesan-masuk.html?to=${encodeURIComponent(username)}&name=${encodeURIComponent(name || username)}`;
+            } else {
+                window.location.href = 'pesan-masuk.html';
+            }
+        }
+
+        // ================================================================
         // EVENT LISTENERS
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
@@ -2294,7 +2313,14 @@
                 sendInvite();
             });
             
-            // Pesan button - sudah pakai href="pesan.html"
+            // ===== TOMBOL PESAN - Redirect ke pesan-masuk.html =====
+            const pesanBtn = document.getElementById('profilePesanBtn');
+            if (pesanBtn) {
+                pesanBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openPesan();
+                });
+            }
             
             console.log('👤 Profile User Page Loaded');
             console.log(`📌 Profile: ${profileUser?.fullName || 'Unknown'}`);
@@ -2303,6 +2329,7 @@
             console.log('✅ Mode READ-ONLY - Like & Komentar aktif');
             console.log('✅ Navbar: Foto & Teman saja');
             console.log('✅ Buat Postingan, Sidebar, Search, Jual, Biodata TERSEMBUNYI');
+            console.log('✅ Tombol PESAN → Redirect ke pesan-masuk.html dengan parameter');
         });
     </script>
 </body>
