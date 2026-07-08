@@ -1178,7 +1178,7 @@
 
         <!-- ===== PROFILE ACTIONS ===== -->
         <div class="profile-actions">
-            <a href="#" class="profile-pesan-btn" id="profilePesanBtn">
+            <a href="#" class="profile-pesan-btn" id="profilePesanBtn" onclick="openPesan()">
                 <i class="fas fa-paper-plane"></i> PESAN
             </a>
             <button class="profile-invite-btn" id="profileInviteBtn">
@@ -1332,6 +1332,7 @@
         let friendIdCounter = 0;
         let currentTheme = 'dark';
         let toastTimeout = null;
+        let isPreviewMode = false;
 
         // ================================================================
         // LOAD THEME
@@ -1533,6 +1534,39 @@
         }
 
         // ================================================================
+        // OPEN PESAN - BUKA HALAMAN PESAN PRIBADI
+        // ================================================================
+        function openPesan() {
+            // Cek apakah user sudah login
+            if (!currentUser) {
+                showToast('⚠️ Info', 'Silakan masuk terlebih dahulu', 'fa-exclamation-triangle');
+                // Redirect ke login
+                window.location.href = 'login.html?redirect=pesan-masuk';
+                return;
+            }
+            
+            // Buka halaman pesan pribadi user yang sedang login
+            window.open('pesan-masuk.html', '_blank');
+        }
+
+        // ================================================================
+        // OPEN PROFILE USER (Navigasi ke halaman ini lagi)
+        // ================================================================
+        function openProfileUser(username) {
+            if (!username) {
+                if (currentUser) {
+                    window.open(`profile-user.html?username=${currentUser.username}`, '_blank');
+                } else {
+                    window.open('profile-user.html', '_blank');
+                }
+                return;
+            }
+            
+            // Redirect ke profile-user.html dengan parameter username
+            window.open(`profile-user.html?username=${encodeURIComponent(username)}`, '_blank');
+        }
+
+        // ================================================================
         // LOAD POSTS FROM LOCALSTORAGE
         // ================================================================
         function loadPosts() {
@@ -1636,23 +1670,6 @@
             
             // Render posts
             renderProfilePosts(userPosts);
-        }
-
-        // ================================================================
-        // OPEN PROFILE USER (Navigasi ke halaman ini lagi)
-        // ================================================================
-        function openProfileUser(username) {
-            if (!username) {
-                if (currentUser) {
-                    window.open(`profile-user.html?username=${currentUser.username}`, '_blank');
-                } else {
-                    window.open('profile-user.html', '_blank');
-                }
-                return;
-            }
-            
-            // Redirect ke profile-user.html dengan parameter username
-            window.open(`profile-user.html?username=${encodeURIComponent(username)}`, '_blank');
         }
 
         // ================================================================
@@ -2224,27 +2241,6 @@
         }
 
         // ================================================================
-        // BUKA PESAN - Redirect ke pesan-masuk.html dengan parameter
-        // ================================================================
-        function openPesan() {
-            if (!profileUser) {
-                showToast('⚠️ Error', 'Profil tidak ditemukan', 'fa-exclamation-triangle');
-                return;
-            }
-            
-            const username = profileUser.username;
-            const name = profileUser.fullName;
-            
-            console.log('📨 Tombol PESAN diklik, redirect ke pesan-masuk.html dengan:', { username, name });
-            
-            if (username) {
-                window.location.href = `pesan-masuk.html?to=${encodeURIComponent(username)}&name=${encodeURIComponent(name || username)}`;
-            } else {
-                window.location.href = 'pesan-masuk.html';
-            }
-        }
-
-        // ================================================================
         // EVENT LISTENERS
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
@@ -2315,28 +2311,6 @@
                 sendInvite();
             });
             
-            // ================================================================
-            // TOMBOL PESAN - REDIRECT DENGAN PARAMETER (SOLUSI 1)
-            // ================================================================
-            const pesanBtn = document.getElementById('profilePesanBtn');
-            if (pesanBtn) {
-                console.log('✅ Tombol PESAN ditemukan, memasang event listener...');
-                
-                // Hapus event listener lama dengan clone
-                const newPesanBtn = pesanBtn.cloneNode(true);
-                pesanBtn.parentNode.replaceChild(newPesanBtn, pesanBtn);
-                
-                // Pasang event listener baru
-                newPesanBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🔄 Tombol PESAN diklik!');
-                    openPesan();
-                });
-            } else {
-                console.error('❌ Tombol PESAN tidak ditemukan!');
-            }
-            
             console.log('👤 Profile User Page Loaded');
             console.log(`📌 Profile: ${profileUser?.fullName || 'Unknown'}`);
             console.log(`📝 Posts: ${posts.filter(p => p.userId === profileUser?.username).length}`);
@@ -2344,7 +2318,7 @@
             console.log('✅ Mode READ-ONLY - Like & Komentar aktif');
             console.log('✅ Navbar: Foto & Teman saja');
             console.log('✅ Buat Postingan, Sidebar, Search, Jual, Biodata TERSEMBUNYI');
-            console.log('✅ Tombol PESAN → Redirect ke pesan-masuk.html dengan parameter');
+            console.log('✅ Tombol PESAN → Buka pesan-masuk.html (halaman pribadi)');
         });
     </script>
 </body>
