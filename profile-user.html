@@ -92,6 +92,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
+            padding-bottom: calc(var(--footer-height) + 20px);
         }
 
         ::-webkit-scrollbar { width: 3px; }
@@ -167,6 +168,7 @@
             color: var(--text-primary);
             font-size: 1rem;
             cursor: pointer;
+            text-decoration: none;
         }
         .app-title .bell-icon { font-size: 1.2rem; color: var(--accent-blue); }
         .app-title span { font-size: 1rem; }
@@ -197,10 +199,77 @@
         .back-btn i { font-size: 1rem; }
 
         /* ================================================================
+           BOTTOM NAVIGATION - KONSISTEN DENGAN DASHBOARD
+           ================================================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--footer-height);
+            background: var(--footer-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 0 4px;
+            box-shadow: 0 -5px 20px var(--shadow-color);
+            transition: background 0.3s ease;
+        }
+        .nav-item-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 4px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            position: relative;
+            min-width: 50px;
+            font-size: 11px;
+        }
+        .nav-item-bottom i { font-size: 1.4rem; transition: all 0.3s; }
+        .nav-item-bottom span { font-size: 0.65rem; font-weight: 500; transition: all 0.3s; }
+        .nav-item-bottom.active { color: var(--accent-blue); }
+        .nav-item-bottom.active i { transform: translateY(-2px); text-shadow: 0 0 20px rgba(88, 166, 255, 0.3); }
+        .nav-item-bottom:hover { color: var(--accent-blue); }
+        .nav-item-bottom .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent-red);
+            color: white;
+            font-size: 0.55rem;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(248, 81, 73, 0.5);
+            padding: 0 4px;
+            animation: pulse 1s ease-in-out infinite;
+            z-index: 5;
+        }
+        .nav-item-bottom .badge.show { display: flex; }
+
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+        /* ================================================================
            MAIN CONTENT
            ================================================================ */
         .main-content {
-            padding: calc(var(--header-height) + 14px) 14px calc(var(--footer-height) + 14px);
+            padding: calc(var(--header-height) + 14px) 14px 20px;
             max-width: 600px;
             margin: 0 auto;
             width: 100%;
@@ -425,7 +494,7 @@
             color: var(--accent-blue);
         }
 
-        /* ===== POST ITEM - READ ONLY TAPI LIKE & KOMENTAR AKTIF ===== */
+        /* ===== POST ITEM ===== */
         .post {
             background: var(--bg-input);
             border-radius: 10px;
@@ -540,12 +609,6 @@
         .post-action .like-count {
             font-size: 0.6rem;
             font-weight: 600;
-        }
-        .post-action.share {
-            color: var(--text-muted);
-        }
-        .post-action.share:hover {
-            color: #4cc9f0;
         }
 
         .comments-section {
@@ -1013,7 +1076,7 @@
            ================================================================ */
         @media (max-width: 480px) {
             .main-content {
-                padding: calc(var(--header-height) + 10px) 10px calc(var(--footer-height) + 10px);
+                padding: calc(var(--header-height) + 10px) 10px 20px;
             }
             .profile-avatar-large {
                 width: 70px;
@@ -1097,6 +1160,23 @@
             .theme-toggle.active .toggle-thumb {
                 left: 20px;
             }
+            .nav-item-bottom {
+                min-width: 45px;
+                padding: 3px 4px;
+            }
+            .nav-item-bottom i {
+                font-size: 1.1rem;
+            }
+            .nav-item-bottom span {
+                font-size: 0.55rem;
+            }
+            .nav-item-bottom .badge {
+                min-width: 14px;
+                height: 14px;
+                font-size: 0.45rem;
+                right: -4px;
+                top: -4px;
+            }
         }
 
         @media (max-width: 380px) {
@@ -1125,6 +1205,16 @@
             .theme-toggle.active .toggle-thumb {
                 left: 18px;
             }
+            .nav-item-bottom {
+                min-width: 38px;
+                padding: 2px 3px;
+            }
+            .nav-item-bottom i {
+                font-size: 0.95rem;
+            }
+            .nav-item-bottom span {
+                font-size: 0.45rem;
+            }
         }
     </style>
 </head>
@@ -1134,10 +1224,10 @@
     <!-- HEADER - TANPA SEARCH & SIDEBAR
     <!-- ================================================================ -->
     <header class="app-bar">
-        <div class="app-title" onclick="window.location.href='dashboard.html'">
+        <a href="dashboard.html" class="app-title">
             <i class="fas fa-bell bell-icon"></i>
             <span>SALINK</span>
-        </div>
+        </a>
         <div class="header-right">
             <div class="theme-toggle" id="themeToggle">
                 <div class="toggle-thumb" id="toggleThumb">
@@ -1216,6 +1306,34 @@
     </main>
 
     <!-- ================================================================ -->
+    <!-- BOTTOM NAVIGATION - KONSISTEN DENGAN DASHBOARD
+    <!-- ================================================================ -->
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item-bottom" id="bottomHomeNav">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="toko.html" target="_blank" class="nav-item-bottom" id="bottomTokoNav">
+            <i class="fas fa-store"></i>
+            <span>Toko</span>
+        </a>
+        <a href="#" class="nav-item-bottom" id="bottomInviteNav">
+            <i class="fas fa-user-plus"></i>
+            <span>Invite</span>
+            <span class="badge" id="inviteBadge">0</span>
+        </a>
+        <a href="#" class="nav-item-bottom" id="bottomNotifNav">
+            <i class="fas fa-bell"></i>
+            <span>Notif</span>
+            <span class="badge" id="notifBadge">0</span>
+        </a>
+        <a href="profil.html" class="nav-item-bottom active" id="bottomProfileNav">
+            <i class="fas fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
+
+    <!-- ================================================================ -->
     <!-- MODALS
     <!-- ================================================================ -->
 
@@ -1251,7 +1369,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body" id="biodataModalBody"></div>
+            <div class="modal-body modal-body-scroll" id="biodataModalBody"></div>
             <div class="modal-footer">
                 <button class="btn-close-modal" onclick="closeBiodataModal()">Tutup</button>
             </div>
@@ -1431,14 +1549,6 @@
         }
 
         // ================================================================
-        // OPEN PROFILE USER (untuk navigasi ke profile-user.html)
-        // ================================================================
-        function openProfileUser(username) {
-            if (!username) return;
-            window.open(`profile-user.html?username=${encodeURIComponent(username)}`, '_blank');
-        }
-
-        // ================================================================
         // GET USER BY USERNAME
         // ================================================================
         function getUserByUsername(username) {
@@ -1490,65 +1600,23 @@
         }
 
         // ================================================================
-        // LOAD PROFILE DATA
+        // OPEN PROFILE USER
         // ================================================================
-        function loadProfileData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('username');
-            
-            if (username) {
-                const user = getUserByUsername(username);
-                if (user) {
-                    profileUser = user;
-                } else {
-                    const savedUser = localStorage.getItem('salink_user');
-                    if (savedUser) {
-                        try {
-                            profileUser = JSON.parse(savedUser);
-                            showToast('ℹ️ Info', 'Pengguna tidak ditemukan, menampilkan profil Anda', 'fa-info-circle');
-                        } catch (e) {
-                            showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
-                        }
-                    }
+        function openProfileUser(username) {
+            if (!username) {
+                if (currentUser) {
+                    window.open(`profile-user.html?username=${encodeURIComponent(currentUser.username)}`, '_blank');
                 }
-            } else {
-                const savedUser = localStorage.getItem('salink_user');
-                if (savedUser) {
-                    try {
-                        profileUser = JSON.parse(savedUser);
-                    } catch (e) {
-                        console.error('Gagal parse saved user:', e);
-                    }
-                }
+                return;
             }
-            
-            if (!profileUser) {
-                profileUser = {
-                    fullName: 'Pengguna SALINK',
-                    username: 'pengguna',
-                    email: 'pengguna@salink.id',
-                    gender: 'male',
-                    phone: '',
-                    country: 'Indonesia',
-                    province: '',
-                    city: '',
-                    district: '',
-                    village: '',
-                    address: '',
-                    bio: 'Bergabung di SALINK untuk keamanan bersama',
-                    profilePicture: null,
-                    joinedDate: new Date().toLocaleString('id-ID', {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }),
-                    mapLink: ''
-                };
-            }
-            
+            window.open(`profile-user.html?username=${encodeURIComponent(username)}`, '_blank');
+        }
+
+        // ================================================================
+        // LOAD DATA
+        // ================================================================
+        function loadData() {
+            // Load current user
             const savedUser = localStorage.getItem('salink_user');
             if (savedUser) {
                 try {
@@ -1557,60 +1625,151 @@
                     currentUser = null;
                 }
             }
-        }
 
-        // ================================================================
-        // LOAD POSTS
-        // ================================================================
-        function loadPosts() {
+            // Ambil username dari URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            
+            if (username) {
+                const user = getUserByUsername(username);
+                if (user) {
+                    profileUser = user;
+                } else {
+                    if (currentUser) {
+                        profileUser = currentUser;
+                        showToast('ℹ️ Info', 'Pengguna tidak ditemukan, menampilkan profil Anda', 'fa-info-circle');
+                    } else {
+                        profileUser = {
+                            fullName: 'Pengguna SALINK',
+                            username: 'pengguna',
+                            email: 'pengguna@salink.id',
+                            gender: 'male',
+                            phone: '',
+                            country: 'Indonesia',
+                            province: '',
+                            city: '',
+                            district: '',
+                            village: '',
+                            address: '',
+                            bio: 'Bergabung di SALINK untuk keamanan bersama',
+                            profilePicture: null,
+                            joinedDate: new Date().toLocaleString('id-ID', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }),
+                            mapLink: ''
+                        };
+                    }
+                }
+            } else {
+                if (currentUser) {
+                    profileUser = currentUser;
+                } else {
+                    profileUser = {
+                        fullName: 'Pengguna SALINK',
+                        username: 'pengguna',
+                        email: 'pengguna@salink.id',
+                        gender: 'male',
+                        phone: '',
+                        country: 'Indonesia',
+                        province: '',
+                        city: '',
+                        district: '',
+                        village: '',
+                        address: '',
+                        bio: 'Bergabung di SALINK untuk keamanan bersama',
+                        profilePicture: null,
+                        joinedDate: new Date().toLocaleString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }),
+                        mapLink: ''
+                    };
+                }
+            }
+
+            // Load posts
             try {
-                const saved = localStorage.getItem('salink_posts');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
+                const savedPosts = localStorage.getItem('salink_posts');
+                if (savedPosts) {
+                    const parsed = JSON.parse(savedPosts);
+                    if (Array.isArray(parsed)) {
                         posts = parsed;
-                        return true;
                     }
                 }
             } catch (e) {
                 console.warn('Gagal memuat posts:', e);
             }
-            return false;
-        }
 
-        // ================================================================
-        // LOAD FRIENDS
-        // ================================================================
-        function loadFriends() {
+            // Load friends
             try {
-                const saved = localStorage.getItem('salink_friends');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
+                const savedFriends = localStorage.getItem('salink_friends');
+                if (savedFriends) {
+                    const parsed = JSON.parse(savedFriends);
                     if (Array.isArray(parsed)) {
                         friends = parsed;
                         friendIdCounter = friends.length;
-                        return true;
                     }
                 }
             } catch (e) {
                 console.warn('Gagal memuat friends:', e);
             }
-            
+
+            // Generate sample friends jika belum ada
             if (friends.length === 0) {
-                const sampleFriends = [
-                    { id: ++friendIdCounter, name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
-                    { id: ++friendIdCounter, name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
-                    { id: ++friendIdCounter, name: 'Bpk. Joko', username: 'joko', gender: 'male', status: 'Online' },
-                    { id: ++friendIdCounter, name: 'Sdri. Dewi', username: 'dewi', gender: 'female', status: 'Online' },
-                    { id: ++friendIdCounter, name: 'Bpk. Budi', username: 'budi', gender: 'male', status: 'Offline' },
-                    { id: ++friendIdCounter, name: 'Sdri. Siti', username: 'siti', gender: 'female', status: 'Online' }
-                ];
-                friends = sampleFriends;
-                try {
-                    localStorage.setItem('salink_friends', JSON.stringify(friends));
-                } catch (e) {}
+                generateSampleFriends();
             }
-            return true;
+
+            renderProfile();
+            
+            // Setup tombol PESAN dengan parameter
+            setupPesanButton();
+        }
+
+        // ================================================================
+        // SETUP PESAN BUTTON
+        // ================================================================
+        function setupPesanButton() {
+            const pesanBtn = document.getElementById('profilePesanBtn');
+            if (!pesanBtn) return;
+            
+            if (profileUser && profileUser.username) {
+                // Jika currentUser melihat profil orang lain
+                if (currentUser && currentUser.username !== profileUser.username) {
+                    pesanBtn.href = `pesan-masuk.html?to=${encodeURIComponent(profileUser.username)}&name=${encodeURIComponent(profileUser.fullName)}`;
+                } else {
+                    // Jika melihat profil sendiri
+                    pesanBtn.href = 'pesan-masuk.html';
+                }
+            } else {
+                pesanBtn.href = 'pesan-masuk.html';
+            }
+        }
+
+        // ================================================================
+        // GENERATE SAMPLE FRIENDS
+        // ================================================================
+        function generateSampleFriends() {
+            const sampleFriends = [
+                { id: ++friendIdCounter, name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
+                { id: ++friendIdCounter, name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
+                { id: ++friendIdCounter, name: 'Bpk. Joko', username: 'joko', gender: 'male', status: 'Online' },
+                { id: ++friendIdCounter, name: 'Sdri. Dewi', username: 'dewi', gender: 'female', status: 'Online' },
+                { id: ++friendIdCounter, name: 'Bpk. Budi', username: 'budi', gender: 'male', status: 'Offline' },
+                { id: ++friendIdCounter, name: 'Sdri. Siti', username: 'siti', gender: 'female', status: 'Online' }
+            ];
+            friends = sampleFriends;
+            try {
+                localStorage.setItem('salink_friends', JSON.stringify(friends));
+            } catch (e) {}
         }
 
         // ================================================================
@@ -1636,27 +1795,20 @@
             const userPosts = posts.filter(p => p.userId === profileUser.username);
             document.getElementById('profileStatPosts').textContent = userPosts.length;
             
+            // Followers
             const followerCount = friends.filter(f => f.username !== profileUser.username).length;
             document.getElementById('profileStatFollowers').textContent = followerCount > 0 ? followerCount : '0';
             
+            // Following
             const followingCount = Math.floor(Math.random() * 3) + 1;
             document.getElementById('profileStatFollowing').textContent = followingCount;
-            
-            // ===== UPDATE TOMBOL PESAN =====
-            // Mengarah ke pesan-masuk.html dengan parameter to dan name
-            const pesanBtn = document.getElementById('profilePesanBtn');
-            if (profileUser && profileUser.username) {
-                pesanBtn.href = `pesan-masuk.html?to=${encodeURIComponent(profileUser.username)}&name=${encodeURIComponent(profileUser.fullName || profileUser.username)}`;
-            } else {
-                pesanBtn.href = 'pesan-masuk.html';
-            }
             
             // Render posts
             renderProfilePosts(userPosts);
         }
 
         // ================================================================
-        // RENDER PROFILE POSTS - READ ONLY, TAPI LIKE & KOMENTAR AKTIF
+        // RENDER PROFILE POSTS - READ ONLY, LIKE & KOMENTAR AKTIF
         // ================================================================
         function renderProfilePosts(userPosts) {
             const container = document.getElementById('profilePosts');
@@ -2210,15 +2362,33 @@
         }
 
         // ================================================================
+        // NOTIFICATION BADGE
+        // ================================================================
+        function updateNotifBadge() {
+            const notifBadge = document.getElementById('notifBadge');
+            if (!notifBadge) return;
+            
+            // Cek notifikasi dari localStorage
+            try {
+                const saved = localStorage.getItem('salink_notifications');
+                if (saved) {
+                    const notifs = JSON.parse(saved);
+                    const unread = notifs.filter(n => !n.read).length;
+                    notifBadge.textContent = unread > 0 ? unread : '0';
+                    notifBadge.classList.toggle('show', unread > 0);
+                }
+            } catch (e) {
+                console.warn('Gagal memuat notifikasi:', e);
+            }
+        }
+
+        // ================================================================
         // EVENT LISTENERS
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             loadTheme();
-            loadProfileData();
-            loadPosts();
-            loadFriends();
-            
-            renderProfile();
+            loadData();
+            updateNotifBadge();
 
             // Theme toggle
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
@@ -2278,14 +2448,36 @@
                 sendInvite();
             });
 
+            // Bottom navigation - Notif
+            document.getElementById('bottomNotifNav').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    showToast('🔒 Login Diperlukan', 'Silakan masuk untuk melihat notifikasi', 'fa-lock');
+                    return;
+                }
+                // Redirect ke dashboard.html untuk melihat notifikasi
+                window.location.href = 'dashboard.html#notif';
+            });
+
+            // Bottom navigation - Invite
+            document.getElementById('bottomInviteNav').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    showToast('🔒 Login Diperlukan', 'Silakan masuk untuk mengundang', 'fa-lock');
+                    return;
+                }
+                // Redirect ke dashboard.html untuk invite
+                window.location.href = 'dashboard.html#invite';
+            });
+
             console.log('👤 Profile User Page Loaded');
             console.log(`📌 Profile: ${profileUser?.fullName || 'Unknown'}`);
             console.log(`📝 Posts: ${posts.filter(p => p.userId === profileUser?.username).length}`);
             console.log(`👥 Friends: ${friends.length}`);
             console.log('✅ Mode READ-ONLY - Like & Komentar aktif');
             console.log('✅ Navbar: Foto & Teman saja');
-            console.log('✅ Buat Postingan, Sidebar, Search, Jual, Biodata TERSEMBUNYI');
-            console.log('✅ Tombol PESAN → pesan-masuk.html?to=username');
+            console.log('✅ Tombol PESAN → pesan-masuk.html dengan parameter to');
+            console.log('✅ Bottom Navigation: Konsisten dengan dashboard');
         });
     </script>
 </body>
