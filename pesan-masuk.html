@@ -1264,7 +1264,7 @@
             if (minutes < 120) return '1 jam yang lalu';
             if (hours < 24) return `${hours} jam yang lalu`;
             if (days < 7) return `${days} hari yang lalu`;
-            if (weeks < 4) return `${weeks} minggu yang lalu`;
+            if (weeks < 4) return `${weeks} minggu yang lalu';
             if (months < 12) return `${months} bulan yang lalu`;
             return `${years} tahun yang lalu`;
         }
@@ -1323,24 +1323,69 @@
 
             renderMessages();
             
-            // Cek parameter URL untuk reply
+            // CEK PARAMETER URL UNTUK AUTO FILL PENERIMA
+            checkUrlParams();
+        }
+
+        // ================================================================
+        // CEK PARAMETER URL UNTUK AUTO FILL PENERIMA
+        // ================================================================
+        function checkUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
-            const replyTo = urlParams.get('reply');
-            if (replyTo) {
-                const msg = messages.find(m => m.id === replyTo);
-                if (msg) {
-                    setTimeout(() => {
-                        openComposeModal(msg.from, msg.fromName, `RE: ${msg.subject || 'Balasan'}`);
-                    }, 500);
-                }
-            }
-            
             const toUser = urlParams.get('to');
             const toName = urlParams.get('name');
+            const replyTo = urlParams.get('reply');
+            
+            console.log('📨 Parameter URL yang diterima:', { toUser, toName, replyTo });
+            
             if (toUser) {
+                // Tunggu sebentar agar DOM & data siap
                 setTimeout(() => {
-                    openComposeModal(toUser, toName || toUser, '');
-                }, 500);
+                    // Cari user dari localStorage
+                    const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                    let user = users.find(u => u.username === toUser);
+                    
+                    // Jika tidak ditemukan, coba dari currentUser
+                    if (!user && currentUser && currentUser.username === toUser) {
+                        user = currentUser;
+                    }
+                    
+                    // Jika masih tidak ditemukan, buat user sementara
+                    if (!user) {
+                        user = {
+                            username: toUser,
+                            fullName: toName || toUser,
+                            gender: 'male'
+                        };
+                    }
+                    
+                    console.log('✅ Membuka compose untuk:', user.fullName);
+                    
+                    // Buka modal compose dengan penerima terisi
+                    openComposeModal(user.username, user.fullName, '');
+                    
+                    // Tampilkan toast notifikasi
+                    showToast('✉️ Pesan', `Mengirim pesan ke ${user.fullName}`, 'fa-paper-plane');
+                }, 600);
+            }
+            
+            if (replyTo) {
+                setTimeout(() => {
+                    const msg = messages.find(m => m.id === replyTo);
+                    if (msg) {
+                        const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                        let user = users.find(u => u.username === msg.from);
+                        if (!user) {
+                            user = {
+                                username: msg.from,
+                                fullName: msg.fromName || msg.from,
+                                gender: msg.fromGender || 'male'
+                            };
+                        }
+                        openComposeModal(user.username, user.fullName, `RE: ${msg.subject || 'Balasan'}`);
+                        showToast('💬 Balas', `Membalas pesan dari ${user.fullName}`, 'fa-reply');
+                    }
+                }, 700);
             }
         }
 
@@ -1792,9 +1837,9 @@
         // COMPOSE MESSAGE
         // ================================================================
         function openComposeModal(toUser, toName, subject) {
-            document.getElementById('composeModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            console.log('📝 Membuka compose modal:', { toUser, toName, subject });
             
+            // Reset form
             document.getElementById('composeSubject').value = subject || '';
             document.getElementById('composeMessage').value = '';
             document.getElementById('composeSendBtn').disabled = true;
@@ -1806,22 +1851,38 @@
             document.getElementById('userSuggestions').classList.remove('active');
             
             if (toUser) {
-                const users = getAllUsers();
-                const user = users.find(u => u.username === toUser);
+                // Cari user dari localStorage
+                const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                let user = users.find(u => u.username === toUser);
+                
+                // Jika tidak ditemukan, coba dari currentUser
+                if (!user && currentUser && currentUser.username === toUser) {
+                    user = currentUser;
+                }
+                
+                // Jika masih tidak ditemukan, buat user sementara
+                if (!user) {
+                    user = {
+                        username: toUser,
+                        fullName: toName || toUser,
+                        gender: 'male'
+                    };
+                }
+                
                 if (user) {
+                    console.log('✅ Recipient ditemukan:', user.fullName);
                     selectRecipient(user);
                 } else {
-                    // Coba cari berdasarkan nama
-                    const userByName = users.find(u => u.fullName === toName);
-                    if (userByName) {
-                        selectRecipient(userByName);
-                    } else {
-                        document.getElementById('composeSearchInput').value = toName || toUser;
-                    }
+                    document.getElementById('composeSearchInput').value = toName || toUser;
+                    showToast('⚠️ Info', 'Pengguna tidak ditemukan, silakan cari manual', 'fa-info-circle');
                 }
             }
             
-            // Focus ke input pertama
+            // Buka modal
+            document.getElementById('composeModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus ke input yang sesuai
             setTimeout(() => {
                 if (!selectedRecipient) {
                     document.getElementById('composeSearchInput').focus();
@@ -2011,6 +2072,8 @@
         // EVENT LISTENERS
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('📨 Memuat Pesan Masuk...');
+            
             loadTheme();
             loadData();
             setupComposeListeners();
@@ -2032,7 +2095,7 @@
                 openComposeModal();
             });
 
-            console.log('📨 Pesan Masuk - SALINK');
+            console.log('✅ Pesan Masuk - SALINK siap digunakan!');
             console.log(`👤 User: ${currentUser?.fullName || 'Guest'}`);
             console.log(`📩 Messages: ${messages.filter(m => m.to === currentUser?.username || m.from === currentUser?.username).length}`);
             console.log('✅ FITUR:');
@@ -2040,6 +2103,7 @@
             console.log('  - Edit pesan sendiri');
             console.log('  - Tulis pesan baru');
             console.log('  - Balas pesan otomatis');
+            console.log('  - Auto open compose dari parameter URL');
             console.log('  - Dark/Light Mode');
             console.log('  - Mobile Friendly');
         });
