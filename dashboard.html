@@ -2014,7 +2014,7 @@
                     <a href="#" data-action="login">Tentang Kami</a>
                     <a href="#" data-action="login">Kebijakan Privasi</a>
                     <a href="#" data-action="login">Syarat & Ketentuan</a>
-                    <a href="https://wa.me/message/L3VQRRSNN7JAP1" data-action="login">Kontak</a>
+                    <a href="#" data-action="login">Kontak</a>
                 </div>
                 <p style="margin-top:8px;font-size:9px;color:var(--text-muted);">&copy; 2026 SALINK. Semua hak dilindungi.</p>
             </div>
@@ -2049,12 +2049,12 @@
                 <span class="profile-stat-label">Mengikuti</span>
             </div>
         </div>
-        
-        <!-- Tombol PESAN + INVITE -->
+
+        <!-- Tombol PESAN + INVITE - PESAN SEKARANG BUKA MODAL NOTIF -->
         <div class="profile-actions">
-        <a href="https://salink-iota.vercel.app/pesan-masuk.html" class="profile-pesan-btn" id="profilePesanBtn" onclick="window.location.href='pesan-masuk.html'">
-        <i class="fas fa-paper-plane"></i> PESAN
-        </a>
+            <button class="profile-pesan-btn" onclick="openPesanModal()">
+                <i class="fas fa-paper-plane"></i> PESAN
+            </button>
             <button class="profile-invite-btn" id="profileInviteBtn">
                 <i class="fas fa-user-plus"></i> INVITE
             </button>
@@ -2067,7 +2067,7 @@
                     <span>🛍️</span>
                     <span>Jual</span>
                 </a>
-                <a href="foto.html" target="_blank" class="profile-nav-item">
+                <a href="https://salink.id/foto" target="_blank" class="profile-nav-item">
                     <span>🖼️</span>
                     <span>Foto</span>
                 </a>
@@ -2279,7 +2279,7 @@
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fas fa-bell"></i>
-                    <span>🔔 Notifikasi</span>
+                    <span>🔔 Pesan Notifikasi</span>
                     <span class="badge-count" id="notifModalBadge">0</span>
                 </div>
                 <button class="modal-close" id="notifModalClose">
@@ -2358,7 +2358,7 @@
     </div>
 
     <!-- ================================================================ -->
-    <!-- JAVASCRIPT - SAMA PERSIS (TIDAK DIUBAH) -->
+    <!-- JAVASCRIPT -->
     <!-- ================================================================ -->
     
     <script>
@@ -2437,9 +2437,10 @@
         }
 
         // ================================================================
-        // PWA - SERVICE WORKER & INSTALL
+        // PWA - SERVICE WORKER & INSTALL - SUPPORT ALL BROWSER
         // ================================================================
         
+        // Service Worker Registration - Support semua browser
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -2454,6 +2455,7 @@
 
         let deferredPrompt = null;
 
+        // Before Install Prompt - Chrome, Edge, Samsung Internet, dll
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -2473,22 +2475,50 @@
                                 console.log('✅ User accepted the install prompt');
                                 hideFloatingNotification();
                                 showToast('✅ Berhasil', 'Aplikasi SALINK berhasil diinstall!', 'fa-check-circle');
+                                localStorage.setItem('salink_installed', 'true');
                             } else {
                                 console.log('❌ User dismissed the install prompt');
                             }
                             deferredPrompt = null;
                         });
+                    } else {
+                        // Fallback untuk browser yang tidak support beforeinstallprompt
+                        showInstallGuide();
                     }
                 },
                 true
             );
         });
 
+        // App Installed Event
         window.addEventListener('appinstalled', (evt) => {
             console.log('✅ SALINK app installed successfully');
             hideFloatingNotification();
+            localStorage.setItem('salink_installed', 'true');
             showToast('🎉 Selamat!', 'Aplikasi SALINK berhasil diinstall!', 'fa-rocket');
         });
+
+        // Fallback untuk Safari iOS dan browser lain
+        function showInstallGuide() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            
+            if (isIOS || isSafari) {
+                showToast('📱 Install Aplikasi', 'Tap ikon "Bagikan" lalu pilih "Tambahkan ke Layar Utama"', 'fa-mobile-alt');
+            } else if (navigator.userAgent.toLowerCase().includes('firefox')) {
+                showToast('🦊 Firefox', 'Klik menu > "Tambahkan ke Layar Utama" untuk install', 'fa-firefox');
+            } else if (navigator.userAgent.toLowerCase().includes('opera')) {
+                showToast('🟠 Opera', 'Klik menu > "Install Aplikasi" untuk install', 'fa-opera');
+            } else {
+                showToast('ℹ️ Info', 'Gunakan menu browser untuk "Install Aplikasi" atau "Tambahkan ke Layar Utama"', 'fa-info-circle');
+            }
+        }
+
+        // Deteksi jika sudah terinstall
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            localStorage.setItem('salink_installed', 'true');
+            console.log('📱 SALINK running as standalone app');
+        }
 
         // ================================================================
         // FLOATING NOTIFICATION SYSTEM
@@ -2969,6 +2999,27 @@
         }
 
         // ================================================================
+        // FUNGSI UNTUK TOMBOL PESAN - BUKA MODAL NOTIF
+        // ================================================================
+        
+        function openPesanModal() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat pesan', 'fa-lock');
+                return;
+            }
+            
+            if (!currentUser) {
+                window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            renderNotifications();
+            document.getElementById('notifModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================================================================
         // NOTIFICATION FUNCTIONS
         // ================================================================
         
@@ -3065,7 +3116,7 @@
                 body.innerHTML = `
                     <div style="text-align:center;padding:30px 0;color:var(--text-muted);">
                         <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada notifikasi</p>
+                        <p>Belum ada pesan notifikasi</p>
                     </div>
                 `;
                 return;
@@ -4646,7 +4697,8 @@
             document.getElementById('profileUsername').textContent = `@${currentUser.username || 'username'}`;
             document.getElementById('profileBio').textContent = currentUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
             
-            document.getElementById('profilePesanBtn').href = 'pesan.html';
+            // Tombol PESAN sekarang menggunakan fungsi openPesanModal()
+            // Sudah diubah di HTML menjadi onclick="openPesanModal()"
             
             const userPosts = posts.filter(p => p.userId === currentUser.username);
             document.getElementById('profileStatPosts').textContent = userPosts.length;
@@ -6121,7 +6173,7 @@
                                     deferredPrompt = null;
                                 });
                             } else {
-                                showToast('ℹ️ Info', 'Gunakan Chrome atau browser yang mendukung PWA', 'fa-info-circle');
+                                showInstallGuide();
                             }
                         },
                         true
@@ -6584,12 +6636,13 @@
         console.log('📜 Riwayat Postingan: Active');
         console.log('🕵🏻 Biodata: Active');
         console.log('⚙️ Settings: Active - Scrollable Content');
-        console.log('📲 PWA: Active - Floating Install Notification');
+        console.log('📲 PWA: Active - Floating Install Notification (Support All Browser)');
         console.log('💬 Floating Notifications: Active (continue every 10-15s)');
         console.log('✅ Swipe to dismiss: Active');
         console.log('🌓 Dark/Light Mode: Active');
         console.log('✅ Emergency buttons: Click to stop alarm/notification');
         console.log('✅ Settings & Biodata modals: Scrollable');
+        console.log('✅ Tombol PESAN: Membuka Modal Notifikasi (sama dengan NOTIF)');
     </script>
 </body>
 </html>
