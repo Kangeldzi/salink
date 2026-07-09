@@ -1493,93 +1493,141 @@
 
             // Alamat E-KTP
             const country = document.getElementById('signupCountry').value;
-            const province = document.getElementById('signupProvince').value;
-            const city = document.getElementById('signupCity').value.trim();
-            const district = document.getElementById('signupDistrict').value.trim();
-            const village = document.getElementById('signupVillage').value.trim();
-            const detailAddress = document.getElementById('signupDetailAddress').value.trim();
-            const mapLink = document.getElementById('signupMapLink').value.trim();
+// ================================================================
+// 🔥 HANDLE LOGIN - VERSI API (TERINTEGRASI SPREADSHEET)
+// ================================================================
 
-            // Validasi
-            let isValid = true;
+async function handleLogin() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    
+    if (!username || !password) {
+        showToast('⚠️ Mohon isi username dan password!', 'error');
+        return;
+    }
+    
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Memproses...';
+    
+    try {
+        // 🔥 PANGGIL API LOGIN!
+        const result = await apiMasuk(username, password);
+        console.log('📡 Login result:', result);
+        
+        if (result.sukses) {
+            // Simpan data user ke localStorage untuk session
+            localStorage.setItem('salink_user', JSON.stringify(result.pengguna));
+            localStorage.setItem('salink_logged_in', 'true');
+            
+            showToast('✅ ' + result.pesan, 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        } else {
+            showToast('❌ ' + result.pesan, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk Sekarang';
+        }
+    } catch (error) {
+        console.error('❌ Login error:', error);
+        showToast('❌ Gagal terhubung ke server! Periksa koneksi internet Anda.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk Sekarang';
+    }
+}
 
-            if (!fullName) { showMessage('⚠️ Nama lengkap harus diisi!', 'error');
-                isValid = false; }
-            else if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showMessage('⚠️ Email tidak valid!', 'error');
-                isValid = false; }
-            else if (!phone || phone.length < 10) { showMessage('⚠️ Nomor WhatsApp tidak valid!', 'error');
-                isValid = false; }
-            else if (!username || !/^[a-zA-Z0-9_]{3,20}$/.test(username)) { showMessage('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
-                isValid = false; }
-            else if (!password || password.length < 6) { showMessage('⚠️ Password minimal 6 karakter!', 'error');
-                isValid = false; }
-            else if (password !== confirmPassword) { showMessage('⚠️ Password dan konfirmasi password tidak sama!', 'error');
-                isValid = false; }
-            else if (!country) { showMessage('⚠️ Negara harus dipilih!', 'error');
-                isValid = false; }
-            else if (!province) { showMessage('⚠️ Provinsi harus dipilih!', 'error');
-                isValid = false; }
-            else if (!city) { showMessage('⚠️ Kabupaten/Kota harus diisi!', 'error');
-                isValid = false; }
-            else if (!district) { showMessage('⚠️ Kecamatan harus diisi!', 'error');
-                isValid = false; }
-            else if (!village) { showMessage('⚠️ Kelurahan/Desa harus diisi!', 'error');
-                isValid = false; }
-            else if (!detailAddress) { showMessage('⚠️ Detail alamat harus diisi!', 'error');
-                isValid = false; }
-            else if (!mapLink || !isValidGoogleMapsLink(mapLink)) { showMessage('⚠️ Link Google Maps tidak valid!', 'error');
-                isValid = false; }
+// ================================================================
+// 🔥 HANDLE REGISTER - VERSI API (TERINTEGRASI SPREADSHEET)
+// ================================================================
 
-            if (!isValid) return;
-
-            const btn = document.getElementById('signupBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
-
-            try {
-                // 🔥 PANGGIL API REGISTER! BUKAN LOCAL STORAGE!
-                const result = await apiDaftarPengguna({
-                    nama_pengguna: username,
-                    nama_lengkap: fullName,
-                    email: email,
-                    kata_sandi: password,
-                    no_hp: phone,
-                    jenis_kelamin: gender,
-                    negara: country,
-                    provinsi: province,
-                    kota: city,
-                    kecamatan: district,
-                    desa: village,
-                    alamat: detailAddress,
-                    bio: bio,
-                    foto_profil: profilePicture,
-                    link_maps: mapLink
-                });
-
-                console.log('📡 Register result:', result);
-
-                if (result.sukses) {
-                    showMessage('✅ ' + result.pesan, 'success');
-
-                    // Simpan ke localStorage untuk session
-                    localStorage.setItem('salink_user', JSON.stringify(result.pengguna));
-                    localStorage.setItem('salink_logged_in', 'true');
-
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                } else {
-                    showMessage('❌ ' + result.pesan, 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
-                }
-            } catch (error) {
-                console.error('❌ Register error:', error);
-                showMessage('❌ Gagal terhubung ke server! Periksa koneksi internet Anda.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
-            }
+async function handleRegister() {
+    const username = document.getElementById('regUsername').value.trim();
+    const fullName = document.getElementById('regFullName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Laki-laki';
+    const password = document.getElementById('regPassword').value.trim();
+    const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+    const bio = document.getElementById('regBio')?.value.trim() || `Halo! Saya ${fullName}`;
+    const profilePicture = document.getElementById('profilePreview')?.dataset?.image || '';
+    
+    // Alamat E-KTP
+    const country = document.getElementById('regCountry')?.value || 'Indonesia';
+    const province = document.getElementById('regProvince')?.value || '';
+    const city = document.getElementById('regCity')?.value || '';
+    const district = document.getElementById('regDistrict')?.value || '';
+    const village = document.getElementById('regVillage')?.value || '';
+    const detailAddress = document.getElementById('regDetailAddress')?.value || '';
+    const mapLink = document.getElementById('regMapLink')?.value || '';
+    
+    // Validasi
+    let isValid = true;
+    
+    if (!fullName) { showToast('⚠️ Nama lengkap harus diisi!', 'error');
+        isValid = false; }
+    else if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('⚠️ Email tidak valid!', 'error');
+        isValid = false; }
+    else if (!phone || phone.length < 10) { showToast('⚠️ Nomor WhatsApp tidak valid!', 'error');
+        isValid = false; }
+    else if (!username || !/^[a-zA-Z0-9_]{3,20}$/.test(username)) { showToast('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
+        isValid = false; }
+    else if (!password || password.length < 6) { showToast('⚠️ Password minimal 6 karakter!', 'error');
+        isValid = false; }
+    else if (password !== confirmPassword) { showToast('⚠️ Password dan konfirmasi password tidak sama!', 'error');
+        isValid = false; }
+    
+    if (!isValid) return;
+    
+    const btn = document.getElementById('registerBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
+    
+    try {
+        // 🔥 PANGGIL API REGISTER! BUKAN LOCAL STORAGE!
+        const result = await apiDaftarPengguna({
+            nama_pengguna: username,
+            nama_lengkap: fullName,
+            email: email,
+            kata_sandi: password,
+            no_hp: phone,
+            jenis_kelamin: gender,
+            negara: country,
+            provinsi: province,
+            kota: city,
+            kecamatan: district,
+            desa: village,
+            alamat: detailAddress,
+            bio: bio,
+            foto_profil: profilePicture,
+            link_maps: mapLink
         });
+        
+        console.log('📡 Register result:', result);
+        
+        if (result.sukses) {
+            showToast('✅ ' + result.pesan, 'success');
+            
+            // Simpan ke localStorage untuk session
+            localStorage.setItem('salink_user', JSON.stringify(result.pengguna));
+            localStorage.setItem('salink_logged_in', 'true');
+            
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        } else {
+            showToast('❌ ' + result.pesan, 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
+        }
+    } catch (error) {
+        console.error('❌ Register error:', error);
+        showToast('❌ Gagal terhubung ke server! Periksa koneksi internet Anda.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
+    }
+}
 
         // ================================================================
         // FORGOT PASSWORD
