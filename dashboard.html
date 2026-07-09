@@ -2227,23 +2227,40 @@
         // ================================================================
         // 🔥 FUNGSI AMBIL DATA DARI API
         // ================================================================
-        
+
         async function loadUserDataFromAPI() {
             if (!currentUser) return false;
             try {
-                console.log('📡 Mengambil data user dari API...');
-                const result = await apiGetPengguna(currentUser.id);
-                if (result) {
-                    currentUser = { ...currentUser, ...result };
-                    localStorage.setItem('salink_user', JSON.stringify(currentUser));
-                    console.log('✅ Data user berhasil diambil dari API:', currentUser.nama_pengguna);
-                    return true;
-                }
-            } catch (error) {
-                console.error('❌ Gagal ambil data dari API:', error);
-            }
+        console.log('📡 Mengambil data user dari API...');
+        const result = await apiGetPengguna(currentUser.id);
+        console.log('📡 Data dari API:', result);
+        
+        if (result && result.sukses !== false) {
+            // Jika result adalah object user langsung
+            const userData = result.id ? result : result.pengguna || result;
+            
+            currentUser = {
+                ...currentUser,
+                ...userData
+            };
+            
+            localStorage.setItem('salink_user', JSON.stringify(currentUser));
+            console.log('✅ Data user berhasil diambil dari API:', currentUser.nama_pengguna);
+            
+            // Update UI
+            updateUserUI();
+            renderBiodata();
+            
+            return true;
+        } else {
+            console.warn('⚠️ API mengembalikan data kosong:', result);
             return false;
         }
+    } catch (error) {
+        console.error('❌ Gagal ambil data dari API:', error);
+        return false;
+    }
+}
 
         // ================================================================
         // 🔥 RENDER BIODATA
