@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SALINK - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- ===== API CONNECTION ===== -->
+    <script src="api.js"></script>
+    
     <style>
         /* ================================================================
            THEME VARIABLES - SAMA DENGAN DASHBOARD
@@ -296,16 +300,6 @@
         .form-group select:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-        }
-
-        .form-group input.error,
-        .form-group select.error {
-            border-color: var(--accent-red);
-        }
-
-        .form-group input.success,
-        .form-group select.success {
-            border-color: var(--accent-green);
         }
 
         .form-row {
@@ -699,36 +693,27 @@
         }
 
         /* ================================================================
-           ERROR MESSAGE
+           LOADING SPINNER
            ================================================================ */
-        .error-msg {
-            color: var(--accent-red);
-            font-size: 0.6rem;
-            margin-top: 3px;
-            display: none;
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
         }
-        .error-msg.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* ================================================================
-           FORGOT PASSWORD & SWITCH LINKS
+           SWITCH LINK
            ================================================================ */
-        .forgot-link {
-            text-align: right;
-            margin-top: 2px;
-        }
-        .forgot-link a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.65rem;
-            transition: color 0.3s;
-        }
-        .forgot-link a:hover {
-            color: var(--accent-blue);
-        }
-
         .switch-link {
             text-align: center;
             margin-top: 10px;
@@ -764,6 +749,19 @@
             height: 14px;
             accent-color: var(--accent-blue);
             cursor: pointer;
+        }
+        .forgot-link {
+            text-align: right;
+            margin-top: 2px;
+        }
+        .forgot-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.65rem;
+            transition: color 0.3s;
+        }
+        .forgot-link a:hover {
+            color: var(--accent-blue);
         }
 
         /* ================================================================
@@ -1013,11 +1011,11 @@
                 <label>Jenis Kelamin <span class="required">*</span></label>
                 <div class="gender-options">
                     <div class="gender-option">
-                        <input type="radio" name="gender" id="regMale" value="male" checked>
+                        <input type="radio" name="gender" id="regMale" value="Laki-laki" checked>
                         <label for="regMale"><i class="fas fa-male"></i> Laki-laki</label>
                     </div>
                     <div class="gender-option">
-                        <input type="radio" name="gender" id="regFemale" value="female">
+                        <input type="radio" name="gender" id="regFemale" value="Perempuan">
                         <label for="regFemale"><i class="fas fa-female"></i> Perempuan</label>
                     </div>
                 </div>
@@ -1184,8 +1182,6 @@
                         <li>Paste link di kolom di atas (format: <strong>maps.app.goo.gl/...</strong>)</li>
                     </ol>
                 </div>
-
-                <div id="regMapError" class="error-msg">⚠️ Silakan masukkan link Google Maps yang valid!</div>
             </div>
 
             <!-- Username & Password -->
@@ -1196,7 +1192,6 @@
                         <i class="fas fa-at"></i>
                         <input type="text" id="signupUsername" placeholder="Buat username unik" autocomplete="username">
                     </div>
-                    <div id="regUsernameError" class="error-msg">Username sudah digunakan!</div>
                 </div>
                 <div class="form-group">
                     <label>Password <span class="required">*</span></label>
@@ -1208,8 +1203,19 @@
                         </button>
                     </div>
                     <div style="font-size:0.5rem;color:var(--text-muted);margin-top:2px;">
-                        <i class="fas fa-info-circle"></i> Minimal 6 karakter, diawali huruf kapital dan diakhiri angka
+                        <i class="fas fa-info-circle"></i> Minimal 6 karakter
                     </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Konfirmasi Password <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupConfirmPassword" placeholder="Ketik ulang password" autocomplete="new-password">
+                    <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
             </div>
 
@@ -1320,7 +1326,6 @@
         tabSignin.addEventListener('click', () => switchTab('signin'));
         tabSignup.addEventListener('click', () => switchTab('signup'));
 
-        // Switch links
         document.getElementById('switchToRegister').addEventListener('click', (e) => {
             e.preventDefault();
             switchTab('signup');
@@ -1344,15 +1349,13 @@
         }
 
         // ================================================================
-        // VALIDATION
+        // MAP LINK PREVIEW
         // ================================================================
-        function validateEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        }
-
-        function validateUsername(username) {
-            return /^[a-zA-Z0-9_]{3,20}$/.test(username);
-        }
+        const mapLinkInput = document.getElementById('signupMapLink');
+        const mapPreview = document.getElementById('mapPreview');
+        const mapStatusText = document.getElementById('mapStatusText');
+        const mapLinkDisplay = document.getElementById('mapLinkDisplay');
+        const clearMapBtn = document.getElementById('clearMapBtn');
 
         function isValidGoogleMapsLink(url) {
             if (!url || url.trim() === '') return false;
@@ -1365,23 +1368,12 @@
             return patterns.some(pattern => pattern.test(url));
         }
 
-        // ================================================================
-        // MAP LINK PREVIEW
-        // ================================================================
-        const mapLinkInput = document.getElementById('signupMapLink');
-        const mapPreview = document.getElementById('mapPreview');
-        const mapStatusText = document.getElementById('mapStatusText');
-        const mapLinkDisplay = document.getElementById('mapLinkDisplay');
-        const clearMapBtn = document.getElementById('clearMapBtn');
-        const regMapError = document.getElementById('regMapError');
-
         function updateMapPreview() {
             const url = mapLinkInput.value.trim();
 
             if (url === '') {
                 mapPreview.classList.remove('show');
                 clearMapBtn.classList.remove('show');
-                regMapError.classList.remove('show');
                 return;
             }
 
@@ -1391,12 +1383,9 @@
                 mapStatusText.textContent = '✅ Link Google Maps terupload';
                 mapLinkDisplay.href = url;
                 mapLinkDisplay.textContent = url.length > 50 ? url.substring(0, 50) + '...' : url;
-                regMapError.classList.remove('show');
             } else {
                 mapPreview.classList.remove('show');
                 clearMapBtn.classList.add('show');
-                regMapError.textContent = '⚠️ Link tidak valid! Pastikan link dari Google Maps';
-                regMapError.classList.add('show');
             }
         }
 
@@ -1410,7 +1399,6 @@
             mapLinkInput.value = '';
             mapPreview.classList.remove('show');
             clearMapBtn.classList.remove('show');
-            regMapError.classList.remove('show');
             mapLinkInput.focus();
         });
 
@@ -1431,9 +1419,12 @@
         });
 
         // ================================================================
-        // SIGN IN
         // ================================================================
-        document.getElementById('signinForm').addEventListener('submit', function(e) {
+        // 🔥 HANDLE LOGIN - VERSI API (TERINTEGRASI SPREADSHEET)
+        // ================================================================
+        // ================================================================
+
+        document.getElementById('signinForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const username = document.getElementById('signinUsername').value.trim();
@@ -1444,44 +1435,59 @@
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            const user = users.find(u => 
-                (u.username === username || u.email === username) && u.password === password
-            );
+            const btn = document.getElementById('signinBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Memproses...';
 
-            if (user) {
-                localStorage.setItem('salink_user', JSON.stringify(user));
-                if (document.getElementById('rememberMe').checked) {
-                    localStorage.setItem('salink_remember', 'true');
-                }
-                showMessage('✅ Login berhasil! Mengalihkan...', 'success');
-                
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 800);
-            } else {
-                const userExists = users.find(u => u.username === username || u.email === username);
-                if (userExists) {
-                    showMessage('❌ Password salah! Silakan coba lagi.', 'error');
+            try {
+                // 🔥 PANGGIL API LOGIN!
+                const result = await apiMasuk(username, password);
+                console.log('📡 Login result:', result);
+
+                if (result.sukses) {
+                    // Simpan data user ke localStorage untuk session
+                    localStorage.setItem('salink_user', JSON.stringify(result.pengguna));
+                    localStorage.setItem('salink_logged_in', 'true');
+                    
+                    if (document.getElementById('rememberMe').checked) {
+                        localStorage.setItem('salink_remember', 'true');
+                    }
+
+                    showMessage('✅ ' + result.pesan, 'success');
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
                 } else {
-                    showMessage('❌ Username atau email tidak ditemukan!', 'error');
+                    showMessage('❌ ' + result.pesan, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
                 }
+            } catch (error) {
+                console.error('❌ Login error:', error);
+                showMessage('❌ Gagal terhubung ke server! Periksa koneksi internet Anda.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk';
             }
         });
 
         // ================================================================
-        // SIGN UP - DENGAN DATA ALAMAT LENGKAP
         // ================================================================
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        // 🔥 HANDLE REGISTER - VERSI API (TERINTEGRASI SPREADSHEET)
+        // ================================================================
+        // ================================================================
+
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             // Ambil semua nilai
             const fullName = document.getElementById('signupFullName').value.trim();
-            const gender = document.querySelector('input[name="gender"]:checked')?.value || 'male';
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Laki-laki';
             const email = document.getElementById('signupEmail').value.trim();
             const phone = document.getElementById('signupPhone').value.trim();
             const username = document.getElementById('signupUsername').value.trim();
             const password = document.getElementById('signupPassword').value.trim();
+            const confirmPassword = document.getElementById('signupConfirmPassword').value.trim();
             const bio = document.getElementById('signupBio').value.trim() || `Halo! Saya ${fullName}`;
             const profilePicture = document.getElementById('profilePreview').dataset.image || '';
 
@@ -1491,7 +1497,6 @@
             const city = document.getElementById('signupCity').value.trim();
             const district = document.getElementById('signupDistrict').value.trim();
             const village = document.getElementById('signupVillage').value.trim();
-            const postalCode = document.getElementById('signupPostalCode').value.trim();
             const detailAddress = document.getElementById('signupDetailAddress').value.trim();
             const mapLink = document.getElementById('signupMapLink').value.trim();
 
@@ -1500,13 +1505,15 @@
 
             if (!fullName) { showMessage('⚠️ Nama lengkap harus diisi!', 'error');
                 isValid = false; }
-            else if (!email || !validateEmail(email)) { showMessage('⚠️ Email tidak valid!', 'error');
+            else if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showMessage('⚠️ Email tidak valid!', 'error');
                 isValid = false; }
             else if (!phone || phone.length < 10) { showMessage('⚠️ Nomor WhatsApp tidak valid!', 'error');
                 isValid = false; }
-            else if (!username || !validateUsername(username)) { showMessage('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
+            else if (!username || !/^[a-zA-Z0-9_]{3,20}$/.test(username)) { showMessage('⚠️ Username harus 3-20 karakter, hanya huruf, angka, dan underscore (_)', 'error');
                 isValid = false; }
             else if (!password || password.length < 6) { showMessage('⚠️ Password minimal 6 karakter!', 'error');
+                isValid = false; }
+            else if (password !== confirmPassword) { showMessage('⚠️ Password dan konfirmasi password tidak sama!', 'error');
                 isValid = false; }
             else if (!country) { showMessage('⚠️ Negara harus dipilih!', 'error');
                 isValid = false; }
@@ -1525,57 +1532,53 @@
 
             if (!isValid) return;
 
-            // Cek duplikat username
-            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            if (users.find(u => u.username === username)) {
-                document.getElementById('regUsernameError').classList.add('show');
-                showMessage('⚠️ Username sudah digunakan!', 'error');
-                return;
+            const btn = document.getElementById('signupBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Mendaftar...';
+
+            try {
+                // 🔥 PANGGIL API REGISTER! BUKAN LOCAL STORAGE!
+                const result = await apiDaftarPengguna({
+                    nama_pengguna: username,
+                    nama_lengkap: fullName,
+                    email: email,
+                    kata_sandi: password,
+                    no_hp: phone,
+                    jenis_kelamin: gender,
+                    negara: country,
+                    provinsi: province,
+                    kota: city,
+                    kecamatan: district,
+                    desa: village,
+                    alamat: detailAddress,
+                    bio: bio,
+                    foto_profil: profilePicture,
+                    link_maps: mapLink
+                });
+
+                console.log('📡 Register result:', result);
+
+                if (result.sukses) {
+                    showMessage('✅ ' + result.pesan, 'success');
+
+                    // Simpan ke localStorage untuk session
+                    localStorage.setItem('salink_user', JSON.stringify(result.pengguna));
+                    localStorage.setItem('salink_logged_in', 'true');
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showMessage('❌ ' + result.pesan, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
+                }
+            } catch (error) {
+                console.error('❌ Register error:', error);
+                showMessage('❌ Gagal terhubung ke server! Periksa koneksi internet Anda.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Daftar Sekarang';
             }
-
-            if (users.find(u => u.email === email)) {
-                showMessage('⚠️ Email sudah terdaftar!', 'error');
-                return;
-            }
-
-            // Buat user baru dengan data lengkap
-            const newUser = {
-                fullName: fullName,
-                username: username,
-                email: email,
-                phone: phone,
-                password: password,
-                gender: gender,
-                bio: bio,
-                profilePicture: profilePicture,
-                country: country,
-                province: province,
-                city: city,
-                district: district,
-                village: village,
-                postalCode: postalCode,
-                detailAddress: detailAddress,
-                address: [detailAddress, village, district, city, province, country].filter(Boolean).join(', '),
-                mapLink: mapLink,
-                joinedDate: new Date().toLocaleString('id-ID', { 
-                    weekday: 'long',
-                    day: 'numeric', 
-                    month: 'long', 
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-            };
-
-            users.push(newUser);
-            localStorage.setItem('salink_users', JSON.stringify(users));
-            localStorage.setItem('salink_user', JSON.stringify(newUser));
-
-            showMessage('✅ Pendaftaran berhasil! Mengalihkan...', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 800);
         });
 
         // ================================================================
@@ -1592,6 +1595,7 @@
         function clearUserData() {
             if (confirm('⚠️ Hapus data user yang sedang login? Data user lain tetap tersimpan.')) {
                 localStorage.removeItem('salink_user');
+                localStorage.removeItem('salink_logged_in');
                 showMessage('✅ Data user Anda berhasil dihapus!', 'success');
                 
                 document.getElementById('signinUsername').value = '';
@@ -1606,15 +1610,13 @@
         function clearAllData() {
             if (confirm('⚠️ YAKIN ingin menghapus SEMUA data? Ini akan mereset semua pengaturan, user, dan postingan!')) {
                 localStorage.removeItem('salink_user');
-                localStorage.removeItem('salink_users');
-                localStorage.removeItem('salink_posts');
+                localStorage.removeItem('salink_logged_in');
                 localStorage.removeItem('salink_theme');
                 localStorage.removeItem('salink_installed');
                 localStorage.removeItem('salink_remember');
                 
                 showMessage('✅ Semua data berhasil direset ke default!', 'success');
                 
-                // Reset form
                 document.querySelectorAll('input').forEach(inp => inp.value = '');
                 document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
                 
@@ -1648,27 +1650,28 @@
         // CEK APAKAH SUDAH LOGIN
         // ================================================================
         const loggedInUser = localStorage.getItem('salink_user');
-        if (loggedInUser) {
+        const isLoggedIn = localStorage.getItem('salink_logged_in') === 'true';
+        
+        if (loggedInUser && isLoggedIn) {
             try {
                 const user = JSON.parse(loggedInUser);
                 setTimeout(() => {
-                    showMessage(`👋 Selamat datang kembali, ${user.fullName}! Mengalihkan...`, 'success');
+                    showMessage(`👋 Selamat datang kembali, ${user.nama_lengkap || user.fullName}! Mengalihkan...`, 'success');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 1000);
                 }, 500);
             } catch (e) {
                 localStorage.removeItem('salink_user');
+                localStorage.removeItem('salink_logged_in');
             }
         }
 
-        console.log('🔐 SALINK Login Page - Dengan Alamat E-KTP');
+        console.log('🔐 SALINK Login Page - VERSI API');
         console.log('📌 Tema:', currentTheme);
-        console.log('📊 Data tersimpan di Local Storage:');
-        console.log('  - salink_user: data user aktif');
-        console.log('  - salink_users: daftar semua user (dengan alamat lengkap)');
-        console.log('  - salink_posts: daftar postingan');
-        console.log('  - salink_theme: tema yang dipilih');
+        console.log('📡 Backend: Google Apps Script API');
+        console.log('📊 Data tersimpan di Google Spreadsheet');
+        console.log('✅ API URL:', typeof API_URL !== 'undefined' ? API_URL : 'api.js belum dimuat');
     </script>
 </body>
 </html>
