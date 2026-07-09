@@ -48,6 +48,7 @@
             --footer-height: 65px;
             --danger: #f85149;
             --success: #3fb950;
+            --warning: #f0d080;
         }
 
         [data-theme="light"] {
@@ -78,6 +79,7 @@
             --input-focus: #4facfe;
             --danger: #e31837;
             --success: #2ea44f;
+            --warning: #8d6b4b;
         }
 
         /* ================================================================
@@ -105,6 +107,7 @@
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         /* ================================================================
            TOGGLE SWITCH
@@ -294,7 +297,7 @@
         }
 
         /* ================================================================
-           PROFILE ACTIONS - PESAN & INVITE
+           PROFILE ACTIONS - PESAN, INVITE & ACTION
            ================================================================ */
         .profile-actions {
             display: flex;
@@ -348,6 +351,29 @@
             box-shadow: 0 4px 15px rgba(88, 166, 255, 0.1);
         }
         .profile-invite-btn:active {
+            animation: zoomOut 0.3s ease;
+        }
+        .profile-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .profile-action-btn:hover {
+            background: var(--bg-card);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(240, 208, 128, 0.15);
+        }
+        .profile-action-btn:active {
             animation: zoomOut 0.3s ease;
         }
 
@@ -966,6 +992,77 @@
             border-color: var(--accent-blue);
         }
 
+        /* ===== ACTION MODAL ===== */
+        .action-modal .action-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            background: var(--bg-input);
+        }
+        .action-modal .action-option:hover {
+            transform: translateX(4px);
+            border-color: var(--accent-blue);
+            background: var(--bg-card);
+        }
+        .action-modal .action-option:active {
+            animation: zoomOut 0.3s ease;
+        }
+        .action-modal .action-option .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+        .action-modal .action-option .action-icon.danger {
+            background: rgba(248, 81, 73, 0.15);
+            color: var(--danger);
+        }
+        .action-modal .action-option .action-icon.warning {
+            background: rgba(240, 208, 128, 0.15);
+            color: var(--warning);
+        }
+        .action-modal .action-option .action-icon.block {
+            background: rgba(199, 146, 234, 0.15);
+            color: #c792ea;
+        }
+        .action-modal .action-option .action-info {
+            flex: 1;
+        }
+        .action-modal .action-option .action-info .action-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .action-modal .action-option .action-info .action-desc {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .action-modal .action-option .action-arrow {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .action-modal .action-option:hover .action-arrow {
+            color: var(--accent-blue);
+            transform: translateX(4px);
+        }
+        .action-modal .action-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 6px 0 12px;
+        }
+
         /* ===== FRIEND ITEM ===== */
         .friend-item {
             display: flex;
@@ -1177,6 +1274,10 @@
                 font-size: 0.65rem;
                 padding: 6px 16px;
             }
+            .profile-action-btn {
+                font-size: 0.65rem;
+                padding: 6px 14px;
+            }
             .profile-actions {
                 gap: 6px;
             }
@@ -1202,6 +1303,20 @@
             #fotoGrid {
                 grid-template-columns: repeat(auto-fill, minmax(120px,1fr));
                 gap: 6px;
+            }
+            .action-modal .action-option {
+                padding: 12px 14px;
+            }
+            .action-modal .action-option .action-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            .action-modal .action-option .action-info .action-title {
+                font-size: 0.75rem;
+            }
+            .action-modal .action-option .action-info .action-desc {
+                font-size: 0.6rem;
             }
         }
 
@@ -1230,6 +1345,18 @@
             }
             .theme-toggle.active .toggle-thumb {
                 left: 18px;
+            }
+            .profile-action-btn {
+                font-size: 0.6rem;
+                padding: 5px 12px;
+            }
+            .action-modal .action-option {
+                padding: 10px 12px;
+            }
+            .action-modal .action-option .action-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1294,6 +1421,9 @@
             </a>
             <button class="profile-invite-btn" id="profileInviteBtn">
                 <i class="fas fa-user-plus"></i> INVITE
+            </button>
+            <button class="profile-action-btn" id="profileActionBtn" title="Tindakan Lainnya">
+                <i class="fas fa-exclamation-triangle"></i> Action
             </button>
         </div>
 
@@ -1478,6 +1608,97 @@
         </div>
     </div>
 
+    <!-- ===== ACTION MODAL ===== -->
+    <div class="modal-overlay action-modal" id="actionModal">
+        <div class="modal-content" style="max-width:420px;">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-exclamation-triangle" style="color:var(--warning);"></i>
+                    <span>⚠️ Tindakan</span>
+                </div>
+                <button class="modal-close" id="actionModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="actionModalBody">
+                <div style="margin-bottom:14px;font-size:0.75rem;color:var(--text-secondary);">
+                    Pilih tindakan yang ingin Anda lakukan terhadap profil ini.
+                </div>
+                
+                <!-- Hapus Pertemanan -->
+                <div class="action-option" onclick="confirmRemoveFriend()">
+                    <div class="action-icon danger">
+                        <i class="fas fa-user-minus"></i>
+                    </div>
+                    <div class="action-info">
+                        <div class="action-title">Hapus Pertemanan</div>
+                        <div class="action-desc">Hapus pengguna ini dari daftar teman Anda</div>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Laporkan Profil -->
+                <div class="action-option" onclick="confirmReportProfile()">
+                    <div class="action-icon warning">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <div class="action-info">
+                        <div class="action-title">Laporkan Profil</div>
+                        <div class="action-desc">Laporkan tindakan kurang baik dan sopan</div>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Blokir -->
+                <div class="action-option" onclick="confirmBlockUser()">
+                    <div class="action-icon block">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div class="action-info">
+                        <div class="action-title">Blokir</div>
+                        <div class="action-desc">Hapus permanen dan batasi akses, review & interaksi</div>
+                    </div>
+                    <div class="action-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closeActionModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONFIRMATION MODAL ===== -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content" style="max-width:400px;">
+            <div class="modal-header">
+                <div class="modal-title" id="confirmModalTitle">
+                    <i class="fas fa-exclamation-circle" style="color:var(--warning);"></i>
+                    <span>Konfirmasi</span>
+                </div>
+                <button class="modal-close" id="confirmModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="confirmModalBody">
+                <p id="confirmMessage" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;">Apakah Anda yakin ingin melanjutkan tindakan ini?</p>
+                <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+                    <button class="btn-confirm-yes" id="confirmYesBtn" style="background:var(--accent-blue-gradient);color:#fff;border:none;padding:8px 30px;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.3s;">
+                        <i class="fas fa-check"></i> Ya
+                    </button>
+                    <button class="btn-confirm-no" id="confirmNoBtn" style="background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color);padding:8px 30px;border-radius:8px;font-size:0.75rem;font-weight:500;cursor:pointer;transition:all 0.3s;">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ================================================================ -->
     <!-- TOAST CONTAINER
     <!-- ================================================================ -->
@@ -1501,6 +1722,7 @@
         let currentFotoFilter = 'semua';
         let notifications = [];
         let notificationIdCounter = 0;
+        let pendingAction = null;
 
         // ================================================================
         // LOAD THEME
@@ -1749,6 +1971,17 @@
                 } catch (e) {}
             }
             return true;
+        }
+
+        // ================================================================
+        // SAVE FRIENDS
+        // ================================================================
+        function saveFriends() {
+            try {
+                localStorage.setItem('salink_friends', JSON.stringify(friends));
+            } catch (e) {
+                console.warn('Gagal menyimpan friends:', e);
+            }
         }
 
         // ================================================================
@@ -2546,6 +2779,177 @@
         }
 
         // ================================================================
+        // ACTION MODAL FUNCTIONS
+        // ================================================================
+        function openActionModal() {
+            if (!currentUser) {
+                showToast('🔒 Login Diperlukan', 'Silakan masuk untuk mengakses tindakan', 'fa-lock');
+                return;
+            }
+            
+            if (!profileUser || profileUser.username === currentUser.username) {
+                showToast('⚠️ Info', 'Anda tidak dapat melakukan tindakan pada profil sendiri', 'fa-exclamation-triangle');
+                return;
+            }
+            
+            document.getElementById('actionModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeActionModal() {
+            document.getElementById('actionModal').classList.remove('active');
+            document.body.style.overflow = '';
+            pendingAction = null;
+        }
+
+        // ================================================================
+        // CONFIRMATION MODAL FUNCTIONS
+        // ================================================================
+        function openConfirmModal(title, message, onConfirm) {
+            document.getElementById('confirmModalTitle').innerHTML = `
+                <i class="fas fa-exclamation-circle" style="color:var(--warning);"></i>
+                <span>${title}</span>
+            `;
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            pendingAction = onConfirm;
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.body.style.overflow = '';
+            pendingAction = null;
+        }
+
+        // ================================================================
+        // ACTION HANDLERS
+        // ================================================================
+        function confirmRemoveFriend() {
+            closeActionModal();
+            setTimeout(() => {
+                openConfirmModal(
+                    'Hapus Pertemanan',
+                    `Apakah Anda yakin ingin menghapus ${profileUser.fullName} dari daftar teman Anda?`,
+                    function() {
+                        removeFriend();
+                    }
+                );
+            }, 300);
+        }
+
+        function removeFriend() {
+            const friendIndex = friends.findIndex(f => f.username === profileUser.username);
+            if (friendIndex > -1) {
+                friends.splice(friendIndex, 1);
+                saveFriends();
+                
+                // Update stats
+                const followerCount = friends.filter(f => f.username !== profileUser.username).length;
+                document.getElementById('profileStatFollowers').textContent = followerCount > 0 ? followerCount : '0';
+                
+                showToast('✅ Berhasil', `${profileUser.fullName} telah dihapus dari daftar teman`, 'fa-user-minus');
+                closeConfirmModal();
+            } else {
+                showToast('ℹ️ Info', 'Pengguna tidak ada dalam daftar teman Anda', 'fa-info-circle');
+                closeConfirmModal();
+            }
+        }
+
+        function confirmReportProfile() {
+            closeActionModal();
+            setTimeout(() => {
+                openConfirmModal(
+                    'Laporkan Profil',
+                    `Apakah Anda yakin ingin melaporkan ${profileUser.fullName} atas tindakan kurang baik dan sopan? Laporan akan ditinjau oleh tim kami.`,
+                    function() {
+                        reportProfile();
+                    }
+                );
+            }, 300);
+        }
+
+        function reportProfile() {
+            // Simulasi laporan
+            showToast('📢 Laporan Terkirim', `Profil ${profileUser.fullName} telah dilaporkan. Tim kami akan meninjau dalam 1x24 jam.`, 'fa-flag');
+            closeConfirmModal();
+            
+            // Tambahkan notifikasi ke pengguna yang dilaporkan (simulasi)
+            addNotificationToUser(profileUser.username, '📢 Laporan Profil', `Profil Anda telah dilaporkan oleh ${currentUser.fullName} karena tindakan kurang baik.`);
+        }
+
+        function confirmBlockUser() {
+            closeActionModal();
+            setTimeout(() => {
+                openConfirmModal(
+                    'Blokir Pengguna',
+                    `Apakah Anda yakin ingin memblokir ${profileUser.fullName}? Pengguna akan dihapus dari daftar teman dan tidak dapat berinteraksi dengan Anda.`,
+                    function() {
+                        blockUser();
+                    }
+                );
+            }, 300);
+        }
+
+        function blockUser() {
+            // Hapus dari daftar teman
+            const friendIndex = friends.findIndex(f => f.username === profileUser.username);
+            if (friendIndex > -1) {
+                friends.splice(friendIndex, 1);
+                saveFriends();
+            }
+            
+            // Simulasi blokir
+            showToast('🚫 Berhasil', `${profileUser.fullName} telah diblokir. Tidak dapat berinteraksi lagi.`, 'fa-ban');
+            closeConfirmModal();
+            
+            // Tambahkan ke daftar blokir (simulasi)
+            const blockedUsers = JSON.parse(localStorage.getItem('salink_blocked') || '[]');
+            if (!blockedUsers.includes(profileUser.username)) {
+                blockedUsers.push(profileUser.username);
+                localStorage.setItem('salink_blocked', JSON.stringify(blockedUsers));
+            }
+            
+            // Update stats
+            const followerCount = friends.filter(f => f.username !== profileUser.username).length;
+            document.getElementById('profileStatFollowers').textContent = followerCount > 0 ? followerCount : '0';
+            
+            // Tambahkan notifikasi ke pengguna yang diblokir (simulasi)
+            addNotificationToUser(profileUser.username, '🚫 Anda Diblokir', `Anda telah diblokir oleh ${currentUser.fullName}.`);
+        }
+
+        // ================================================================
+        // ADD NOTIFICATION TO USER (Simulasi)
+        // ================================================================
+        function addNotificationToUser(username, title, message) {
+            // Simulasi mengirim notifikasi ke user lain
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            const user = users.find(u => u.username === username);
+            if (user) {
+                // Tambahkan ke notifikasi jika user sedang login
+                if (username === currentUser?.username) {
+                    notifications.unshift({
+                        id: ++notificationIdCounter,
+                        type: 'profile',
+                        title: title,
+                        message: message,
+                        sender: 'Sistem',
+                        senderUsername: 'sistem',
+                        link: '#',
+                        postId: null,
+                        timestamp: Date.now(),
+                        read: false,
+                        soundKey: 'notifikasi'
+                    });
+                    saveNotifications();
+                    updateNotifBadge();
+                }
+                console.log(`📨 Notifikasi dikirim ke ${user.fullName}: ${title}`);
+            }
+        }
+
+        // ================================================================
         // TEMAN MODAL
         // ================================================================
         function openTemanModal() {
@@ -2860,6 +3264,29 @@
                 if (e.target === this) closeFotoModal();
             });
             
+            // Action Modal
+            document.getElementById('profileActionBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                openActionModal();
+            });
+            
+            document.getElementById('actionModalClose').addEventListener('click', closeActionModal);
+            document.getElementById('actionModal').addEventListener('click', function(e) {
+                if (e.target === this) closeActionModal();
+            });
+            
+            // Confirm Modal
+            document.getElementById('confirmModalClose').addEventListener('click', closeConfirmModal);
+            document.getElementById('confirmModal').addEventListener('click', function(e) {
+                if (e.target === this) closeConfirmModal();
+            });
+            document.getElementById('confirmNoBtn').addEventListener('click', closeConfirmModal);
+            document.getElementById('confirmYesBtn').addEventListener('click', function() {
+                if (pendingAction) {
+                    pendingAction();
+                }
+            });
+            
             document.getElementById('statPosts').addEventListener('click', function() {
                 openPostinganModal();
             });
@@ -2877,9 +3304,6 @@
                 sendInvite();
             });
             
-            // Tombol PESAN sudah menggunakan href langsung ke pesan-masuk.html
-            // dengan parameter to dan name dari profileUser
-            
             console.log('👤 Profile User Page Loaded');
             console.log(`📌 Profile: ${profileUser?.fullName || 'Unknown'}`);
             console.log(`📝 Posts: ${posts.filter(p => p.userId === profileUser?.username).length}`);
@@ -2890,7 +3314,8 @@
             console.log('✅ Modal FOTO - Menampilkan foto/video dari profileUser');
             console.log('✅ Filter: Semua, Foto, Video');
             console.log('✅ Like, Komentar, Hapus (jika pemilik) aktif');
-            console.log('✅ Tombol PESAN -> buka pesan-masuk.html dengan parameter to dan name');
+            console.log('✅ Tombol PESAN -> buka pesan-masuk.html');
+            console.log('✅ Tombol ACTION ⚠️ -> Modal dengan 3 pilihan tindakan');
         });
     </script>
 </body>
