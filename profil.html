@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SALINK - Profil Saya</title>
     
-    <!-- ===== PWA META TAGS ===== -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0d1117" id="themeColorMeta">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,199 +18,124 @@
     <!-- 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS                       -->
     <!-- ================================================================ -->
     <script>
-        // ================================================================
-        // 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS
-        // ================================================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
 
-        /**
-         * 📥 Ambil semua user dari Google Sheets
-         */
         async function apiGetUsers() {
             try {
                 const response = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                if (!response.ok) throw new Error('HTTP error');
                 const result = await response.json();
-                
                 if (result.status === 'success' && result.data) {
                     localStorage.setItem('salink_users', JSON.stringify(result.data));
                     return result.data;
                 }
                 return null;
             } catch (error) {
-                console.error('❌ Gagal get users:', error);
                 return JSON.parse(localStorage.getItem('salink_users') || '[]');
             }
         }
 
-        /**
-         * 📥 Ambil semua postingan dari Google Sheets
-         */
         async function apiGetPosts() {
             try {
                 const response = await fetch(API_URL + '?action=get_posts&timestamp=' + Date.now());
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                if (!response.ok) throw new Error('HTTP error');
                 const result = await response.json();
-                
                 if (result.status === 'success' && result.data) {
                     localStorage.setItem('salink_posts', JSON.stringify(result.data));
                     return result.data;
                 }
                 return null;
             } catch (error) {
-                console.error('❌ Gagal get posts:', error);
                 return JSON.parse(localStorage.getItem('salink_posts') || '[]');
             }
         }
 
-        /**
-         * 📥 Ambil semua notifikasi dari Google Sheets
-         */
         async function apiGetNotifications() {
             try {
                 const response = await fetch(API_URL + '?action=get_notifications&timestamp=' + Date.now());
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                if (!response.ok) throw new Error('HTTP error');
                 const result = await response.json();
-                
                 if (result.status === 'success' && result.data) {
                     localStorage.setItem('salink_notifications', JSON.stringify(result.data));
                     return result.data;
                 }
                 return null;
             } catch (error) {
-                console.error('❌ Gagal get notifications:', error);
                 return JSON.parse(localStorage.getItem('salink_notifications') || '[]');
             }
         }
 
-        /**
-         * 📥 Ambil semua undangan dari Google Sheets
-         */
         async function apiGetInvites() {
             try {
                 const response = await fetch(API_URL + '?action=get_invites&timestamp=' + Date.now());
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                if (!response.ok) throw new Error('HTTP error');
                 const result = await response.json();
-                
                 if (result.status === 'success' && result.data) {
                     localStorage.setItem('salink_invites', JSON.stringify(result.data));
                     return result.data;
                 }
                 return null;
             } catch (error) {
-                console.error('❌ Gagal get invites:', error);
                 return JSON.parse(localStorage.getItem('salink_invites') || '[]');
             }
         }
 
-        /**
-         * 📤 Simpan postingan ke Google Sheets
-         */
         async function apiSavePost(postData) {
             try {
-                const response = await fetch(API_URL, {
+                await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save_post',
-                        post: postData,
-                        timestamp: Date.now()
-                    })
+                    body: JSON.stringify({ action: 'save_post', post: postData, timestamp: Date.now() })
                 });
-                
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-                const result = await response.json();
-                console.log('📡 Post saved to Spreadsheet:', result);
-                return result.status === 'success';
+                return true;
             } catch (error) {
-                console.error('❌ Gagal save post:', error);
                 return false;
             }
         }
 
-        /**
-         * 📤 Simpan notifikasi ke Google Sheets
-         */
         async function apiSaveNotification(notifData) {
             try {
-                const response = await fetch(API_URL, {
+                await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save_notification',
-                        notification: notifData,
-                        timestamp: Date.now()
-                    })
+                    body: JSON.stringify({ action: 'save_notification', notification: notifData, timestamp: Date.now() })
                 });
-                
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-                const result = await response.json();
-                console.log('📡 Notification saved to Spreadsheet:', result);
-                return result.status === 'success';
+                return true;
             } catch (error) {
-                console.error('❌ Gagal save notification:', error);
                 return false;
             }
         }
 
-        /**
-         * 📤 Simpan profil ke Google Sheets
-         */
         async function apiSaveProfile(profileData) {
             try {
-                const response = await fetch(API_URL, {
+                await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save_profile',
-                        profile: profileData,
-                        timestamp: Date.now()
-                    })
+                    body: JSON.stringify({ action: 'save_profile', profile: profileData, timestamp: Date.now() })
                 });
-                
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-                const result = await response.json();
-                console.log('📡 Profile saved to Spreadsheet:', result);
-                return result.status === 'success';
+                return true;
             } catch (error) {
-                console.error('❌ Gagal save profile:', error);
                 return false;
             }
         }
 
-        /**
-         * 🔄 Sinkronisasi aksi ke Google Sheets
-         */
         async function syncActionToSpreadsheet(action, data) {
             try {
-                const response = await fetch(API_URL, {
+                await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: action,
-                        data: data,
-                        timestamp: Date.now()
-                    })
+                    body: JSON.stringify({ action: action, data: data, timestamp: Date.now() })
                 });
-                
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-                const result = await response.json();
-                console.log('📡 Sync action result:', result);
-                return result.status === 'success';
+                return true;
             } catch (error) {
-                console.error('❌ Sync action error:', error);
                 return false;
             }
         }
 
-        console.log('✅ API Module Loaded - Google Spreadsheets Connected');
-        console.log('📡 API URL:', API_URL);
+        console.log('✅ API Module Loaded');
     </script>
     
     <style>
-        /* ================================================================ */
-        /* THEME VARIABLES - LIGHT & DARK MODE                              */
-        /* ================================================================ */
         :root {
             --bg-primary: #0d1117;
             --bg-secondary: #161b22;
@@ -221,16 +145,13 @@
             --text-secondary: #8b949e;
             --text-muted: #6e7681;
             --border-color: #30363d;
-            --border-light: rgba(255,255,255,0.06);
             --shadow-color: rgba(0,0,0,0.4);
             --shadow-light: rgba(0,0,0,0.2);
             --accent-blue: #58a6ff;
-            --accent-blue-dark: #1f6feb;
             --accent-blue-gradient: linear-gradient(135deg, #58a6ff, #1f6feb);
-            --accent-green: #25D366;
             --accent-red: #f85149;
+            --accent-green: #25D366;
             --accent-gold: #f0d080;
-            --card-border: rgba(255,255,255,0.06);
             --toggle-bg: #30363d;
             --toggle-thumb: #58a6ff;
             --header-bg: rgba(22, 27, 34, 0.95);
@@ -244,7 +165,6 @@
             --success: #3fb950;
             --warning: #f0d080;
         }
-
         [data-theme="light"] {
             --bg-primary: #f0f4f8;
             --bg-secondary: #e8edf2;
@@ -254,16 +174,13 @@
             --text-secondary: #4a4a6a;
             --text-muted: #6a6a8a;
             --border-color: #d0d7de;
-            --border-light: rgba(0,0,0,0.06);
             --shadow-color: rgba(0,0,0,0.08);
             --shadow-light: rgba(0,0,0,0.04);
             --accent-blue: #4facfe;
-            --accent-blue-dark: #00c6fb;
             --accent-blue-gradient: linear-gradient(135deg, #4facfe, #00c6fb);
-            --accent-green: #25D366;
             --accent-red: #e31837;
+            --accent-green: #25D366;
             --accent-gold: #8d6b4b;
-            --card-border: rgba(0,0,0,0.04);
             --toggle-bg: #d0d7de;
             --toggle-thumb: #4facfe;
             --header-bg: rgba(255, 255, 255, 0.95);
@@ -275,12 +192,7 @@
             --success: #2ea44f;
             --warning: #8d6b4b;
         }
-
-        /* ================================================================ */
-        /* BASE STYLES                                                       */
-        /* ================================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
@@ -289,26 +201,21 @@
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
         }
-
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
 
-        /* ================================================================ */
-        /* ANIMATIONS                                                       */
-        /* ================================================================ */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
+        @keyframes notifPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+        @keyframes toastIn { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
 
-        /* ================================================================ */
-        /* TOGGLE SWITCH                                                    */
-        /* ================================================================ */
         .theme-toggle {
             position: relative;
-            width: 44px;
-            height: 24px;
+            width: 44px; height: 24px;
             background: var(--toggle-bg);
             border-radius: 30px;
             cursor: pointer;
@@ -319,10 +226,8 @@
         .theme-toggle.active { background: rgba(88, 166, 255, 0.3); }
         .theme-toggle .toggle-thumb {
             position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 18px;
-            height: 18px;
+            top: 2px; left: 2px;
+            width: 18px; height: 18px;
             border-radius: 50%;
             background: var(--toggle-thumb);
             transition: all 0.3s ease;
@@ -332,12 +237,9 @@
             justify-content: center;
             font-size: 0.55rem;
         }
-        .theme-toggle.active .toggle-thumb { left: 22px; background: var(--toggle-thumb); }
+        .theme-toggle.active .toggle-thumb { left: 22px; }
         .theme-toggle .toggle-thumb i { color: #fff; }
 
-        /* ================================================================ */
-        /* HEADER - TANPA SEARCH & SIDEBAR                                  */
-        /* ================================================================ */
         .app-bar {
             position: fixed;
             top: 0;
@@ -366,16 +268,13 @@
         }
         .app-title .bell-icon { font-size: 1.2rem; color: var(--accent-blue); }
         .app-title span { font-size: 1rem; }
-        
         .header-right {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-
         .back-btn {
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -392,9 +291,6 @@
         .back-btn:active { transform: scale(0.95); }
         .back-btn i { font-size: 1rem; }
 
-        /* ================================================================ */
-        /* MAIN CONTENT                                                     */
-        /* ================================================================ */
         .main-content {
             padding: calc(var(--header-height) + 14px) 14px calc(var(--footer-height) + 14px);
             max-width: 600px;
@@ -403,17 +299,13 @@
             min-height: 100vh;
         }
 
-        /* ================================================================ */
-        /* PROFILE HEADER                                                   */
-        /* ================================================================ */
         .profile-header {
             text-align: center;
             margin-bottom: 20px;
             position: relative;
         }
         .profile-avatar-large {
-            width: 90px;
-            height: 90px;
+            width: 90px; height: 90px;
             border-radius: 50%;
             margin: 0 auto 12px;
             border: 3px solid var(--accent-blue);
@@ -427,11 +319,7 @@
             cursor: default;
             transition: all 0.3s;
         }
-        .profile-avatar-large img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
         .profile-name {
             font-size: 1.2rem;
             font-weight: 600;
@@ -450,9 +338,6 @@
             cursor: default;
         }
 
-        /* ================================================================ */
-        /* PROFILE STATS                                                    */
-        /* ================================================================ */
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -489,9 +374,6 @@
             color: var(--text-muted);
         }
 
-        /* ================================================================ */
-        /* PROFILE ACTIONS - PESAN & INVITE                                 */
-        /* ================================================================ */
         .profile-actions {
             display: flex;
             justify-content: center;
@@ -520,9 +402,6 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(88, 166, 255, 0.4);
         }
-        .profile-pesan-btn:active {
-            animation: zoomOut 0.3s ease;
-        }
         .profile-invite-btn {
             display: inline-flex;
             align-items: center;
@@ -543,13 +422,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(88, 166, 255, 0.1);
         }
-        .profile-invite-btn:active {
-            animation: zoomOut 0.3s ease;
-        }
 
-        /* ================================================================ */
-        /* PROFILE NAVBAR - FOTO, TEMAN, BIODATA, JUAL                     */
-        /* ================================================================ */
         .profile-nav-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -588,9 +461,6 @@
             font-size: 0.6rem;
         }
 
-        /* ================================================================ */
-        /* POST SECTION - READ ONLY                                         */
-        /* ================================================================ */
         .post-section {
             margin-top: 16px;
             background: var(--bg-card);
@@ -617,11 +487,8 @@
             align-items: center;
             gap: 8px;
         }
-        .section-title-small i {
-            color: var(--accent-blue);
-        }
+        .section-title-small i { color: var(--accent-blue); }
 
-        /* ===== POST ITEM ===== */
         .post {
             background: var(--bg-input);
             border-radius: 10px;
@@ -637,8 +504,7 @@
             margin-bottom: 8px;
         }
         .post-profile-pic {
-            width: 34px;
-            height: 34px;
+            width: 34px; height: 34px;
             border-radius: 50%;
             background: var(--accent-blue-gradient);
             display: flex;
@@ -651,54 +517,18 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .post-profile-pic:hover {
-            transform: scale(1.05);
-        }
-        .post-profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .post-profile-pic i {
-            color: #fff;
-            font-size: 0.85rem;
-        }
-        .post-user-info h4 {
-            font-size: 0.85rem;
-            color: var(--text-primary);
-        }
-        .post-user-info h4 .profile-link {
-            color: var(--accent-blue);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .post-user-info h4 .profile-link:hover {
-            text-decoration: underline;
-            opacity: 0.8;
-        }
-        .post-user-info small {
-            font-size: 0.55rem;
-            color: var(--text-muted);
-        }
+        .post-profile-pic:hover { transform: scale(1.05); }
+        .post-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .post-profile-pic i { color: #fff; font-size: 0.85rem; }
+        .post-user-info h4 { font-size: 0.85rem; color: var(--text-primary); }
+        .post-user-info h4 .profile-link { color: var(--accent-blue); text-decoration: none; cursor: pointer; transition: all 0.3s; }
+        .post-user-info h4 .profile-link:hover { text-decoration: underline; opacity: 0.8; }
+        .post-user-info small { font-size: 0.55rem; color: var(--text-muted); }
 
-        .post-content {
-            margin: 8px 0;
-        }
-        .post-text {
-            font-size: 0.75rem;
-            line-height: 1.5;
-            color: var(--text-primary);
-        }
-        .post-media {
-            margin: 8px 0;
-        }
-        .post-media img,
-        .post-media video {
-            max-width: 100%;
-            max-height: 220px;
-            border-radius: 8px;
-        }
+        .post-content { margin: 8px 0; }
+        .post-text { font-size: 0.75rem; line-height: 1.5; color: var(--text-primary); }
+        .post-media { margin: 8px 0; }
+        .post-media img, .post-media video { max-width: 100%; max-height: 220px; border-radius: 8px; }
 
         .post-actions {
             display: flex;
@@ -720,29 +550,63 @@
             padding: 3px 6px;
             border-radius: 6px;
         }
-        .post-action:hover {
-            color: var(--accent-blue);
-            background: var(--bg-input);
-        }
-        .post-action i {
-            font-size: 0.8rem;
-        }
-        .post-action.liked {
-            color: var(--accent-red);
-        }
-        .post-action.liked i {
-            color: var(--accent-red);
-        }
-        .post-action .like-count {
-            font-size: 0.6rem;
-            font-weight: 600;
-        }
+        .post-action:hover { color: var(--accent-blue); background: var(--bg-input); }
+        .post-action i { font-size: 0.8rem; }
+        .post-action.liked { color: var(--accent-red); }
+        .post-action.liked i { color: var(--accent-red); }
+        .post-action .like-count { font-size: 0.6rem; font-weight: 600; }
+        .post-action.delete { color: var(--accent-red); margin-left: auto; }
+        .post-action.delete:hover { opacity: 0.7; }
+        .post-action.share { color: var(--text-muted); }
+        .post-action.share:hover { color: #4cc9f0; }
 
-        .comments-section {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-bottom: 8px;
+        .post-menu-toggle {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--bg-input);
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            z-index: 5;
         }
+        .post-menu-toggle:hover { background: var(--bg-card); color: var(--accent-blue); }
+        .post-menu-dropdown {
+            position: absolute;
+            top: 32px;
+            right: 8px;
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 4px 0;
+            min-width: 140px;
+            z-index: 10;
+            display: none;
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+        .post-menu-dropdown.active { display: block; animation: fadeIn 0.2s ease; }
+        .post-menu-dropdown .menu-item {
+            padding: 8px 14px;
+            color: var(--text-primary);
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+        .post-menu-dropdown .menu-item:hover { background: var(--bg-input); color: var(--accent-blue); }
+        .post-menu-dropdown .menu-item i { width: 16px; text-align: center; color: var(--accent-blue); }
+
+        .comments-section { max-height: 200px; overflow-y: auto; margin-bottom: 8px; }
         .comment {
             display: flex;
             flex-direction: column;
@@ -758,8 +622,7 @@
             gap: 8px;
         }
         .comment-profile-pic {
-            width: 26px;
-            height: 26px;
+            width: 26px; height: 26px;
             border-radius: 50%;
             overflow: hidden;
             flex-shrink: 0;
@@ -771,94 +634,27 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .comment-profile-pic:hover {
-            transform: scale(1.05);
-        }
-        .comment-profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .comment-profile-pic i {
-            font-size: 0.65rem;
-            color: #fff;
-        }
-        .comment-content {
-            flex: 1;
-        }
-        .comment-user {
-            font-weight: 600;
-            font-size: 0.65rem;
-            color: var(--accent-blue);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .comment-user:hover {
-            text-decoration: underline;
-            opacity: 0.8;
-        }
-        .comment-text {
-            font-size: 0.7rem;
-            color: var(--text-primary);
-            margin: 2px 0;
-        }
-        .comment-time {
-            font-size: 0.5rem;
-            color: var(--text-muted);
-        }
-        .comment-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 4px;
-        }
-        .comment-action {
-            font-size: 0.55rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .comment-action:hover {
-            color: var(--accent-blue);
-        }
-        .comment-replies {
-            margin-left: 34px;
-            margin-top: 6px;
-            border-left: 2px solid var(--border-color);
-            padding-left: 10px;
-        }
-        .reply-comment {
-            margin-bottom: 6px;
-            padding: 4px 6px;
-            background: var(--bg-input);
-            border-radius: 6px;
-        }
-        .reply-comment .comment-main {
-            display: flex;
-            align-items: flex-start;
-            gap: 6px;
-        }
-        .reply-comment .comment-profile-pic {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-        .reply-comment .comment-profile-pic:hover {
-            transform: scale(1.05);
-        }
-        .reply-comment .comment-user {
-            font-size: 0.6rem;
-            cursor: pointer;
-        }
-        .reply-comment .comment-user:hover {
-            text-decoration: underline;
-            opacity: 0.8;
-        }
-        .reply-comment .comment-text {
-            font-size: 0.65rem;
-        }
-        .reply-comment .comment-time {
-            font-size: 0.45rem;
-        }
+        .comment-profile-pic:hover { transform: scale(1.05); }
+        .comment-profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .comment-profile-pic i { font-size: 0.65rem; color: #fff; }
+        .comment-content { flex: 1; }
+        .comment-user { font-weight: 600; font-size: 0.65rem; color: var(--accent-blue); cursor: pointer; transition: all 0.3s; }
+        .comment-user:hover { text-decoration: underline; opacity: 0.8; }
+        .comment-text { font-size: 0.7rem; color: var(--text-primary); margin: 2px 0; }
+        .comment-time { font-size: 0.5rem; color: var(--text-muted); }
+        .comment-actions { display: flex; gap: 10px; margin-top: 4px; }
+        .comment-action { font-size: 0.55rem; color: var(--text-muted); cursor: pointer; transition: all 0.3s; }
+        .comment-action:hover { color: var(--accent-blue); }
+        .comment-action.delete-comment { color: var(--accent-red); }
+        .comment-replies { margin-left: 34px; margin-top: 6px; border-left: 2px solid var(--border-color); padding-left: 10px; }
+        .reply-comment { margin-bottom: 6px; padding: 4px 6px; background: var(--bg-input); border-radius: 6px; }
+        .reply-comment .comment-main { display: flex; align-items: flex-start; gap: 6px; }
+        .reply-comment .comment-profile-pic { width: 20px; height: 20px; cursor: pointer; }
+        .reply-comment .comment-profile-pic:hover { transform: scale(1.05); }
+        .reply-comment .comment-user { font-size: 0.6rem; cursor: pointer; }
+        .reply-comment .comment-user:hover { text-decoration: underline; opacity: 0.8; }
+        .reply-comment .comment-text { font-size: 0.65rem; }
+        .reply-comment .comment-time { font-size: 0.45rem; }
 
         .add-comment {
             display: flex;
@@ -877,18 +673,12 @@
             transition: all 0.3s;
             min-height: 32px;
         }
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-        }
-        .comment-input::placeholder {
-            color: var(--text-muted);
-        }
+        .comment-input:focus { outline: none; border-color: var(--accent-blue); }
+        .comment-input::placeholder { color: var(--text-muted); }
         .send-comment {
             background: var(--accent-blue-gradient);
             border: none;
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             border-radius: 50%;
             color: #fff;
             cursor: pointer;
@@ -899,19 +689,9 @@
             flex-shrink: 0;
             transition: all 0.3s;
         }
-        .send-comment:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
-        }
-        .send-comment:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .send-comment:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3); }
+        .send-comment:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* ================================================================ */
-        /* EMPTY STATE                                                      */
-        /* ================================================================ */
         .empty-state {
             text-align: center;
             padding: 30px 0;
@@ -927,9 +707,243 @@
             font-size: 0.75rem;
         }
 
-        /* ================================================================ */
-        /* FOTO MODAL                                                       */
-        /* ================================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 30px 60px var(--shadow-color);
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0 auto;
+            transition: background 0.3s ease;
+        }
+        .modal-content::-webkit-scrollbar { width: 3px; }
+        .modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        .modal-content::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            background: var(--modal-bg);
+            z-index: 2;
+            border-radius: 18px 18px 0 0;
+        }
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-title .badge-count {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+        .modal-close {
+            background: var(--bg-input);
+            border: none;
+            color: var(--text-primary);
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+        }
+        .modal-close:hover {
+            background: var(--bg-card);
+            transform: rotate(90deg);
+        }
+        .modal-body {
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            flex: 1;
+            padding: 0 2px;
+        }
+        .modal-footer {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-shrink: 0;
+            position: sticky;
+            bottom: 0;
+            background: var(--modal-bg);
+            z-index: 2;
+            border-radius: 0 0 18px 18px;
+            padding-bottom: 4px;
+        }
+        .modal-footer .btn-close-modal {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 8px 30px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .modal-footer .btn-close-modal:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-blue);
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            background: var(--bg-input);
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .friend-item:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-blue);
+        }
+        .friend-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--accent-blue-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .friend-avatar:hover { transform: scale(1.05); }
+        .friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .friend-info { flex: 1; }
+        .friend-name { font-size: 0.8rem; color: var(--text-primary); font-weight: 500; cursor: pointer; transition: all 0.3s; }
+        .friend-name:hover { color: var(--accent-blue); }
+        .friend-status { font-size: 0.6rem; color: var(--text-muted); }
+
+        .bio-data-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 4px 0;
+        }
+        .bio-data-item {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+        }
+        .bio-data-item .bio-label {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            display: block;
+        }
+        .bio-data-item .bio-value {
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            font-weight: 500;
+            margin-top: 2px;
+            word-break: break-word;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: calc(var(--footer-height) + 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            max-width: 400px;
+            width: 90%;
+        }
+        .toast {
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: fadeIn 0.4s ease;
+            margin-bottom: 8px;
+            transition: background 0.3s ease;
+        }
+        .toast .toast-icon {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+        }
+        .toast .toast-content { flex: 1; }
+        .toast .toast-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .toast .toast-message {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px;
+            transition: all 0.3s;
+        }
+        .toast .toast-close:hover { color: var(--text-primary); }
+
+        /* ===== FOTO MODAL ===== */
         #fotoGrid::-webkit-scrollbar { width: 3px; }
         #fotoGrid::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         #fotoGrid::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
@@ -1017,8 +1031,7 @@
             background: var(--accent-blue-gradient);
             border: none;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             color: #fff;
             cursor: pointer;
             font-size: 0.6rem;
@@ -1034,288 +1047,12 @@
             border-color: var(--accent-blue) !important;
         }
 
-        /* ================================================================ */
-        /* MODALS                                                           */
-        /* ================================================================ */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background: var(--modal-bg);
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 20px 18px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 30px 60px var(--shadow-color);
-            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin: 0 auto;
-            transition: background 0.3s ease;
-        }
-        .modal-content::-webkit-scrollbar { width: 3px; }
-        .modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        .modal-content::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            flex-shrink: 0;
-            position: sticky;
-            top: 0;
-            background: var(--modal-bg);
-            z-index: 2;
-            border-radius: 18px 18px 0 0;
-        }
-        .modal-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .modal-title .badge-count {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-        }
-        .modal-close {
-            background: var(--bg-input);
-            border: none;
-            color: var(--text-primary);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            border: 1px solid var(--border-color);
-        }
-        .modal-close:hover {
-            background: var(--bg-card);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            color: var(--text-primary);
-            font-size: 0.75rem;
-            flex: 1;
-            padding: 0 2px;
-        }
-
-        .modal-footer {
-            margin-top: 16px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-shrink: 0;
-            position: sticky;
-            bottom: 0;
-            background: var(--modal-bg);
-            z-index: 2;
-            border-radius: 0 0 18px 18px;
-            padding-bottom: 4px;
-        }
-        .modal-footer .btn-close-modal {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            padding: 8px 30px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        .modal-footer .btn-close-modal:hover {
-            background: var(--bg-card);
-            border-color: var(--accent-blue);
-        }
-
-        /* ===== FRIEND ITEM ===== */
-        .friend-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 10px;
-            background: var(--bg-input);
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        .friend-item:hover {
-            background: var(--bg-card);
-            border-color: var(--accent-blue);
-        }
-        .friend-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--accent-blue-gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .friend-avatar:hover {
-            transform: scale(1.05);
-        }
-        .friend-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .friend-info {
-            flex: 1;
-        }
-        .friend-name {
-            font-size: 0.8rem;
-            color: var(--text-primary);
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .friend-name:hover {
-            color: var(--accent-blue);
-        }
-        .friend-status {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
-
-        /* ===== BIODATA ===== */
-        .bio-data-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            padding: 4px 0;
-        }
-        .bio-data-item {
-            background: var(--bg-input);
-            border-radius: 8px;
-            padding: 8px 10px;
-            border: 1px solid var(--border-color);
-        }
-        .bio-data-item .bio-label {
-            font-size: 0.55rem;
-            color: var(--text-muted);
-            display: block;
-        }
-        .bio-data-item .bio-value {
-            font-size: 0.75rem;
-            color: var(--accent-blue);
-            font-weight: 500;
-            margin-top: 2px;
-            word-break: break-word;
-        }
-
-        /* ================================================================ */
-        /* TOAST                                                            */
-        /* ================================================================ */
-        .toast-container {
-            position: fixed;
-            bottom: calc(var(--footer-height) + 20px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3000;
-            max-width: 400px;
-            width: 90%;
-        }
-        .toast {
-            background: var(--modal-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 16px;
-            box-shadow: 0 10px 30px var(--shadow-color);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            animation: fadeIn 0.4s ease;
-            margin-bottom: 8px;
-            transition: background 0.3s ease;
-        }
-        .toast .toast-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: rgba(88, 166, 255, 0.15);
-            color: var(--accent-blue);
-        }
-        .toast .toast-content {
-            flex: 1;
-        }
-        .toast .toast-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .toast .toast-message {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-        }
-        .toast .toast-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 0.8rem;
-            padding: 4px;
-            transition: all 0.3s;
-        }
-        .toast .toast-close:hover {
-            color: var(--text-primary);
-        }
-
-        /* ================================================================ */
-        /* RESPONSIVE                                                       */
-        /* ================================================================ */
         @media (max-width: 480px) {
             .main-content {
                 padding: calc(var(--header-height) + 10px) 10px calc(var(--footer-height) + 10px);
             }
             .profile-avatar-large {
-                width: 70px;
-                height: 70px;
+                width: 70px; height: 70px;
                 font-size: 2rem;
             }
             .profile-name {
@@ -1365,8 +1102,7 @@
                 gap: 6px;
             }
             .comment-profile-pic {
-                width: 22px;
-                height: 22px;
+                width: 22px; height: 22px;
             }
             .profile-pesan-btn,
             .profile-invite-btn {
@@ -1377,19 +1113,16 @@
                 gap: 6px;
             }
             .back-btn {
-                width: 32px;
-                height: 32px;
+                width: 32px; height: 32px;
             }
             .back-btn i {
                 font-size: 0.85rem;
             }
             .theme-toggle {
-                width: 40px;
-                height: 22px;
+                width: 40px; height: 22px;
             }
             .theme-toggle .toggle-thumb {
-                width: 16px;
-                height: 16px;
+                width: 16px; height: 16px;
                 font-size: 0.5rem;
             }
             .theme-toggle.active .toggle-thumb {
@@ -1416,12 +1149,10 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             .theme-toggle {
-                width: 36px;
-                height: 20px;
+                width: 36px; height: 20px;
             }
             .theme-toggle .toggle-thumb {
-                width: 14px;
-                height: 14px;
+                width: 14px; height: 14px;
                 font-size: 0.45rem;
             }
             .theme-toggle.active .toggle-thumb {
@@ -1433,7 +1164,7 @@
 <body>
 
     <!-- ================================================================ -->
-    <!-- HEADER - TANPA SEARCH & SIDEBAR                                   -->
+    <!-- HEADER                                                           -->
     <!-- ================================================================ -->
     <header class="app-bar">
         <div class="app-title" onclick="window.location.href='dashboard.html'">
@@ -1493,7 +1224,7 @@
             </button>
         </div>
 
-        <!-- ===== PROFILE NAVBAR - SEMUA TOMBOL ===== -->
+        <!-- ===== PROFILE NAVBAR ===== -->
         <div class="profile-nav-grid">
             <a href="#" class="profile-nav-item" id="profileFotoBtn" onclick="openFotoModal()">
                 <span>🖼️</span>
@@ -1688,7 +1419,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ================================================================ -->
-    <!-- JAVASCRIPT                                                        -->
+    <!-- JAVASCRIPT                                                       -->
     <!-- ================================================================ -->
     <script>
         // ================================================================
@@ -1706,533 +1437,68 @@
         let notifications = [];
         let notificationIdCounter = 0;
         let inviteCount = 0;
+        let notifCheckInterval = null;
 
         // ================================================================
-        // LOAD THEME
+        // THEME
         // ================================================================
         function loadTheme() {
-            const savedTheme = localStorage.getItem('salink_theme');
-            if (savedTheme === 'light') {
+            const saved = localStorage.getItem('salink_theme');
+            if (saved === 'light') {
                 currentTheme = 'light';
                 document.documentElement.setAttribute('data-theme', 'light');
                 document.getElementById('themeToggle').classList.add('active');
                 document.getElementById('toggleIcon').className = 'fas fa-sun';
-                const metaThemeColor = document.getElementById('themeColorMeta');
-                if (metaThemeColor) metaThemeColor.content = '#f0f4f8';
             }
         }
 
         function toggleTheme() {
             const html = document.documentElement;
-            const themeToggle = document.getElementById('themeToggle');
-            const toggleThumb = document.getElementById('toggleThumb');
-            const toggleIcon = document.getElementById('toggleIcon');
-            const metaThemeColor = document.getElementById('themeColorMeta');
-            
             if (currentTheme === 'dark') {
                 currentTheme = 'light';
                 html.setAttribute('data-theme', 'light');
-                themeToggle.classList.add('active');
-                toggleIcon.className = 'fas fa-sun';
-                if (metaThemeColor) metaThemeColor.content = '#f0f4f8';
+                document.getElementById('themeToggle').classList.add('active');
+                document.getElementById('toggleIcon').className = 'fas fa-sun';
                 localStorage.setItem('salink_theme', 'light');
             } else {
                 currentTheme = 'dark';
                 html.removeAttribute('data-theme');
-                themeToggle.classList.remove('active');
-                toggleIcon.className = 'fas fa-moon';
-                if (metaThemeColor) metaThemeColor.content = '#0d1117';
+                document.getElementById('themeToggle').classList.remove('active');
+                document.getElementById('toggleIcon').className = 'fas fa-moon';
                 localStorage.setItem('salink_theme', 'dark');
             }
         }
 
         // ================================================================
-        // TOAST SYSTEM
+        // TOAST
         // ================================================================
         function showToast(title, message, icon = 'fa-info-circle') {
             document.querySelectorAll('.toast').forEach(t => t.remove());
             clearTimeout(toastTimeout);
-            
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.innerHTML = `
                 <div class="toast-icon"><i class="fas ${icon}"></i></div>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
+                <div class="toast-content"><div class="toast-title">${title}</div><div class="toast-message">${message}</div></div>
                 <button class="toast-close"><i class="fas fa-times"></i></button>
             `;
-            
-            toast.querySelector('.toast-close').addEventListener('click', () => {
-                toast.remove();
-            });
-            
+            toast.querySelector('.toast-close').addEventListener('click', () => { toast.remove(); });
             container.appendChild(toast);
-            
-            toastTimeout = setTimeout(() => {
-                toast.remove();
-            }, 5000);
+            toastTimeout = setTimeout(() => { toast.remove(); }, 4000);
         }
 
         // ================================================================
-        // GET USER BY USERNAME - DENGAN SYNC DARI SPREADSHEET
+        // GET TIME AGO
         // ================================================================
-        async function getUserByUsername(username) {
-            if (!username) return null;
-            
-            let users = JSON.parse(localStorage.getItem('salink_users') || '[]');
-            let user = users.find(u => u.username === username);
-            
-            if (!user) {
-                try {
-                    const remoteUsers = await apiGetUsers();
-                    if (remoteUsers && remoteUsers.length > 0) {
-                        users = remoteUsers;
-                        localStorage.setItem('salink_users', JSON.stringify(users));
-                        user = users.find(u => u.username === username);
-                    }
-                } catch (e) {
-                    console.warn('⚠️ Gagal sync users dari Spreadsheet:', e);
-                }
-            }
-            
-            if (!user) {
-                const savedUser = localStorage.getItem('salink_user');
-                if (savedUser) {
-                    try {
-                        const current = JSON.parse(savedUser);
-                        if (current.username === username) {
-                            user = current;
-                        }
-                    } catch (e) {}
-                }
-            }
-            
-            if (!user) {
-                user = {
-                    fullName: username,
-                    username: username,
-                    email: `${username}@salink.id`,
-                    gender: 'male',
-                    phone: '',
-                    country: 'Indonesia',
-                    province: '',
-                    city: '',
-                    district: '',
-                    village: '',
-                    address: '',
-                    bio: `Profil pengguna ${username}`,
-                    profilePicture: null,
-                    joinedDate: new Date().toLocaleString('id-ID', {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }),
-                    mapLink: ''
-                };
-            }
-            
-            return user;
-        }
-
-        // ================================================================
-        // LOAD PROFILE DATA
-        // ================================================================
-        async function loadProfileData() {
-            const savedUser = localStorage.getItem('salink_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    profileUser = currentUser;
-                } catch (e) {
-                    currentUser = null;
-                    profileUser = null;
-                }
-            }
-            
-            if (!profileUser) {
-                profileUser = {
-                    fullName: 'Pengguna SALINK',
-                    username: 'pengguna',
-                    email: 'pengguna@salink.id',
-                    gender: 'male',
-                    phone: '',
-                    country: 'Indonesia',
-                    province: '',
-                    city: '',
-                    district: '',
-                    village: '',
-                    address: '',
-                    bio: 'Bergabung di SALINK untuk keamanan bersama',
-                    profilePicture: null,
-                    joinedDate: new Date().toLocaleString('id-ID', {
-                        weekday: 'long',
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }),
-                    mapLink: ''
-                };
-            }
-        }
-
-        // ================================================================
-        // LOAD POSTS - DENGAN SYNC DARI SPREADSHEET
-        // ================================================================
-        async function loadUserPosts() {
-            try {
-                // Coba ambil dari Spreadsheet
-                const remotePosts = await apiGetPosts();
-                if (remotePosts && remotePosts.length > 0) {
-                    posts = remotePosts;
-                    let maxId = 0;
-                    posts.forEach(p => {
-                        const numId = parseInt(p.id.replace('post-', ''));
-                        if (!isNaN(numId) && numId > maxId) maxId = numId;
-                    });
-                    postIdCounter = maxId;
-                    localStorage.setItem('salink_posts', JSON.stringify(posts));
-                    console.log('✅ Posts from Spreadsheet: ' + posts.length);
-                } else {
-                    // Fallback ke localStorage
-                    const saved = localStorage.getItem('salink_posts');
-                    if (saved) {
-                        posts = JSON.parse(saved);
-                        let maxId = 0;
-                        posts.forEach(p => {
-                            const numId = parseInt(p.id.replace('post-', ''));
-                            if (!isNaN(numId) && numId > maxId) maxId = numId;
-                        });
-                        postIdCounter = maxId;
-                        console.log('✅ Posts from localStorage: ' + posts.length);
-                    }
-                }
-            } catch (e) {
-                console.warn('⚠️ Gagal load posts:', e);
-                const saved = localStorage.getItem('salink_posts');
-                if (saved) {
-                    posts = JSON.parse(saved);
-                }
-            }
-            
-            // Render posts
-            const userPosts = posts.filter(p => p.userId === profileUser?.username);
-            renderProfilePosts(userPosts);
-            document.getElementById('profileStatPosts').textContent = userPosts.length;
-        }
-
-        // ================================================================
-        // SAVE POSTS - SYNC KE SPREADSHEET
-        // ================================================================
-        function savePosts() {
-            try {
-                localStorage.setItem('salink_posts', JSON.stringify(posts));
-            } catch (e) {
-                console.warn('Gagal menyimpan posts:', e);
-            }
-        }
-
-        // ================================================================
-        // LOAD FRIENDS
-        // ================================================================
-        function loadFriends() {
-            try {
-                const saved = localStorage.getItem('salink_friends');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) {
-                        friends = parsed;
-                        return true;
-                    }
-                }
-            } catch (e) {
-                console.warn('Gagal memuat friends:', e);
-            }
-            
-            if (friends.length === 0) {
-                const sampleFriends = [
-                    { id: ++friendIdCounter, name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
-                    { id: ++friendIdCounter, name: 'Sdri. Rina', username: 'rina', gender: 'female', status: 'Offline' },
-                    { id: ++friendIdCounter, name: 'Bpk. Joko', username: 'joko', gender: 'male', status: 'Online' },
-                    { id: ++friendIdCounter, name: 'Sdri. Dewi', username: 'dewi', gender: 'female', status: 'Online' },
-                    { id: ++friendIdCounter, name: 'Bpk. Budi', username: 'budi', gender: 'male', status: 'Offline' },
-                    { id: ++friendIdCounter, name: 'Sdri. Siti', username: 'siti', gender: 'female', status: 'Online' }
-                ];
-                friends = sampleFriends;
-                try {
-                    localStorage.setItem('salink_friends', JSON.stringify(friends));
-                } catch (e) {}
-            }
-            return true;
-        }
-
-        // ================================================================
-        // SAVE FRIENDS
-        // ================================================================
-        function saveFriends() {
-            try {
-                localStorage.setItem('salink_friends', JSON.stringify(friends));
-            } catch (e) {
-                console.warn('Gagal menyimpan friends:', e);
-            }
-        }
-
-        // ================================================================
-        // LOAD NOTIFICATIONS
-        // ================================================================
-        function loadNotifications() {
-            try {
-                const saved = localStorage.getItem('salink_notifications');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed)) {
-                        notifications = parsed;
-                        return true;
-                    }
-                }
-            } catch (e) {
-                console.warn('Gagal memuat notifikasi:', e);
-            }
-            
-            if (notifications.length === 0) {
-                generateSampleNotifications();
-            }
-            return true;
-        }
-
-        // ================================================================
-        // LOAD INVITES
-        // ================================================================
-        async function loadInvites() {
-            try {
-                const invites = await apiGetInvites();
-                if (invites && invites.length > 0) {
-                    localStorage.setItem('salink_invites', JSON.stringify(invites));
-                    const pendingInvites = invites.filter(i => i.to === currentUser?.username && i.status === 'pending');
-                    inviteCount = pendingInvites.length;
-                    updateInviteBadge();
-                    console.log('✅ Invites: ' + invites.length + ' data');
-                }
-            } catch (e) {
-                console.warn('⚠️ Gagal load invites:', e);
-                const saved = localStorage.getItem('salink_invites');
-                if (saved) {
-                    const invites = JSON.parse(saved);
-                    const pendingInvites = invites.filter(i => i.to === currentUser?.username && i.status === 'pending');
-                    inviteCount = pendingInvites.length;
-                    updateInviteBadge();
-                }
-            }
-        }
-
-        // ================================================================
-        // UPDATE INVITE BADGE
-        // ================================================================
-        function updateInviteBadge() {
-            // Tidak ada badge invite di profil, tapi kita simpan state
-        }
-
-        // ================================================================
-        // SAVE NOTIFICATIONS
-        // ================================================================
-        function saveNotifications() {
-            try {
-                localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-            } catch (e) {
-                console.warn('Gagal menyimpan notifikasi:', e);
-            }
-        }
-
-        // ================================================================
-        // GENERATE SAMPLE NOTIFICATIONS
-        // ================================================================
-        function generateSampleNotifications() {
-            const now = Date.now();
-            const notifTypes = [
-                { type: 'inbox', title: '📩 Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat', sender: 'Bpk. Ahmad', username: 'ahmad' },
-                { type: 'invite', title: '📨 Undangan', msg: 'Sdri. Rina mengundang Anda berteman', sender: 'Sdri. Rina', username: 'rina' },
-                { type: 'comment', title: '💬 Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda', sender: 'Bpk. Joko', username: 'joko' },
-                { type: 'profile', title: '👤 Pengikut Baru', msg: 'Sdri. Dewi mengikuti Anda', sender: 'Sdri. Dewi', username: 'dewi' }
-            ];
-            
-            notifTypes.forEach((nt, index) => {
-                const timeOffset = index * 5 * 60000;
-                notifications.push({
-                    id: ++notificationIdCounter,
-                    type: nt.type,
-                    title: nt.title,
-                    message: nt.msg,
-                    sender: nt.sender,
-                    senderUsername: nt.username,
-                    link: '#',
-                    postId: null,
-                    timestamp: now - timeOffset,
-                    read: index > 1,
-                    soundKey: 'notifikasi'
-                });
-            });
-            saveNotifications();
-            updateNotifBadge();
-        }
-
-        // ================================================================
-        // UPDATE NOTIF BADGE
-        // ================================================================
-        function updateNotifBadge() {
-            const unread = notifications.filter(n => !n.read).length;
-            const badge = document.getElementById('notifModalBadge');
-            if (badge) {
-                badge.textContent = unread > 0 ? unread : '0';
-            }
-        }
-
-        // ================================================================
-        // RENDER NOTIFICATIONS
-        // ================================================================
-        function renderNotifications() {
-            const body = document.getElementById('notifModalBody');
-            body.innerHTML = '';
-            
-            if (notifications.length === 0) {
-                body.innerHTML = `
-                    <div style="text-align:center;padding:30px 0;color:var(--text-muted);">
-                        <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada notifikasi</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            notifications.forEach(notif => {
-                const item = document.createElement('div');
-                item.style.cssText = `
-                    background: ${notif.read ? 'var(--bg-input)' : 'rgba(88,166,255,0.08)'};
-                    border-radius: 10px;
-                    padding: 12px 14px;
-                    margin-bottom: 8px;
-                    border-left: 3px solid ${notif.read ? 'var(--border-color)' : 'var(--accent-blue)'};
-                    cursor: pointer;
-                    transition: all 0.3s;
-                `;
-                
-                const iconMap = {
-                    'inbox': 'fa-inbox',
-                    'invite': 'fa-user-plus',
-                    'comment': 'fa-comment',
-                    'profile': 'fa-eye',
-                    'post': 'fa-file-alt',
-                    'fire': 'fa-fire',
-                    'death': 'fa-skull',
-                    'theft': 'fa-gem',
-                    'disaster': 'fa-house-damage'
-                };
-                
-                const senderHtml = notif.sender && notif.sender !== 'Sistem' ? 
-                    `<a href="#" onclick="event.preventDefault(); openProfileUser('${notif.senderUsername || notif.sender}');" style="color:var(--accent-blue);text-decoration:none;cursor:pointer;">${notif.sender}</a>` : 
-                    notif.sender;
-                
-                item.innerHTML = `
-                    <div style="display:flex;align-items:center;gap:10px;">
-                        <div style="width:32px;height:32px;border-radius:50%;background:rgba(88,166,255,0.15);display:flex;align-items:center;justify-content:center;color:var(--accent-blue);">
-                            <i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i>
-                        </div>
-                        <div style="flex:1;min-width:0;">
-                            <div style="font-size:0.8rem;font-weight:500;color:var(--text-primary);">${notif.title}</div>
-                            <div style="font-size:0.7rem;color:var(--text-secondary);">${notif.message}</div>
-                            <div style="font-size:0.55rem;color:var(--text-muted);margin-top:3px;">
-                                ${getTimeAgo(notif.timestamp)} • ${senderHtml}
-                            </div>
-                        </div>
-                        ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;"></div>` : ''}
-                    </div>
-                `;
-                
-                item.addEventListener('click', () => {
-                    notif.read = true;
-                    saveNotifications();
-                    updateNotifBadge();
-                    renderNotifications();
-                    
-                    if (notif.type === 'inbox' || notif.type === 'post' || notif.type === 'comment') {
-                        document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' });
-                    } else if (notif.sender && notif.sender !== 'Sistem') {
-                        openProfileUser(notif.senderUsername || notif.sender);
-                    }
-                });
-                
-                body.appendChild(item);
-            });
-        }
-
-        // ================================================================
-        // OPEN PESAN MODAL - SAMA DENGAN NOTIF
-        // ================================================================
-        function openPesanModal() {
-            renderNotifications();
-            document.getElementById('notifModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeNotifModal() {
-            document.getElementById('notifModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // ================================================================
-        // BUKA HALAMAN PESAN-MASUK.HTML
-        // ================================================================
-        function openPesanPage() {
-            if (profileUser?.username) {
-                window.open(`pesan-masuk.html?to=${profileUser.username}&name=${encodeURIComponent(profileUser.fullName)}`, '_blank');
-            } else {
-                showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
-            }
-        }
-
-        // ================================================================
-        // RENDER PROFILE
-        // ================================================================
-        function renderProfile() {
-            if (!profileUser) return;
-            
-            const avatarEl = document.getElementById('profileAvatarLarge');
-            if (profileUser.profilePicture) {
-                avatarEl.innerHTML = `<img src="${profileUser.profilePicture}" alt="Profile">`;
-            } else {
-                avatarEl.innerHTML = profileUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
-            }
-            
-            document.getElementById('profileName').textContent = profileUser.fullName || 'Nama Pengguna';
-            document.getElementById('profileUsername').textContent = `@${profileUser.username || 'username'}`;
-            document.getElementById('profileBio').textContent = profileUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
-            
-            const userPosts = posts.filter(p => p.userId === profileUser.username);
-            document.getElementById('profileStatPosts').textContent = userPosts.length;
-            
-            const followerCount = friends.filter(f => f.username !== profileUser.username).length;
-            document.getElementById('profileStatFollowers').textContent = followerCount > 0 ? followerCount : '0';
-            
-            const followingCount = Math.floor(Math.random() * 3) + 1;
-            document.getElementById('profileStatFollowing').textContent = followingCount;
-            
-            renderProfilePosts(userPosts);
-            
-            // Update tombol PESAN
-            const pesanBtn = document.getElementById('profilePesanBtn');
-            if (pesanBtn) {
-                pesanBtn.href = `pesan-masuk.html?to=${profileUser.username}&name=${encodeURIComponent(profileUser.fullName)}`;
-                pesanBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    openPesanPage();
-                });
-            }
+        function getTimeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            const m = Math.floor(diff / 60000);
+            if (m < 1) return 'Baru saja';
+            if (m < 60) return `${m} menit lalu`;
+            const h = Math.floor(m / 60);
+            if (h < 24) return `${h} jam lalu`;
+            return `${Math.floor(h / 24)} hari lalu`;
         }
 
         // ================================================================
@@ -2241,7 +1507,7 @@
         function openProfileUser(username) {
             if (!username) {
                 if (currentUser) {
-                    window.open(`profile-user.html?username=${currentUser.username}`, '_blank');
+                    window.open(`profile-user.html?username=${encodeURIComponent(currentUser.username)}`, '_blank');
                 } else {
                     window.open('profile-user.html', '_blank');
                 }
@@ -2251,26 +1517,132 @@
         }
 
         // ================================================================
-        // GET TIME AGO
+        // LOAD DATA
         // ================================================================
-        function getTimeAgo(timestamp) {
-            const diff = Date.now() - timestamp;
-            const seconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-            const weeks = Math.floor(days / 7);
-            const months = Math.floor(days / 30);
-            const years = Math.floor(days / 365);
-            
-            if (seconds < 60) return 'Baru saja';
-            if (minutes < 60) return `${minutes} menit yang lalu`;
-            if (minutes < 120) return '1 jam yang lalu';
-            if (hours < 24) return `${hours} jam yang lalu`;
-            if (days < 7) return `${days} hari yang lalu`;
-            if (weeks < 4) return `${weeks} minggu yang lalu`;
-            if (months < 12) return `${months} bulan yang lalu`;
-            return `${years} tahun yang lalu`;
+        async function loadAllData() {
+            try {
+                const savedUser = localStorage.getItem('salink_user');
+                if (savedUser) {
+                    try {
+                        currentUser = JSON.parse(savedUser);
+                        profileUser = currentUser;
+                    } catch (e) {
+                        currentUser = null;
+                        profileUser = null;
+                    }
+                }
+
+                if (!profileUser) {
+                    profileUser = {
+                        fullName: 'Pengguna SALINK',
+                        username: 'pengguna',
+                        email: 'pengguna@salink.id',
+                        gender: 'male',
+                        phone: '',
+                        country: 'Indonesia',
+                        province: '',
+                        city: '',
+                        district: '',
+                        village: '',
+                        address: '',
+                        bio: 'Bergabung di SALINK untuk keamanan bersama',
+                        profilePicture: null,
+                        joinedDate: new Date().toLocaleString('id-ID')
+                    };
+                }
+
+                // Load posts dari Spreadsheet
+                const postsData = await apiGetPosts();
+                if (postsData && postsData.length > 0) {
+                    posts = postsData;
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
+                } else {
+                    const saved = localStorage.getItem('salink_posts');
+                    if (saved) posts = JSON.parse(saved);
+                }
+
+                // Load friends
+                const users = await apiGetUsers();
+                if (users && users.length > 0) {
+                    friends = users.filter(u => u.username !== profileUser?.username).map((u, index) => ({
+                        id: ++friendIdCounter,
+                        name: u.fullName,
+                        username: u.username,
+                        gender: u.gender || 'male',
+                        status: u.status || 'Online',
+                        avatar: u.profilePicture || null
+                    }));
+                    localStorage.setItem('salink_friends', JSON.stringify(friends));
+                } else {
+                    const saved = localStorage.getItem('salink_friends');
+                    if (saved) friends = JSON.parse(saved);
+                }
+
+                // Load notifications
+                const notifs = await apiGetNotifications();
+                if (notifs && notifs.length > 0) {
+                    notifications = notifs;
+                    let maxId = 0;
+                    notifications.forEach(n => { const numId = parseInt(n.id); if (!isNaN(numId) && numId > maxId) maxId = numId; });
+                    notificationIdCounter = maxId;
+                    localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+                } else {
+                    const saved = localStorage.getItem('salink_notifications');
+                    if (saved) notifications = JSON.parse(saved);
+                }
+
+                // Load invites
+                const invites = await apiGetInvites();
+                if (invites) {
+                    localStorage.setItem('salink_invites', JSON.stringify(invites));
+                    const pendingInvites = invites.filter(i => i.to === currentUser?.username && i.status === 'pending');
+                    inviteCount = pendingInvites.length;
+                }
+
+                renderProfile();
+                renderProfilePosts(posts.filter(p => p.userId === profileUser?.username));
+                updateNotifBadge();
+
+            } catch (error) {
+                console.error('❌ Gagal load data:', error);
+            }
+        }
+
+        // ================================================================
+        // RENDER PROFILE
+        // ================================================================
+        function renderProfile() {
+            if (!profileUser) return;
+
+            const avatarEl = document.getElementById('profileAvatarLarge');
+            if (profileUser.profilePicture) {
+                avatarEl.innerHTML = `<img src="${profileUser.profilePicture}" alt="Profile">`;
+            } else {
+                avatarEl.innerHTML = profileUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
+            }
+
+            document.getElementById('profileName').textContent = profileUser.fullName || 'Nama Pengguna';
+            document.getElementById('profileUsername').textContent = `@${profileUser.username || 'username'}`;
+            document.getElementById('profileBio').textContent = profileUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
+
+            const userPosts = posts.filter(p => p.userId === profileUser.username);
+            document.getElementById('profileStatPosts').textContent = userPosts.length;
+
+            const followerCount = friends.length;
+            document.getElementById('profileStatFollowers').textContent = followerCount > 0 ? followerCount : '0';
+
+            const followingCount = Math.floor(Math.random() * 3) + 1;
+            document.getElementById('profileStatFollowing').textContent = followingCount;
+
+            // Update tombol PESAN
+            const pesanBtn = document.getElementById('profilePesanBtn');
+            if (pesanBtn) {
+                pesanBtn.href = `pesan-masuk.html?to=${profileUser.username}&name=${encodeURIComponent(profileUser.fullName)}`;
+                pesanBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.open(`pesan-masuk.html?to=${profileUser.username}&name=${encodeURIComponent(profileUser.fullName)}`, '_blank');
+                });
+            }
         }
 
         // ================================================================
@@ -2278,8 +1650,9 @@
         // ================================================================
         function renderProfilePosts(userPosts) {
             const container = document.getElementById('profilePosts');
+            if (!container) return;
             container.innerHTML = '';
-            
+
             if (!userPosts || userPosts.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
@@ -2290,141 +1663,75 @@
                 `;
                 return;
             }
-            
+
             userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
-                const postEl = document.createElement('div');
-                postEl.className = 'post';
-                postEl.id = `post-${post.id}`;
-                
-                const profilePic = post.userProfilePic 
-                    ? `<img src="${post.userProfilePic}" alt="Profile">` 
-                    : (post.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                
+                const el = document.createElement('div');
+                el.className = 'post';
+                el.id = `post-${post.id}`;
+
+                const pp = post.userProfilePic ? `<img src="${post.userProfilePic}">` : `<i class="fas ${post.userGender === 'female' ? 'fa-female' : 'fa-male'}"></i>`;
                 let mediaHTML = '';
-                if (post.mediaType === 'image') {
-                    mediaHTML = `<div class="post-media"><img src="${post.mediaData}" alt="Post media"></div>`;
-                } else if (post.mediaType === 'video') {
-                    mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
-                }
-                
+                if (post.mediaType === 'image') mediaHTML = `<div class="post-media"><img src="${post.mediaData}"></div>`;
+                else if (post.mediaType === 'video') mediaHTML = `<div class="post-media"><video controls><source src="${post.mediaData}"></video></div>`;
                 const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
                 const specialBadge = post.isSpecial ? `<span style="background:rgba(88,166,255,0.15);padding:2px 8px;border-radius:10px;font-size:0.5rem;color:var(--accent-blue);margin-left:6px;">🚨 Khusus</span>` : '';
-                
-                postEl.innerHTML = `
+
+                el.innerHTML = `
                     <div class="post-header">
-                        <div class="post-profile-pic" onclick="openProfileUser('${post.userId}')">
-                            ${profilePic}
-                        </div>
-                        <div class="post-user-info">
-                            <h4>${post.userFullName} ${specialBadge}</h4>
-                            <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
-                        </div>
+                        <div class="post-profile-pic" onclick="openProfileUser('${post.userId}')">${pp}</div>
+                        <div class="post-user-info"><h4>${post.userFullName} ${specialBadge}</h4><small>${new Date(post.timestamp).toLocaleString('id-ID')}</small></div>
                         ${post.userId === currentUser?.username ? `
-                            <button class="post-menu-toggle" data-post-id="${post.id}">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
+                            <button class="post-menu-toggle" data-post-id="${post.id}"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="post-menu-dropdown" id="postMenu-${post.id}">
-                                <button class="menu-item edit-post" data-post-id="${post.id}">
-                                    <i class="fas fa-edit"></i> Edit Postingan
-                                </button>
+                                <button class="menu-item edit-post" data-post-id="${post.id}"><i class="fas fa-edit"></i> Edit</button>
                             </div>
                         ` : ''}
                     </div>
-                    <div class="post-content">
-                        ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
-                        ${mediaHTML}
-                        ${post.isSpecial && post.specialData ? `
-                            <div style="margin-top:6px;padding:6px 10px;background:var(--bg-input);border-radius:6px;border-left:3px solid var(--accent-blue);">
-                                <div style="font-size:0.65rem;color:var(--accent-blue);">
-                                    <span>🚨</span>
-                                    <strong>${post.specialData.type ? post.specialData.type.toUpperCase() : 'Khusus'}</strong>
-                                </div>
-                                <div style="font-size:0.6rem;color:var(--text-secondary);">
-                                    📍 ${post.specialData.location || 'Lokasi tidak diketahui'}
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
+                    <div class="post-content">${post.text ? `<div class="post-text">${post.text}</div>` : ''}${mediaHTML}</div>
                     <div class="post-actions">
-                        <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
-                            <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
-                            <span>Suka</span>
-                            <span class="like-count">${post.likes && post.likes.length > 0 ? post.likes.length : ''}</span>
-                        </div>
-                        <div class="post-action comment-toggle" data-post-id="${post.id}">
-                            <i class="far fa-comment"></i>
-                            <span>Komentar</span>
-                            <span>(${post.comments ? post.comments.length : 0})</span>
-                        </div>
-                        <div class="post-action share" data-post-id="${post.id}">
-                            <i class="fas fa-share-alt"></i>
-                            <span>Bagikan</span>
-                        </div>
-                        ${post.userId === currentUser?.username ? `
-                            <div class="post-action delete" data-post-id="${post.id}">
-                                <i class="fas fa-trash"></i>
-                                <span>Hapus</span>
-                            </div>
-                        ` : ''}
+                        <div class="post-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}"><i class="${isLiked ? 'fas' : 'far'} fa-heart"></i><span>Suka</span><span class="like-count">${post.likes?.length || ''}</span></div>
+                        <div class="post-action comment-toggle" data-post-id="${post.id}"><i class="far fa-comment"></i><span>Komentar</span><span>(${post.comments?.length || 0})</span></div>
+                        <div class="post-action share" data-post-id="${post.id}"><i class="fas fa-share-alt"></i><span>Bagikan</span></div>
+                        ${post.userId === currentUser?.username ? `<div class="post-action delete" data-post-id="${post.id}" style="color:var(--accent-red);margin-left:auto;"><i class="fas fa-trash"></i><span>Hapus</span></div>` : ''}
                     </div>
-                    <div class="comments-section" id="comments-${post.id}">
-                        ${post.comments ? post.comments.map(comment => {
-                            const commentProfilePic = comment.userProfilePic 
-                                ? `<img src="${comment.userProfilePic}" alt="Profile">` 
-                                : (comment.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                            return `
-                                <div class="comment" id="comment-${comment.id}">
-                                    <div class="comment-main">
-                                        <div class="comment-profile-pic" onclick="openProfileUser('${comment.userId}')">
-                                            ${commentProfilePic}
-                                        </div>
-                                        <div class="comment-content">
-                                            <div class="comment-user" onclick="openProfileUser('${comment.userId}')">${comment.userFullName}</div>
-                                            <div class="comment-text">${comment.text}</div>
-                                            <div class="comment-time">${getTimeAgo(comment.timestamp)}</div>
-                                            <div class="comment-actions">
-                                                <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${comment.id}">Balas</span>
+                    <div class="comments-section" id="profile-comments-${post.id}">${(post.comments || []).map(c => `
+                        <div class="comment">
+                            <div class="comment-main">
+                                <div class="comment-profile-pic" onclick="openProfileUser('${c.userId}')">${c.userProfilePic ? `<img src="${c.userProfilePic}">` : `<i class="fas ${c.userGender === 'female' ? 'fa-female' : 'fa-male'}"></i>`}</div>
+                                <div class="comment-content">
+                                    <div class="comment-user" onclick="openProfileUser('${c.userId}')">${c.userFullName}</div>
+                                    <div class="comment-text">${c.text}</div>
+                                    <div class="comment-time">${getTimeAgo(c.timestamp)}</div>
+                                    <div class="comment-actions">
+                                        <span class="comment-action reply-comment-action" data-post-id="${post.id}" data-comment-id="${c.id}">Balas</span>
+                                    </div>
+                                </div>
+                            </div>
+                            ${c.replies ? c.replies.map(r => `
+                                <div class="comment-replies">
+                                    <div class="reply-comment">
+                                        <div class="comment-main">
+                                            <div class="comment-profile-pic" onclick="openProfileUser('${r.userId}')">${r.userProfilePic ? `<img src="${r.userProfilePic}">` : `<i class="fas ${r.userGender === 'female' ? 'fa-female' : 'fa-male'}"></i>`}</div>
+                                            <div class="comment-content">
+                                                <div class="comment-user" onclick="openProfileUser('${r.userId}')">${r.userFullName}</div>
+                                                <div class="comment-text">${r.text}</div>
+                                                <div class="comment-time">${getTimeAgo(r.timestamp)}</div>
                                             </div>
                                         </div>
                                     </div>
-                                    ${comment.replies && comment.replies.length > 0 ? `
-                                        <div class="comment-replies">
-                                            ${comment.replies.map(reply => {
-                                                const replyProfilePic = reply.userProfilePic 
-                                                    ? `<img src="${reply.userProfilePic}" alt="Profile">` 
-                                                    : (reply.userGender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>');
-                                                return `
-                                                    <div class="reply-comment">
-                                                        <div class="comment-main">
-                                                            <div class="comment-profile-pic" onclick="openProfileUser('${reply.userId}')">
-                                                                ${replyProfilePic}
-                                                            </div>
-                                                            <div class="comment-content">
-                                                                <div class="comment-user" onclick="openProfileUser('${reply.userId}')">${reply.userFullName}</div>
-                                                                <div class="comment-text">${reply.text}</div>
-                                                                <div class="comment-time">${getTimeAgo(reply.timestamp)}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                `;
-                                            }).join('')}
-                                        </div>
-                                    ` : ''}
                                 </div>
-                            `;
-                        }).join('') : ''}
-                    </div>
+                            `).join('') : ''}
+                        </div>
+                    `).join('')}</div>
                     <div class="add-comment">
                         <input type="text" class="comment-input" placeholder="Tulis komentar..." data-post-id="${post.id}">
-                        <button class="send-comment" data-post-id="${post.id}">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+                        <button class="send-comment" data-post-id="${post.id}"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 `;
-                
-                container.appendChild(postEl);
+
+                container.appendChild(el);
             });
-            
+
             attachPostListeners();
         }
 
@@ -2433,59 +1740,52 @@
         // ================================================================
         function attachPostListeners() {
             // LIKE
-            document.querySelectorAll('.post-action.liked, .post-action[data-post-id]').forEach(el => {
-                el.addEventListener('click', function(e) {
-                    const postId = this.dataset.postId;
-                    if (!postId) return;
-                    
-                    if (!currentUser) {
-                        showToast('🔒 Login Diperlukan', 'Silakan masuk untuk menyukai postingan', 'fa-lock');
-                        return;
-                    }
-                    
-                    const post = posts.find(p => p.id === postId);
+            document.querySelectorAll('#profilePosts .post-action.liked, #profilePosts .post-action[data-post-id]').forEach(el => {
+                el.addEventListener('click', function() {
+                    if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
+                    const post = posts.find(p => p.id === this.dataset.postId);
                     if (!post) return;
-                    
-                    const index = post.likes.indexOf(currentUser.username);
-                    if (index > -1) {
-                        post.likes.splice(index, 1);
-                    } else {
-                        post.likes.push(currentUser.username);
-                        // 🔥 SYNC KE SPREADSHEET
-                        syncActionToSpreadsheet('like_post', { postId: postId, user: currentUser.username });
-                    }
-                    savePosts();
+                    const idx = post.likes.indexOf(currentUser.username);
+                    if (idx > -1) post.likes.splice(idx, 1);
+                    else { post.likes.push(currentUser.username); }
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
                 });
             });
-            
-            // COMMENT TOGGLE
-            document.querySelectorAll('.comment-toggle').forEach(el => {
+
+            // DELETE
+            document.querySelectorAll('#profilePosts .post-action.delete').forEach(el => {
                 el.addEventListener('click', function() {
+                    if (!currentUser) return;
+                    if (!confirm('Hapus postingan ini?')) return;
                     const postId = this.dataset.postId;
-                    const commentsSection = document.getElementById(`comments-${postId}`);
-                    if (commentsSection) {
-                        commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
-                    }
+                    const post = posts.find(p => p.id === postId);
+                    if (post) syncActionToSpreadsheet('delete_post', { postId: postId });
+                    posts = posts.filter(p => p.id !== postId);
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
+                    renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
+                    document.getElementById('profileStatPosts').textContent = posts.filter(p => p.userId === profileUser.username).length;
+                    showToast('🗑️ Dihapus', 'Postingan dihapus', 'fa-trash');
                 });
             });
-            
-            // SEND COMMENT
-            document.querySelectorAll('.send-comment').forEach(el => {
+
+            // COMMENT TOGGLE
+            document.querySelectorAll('#profilePosts .comment-toggle').forEach(el => {
                 el.addEventListener('click', function() {
-                    if (!currentUser) {
-                        showToast('🔒 Login Diperlukan', 'Silakan masuk untuk berkomentar', 'fa-lock');
-                        return;
-                    }
-                    
-                    const postId = this.dataset.postId;
+                    const sec = document.getElementById('profile-comments-' + this.dataset.postId);
+                    if (sec) sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+
+            // SEND COMMENT
+            document.querySelectorAll('#profilePosts .send-comment').forEach(el => {
+                el.addEventListener('click', function() {
+                    if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
                     const input = this.parentElement.querySelector('.comment-input');
                     const text = input.value.trim();
                     if (!text) return;
-                    
-                    const post = posts.find(p => p.id === postId);
+                    const post = posts.find(p => p.id === this.dataset.postId);
                     if (!post) return;
-                    
                     if (!post.comments) post.comments = [];
                     const comment = {
                         id: 'cmt-' + Date.now(),
@@ -2498,18 +1798,16 @@
                         replies: []
                     };
                     post.comments.push(comment);
-                    savePosts();
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
+                    syncActionToSpreadsheet('add_comment', { postId: post.id, comment: comment });
                     input.value = '';
                     showToast('✅ Berhasil', 'Komentar ditambahkan!', 'fa-check-circle');
-                    
-                    // 🔥 SYNC KE SPREADSHEET
-                    syncActionToSpreadsheet('add_comment', { postId: postId, comment: comment });
                 });
             });
-            
+
             // COMMENT INPUT ENTER
-            document.querySelectorAll('.comment-input').forEach(el => {
+            document.querySelectorAll('#profilePosts .comment-input').forEach(el => {
                 el.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         const sendBtn = this.parentElement.querySelector('.send-comment');
@@ -2517,25 +1815,19 @@
                     }
                 });
             });
-            
+
             // REPLY COMMENT
-            document.querySelectorAll('.reply-comment-action').forEach(el => {
+            document.querySelectorAll('#profilePosts .reply-comment-action').forEach(el => {
                 el.addEventListener('click', function() {
-                    if (!currentUser) {
-                        showToast('🔒 Login Diperlukan', 'Silakan masuk untuk membalas komentar', 'fa-lock');
-                        return;
-                    }
-                    
+                    if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
                     const postId = this.dataset.postId;
                     const commentId = this.dataset.commentId;
                     const replyText = prompt('Balas komentar:');
                     if (!replyText) return;
-                    
                     const post = posts.find(p => p.id === postId);
                     if (!post) return;
                     const comment = post.comments.find(c => c.id === commentId);
                     if (!comment) return;
-                    
                     if (!comment.replies) comment.replies = [];
                     const reply = {
                         id: 'reply-' + Date.now(),
@@ -2547,100 +1839,71 @@
                         timestamp: Date.now()
                     };
                     comment.replies.push(reply);
-                    savePosts();
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
-                    showToast('✅ Berhasil', 'Balasan ditambahkan!', 'fa-check-circle');
-                    
-                    // 🔥 SYNC KE SPREADSHEET
                     syncActionToSpreadsheet('add_reply', { postId: postId, commentId: commentId, reply: reply });
+                    showToast('✅ Berhasil', 'Balasan ditambahkan!', 'fa-check-circle');
                 });
             });
-            
+
             // SHARE
-            document.querySelectorAll('.post-action.share').forEach(el => {
+            document.querySelectorAll('#profilePosts .post-action.share').forEach(el => {
                 el.addEventListener('click', function() {
-                    const postId = this.dataset.postId;
-                    const post = posts.find(p => p.id === postId);
+                    const post = posts.find(p => p.id === this.dataset.postId);
                     if (!post) return;
                     const text = post.text || 'Postingan SALINK';
-                    const url = window.location.href;
                     if (navigator.share) {
-                        navigator.share({
-                            title: 'Postingan SALINK',
-                            text: text,
-                            url: url
-                        }).catch(() => {});
+                        navigator.share({ title: 'Postingan SALINK', text: text, url: window.location.href }).catch(() => {});
                     } else {
-                        navigator.clipboard.writeText(`${text}\n${url}`).then(() => {
-                            showToast('📋 Disalin', 'Link postingan disalin ke clipboard', 'fa-copy');
+                        navigator.clipboard.writeText(`${text}\n${window.location.href}`).then(() => {
+                            showToast('📋 Disalin', 'Link disalin', 'fa-copy');
                         }).catch(() => {
-                            showToast('📋 Disalin', 'Link: ' + url, 'fa-copy');
+                            showToast('📋 Disalin', 'Link: ' + window.location.href, 'fa-copy');
                         });
                     }
                 });
             });
-            
-            // DELETE POST
-            document.querySelectorAll('.post-action.delete').forEach(el => {
+
+            // EDIT POST
+            document.querySelectorAll('#profilePosts .edit-post').forEach(el => {
                 el.addEventListener('click', function() {
                     if (!currentUser) return;
-                    const postId = this.dataset.postId;
-                    if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
-                        const post = posts.find(p => p.id === postId);
-                        if (post) {
-                            // 🔥 SYNC KE SPREADSHEET
-                            syncActionToSpreadsheet('delete_post', { postId: postId });
-                        }
-                        posts = posts.filter(p => p.id !== postId);
-                        savePosts();
-                        renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
-                        showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
-                    }
-                });
-            });
-            
-            // POST MENU TOGGLE
-            document.querySelectorAll('.post-menu-toggle').forEach(el => {
-                el.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const postId = this.dataset.postId;
-                    const menu = document.getElementById(`postMenu-${postId}`);
-                    if (menu) {
-                        menu.classList.toggle('active');
-                    }
-                });
-            });
-            
-            // EDIT POST
-            document.querySelectorAll('.edit-post').forEach(el => {
-                el.addEventListener('click', function() {
-                    const postId = this.dataset.postId;
-                    const post = posts.find(p => p.id === postId);
+                    const post = posts.find(p => p.id === this.dataset.postId);
                     if (!post) return;
                     const newText = prompt('Edit postingan:', post.text);
                     if (newText !== null) {
                         post.text = newText;
-                        savePosts();
+                        localStorage.setItem('salink_posts', JSON.stringify(posts));
                         renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
-                        showToast('✅ Diperbarui', 'Postingan berhasil diedit', 'fa-check-circle');
-                        // 🔥 SYNC KE SPREADSHEET
-                        syncActionToSpreadsheet('edit_post', { postId: postId, newText: newText });
+                        syncActionToSpreadsheet('edit_post', { postId: post.id, newText: newText });
+                        showToast('✅ Diperbarui', 'Postingan diedit', 'fa-check-circle');
                     }
-                    const menu = document.getElementById(`postMenu-${postId}`);
+                    const menu = document.getElementById(`postMenu-${post.id}`);
                     if (menu) menu.classList.remove('active');
                 });
+            });
+
+            // POST MENU TOGGLE
+            document.querySelectorAll('#profilePosts .post-menu-toggle').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const menu = document.getElementById(`postMenu-${this.dataset.postId}`);
+                    if (menu) menu.classList.toggle('active');
+                });
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.post-menu-toggle')) {
+                    document.querySelectorAll('.post-menu-dropdown').forEach(m => m.classList.remove('active'));
+                }
             });
         }
 
         // ================================================================
-        // FOTO MODAL FUNCTIONS
+        // FOTO MODAL
         // ================================================================
         function openFotoModal() {
-            if (!currentUser) {
-                showToast('🔒 Login Diperlukan', 'Silakan masuk untuk melihat foto', 'fa-lock');
-                return;
-            }
-            
+            if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
             document.getElementById('fotoModal').classList.add('active');
             document.body.style.overflow = 'hidden';
             renderFotoPosts(currentFotoFilter);
@@ -2654,159 +1917,85 @@
         function renderFotoPosts(filter) {
             const grid = document.getElementById('fotoGrid');
             grid.innerHTML = '';
-            
             const userPosts = posts.filter(p => p.userId === profileUser?.username && (p.mediaType === 'image' || p.mediaType === 'video'));
-            
-            let filteredPosts = userPosts;
-            if (filter === 'foto') {
-                filteredPosts = userPosts.filter(p => p.mediaType === 'image');
-            } else if (filter === 'video') {
-                filteredPosts = userPosts.filter(p => p.mediaType === 'video');
-            }
-            
-            document.getElementById('fotoModalCount').textContent = filteredPosts.length;
-            document.getElementById('fotoTotalCount').textContent = `Total: ${filteredPosts.length}`;
-            
-            if (filteredPosts.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--text-muted);">
-                        <i class="fas fa-images" style="font-size:3rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada ${filter === 'foto' ? 'foto' : filter === 'video' ? 'video' : 'foto/video'}</p>
-                    </div>
-                `;
+            let filtered = userPosts;
+            if (filter === 'foto') filtered = userPosts.filter(p => p.mediaType === 'image');
+            else if (filter === 'video') filtered = userPosts.filter(p => p.mediaType === 'video');
+            document.getElementById('fotoModalCount').textContent = filtered.length;
+            document.getElementById('fotoTotalCount').textContent = `Total: ${filtered.length}`;
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--text-muted);"><i class="fas fa-images" style="font-size:3rem;display:block;margin-bottom:10px;opacity:0.3;"></i><p>Belum ada foto/video</p></div>`;
                 return;
             }
-            
-            filteredPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
+            filtered.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
                 const item = document.createElement('div');
                 item.className = 'foto-item';
-                
                 const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
                 const isOwner = currentUser && post.userId === currentUser.username;
-                const mediaClass = post.mediaType === 'video' ? 'video' : '';
-                
-                let mediaHtml = '';
-                if (post.mediaType === 'image') {
-                    mediaHtml = `<img src="${post.mediaData}" alt="Foto" class="foto-media" onclick="openImagePreview('${post.mediaData}')">`;
-                } else if (post.mediaType === 'video') {
-                    mediaHtml = `<video controls class="foto-media video" onclick="this.paused ? this.play() : this.pause()"><source src="${post.mediaData}"></video>`;
-                }
-                
-                const recentComments = post.comments ? post.comments.slice(-2) : [];
-                
+                let mediaHtml = post.mediaType === 'image' ?
+                    `<img src="${post.mediaData}" class="foto-media" onclick="window.open('${post.mediaData}','_blank')">` :
+                    `<video controls class="foto-media video"><source src="${post.mediaData}"></video>`;
                 item.innerHTML = `
                     ${mediaHtml}
-                    <div class="foto-info">
-                        <span class="foto-user" onclick="openProfileUser('${post.userId}')">${post.userFullName}</span>
-                        <span style="font-size:0.5rem;color:var(--text-muted);">${getTimeAgo(post.timestamp)}</span>
-                    </div>
+                    <div class="foto-info"><span class="foto-user" onclick="openProfileUser('${post.userId}')">${post.userFullName}</span><span style="font-size:0.5rem;color:var(--text-muted);">${getTimeAgo(post.timestamp)}</span></div>
                     <div class="foto-actions">
-                        <div class="foto-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}">
-                            <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
-                            <span>${post.likes && post.likes.length > 0 ? post.likes.length : '0'}</span>
-                        </div>
-                        <div class="foto-action" onclick="toggleFotoComments('${post.id}')">
-                            <i class="far fa-comment"></i>
-                            <span>${post.comments ? post.comments.length : '0'}</span>
-                        </div>
-                        ${isOwner ? `
-                            <div class="foto-action delete-foto" data-post-id="${post.id}">
-                                <i class="fas fa-trash"></i>
-                                <span>Hapus</span>
-                            </div>
-                        ` : ''}
+                        <div class="foto-action ${isLiked ? 'liked' : ''}" data-post-id="${post.id}"><i class="${isLiked ? 'fas' : 'far'} fa-heart"></i><span>${post.likes?.length || 0}</span></div>
+                        <div class="foto-action" onclick="toggleFotoComments('${post.id}')"><i class="far fa-comment"></i><span>${post.comments?.length || 0}</span></div>
+                        ${isOwner ? `<div class="foto-action delete-foto" data-post-id="${post.id}" style="color:var(--accent-red);margin-left:auto;"><i class="fas fa-trash"></i><span>Hapus</span></div>` : ''}
                     </div>
                     <div class="foto-comment-section" id="foto-comments-${post.id}" style="display:none;">
-                        ${recentComments.map(c => `
-                            <div class="foto-comment">
-                                <span class="foto-cmt-user" onclick="openProfileUser('${c.userId}')">${c.userFullName}</span>
-                                : ${c.text}
-                            </div>
-                        `).join('')}
-                        ${post.comments && post.comments.length > 2 ? `<div style="font-size:0.5rem;color:var(--text-muted);padding:2px 0;">+${post.comments.length - 2} komentar lainnya</div>` : ''}
-                        <div class="foto-add-comment">
-                            <input type="text" placeholder="Tulis komentar..." data-post-id="${post.id}">
-                            <button data-post-id="${post.id}"><i class="fas fa-paper-plane"></i></button>
-                        </div>
+                        ${(post.comments || []).slice(-2).map(c => `<div class="foto-comment"><span class="foto-cmt-user" onclick="openProfileUser('${c.userId}')">${c.userFullName}</span> : ${c.text}</div>`).join('')}
+                        ${post.comments && post.comments.length > 2 ? `<div style="font-size:0.5rem;color:var(--text-muted);padding:2px 0;">+${post.comments.length - 2} komentar</div>` : ''}
+                        <div class="foto-add-comment"><input type="text" placeholder="Tulis komentar..." data-post-id="${post.id}"><button data-post-id="${post.id}"><i class="fas fa-paper-plane"></i></button></div>
                     </div>
                 `;
-                
                 grid.appendChild(item);
             });
-            
             attachFotoListeners();
         }
 
         function toggleFotoComments(postId) {
             const section = document.getElementById(`foto-comments-${postId}`);
-            if (section) {
-                section.style.display = section.style.display === 'none' ? 'block' : 'none';
-            }
+            if (section) section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
 
         function attachFotoListeners() {
             document.querySelectorAll('.foto-action.liked, .foto-action[data-post-id]').forEach(el => {
-                el.addEventListener('click', function(e) {
-                    const postId = this.dataset.postId;
-                    if (!postId) return;
-                    
-                    if (!currentUser) {
-                        showToast('🔒 Login Diperlukan', 'Silakan masuk untuk menyukai', 'fa-lock');
-                        return;
-                    }
-                    
-                    const post = posts.find(p => p.id === postId);
+                el.addEventListener('click', function() {
+                    if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
+                    const post = posts.find(p => p.id === this.dataset.postId);
                     if (!post) return;
-                    
-                    const index = post.likes.indexOf(currentUser.username);
-                    if (index > -1) {
-                        post.likes.splice(index, 1);
-                    } else {
-                        post.likes.push(currentUser.username);
-                    }
-                    savePosts();
+                    const idx = post.likes.indexOf(currentUser.username);
+                    if (idx > -1) post.likes.splice(idx, 1);
+                    else post.likes.push(currentUser.username);
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
                     renderFotoPosts(currentFotoFilter);
                 });
             });
-            
+
             document.querySelectorAll('.delete-foto').forEach(el => {
-                el.addEventListener('click', function(e) {
+                el.addEventListener('click', function() {
+                    if (!currentUser) return;
+                    if (!confirm('Hapus foto ini?')) return;
                     const postId = this.dataset.postId;
-                    if (!postId) return;
-                    
-                    if (!currentUser) {
-                        showToast('🔒 Login Diperlukan', 'Silakan masuk untuk menghapus', 'fa-lock');
-                        return;
-                    }
-                    
-                    if (!confirm('Apakah Anda yakin ingin menghapus postingan ini?')) return;
-                    
+                    const post = posts.find(p => p.id === postId);
+                    if (post) syncActionToSpreadsheet('delete_post', { postId: postId });
                     posts = posts.filter(p => p.id !== postId);
-                    savePosts();
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
                     renderFotoPosts(currentFotoFilter);
-                    renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
-                    showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
-                    
-                    // 🔥 SYNC KE SPREADSHEET
-                    syncActionToSpreadsheet('delete_post', { postId: postId });
+                    showToast('🗑️ Dihapus', 'Foto dihapus', 'fa-trash');
                 });
             });
-            
+
             document.querySelectorAll('.foto-add-comment button').forEach(el => {
                 el.addEventListener('click', function() {
-                    if (!currentUser) {
-                        showToast('🔒 Login Diperlukan', 'Silakan masuk untuk berkomentar', 'fa-lock');
-                        return;
-                    }
-                    
+                    if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
                     const postId = this.dataset.postId;
                     const input = this.parentElement.querySelector('input');
                     const text = input.value.trim();
                     if (!text) return;
-                    
                     const post = posts.find(p => p.id === postId);
                     if (!post) return;
-                    
                     if (!post.comments) post.comments = [];
                     const comment = {
                         id: 'cmt-' + Date.now(),
@@ -2819,13 +2008,13 @@
                         replies: []
                     };
                     post.comments.push(comment);
-                    savePosts();
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
                     renderFotoPosts(currentFotoFilter);
                     input.value = '';
                     showToast('✅ Berhasil', 'Komentar ditambahkan!', 'fa-check-circle');
                 });
             });
-            
+
             document.querySelectorAll('.foto-add-comment input').forEach(el => {
                 el.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -2836,51 +2025,22 @@
             });
         }
 
-        function openImagePreview(imageSrc) {
-            const win = window.open('', '_blank');
-            if (win) {
-                win.document.write(`
-                    <html>
-                        <head><title>Preview Foto</title>
-                        <style>
-                            body { margin:0; display:flex; align-items:center; justify-content:center; min-height:100vh; background:#000; }
-                            img { max-width:100%; max-height:100vh; object-fit:contain; }
-                            .close { position:fixed; top:20px; right:20px; color:#fff; font-size:2rem; cursor:pointer; font-family:sans-serif; z-index:10; background:rgba(0,0,0,0.5); width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; }
-                            .close:hover { background:rgba(255,255,255,0.2); }
-                        </style>
-                        </head>
-                        <body>
-                            <button class="close" onclick="window.close()">&times;</button>
-                            <img src="${imageSrc}" alt="Preview">
-                        </body>
-                    </html>
-                `);
-                win.document.close();
-            }
-        }
-
-        // ================================================================
-        // SETUP FOTO FILTERS
-        // ================================================================
-        function setupFotoFilters() {
-            document.querySelectorAll('.filter-foto-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-foto-btn').forEach(b => {
-                        b.classList.remove('active');
-                        b.style.background = 'var(--bg-input)';
-                        b.style.color = 'var(--text-primary)';
-                        b.style.border = '1px solid var(--border-color)';
-                    });
-                    this.classList.add('active');
-                    this.style.background = 'var(--accent-blue-gradient)';
-                    this.style.color = '#fff';
-                    this.style.border = 'none';
-                    
-                    currentFotoFilter = this.dataset.filter;
-                    renderFotoPosts(currentFotoFilter);
+        document.querySelectorAll('.filter-foto-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-foto-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.style.background = 'var(--bg-input)';
+                    b.style.color = 'var(--text-primary)';
+                    b.style.border = '1px solid var(--border-color)';
                 });
+                this.classList.add('active');
+                this.style.background = 'var(--accent-blue-gradient)';
+                this.style.color = '#fff';
+                this.style.border = 'none';
+                currentFotoFilter = this.dataset.filter;
+                renderFotoPosts(currentFotoFilter);
             });
-        }
+        });
 
         // ================================================================
         // TEMAN MODAL
@@ -2889,37 +2049,35 @@
             const body = document.getElementById('temanModalBody');
             body.innerHTML = '';
             document.getElementById('totalTemanCount').textContent = friends.length;
-            
+
             if (friends.length === 0) {
                 body.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-users"></i>
                         <p>Belum ada teman</p>
+                        <p style="font-size:0.7rem;margin-top:4px;">Undang teman untuk mulai berteman!</p>
                     </div>
                 `;
             } else {
-                friends.forEach(friend => {
+                friends.forEach(f => {
                     const item = document.createElement('div');
                     item.className = 'friend-item';
-                    const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
-                    const statusColor = friend.status === 'Online' ? '#3fb950' : '#888';
-                    
+                    const avatarIcon = f.gender === 'female' ? 'fa-female' : 'fa-male';
+                    const statusColor = f.status === 'Online' ? '#3fb950' : '#888';
                     item.innerHTML = `
-                        <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
-                            ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
+                        <div class="friend-avatar" onclick="openProfileUser('${f.username}')">
+                            ${f.avatar ? `<img src="${f.avatar}">` : `<i class="fas ${avatarIcon}"></i>`}
                         </div>
                         <div class="friend-info">
-                            <div class="friend-name" onclick="openProfileUser('${friend.username}')" style="cursor:pointer;color:var(--accent-blue);">${friend.name}</div>
-                            <div class="friend-status">@${friend.username} • <span style="color:${statusColor};">${friend.status}</span></div>
+                            <div class="friend-name" onclick="openProfileUser('${f.username}')" style="cursor:pointer;color:var(--accent-blue);">${f.name}</div>
+                            <div class="friend-status">@${f.username} • <span style="color:${statusColor};">${f.status}</span></div>
                         </div>
-                        <button onclick="openProfileUser('${friend.username}')" style="background:var(--bg-input);color:var(--accent-blue);border:1px solid var(--accent-blue);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
-                            <i class="fas fa-eye"></i> Lihat
-                        </button>
+                        <button onclick="openProfileUser('${f.username}')" style="background:var(--bg-input);color:var(--accent-blue);border:1px solid var(--accent-blue);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;"><i class="fas fa-eye"></i> Lihat</button>
                     `;
                     body.appendChild(item);
                 });
             }
-            
+
             document.getElementById('temanModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2934,14 +2092,9 @@
         // ================================================================
         function openBiodataModal() {
             const body = document.getElementById('biodataModalBody');
-            
+
             if (!profileUser) {
-                body.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-user"></i>
-                        <p>Data profil tidak ditemukan</p>
-                    </div>
-                `;
+                body.innerHTML = `<div class="empty-state"><i class="fas fa-user"></i><p>Data profil tidak ditemukan</p></div>`;
             } else {
                 const bioData = {
                     'Nama Lengkap': profileUser.fullName || '-',
@@ -2958,7 +2111,7 @@
                     'Bio': profileUser.bio || '-',
                     'Bergabung': profileUser.joinedDate || '-'
                 };
-                
+
                 let html = '<div class="bio-data-content">';
                 Object.keys(bioData).forEach(key => {
                     html += `
@@ -2971,7 +2124,7 @@
                 html += '</div>';
                 body.innerHTML = html;
             }
-            
+
             document.getElementById('biodataModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -2982,41 +2135,28 @@
         }
 
         // ================================================================
-        // POSTINGAN MODAL
+        // POSTINGAN, PENGIKUT, MENGIKUTI MODAL
         // ================================================================
         function openPostinganModal() {
             const body = document.getElementById('postinganModalBody');
             const userPosts = posts.filter(p => p.userId === profileUser.username);
             document.getElementById('postinganCount').textContent = userPosts.length;
-            
             body.innerHTML = '';
-            
             if (userPosts.length === 0) {
-                body.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-file-alt"></i>
-                        <p>Belum ada postingan</p>
-                    </div>
-                `;
+                body.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><p>Belum ada postingan</p></div>`;
             } else {
-                userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(post => {
+                userPosts.sort((a, b) => b.timestamp - a.timestamp).forEach(p => {
                     const item = document.createElement('div');
                     item.className = 'friend-item';
-                    const specialBadge = post.isSpecial ? `🚨 Khusus` : '📝 Biasa';
+                    const specialBadge = p.isSpecial ? '🚨 Khusus' : '📝 Biasa';
                     item.innerHTML = `
-                        <div class="friend-avatar" style="background:var(--bg-input);border:1px solid var(--border-color);">
-                            <i class="fas fa-file-alt" style="color:var(--accent-blue);"></i>
-                        </div>
-                        <div class="friend-info">
-                            <div class="friend-name" style="font-size:0.75rem;">${post.text ? post.text.substring(0, 50) + (post.text.length > 50 ? '...' : '') : 'Postingan media'}</div>
-                            <div class="friend-status">${specialBadge} • ${getTimeAgo(post.timestamp)}</div>
-                        </div>
-                        <div style="font-size:0.6rem;color:var(--text-muted);">${new Date(post.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</div>
+                        <div class="friend-avatar" style="background:var(--bg-input);border:1px solid var(--border-color);"><i class="fas fa-file-alt" style="color:var(--accent-blue);"></i></div>
+                        <div class="friend-info"><div class="friend-name" style="font-size:0.75rem;">${p.text ? p.text.substring(0, 50) + (p.text.length > 50 ? '...' : '') : 'Postingan media'}</div><div class="friend-status">${specialBadge} • ${getTimeAgo(p.timestamp)}</div></div>
+                        <div style="font-size:0.6rem;color:var(--text-muted);">${new Date(p.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</div>
                     `;
                     body.appendChild(item);
                 });
             }
-            
             document.getElementById('postinganModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -3026,44 +2166,26 @@
             document.body.style.overflow = '';
         }
 
-        // ================================================================
-        // PENGIKUT MODAL
-        // ================================================================
         function openPengikutModal() {
             const body = document.getElementById('pengikutModalBody');
-            const followers = friends.filter(f => f.username !== profileUser.username);
+            const followers = friends;
             document.getElementById('pengikutCount').textContent = followers.length;
-            
             body.innerHTML = '';
-            
             if (followers.length === 0) {
-                body.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-user-friends"></i>
-                        <p>Belum ada pengikut</p>
-                    </div>
-                `;
+                body.innerHTML = `<div class="empty-state"><i class="fas fa-user-friends"></i><p>Belum ada pengikut</p></div>`;
             } else {
-                followers.slice(0, 20).forEach(friend => {
+                followers.slice(0, 20).forEach(f => {
                     const item = document.createElement('div');
                     item.className = 'friend-item';
-                    const avatarIcon = friend.gender === 'female' ? 'fa-female' : 'fa-male';
+                    const avatarIcon = f.gender === 'female' ? 'fa-female' : 'fa-male';
                     item.innerHTML = `
-                        <div class="friend-avatar" onclick="openProfileUser('${friend.username}')">
-                            ${friend.avatar ? `<img src="${friend.avatar}" alt="${friend.name}">` : `<i class="fas ${avatarIcon}"></i>`}
-                        </div>
-                        <div class="friend-info">
-                            <div class="friend-name" onclick="openProfileUser('${friend.username}')" style="cursor:pointer;color:var(--accent-blue);">${friend.name}</div>
-                            <div class="friend-status">@${friend.username}</div>
-                        </div>
-                        <button onclick="openProfileUser('${friend.username}')" style="background:var(--bg-input);color:var(--accent-blue);border:1px solid var(--accent-blue);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
-                            <i class="fas fa-eye"></i> Lihat
-                        </button>
+                        <div class="friend-avatar" onclick="openProfileUser('${f.username}')">${f.avatar ? `<img src="${f.avatar}">` : `<i class="fas ${avatarIcon}"></i>`}</div>
+                        <div class="friend-info"><div class="friend-name" onclick="openProfileUser('${f.username}')" style="cursor:pointer;color:var(--accent-blue);">${f.name}</div><div class="friend-status">@${f.username}</div></div>
+                        <button onclick="openProfileUser('${f.username}')" style="background:var(--bg-input);color:var(--accent-blue);border:1px solid var(--accent-blue);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;"><i class="fas fa-eye"></i> Lihat</button>
                     `;
                     body.appendChild(item);
                 });
             }
-            
             document.getElementById('pengikutModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -3073,9 +2195,6 @@
             document.body.style.overflow = '';
         }
 
-        // ================================================================
-        // MENGIKUTI MODAL
-        // ================================================================
         function openMengikutiModal() {
             const body = document.getElementById('mengikutiModalBody');
             const followingUsers = [
@@ -3085,37 +2204,22 @@
             ];
             const count = Math.floor(Math.random() * 3) + 1;
             document.getElementById('mengikutiCount').textContent = count;
-            
             body.innerHTML = '';
-            
             if (count === 0) {
-                body.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-user-plus"></i>
-                        <p>Belum mengikuti siapa pun</p>
-                    </div>
-                `;
+                body.innerHTML = `<div class="empty-state"><i class="fas fa-user-plus"></i><p>Belum mengikuti siapa pun</p></div>`;
             } else {
-                followingUsers.slice(0, count).forEach(user => {
-                    const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+                followingUsers.slice(0, count).forEach(u => {
+                    const avatarIcon = u.gender === 'female' ? 'fa-female' : 'fa-male';
                     const item = document.createElement('div');
                     item.className = 'friend-item';
                     item.innerHTML = `
-                        <div class="friend-avatar" onclick="openProfileUser('${user.username}')">
-                            <i class="fas ${avatarIcon}"></i>
-                        </div>
-                        <div class="friend-info">
-                            <div class="friend-name" onclick="openProfileUser('${user.username}')" style="cursor:pointer;color:var(--accent-blue);">${user.name}</div>
-                            <div class="friend-status">@${user.username}</div>
-                        </div>
-                        <button onclick="openProfileUser('${user.username}')" style="background:var(--bg-input);color:var(--accent-blue);border:1px solid var(--accent-blue);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;">
-                            <i class="fas fa-eye"></i> Lihat
-                        </button>
+                        <div class="friend-avatar" onclick="openProfileUser('${u.username}')"><i class="fas ${avatarIcon}"></i></div>
+                        <div class="friend-info"><div class="friend-name" onclick="openProfileUser('${u.username}')" style="cursor:pointer;color:var(--accent-blue);">${u.name}</div><div class="friend-status">@${u.username}</div></div>
+                        <button onclick="openProfileUser('${u.username}')" style="background:var(--bg-input);color:var(--accent-blue);border:1px solid var(--accent-blue);padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.6rem;"><i class="fas fa-eye"></i> Lihat</button>
                     `;
                     body.appendChild(item);
                 });
             }
-            
             document.getElementById('mengikutiModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -3126,29 +2230,69 @@
         }
 
         // ================================================================
+        // NOTIFICATIONS
+        // ================================================================
+        function updateNotifBadge() {
+            const unread = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notifModalBadge');
+            if (badge) badge.textContent = unread > 0 ? unread : '0';
+        }
+
+        function renderNotifications() {
+            const body = document.getElementById('notifModalBody');
+            body.innerHTML = '';
+            if (notifications.length === 0) {
+                body.innerHTML = `<div style="text-align:center;padding:30px 0;color:var(--text-muted);"><i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i><p>Belum ada notifikasi</p></div>`;
+                return;
+            }
+            notifications.forEach(n => {
+                const div = document.createElement('div');
+                div.style.cssText = `background:${n.read ? 'var(--bg-input)' : 'rgba(88,166,255,0.08)'};border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:3px solid ${n.read ? 'var(--border-color)' : 'var(--accent-blue)'};cursor:pointer;`;
+                div.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="width:32px;height:32px;border-radius:50%;background:rgba(88,166,255,0.15);display:flex;align-items:center;justify-content:center;color:var(--accent-blue);"><i class="fas fa-bell"></i></div>
+                        <div style="flex:1;min-width:0;"><div style="font-size:0.8rem;font-weight:500;">${n.title}</div><div style="font-size:0.7rem;color:var(--text-secondary);">${n.message}</div><div style="font-size:0.55rem;color:var(--text-muted);margin-top:3px;">${getTimeAgo(n.timestamp)} • ${n.sender}</div></div>
+                        ${!n.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;"></div>` : ''}
+                    </div>
+                `;
+                div.addEventListener('click', () => { n.read = true; localStorage.setItem('salink_notifications', JSON.stringify(notifications)); updateNotifBadge(); renderNotifications(); });
+                body.appendChild(div);
+            });
+        }
+
+        function openPesanModal() {
+            renderNotifications();
+            document.getElementById('notifModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNotifModal() {
+            document.getElementById('notifModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ================================================================
         // INVITE
         // ================================================================
         async function sendInvite() {
-            if (!currentUser) {
-                showToast('🔒 Login Diperlukan', 'Silakan masuk untuk mengirim undangan', 'fa-lock');
-                return;
-            }
-            
+            if (!currentUser) { showToast('🔒 Login', 'Silakan masuk', 'fa-lock'); return; }
             if (currentUser.username === profileUser.username) {
-                showToast('⚠️ Info', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
+                showToast('⚠️ Info', 'Tidak bisa mengundang diri sendiri!', 'fa-exclamation-triangle');
                 return;
             }
-            
-            // Cek apakah sudah pernah diinvite
+
+            const isFriend = friends.some(f => f.username === profileUser.username);
+            if (isFriend) {
+                showToast('ℹ️ Info', `${profileUser.fullName} sudah menjadi teman!`, 'fa-info-circle');
+                return;
+            }
+
             const invites = JSON.parse(localStorage.getItem('salink_invites') || '[]');
-            const existing = invites.find(i => i.from === currentUser.username && i.to === profileUser.username);
-            
-            if (existing) {
+            if (invites.find(i => i.from === currentUser.username && i.to === profileUser.username)) {
                 showToast('ℹ️ Info', `Anda sudah mengundang ${profileUser.fullName}`, 'fa-info-circle');
                 return;
             }
-            
-            // 🔥 SYNC ke Spreadsheet
+
             const newInvite = {
                 id: 'invite-' + Date.now(),
                 from: currentUser.username,
@@ -3158,13 +2302,11 @@
                 status: 'pending',
                 timestamp: Date.now()
             };
-            
+
             invites.push(newInvite);
             localStorage.setItem('salink_invites', JSON.stringify(invites));
-            
             await syncActionToSpreadsheet('send_invite', newInvite);
-            
-            // 🔥 Tambahkan notifikasi ke penerima
+
             const notifData = {
                 id: ++notificationIdCounter,
                 type: 'invite',
@@ -3179,11 +2321,42 @@
                 soundKey: 'notifikasi'
             };
             notifications.unshift(notifData);
-            saveNotifications();
+            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
             updateNotifBadge();
             await apiSaveNotification(notifData);
-            
-            showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${profileUser.fullName}!`, 'fa-user-plus');
+
+            showToast('✅ Terkirim', `Permintaan ke ${profileUser.fullName} berhasil!`, 'fa-user-plus');
+        }
+
+        // ================================================================
+        // NOTIF CHECKER - REAL TIME
+        // ================================================================
+        function startNotifChecker() {
+            if (notifCheckInterval) clearInterval(notifCheckInterval);
+            notifCheckInterval = setInterval(async () => {
+                if (!currentUser) return;
+                try {
+                    const notifs = await apiGetNotifications();
+                    if (notifs && notifs.length > 0) {
+                        let newNotifs = 0;
+                        const existingIds = new Set(notifications.map(n => n.id));
+                        notifs.forEach(n => {
+                            if (!existingIds.has(n.id)) {
+                                notifications.unshift(n);
+                                newNotifs++;
+                            }
+                        });
+                        if (newNotifs > 0) {
+                            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+                            updateNotifBadge();
+                        }
+                    }
+                } catch (e) {}
+            }, 15000);
+        }
+
+        function stopNotifChecker() {
+            if (notifCheckInterval) { clearInterval(notifCheckInterval); notifCheckInterval = null; }
         }
 
         // ================================================================
@@ -3191,88 +2364,74 @@
         // ================================================================
         document.addEventListener('DOMContentLoaded', async function() {
             loadTheme();
-            await loadProfileData();
-            await loadUserPosts();
-            loadFriends();
-            loadNotifications();
-            await loadInvites();
-            
-            renderProfile();
-            setupFotoFilters();
-            
+            await loadAllData();
+            startNotifChecker();
+
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-            
+
             document.getElementById('profileTemanBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 openTemanModal();
             });
-            
+
             document.getElementById('temanModalClose').addEventListener('click', closeTemanModal);
             document.getElementById('temanModal').addEventListener('click', function(e) {
                 if (e.target === this) closeTemanModal();
             });
-            
+
             document.getElementById('biodataModalClose').addEventListener('click', closeBiodataModal);
             document.getElementById('biodataModal').addEventListener('click', function(e) {
                 if (e.target === this) closeBiodataModal();
             });
-            
+
             document.getElementById('postinganModalClose').addEventListener('click', closePostinganModal);
             document.getElementById('postinganModal').addEventListener('click', function(e) {
                 if (e.target === this) closePostinganModal();
             });
-            
+
             document.getElementById('pengikutModalClose').addEventListener('click', closePengikutModal);
             document.getElementById('pengikutModal').addEventListener('click', function(e) {
                 if (e.target === this) closePengikutModal();
             });
-            
+
             document.getElementById('mengikutiModalClose').addEventListener('click', closeMengikutiModal);
             document.getElementById('mengikutiModal').addEventListener('click', function(e) {
                 if (e.target === this) closeMengikutiModal();
             });
-            
+
             document.getElementById('notifModalClose').addEventListener('click', closeNotifModal);
             document.getElementById('notifModal').addEventListener('click', function(e) {
                 if (e.target === this) closeNotifModal();
             });
-            
+
             document.getElementById('fotoModalClose').addEventListener('click', closeFotoModal);
             document.getElementById('fotoModal').addEventListener('click', function(e) {
                 if (e.target === this) closeFotoModal();
             });
-            
+
             document.getElementById('statPosts').addEventListener('click', function() {
                 openPostinganModal();
             });
-            
+
             document.getElementById('statFollowers').addEventListener('click', function() {
                 openPengikutModal();
             });
-            
+
             document.getElementById('statFollowing').addEventListener('click', function() {
                 openMengikutiModal();
             });
-            
-            // Tombol INVITE
+
             document.getElementById('profileInviteBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 sendInvite();
             });
-            
-            console.log('👤 Profil Saya - INTEGRASI SPREADSHEET');
+
+            console.log('👤 Profil Saya - READY');
             console.log(`📌 User: ${profileUser?.fullName || 'Unknown'}`);
             console.log(`📝 Posts: ${posts.filter(p => p.userId === profileUser?.username).length}`);
             console.log(`👥 Friends: ${friends.length}`);
-            console.log('📡 API URL:', API_URL);
-            console.log('✅ Mode Profil Pribadi - Like & Komentar aktif');
-            console.log('✅ Navbar: Foto, Teman, Biodata, Jual - SEMUA TAMPIL');
-            console.log('✅ Modal FOTO - Menampilkan foto/video milik sendiri');
-            console.log('✅ Filter: Semua, Foto, Video');
-            console.log('✅ Like, Komentar, Hapus (jika pemilik) aktif');
-            console.log('✅ Tombol PESAN -> buka pesan-masuk.html');
-            console.log('✅ Tombol INVITE -> kirim undangan berteman');
-            console.log('✅ Semua aksi disinkronkan ke Spreadsheet');
+            console.log('📡 Google Spreadsheet Integration: ACTIVE');
+            console.log('🔔 Real-time Notifications: ON');
         });
     </script>
 </body>
