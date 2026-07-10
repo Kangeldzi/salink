@@ -7,7 +7,309 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- ===== API CONNECTION ===== -->
-    <script src="api.js"></script>
+    <script>
+        // ================================================================
+        // 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS
+        // ================================================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
+
+        // ================================================================
+        // 🔥 API FUNCTIONS
+        // ================================================================
+
+        /**
+         * 🔐 Login - Cek username/password di Google Sheets
+         */
+        async function apiMasuk(username, password) {
+            try {
+                console.log('📡 Login API dipanggil untuk:', username);
+                
+                // Ambil semua user dari Google Sheets
+                const response = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
+                
+                if (!response.ok) {
+                    throw new Error('HTTP error: ' + response.status);
+                }
+                
+                const result = await response.json();
+                console.log('📡 Response dari Google Sheets:', result);
+                
+                if (result.status === 'success' && result.data) {
+                    const users = result.data;
+                    
+                    // Cari user dengan username atau email yang cocok
+                    const user = users.find(u => 
+                        (u.username === username || u.email === username) && 
+                        u.password === password
+                    );
+                    
+                    if (user) {
+                        return {
+                            sukses: true,
+                            pesan: 'Login berhasil! Selamat datang, ' + (user.fullName || user.nama_lengkap || user.username),
+                            pengguna: user
+                        };
+                    } else {
+                        return {
+                            sukses: false,
+                            pesan: 'Username atau password salah!'
+                        };
+                    }
+                } else {
+                    // Coba ambil dari localStorage sebagai fallback
+                    const localUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                    const user = localUsers.find(u => 
+                        (u.username === username || u.email === username) && 
+                        u.password === password
+                    );
+                    
+                    if (user) {
+                        return {
+                            sukses: true,
+                            pesan: 'Login berhasil (offline mode)!',
+                            pengguna: user
+                        };
+                    }
+                    
+                    return {
+                        sukses: false,
+                        pesan: 'Gagal terhubung ke server. Periksa koneksi internet Anda.'
+                    };
+                }
+            } catch (error) {
+                console.error('❌ Login error:', error);
+                
+                // Fallback ke localStorage
+                try {
+                    const localUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                    const user = localUsers.find(u => 
+                        (u.username === username || u.email === username) && 
+                        u.password === password
+                    );
+                    
+                    if (user) {
+                        return {
+                            sukses: true,
+                            pesan: 'Login berhasil (offline mode)!',
+                            pengguna: user
+                        };
+                    }
+                } catch (e) {}
+                
+                return {
+                    sukses: false,
+                    pesan: 'Gagal terhubung ke server. Periksa koneksi internet Anda.'
+                };
+            }
+        }
+
+        /**
+         * 📝 Register - Daftar user baru ke Google Sheets
+         */
+        async function apiDaftarPengguna(data) {
+            try {
+                console.log('📡 Register API dipanggil:', data);
+                
+                // 1. Cek apakah username/email sudah terdaftar
+                const checkResponse = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
+                let existingUsers = [];
+                
+                if (checkResponse.ok) {
+                    const checkResult = await checkResponse.json();
+                    if (checkResult.status === 'success' && checkResult.data) {
+                        existingUsers = checkResult.data;
+                    }
+                } else {
+                    // Fallback ke localStorage
+                    existingUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                }
+                
+                // Cek duplikat
+                if (existingUsers.some(u => u.username === data.nama_pengguna || u.nama_pengguna === data.nama_pengguna)) {
+                    return {
+                        sukses: false,
+                        pesan: 'Username "' + data.nama_pengguna + '" sudah terdaftar!'
+                    };
+                }
+                if (existingUsers.some(u => u.email === data.email)) {
+                    return {
+                        sukses: false,
+                        pesan: 'Email "' + data.email + '" sudah terdaftar!'
+                    };
+                }
+                
+                // 2. Kirim data ke Google Sheets
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'register',
+                        user: {
+                            username: data.nama_pengguna,
+                            fullName: data.nama_lengkap,
+                            email: data.email,
+                            phone: data.no_hp,
+                            gender: data.jenis_kelamin,
+                            country: data.negara || 'Indonesia',
+                            province: data.provinsi || '',
+                            city: data.kota || '',
+                            district: data.kecamatan || '',
+                            village: data.desa || '',
+                            address: data.alamat || '',
+                            bio: data.bio || '',
+                            profilePicture: data.foto_profil || '',
+                            mapLink: data.link_maps || '',
+                            password: data.kata_sandi,
+                            joinedDate: new Date().toLocaleString('id-ID', {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }),
+                            lastLogin: null
+                        },
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('HTTP error: ' + response.status);
+                }
+                
+                const result = await response.json();
+                console.log('📡 Register response:', result);
+                
+                if (result.status === 'success') {
+                    // Simpan ke localStorage untuk cache
+                    const localUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                    localUsers.push({
+                        username: data.nama_pengguna,
+                        fullName: data.nama_lengkap,
+                        email: data.email,
+                        phone: data.no_hp,
+                        gender: data.jenis_kelamin,
+                        country: data.negara || 'Indonesia',
+                        province: data.provinsi || '',
+                        city: data.kota || '',
+                        district: data.kecamatan || '',
+                        village: data.desa || '',
+                        address: data.alamat || '',
+                        bio: data.bio || '',
+                        profilePicture: data.foto_profil || '',
+                        mapLink: data.link_maps || '',
+                        password: data.kata_sandi,
+                        joinedDate: new Date().toLocaleString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }),
+                        lastLogin: null
+                    });
+                    localStorage.setItem('salink_users', JSON.stringify(localUsers));
+                    
+                    // Ambil data user yang baru
+                    const newUser = localUsers.find(u => u.username === data.nama_pengguna);
+                    
+                    return {
+                        sukses: true,
+                        pesan: 'Pendaftaran berhasil! Selamat datang di SALINK!',
+                        pengguna: newUser
+                    };
+                } else {
+                    return {
+                        sukses: false,
+                        pesan: result.message || 'Gagal mendaftar. Coba lagi.'
+                    };
+                }
+            } catch (error) {
+                console.error('❌ Register error:', error);
+                
+                // Fallback: simpan ke localStorage saja
+                try {
+                    const localUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
+                    
+                    // Cek duplikat di localStorage
+                    if (localUsers.some(u => u.username === data.nama_pengguna)) {
+                        return {
+                            sukses: false,
+                            pesan: 'Username "' + data.nama_pengguna + '" sudah terdaftar!'
+                        };
+                    }
+                    
+                    const newUser = {
+                        username: data.nama_pengguna,
+                        fullName: data.nama_lengkap,
+                        email: data.email,
+                        phone: data.no_hp,
+                        gender: data.jenis_kelamin,
+                        country: data.negara || 'Indonesia',
+                        province: data.provinsi || '',
+                        city: data.kota || '',
+                        district: data.kecamatan || '',
+                        village: data.desa || '',
+                        address: data.alamat || '',
+                        bio: data.bio || '',
+                        profilePicture: data.foto_profil || '',
+                        mapLink: data.link_maps || '',
+                        password: data.kata_sandi,
+                        joinedDate: new Date().toLocaleString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }),
+                        lastLogin: null
+                    };
+                    
+                    localUsers.push(newUser);
+                    localStorage.setItem('salink_users', JSON.stringify(localUsers));
+                    
+                    return {
+                        sukses: true,
+                        pesan: 'Pendaftaran berhasil (offline mode)!',
+                        pengguna: newUser
+                    };
+                } catch (e) {
+                    return {
+                        sukses: false,
+                        pesan: 'Gagal mendaftar. Periksa koneksi internet Anda.'
+                    };
+                }
+            }
+        }
+
+        /**
+         * 📥 Ambil semua user dari Google Sheets
+         */
+        async function apiGetUsers() {
+            try {
+                const response = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_users', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get users:', error);
+                return JSON.parse(localStorage.getItem('salink_users') || '[]');
+            }
+        }
+
+        console.log('✅ API Module Loaded - Google Spreadsheets Connected');
+        console.log('📡 API URL:', API_URL);
+    </script>
     
     <style>
         /* ================================================================
@@ -1204,6 +1506,11 @@
                 localStorage.removeItem('salink_theme');
                 localStorage.removeItem('salink_installed');
                 localStorage.removeItem('salink_remember');
+                localStorage.removeItem('salink_users');
+                localStorage.removeItem('salink_posts');
+                localStorage.removeItem('salink_notifications');
+                localStorage.removeItem('salink_friends');
+                localStorage.removeItem('salink_pending_sync');
                 
                 showMessage('✅ Semua data berhasil direset ke default!', 'success');
                 
@@ -1245,7 +1552,7 @@
             try {
                 const user = JSON.parse(loggedInUser);
                 setTimeout(() => {
-                    showMessage(`👋 Selamat datang kembali, ${user.nama_lengkap || user.fullName}! Mengalihkan...`, 'success');
+                    showMessage(`👋 Selamat datang kembali, ${user.fullName || user.nama_lengkap || user.username}! Mengalihkan...`, 'success');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 1000);
@@ -1259,7 +1566,8 @@
         console.log('🔐 SALINK Login Page - VERSI API');
         console.log('📌 Tema:', currentTheme);
         console.log('📡 Backend: Google Apps Script API');
-        console.log('✅ API URL:', typeof API_URL !== 'undefined' ? API_URL : 'api.js belum dimuat');
+        console.log('📡 API URL:', API_URL);
+        console.log('✅ API Functions: apiMasuk(), apiDaftarPengguna(), apiGetUsers()');
     </script>
 </body>
 </html>
