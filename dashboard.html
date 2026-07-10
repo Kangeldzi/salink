@@ -45,6 +45,7 @@
             --modal-bg: rgba(22, 27, 34, 0.98);
             --input-border: #30363d;
             --input-focus: #58a6ff;
+            --neumorph-shadow: 8px 8px 16px #0a0604, -8px -8px 16px #2a1a0e;
             --header-height: 60px;
             --footer-height: 65px;
             --danger: #f85149;
@@ -78,6 +79,7 @@
             --modal-bg: rgba(255, 255, 255, 0.98);
             --input-border: #dce1e8;
             --input-focus: #4facfe;
+            --neumorph-shadow: 8px 8px 16px #d0c8be, -8px -8px 16px #ffffff;
             --danger: #e31837;
             --success: #2ea44f;
         }
@@ -1700,42 +1702,12 @@
         .post-special-fields .field-input:focus { outline: none; border-color: var(--accent-blue); }
         .post-special-fields .field-input:disabled { opacity: 0.5; cursor: not-allowed; }
         .post-special-fields .post-icon-display { font-size: 1.2rem; margin-right: 4px; }
-
-        /* ===== LOADING ===== */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--accent-blue);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .sync-status {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 4px;
-        }
-        .sync-status .sync-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .sync-status .sync-dot.online { background: var(--success); }
-        .sync-status .sync-dot.offline { background: var(--danger); }
-        .sync-status .sync-dot.syncing { background: var(--accent-gold); animation: notifPulse 0.5s ease-in-out infinite; }
     </style>
 </head>
 <body>
 
     <!-- ================================================================ -->
-    <!-- HTML KONTEN -->
+    <!-- HTML KONTEN - SAMA PERSIS (TIDAK DIUBAH) -->
     <!-- ================================================================ -->
 
     <!-- ===== FLOATING NOTIFICATION ===== -->
@@ -1774,14 +1746,6 @@
         <span class="login-link" id="badgeLoginLink">Masuk untuk berinteraksi</span>
     </div>
 
-    <!-- ===== SYNC STATUS BAR ===== -->
-    <div class="preview-badge" id="syncStatusBar" style="background:var(--bg-card);border-bottom:1px solid var(--border-color);padding:4px 16px;font-size:0.6rem;display:none;top:calc(var(--header-height) + 30px);">
-        <div class="sync-status" id="syncStatus">
-            <span class="sync-dot" id="syncDot"></span>
-            <span id="syncText">Tersinkronisasi dengan Google Spreadsheets</span>
-        </div>
-    </div>
-
     <!-- ===== HEADER ===== -->
     <header class="app-bar">
         <div class="app-title" id="appTitle">
@@ -1805,12 +1769,15 @@
         </div>
     </header>
 
-    <!-- ===== SIDEBAR ===== -->
+    <!-- ===== SIDEBAR OVERLAY ===== -->
     <div class="sidebar-overlay-bg" id="sidebarOverlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
         </button>
+        
         <div class="sidebar-header">
             <div class="sidebar-user-avatar" id="sidebarUserAvatar">
                 <i class="fas fa-user"></i>
@@ -1818,6 +1785,7 @@
             <div class="sidebar-user-name" id="sidebarUserName">Guest</div>
             <div class="sidebar-user-email" id="sidebarUserEmail">guest@salink.id</div>
         </div>
+        
         <ul class="nav-menu">
             <li class="nav-item">
                 <a href="#" class="nav-link active" id="homeNavLink">
@@ -1980,6 +1948,7 @@
                     <span class="play-status">▶ Tap untuk Alarm</span>
                 </div>
             </button>
+            
             <button class="emergency-btn btn-death" id="deathBtn" data-sound="kematian" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
@@ -1988,6 +1957,7 @@
                     <span class="play-status">▶ Tap untuk Alarm</span>
                 </div>
             </button>
+            
             <button class="emergency-btn btn-theft" id="theftBtn" data-sound="pencurian" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
@@ -1996,6 +1966,7 @@
                     <span class="play-status">▶ Tap untuk Alarm</span>
                 </div>
             </button>
+            
             <button class="emergency-btn btn-disaster" id="disasterBtn" data-sound="bencana" data-action="login">
                 <div class="btn-glow"></div>
                 <div class="btn-content">
@@ -2058,6 +2029,7 @@
                     <button class="chart-nav-btn" data-chart="line" data-action="login">Line</button>
                 </div>
             </div>
+            
             <div class="chart-container pie-chart-container" id="pieChartContainer" data-action="login">
                 <div class="pie-chart">
                     <div class="pie-chart-center">
@@ -2080,6 +2052,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="chart-container bar-chart-container" id="barChartContainer" data-action="login">
                 <div class="bar-chart" id="barChart"></div>
                 <div class="chart-legend">
@@ -2097,6 +2070,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="chart-container bar-chart-container" id="lineChartContainer" data-action="login">
                 <div class="bar-chart" id="lineChart" style="position:relative;"></div>
                 <div class="chart-legend">
@@ -2114,6 +2088,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="chart-period-info">
                 <span id="chartPeriodInfo">📊 Data: Minggu Ini (1-7 Juni 2026)</span>
             </div>
@@ -2183,6 +2158,7 @@
             </div>
         </div>
 
+        <!-- Tombol PESAN + INVITE - PESAN SEKARANG BUKA MODAL NOTIF -->
         <div class="profile-actions">
             <button class="profile-pesan-btn" onclick="openPesanModal()">
                 <i class="fas fa-paper-plane"></i> PESAN
@@ -2192,6 +2168,7 @@
             </button>
         </div>
 
+        <!-- ===== NAVBAR ===== -->
         <div class="profile-navbar active" id="profileNavbar">
             <div class="profile-nav-grid">
                 <a href="jual.html" target="_blank" class="profile-nav-item">
@@ -2213,6 +2190,7 @@
             </div>
         </div>
         
+        <!-- ===== POSTINGAN BARU ===== -->
         <div class="post-section profile-posts-section" style="margin-top:12px;">
             <h4 style="color:var(--text-primary);font-size:0.9rem;margin-bottom:10px;">📝 Postingan Baru</h4>
             
@@ -2267,6 +2245,7 @@
             </div>
         </div>
 
+        <!-- ===== POSTINGAN SAYA ===== -->
         <div class="post-section profile-posts-section" style="margin-top:12px;">
             <h4 style="color:var(--text-primary);font-size:0.9rem;margin-bottom:10px;">📄 Postingan Saya</h4>
             <div id="profilePosts"></div>
@@ -2500,6 +2479,7 @@
                 </button>
             </div>
             <div class="modal-body" id="fotoModalBody">
+                <!-- Filter Buttons -->
                 <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
                     <button class="filter-foto-btn active" data-filter="semua" style="background:var(--accent-blue-gradient);color:#fff;border:none;padding:6px 16px;border-radius:18px;font-size:0.7rem;cursor:pointer;transition:all 0.3s;">
                         📸 Semua
@@ -2526,433 +2506,7 @@
     
     <script>
         // ================================================================
-        // KONFIGURASI - GOOGLE SPREADSHEETS API
-        // ================================================================
-        
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
-        
-        // ================================================================
-        // SYNC ENGINE - INTEGRASI GOOGLE SPREADSHEETS
-        // ================================================================
-        
-        let syncStatus = 'online';
-        let isSyncing = false;
-        let lastSyncTime = 0;
-        let pendingSyncData = [];
-        let syncIntervalId = null;
-        
-        // ===== Sync Status UI =====
-        function updateSyncStatus(status, message) {
-            const bar = document.getElementById('syncStatusBar');
-            const dot = document.getElementById('syncDot');
-            const text = document.getElementById('syncText');
-            
-            if (status === 'online') {
-                bar.style.display = 'block';
-                dot.className = 'sync-dot online';
-                text.textContent = message || 'Tersinkronisasi dengan Google Spreadsheets';
-                syncStatus = 'online';
-            } else if (status === 'offline') {
-                bar.style.display = 'block';
-                dot.className = 'sync-dot offline';
-                text.textContent = message || '⚠️ Offline - Data disimpan lokal';
-                syncStatus = 'offline';
-            } else if (status === 'syncing') {
-                bar.style.display = 'block';
-                dot.className = 'sync-dot syncing';
-                text.textContent = message || '🔄 Menyinkronkan data...';
-                syncStatus = 'syncing';
-            } else {
-                bar.style.display = 'none';
-            }
-        }
-
-        // ===== Generate Unique ID =====
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
-        }
-
-        // ===== GET Data from Google Sheets =====
-        async function fetchFromGoogleSheets(action = 'get') {
-            try {
-                updateSyncStatus('syncing', '🔄 Mengambil data dari Google Sheets...');
-                
-                const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=${action}&timestamp=${Date.now()}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    updateSyncStatus('online', `✅ Tersinkronisasi (${new Date().toLocaleTimeString()})`);
-                    lastSyncTime = Date.now();
-                    return data.data;
-                } else {
-                    throw new Error(data.message || 'Gagal mengambil data');
-                }
-            } catch (error) {
-                console.error('❌ Gagal fetch dari Google Sheets:', error);
-                updateSyncStatus('offline', '⚠️ Offline - Menggunakan data lokal');
-                return null;
-            }
-        }
-
-        // ===== POST Data ke Google Sheets =====
-        async function pushToGoogleSheets(data) {
-            try {
-                isSyncing = true;
-                updateSyncStatus('syncing', '🔄 Menyimpan ke Google Sheets...');
-                
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'save',
-                        data: data,
-                        timestamp: Date.now()
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    updateSyncStatus('online', `✅ Data tersimpan (${new Date().toLocaleTimeString()})`);
-                    lastSyncTime = Date.now();
-                    isSyncing = false;
-                    return true;
-                } else {
-                    throw new Error(result.message || 'Gagal menyimpan data');
-                }
-            } catch (error) {
-                console.error('❌ Gagal push ke Google Sheets:', error);
-                updateSyncStatus('offline', '⚠️ Offline - Data disimpan lokal');
-                
-                // Simpan ke pending sync
-                pendingSyncData.push({
-                    ...data,
-                    _pendingId: generateId(),
-                    _timestamp: Date.now()
-                });
-                localStorage.setItem('salink_pending_sync', JSON.stringify(pendingSyncData));
-                isSyncing = false;
-                return false;
-            }
-        }
-
-        // ===== Sync All Data =====
-        async function syncAllData() {
-            if (isSyncing) return;
-            
-            try {
-                updateSyncStatus('syncing', '🔄 Sinkronisasi penuh...');
-                
-                // Kumpulkan semua data
-                const allData = {
-                    users: JSON.parse(localStorage.getItem('salink_users') || '[]'),
-                    posts: JSON.parse(localStorage.getItem('salink_posts') || '[]'),
-                    notifications: JSON.parse(localStorage.getItem('salink_notifications') || '[]'),
-                    friends: JSON.parse(localStorage.getItem('salink_friends') || '[]'),
-                    user: JSON.parse(localStorage.getItem('salink_user') || 'null'),
-                    stats: {
-                        activeReports: document.getElementById('statActive').textContent,
-                        completedReports: document.getElementById('statCompleted').textContent,
-                        teams: document.getElementById('statTeams').textContent,
-                        responseRate: document.getElementById('statResponse').textContent
-                    }
-                };
-                
-                const result = await pushToGoogleSheets(allData);
-                
-                if (result) {
-                    // Hapus pending sync
-                    pendingSyncData = [];
-                    localStorage.removeItem('salink_pending_sync');
-                    updateSyncStatus('online', `✅ Sinkronisasi lengkap (${new Date().toLocaleTimeString()})`);
-                }
-                
-                return result;
-            } catch (error) {
-                console.error('❌ Gagal sinkronisasi:', error);
-                updateSyncStatus('offline', '⚠️ Gagal sinkronisasi - Data disimpan lokal');
-                return false;
-            }
-        }
-
-        // ===== Sync Pending Data =====
-        async function syncPendingData() {
-            if (pendingSyncData.length === 0) return true;
-            
-            try {
-                updateSyncStatus('syncing', `🔄 Menyinkronkan ${pendingSyncData.length} data tertunda...`);
-                
-                // Gabungkan semua pending data
-                const combinedData = {
-                    users: JSON.parse(localStorage.getItem('salink_users') || '[]'),
-                    posts: JSON.parse(localStorage.getItem('salink_posts') || '[]'),
-                    notifications: JSON.parse(localStorage.getItem('salink_notifications') || '[]'),
-                    friends: JSON.parse(localStorage.getItem('salink_friends') || '[]'),
-                    user: JSON.parse(localStorage.getItem('salink_user') || 'null'),
-                    pendingItems: pendingSyncData
-                };
-                
-                const result = await pushToGoogleSheets(combinedData);
-                
-                if (result) {
-                    pendingSyncData = [];
-                    localStorage.removeItem('salink_pending_sync');
-                    updateSyncStatus('online', `✅ ${pendingSyncData.length} data tersinkronisasi`);
-                }
-                
-                return result;
-            } catch (error) {
-                console.error('❌ Gagal sinkronisasi data tertunda:', error);
-                return false;
-            }
-        }
-
-        // ===== Auto Sync =====
-        function startAutoSync(interval = 30000) {
-            if (syncIntervalId) {
-                clearInterval(syncIntervalId);
-            }
-            
-            syncIntervalId = setInterval(() => {
-                if (!isSyncing) {
-                    syncPendingData();
-                }
-            }, interval);
-            
-            console.log(`🔄 Auto sync started (interval: ${interval}ms)`);
-        }
-
-        // ===== Inisialisasi Sync =====
-        async function initSync() {
-            try {
-                // Load pending sync data
-                const pending = localStorage.getItem('salink_pending_sync');
-                if (pending) {
-                    try {
-                        pendingSyncData = JSON.parse(pending);
-                        if (!Array.isArray(pendingSyncData)) pendingSyncData = [];
-                    } catch (e) {
-                        pendingSyncData = [];
-                        localStorage.removeItem('salink_pending_sync');
-                    }
-                }
-                
-                // Ambil data dari Google Sheets
-                const remoteData = await fetchFromGoogleSheets('get');
-                
-                if (remoteData) {
-                    // Merge data dari remote ke lokal
-                    if (remoteData.users) {
-                        const localUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
-                        const mergedUsers = [...localUsers];
-                        remoteData.users.forEach(remoteUser => {
-                            const existing = mergedUsers.find(u => u.username === remoteUser.username);
-                            if (existing) {
-                                Object.assign(existing, remoteUser);
-                            } else {
-                                mergedUsers.push(remoteUser);
-                            }
-                        });
-                        localStorage.setItem('salink_users', JSON.stringify(mergedUsers));
-                    }
-                    
-                    if (remoteData.posts && remoteData.posts.length > 0) {
-                        const localPosts = JSON.parse(localStorage.getItem('salink_posts') || '[]');
-                        const mergedPosts = [...localPosts];
-                        remoteData.posts.forEach(remotePost => {
-                            const existing = mergedPosts.find(p => p.id === remotePost.id);
-                            if (existing) {
-                                Object.assign(existing, remotePost);
-                            } else {
-                                mergedPosts.push(remotePost);
-                            }
-                        });
-                        localStorage.setItem('salink_posts', JSON.stringify(mergedPosts));
-                    }
-                    
-                    if (remoteData.user && remoteData.user.username) {
-                        localStorage.setItem('salink_user', JSON.stringify(remoteData.user));
-                    }
-                    
-                    if (remoteData.notifications && remoteData.notifications.length > 0) {
-                        localStorage.setItem('salink_notifications', JSON.stringify(remoteData.notifications));
-                    }
-                    
-                    if (remoteData.friends && remoteData.friends.length > 0) {
-                        localStorage.setItem('salink_friends', JSON.stringify(remoteData.friends));
-                    }
-                }
-                
-                // Re-load data ke UI
-                reloadAllData();
-                
-                // Start auto sync
-                startAutoSync(45000);
-                
-                updateSyncStatus('online', '✅ Terhubung dengan Google Spreadsheets');
-                
-            } catch (error) {
-                console.error('❌ Gagal inisialisasi sync:', error);
-                updateSyncStatus('offline', '⚠️ Menggunakan data lokal');
-                startAutoSync(60000);
-            }
-        }
-
-        // ================================================================
-        // DATA RELOAD FUNCTIONS
-        // ================================================================
-        
-        function reloadAllData() {
-            // Reload posts
-            const savedPosts = localStorage.getItem('salink_posts');
-            if (savedPosts) {
-                try {
-                    const parsed = JSON.parse(savedPosts);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        posts = parsed;
-                        let maxId = 0;
-                        posts.forEach(p => {
-                            const numId = parseInt(p.id?.replace('post-', ''));
-                            if (!isNaN(numId) && numId > maxId) maxId = numId;
-                        });
-                        postIdCounter = maxId || posts.length;
-                    }
-                } catch (e) {
-                    console.warn('Gagal memuat posts:', e);
-                }
-            }
-            
-            // Reload notifications
-            const savedNotifs = localStorage.getItem('salink_notifications');
-            if (savedNotifs) {
-                try {
-                    const parsed = JSON.parse(savedNotifs);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        notifications = parsed;
-                        let maxId = 0;
-                        notifications.forEach(n => {
-                            if (n.id && n.id > maxId) maxId = n.id;
-                        });
-                        notificationIdCounter = maxId || notifications.length;
-                    }
-                } catch (e) {
-                    console.warn('Gagal memuat notifications:', e);
-                }
-            }
-            
-            // Reload friends
-            const savedFriends = localStorage.getItem('salink_friends');
-            if (savedFriends) {
-                try {
-                    const parsed = JSON.parse(savedFriends);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        friends = parsed;
-                        let maxId = 0;
-                        friends.forEach(f => {
-                            if (f.id && f.id > maxId) maxId = f.id;
-                        });
-                        friendIdCounter = maxId || friends.length;
-                    }
-                } catch (e) {
-                    console.warn('Gagal memuat friends:', e);
-                }
-            }
-            
-            // Reload user
-            const savedUser = localStorage.getItem('salink_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                } catch (e) {
-                    currentUser = null;
-                }
-            }
-            
-            // Update UI
-            renderPosts();
-            renderAlerts(reports);
-            updateBadge();
-            updateNotifBadge();
-            updateInviteBadge();
-            
-            if (currentUser) {
-                updateUserUI();
-                renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
-                updateProfileStats();
-            }
-            
-            console.log('✅ Data reloaded from localStorage');
-        }
-
-        // ================================================================
-        // OVERRIDE FUNCTIONS WITH SYNC
-        // ================================================================
-        
-        // Override savePostsToLocalStorage
-        const originalSavePosts = savePostsToLocalStorage;
-        savePostsToLocalStorage = function() {
-            originalSavePosts();
-            // Trigger sync
-            if (!isSyncing) {
-                syncPendingData();
-            }
-        };
-
-        // Override addNotification
-        const originalAddNotification = addNotification;
-        addNotification = function(type, title, message, sender, link, postId, soundKey) {
-            const notif = originalAddNotification(type, title, message, sender, link, postId, soundKey);
-            if (notif) {
-                // Save notifications to localStorage
-                localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-                if (!isSyncing) {
-                    syncPendingData();
-                }
-            }
-            return notif;
-        };
-
-        // Override createPost
-        const originalCreatePost = createPost;
-        createPost = function(text, mediaFile, isSpecial, specialData, postType) {
-            originalCreatePost(text, mediaFile, isSpecial, specialData, postType);
-            // Post sudah disimpan di localStorage via savePostsToLocalStorage
-        };
-
-        // ================================================================
-        // DATA MIGRATION & INIT
-        // ================================================================
-        
-        function migrateLocalData() {
-            // Pastikan semua data memiliki format yang benar
-            if (!Array.isArray(posts)) posts = [];
-            if (!Array.isArray(notifications)) notifications = [];
-            if (!Array.isArray(friends)) friends = [];
-            
-            // Simpan ke localStorage
-            localStorage.setItem('salink_posts', JSON.stringify(posts));
-            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-            localStorage.setItem('salink_friends', JSON.stringify(friends));
-        }
-
-        // ================================================================
-        // STATE & KONFIGURASI (dari original)
+        // KONFIGURASI & STATE
         // ================================================================
         
         const LOGIN_URL = 'login.html';
@@ -3027,7 +2581,7 @@
         }
 
         // ================================================================
-        // PWA - SERVICE WORKER & INSTALL
+        // PWA - SERVICE WORKER & INSTALL - SUPPORT ALL BROWSER
         // ================================================================
         
         if ('serviceWorker' in navigator) {
@@ -3518,7 +3072,7 @@
         }
 
         // ================================================================
-        // PROFILE USER OPEN
+        // PROFILE USER OPEN - FIXED: HANYA KIRIM USERNAME
         // ================================================================
         
         function openProfileUser(username) {
@@ -3581,7 +3135,7 @@
         }
 
         // ================================================================
-        // FUNGSI UNTUK TOMBOL PESAN
+        // FUNGSI UNTUK TOMBOL PESAN - BUKA MODAL NOTIF
         // ================================================================
         
         function openPesanModal() {
@@ -3625,9 +3179,6 @@
             notifications.unshift(notification);
             updateNotifBadge();
             
-            // Simpan ke localStorage
-            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-            
             if (!(sender && currentUser && sender === currentUser.fullName)) {
                 playNotificationSound(soundKey);
             }
@@ -3669,11 +3220,6 @@
                         hideFloatingNotification();
                     }
                 );
-            }
-            
-            // Trigger sync
-            if (!isSyncing) {
-                syncPendingData();
             }
             
             broadcastNotification(notification);
@@ -3766,7 +3312,6 @@
                         return;
                     }
                     notif.read = true;
-                    localStorage.setItem('salink_notifications', JSON.stringify(notifications));
                     updateNotifBadge();
                     renderNotifications();
                     
@@ -3821,7 +3366,6 @@
                     soundKey: nt.sound
                 });
             });
-            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
             updateNotifBadge();
         }
 
@@ -3998,7 +3542,6 @@
                     avatar: null
                 });
             });
-            localStorage.setItem('salink_friends', JSON.stringify(friends));
             
             if (currentUser) {
                 document.getElementById('profileStatFollowers').textContent = friends.length;
@@ -4554,11 +4097,6 @@
                     document.getElementById('settingsModal').classList.remove('active');
                     document.body.style.overflow = '';
                     showToast('✅ Berhasil', 'Profil berhasil diperbarui!', 'fa-check-circle');
-                    
-                    // Trigger sync
-                    if (!isSyncing) {
-                        syncPendingData();
-                    }
                 });
             }
         }
@@ -6860,23 +6398,6 @@
         ];
 
         // ================================================================
-        // MANUAL SYNC BUTTON (hidden feature)
-        // ================================================================
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'S') {
-                e.preventDefault();
-                syncAllData().then(result => {
-                    if (result) {
-                        showToast('✅ Sinkronisasi', 'Data berhasil disinkronkan dengan Google Sheets!', 'fa-cloud-upload-alt');
-                    } else {
-                        showToast('⚠️ Gagal', 'Gagal sinkronisasi, periksa koneksi internet', 'fa-exclamation-triangle');
-                    }
-                });
-            }
-        });
-
-        // ================================================================
         // INITIALIZE
         // ================================================================
         
@@ -7019,11 +6540,6 @@
         
         renderPosts();
         setupProfilePostInput();
-        
-        // ===== INITIALIZE SYNC =====
-        initSync().then(() => {
-            console.log('✅ Sync engine initialized');
-        });
         
         setTimeout(() => {
             if (!isPreviewMode && !window.matchMedia('(display-mode: standalone)').matches) {
@@ -7505,13 +7021,11 @@
         
         switchChart('pie');
         
-        console.log('🚀 SALINK Dashboard - Emergency Alert System with PWA & Google Sheets Sync');
+        console.log('🚀 SALINK Dashboard - Emergency Alert System with PWA');
         console.log(`📌 Mode: ${isPreviewMode ? 'PREVIEW' : 'FULL'}`);
         console.log(`👤 User: ${currentUser ? currentUser.fullName : 'Guest'}`);
         console.log(`👥 Friends: ${friends.length}`);
         console.log(`📝 Posts: ${posts.length} (disimpan di Local Storage)`);
-        console.log(`📊 Google Sheets Sync: Active (URL: ${GOOGLE_SCRIPT_URL})`);
-        console.log(`🔄 Auto Sync: Active (interval 45s)`);
         console.log('🔔 Emergency Overlay: Active');
         console.log('📨 Invite System: Active');
         console.log('📜 Riwayat Postingan: Active');
@@ -7523,10 +7037,9 @@
         console.log('🌓 Dark/Light Mode: Active');
         console.log('✅ Emergency buttons: Click to stop alarm/notification');
         console.log('✅ Settings & Biodata modals: Scrollable');
-        console.log('✅ Tombol PESAN: Membuka Modal Notifikasi');
+        console.log('✅ Tombol PESAN: Membuka Modal Notifikasi (sama dengan NOTIF)');
         console.log('✅ Modal FOTO: Dengan filter Semua, Foto, Video');
         console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
-        console.log('⌨️ Ctrl+Shift+S: Manual sync to Google Sheets');
     </script>
 </body>
-</html>
+</html
