@@ -15,10 +15,6 @@
         // ================================================================
         const API_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
 
-        // ================================================================
-        // 🔥 API FUNCTIONS - VERSI TERBARU
-        // ================================================================
-
         /**
          * 🔐 Login - Cek username/password di Google Sheets
          */
@@ -26,7 +22,6 @@
             try {
                 console.log('📡 Login API dipanggil untuk:', username);
                 
-                // Coba ambil dari Google Sheets
                 const response = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
                 
                 if (response.ok) {
@@ -72,7 +67,6 @@
             } catch (error) {
                 console.error('❌ Login error:', error);
                 
-                // Fallback ke localStorage
                 try {
                     const localUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
                     const user = localUsers.find(u => 
@@ -103,7 +97,6 @@
             try {
                 console.log('📡 Register API dipanggil:', data);
                 
-                // 1. Cek apakah username/email sudah terdaftar
                 let existingUsers = [];
                 try {
                     const checkResponse = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
@@ -114,7 +107,6 @@
                         }
                     }
                 } catch (e) {
-                    // Fallback ke localStorage
                     existingUsers = JSON.parse(localStorage.getItem('salink_users') || '[]');
                 }
                 
@@ -210,6 +202,9 @@
                     localUsers.push(newUser);
                     localStorage.setItem('salink_users', JSON.stringify(localUsers));
                     
+                    // 🔥 SYNC PROFILE KE SPREADSHEET
+                    await syncActionToSpreadsheet('save_profile', newUser);
+                    
                     return {
                         sukses: true,
                         pesan: 'Pendaftaran berhasil! Selamat datang di SALINK!',
@@ -300,26 +295,26 @@
         }
 
         /**
-         * 🔄 Sinkronisasi data user ke Google Sheets
+         * 🔄 Sinkronisasi aksi ke Google Sheets
          */
-        async function syncUserToSpreadsheet(userData) {
+        async function syncActionToSpreadsheet(action, data) {
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'sync_user',
-                        user: userData,
+                        action: action,
+                        data: data,
                         timestamp: Date.now()
                     })
                 });
                 
                 if (!response.ok) throw new Error('HTTP error: ' + response.status);
                 const result = await response.json();
-                console.log('📡 Sync user result:', result);
+                console.log('📡 Sync action result:', result);
                 return result.status === 'success';
             } catch (error) {
-                console.error('❌ Sync user error:', error);
+                console.error('❌ Sync action error:', error);
                 return false;
             }
         }
@@ -1212,7 +1207,7 @@
         });
 
         // ================================================================
-        // 🔥 TOGGLE PASSWORD VISIBILITY - FIXED!
+        // 🔥 TOGGLE PASSWORD VISIBILITY
         // ================================================================
         function togglePasswordVis(inputId) {
             const input = document.getElementById(inputId);
@@ -1344,7 +1339,7 @@
         });
 
         // ================================================================
-        // 🔥 HANDLE LOGIN - VERSI API
+        // 🔥 HANDLE LOGIN
         // ================================================================
         document.getElementById('signinBtn').addEventListener('click', async function() {
             const username = document.getElementById('signinUsername').value.trim();
@@ -1364,22 +1359,11 @@
                 console.log('📡 Login result:', result);
 
                 if (result.sukses) {
-                    // Simpan user ke localStorage
                     localStorage.setItem('salink_user', JSON.stringify(result.pengguna));
                     localStorage.setItem('salink_logged_in', 'true');
                     
                     if (document.getElementById('rememberMe').checked) {
                         localStorage.setItem('salink_remember', 'true');
-                    }
-
-                    // 🔥 SYNC ke Spreadsheet - update lastLogin
-                    try {
-                        await syncUserToSpreadsheet({
-                            ...result.pengguna,
-                            lastLogin: new Date().toISOString()
-                        });
-                    } catch (e) {
-                        console.warn('⚠️ Gagal sync lastLogin:', e);
                     }
 
                     showMessage('✅ ' + result.pesan, 'success');
@@ -1401,10 +1385,9 @@
         });
 
         // ================================================================
-        // 🔥 HANDLE REGISTER - VERSI API
+        // 🔥 HANDLE REGISTER
         // ================================================================
         document.getElementById('signupBtn').addEventListener('click', async function() {
-            // Ambil semua nilai
             const fullName = document.getElementById('signupFullName').value.trim();
             const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Laki-laki';
             const email = document.getElementById('signupEmail').value.trim();
@@ -1415,7 +1398,6 @@
             const bio = document.getElementById('signupBio').value.trim() || `Halo! Saya ${fullName}`;
             const profilePicture = document.getElementById('profilePreview').dataset.image || '';
 
-            // Alamat E-KTP
             const country = document.getElementById('signupCountry').value;
             const province = document.getElementById('signupProvince').value;
             const city = document.getElementById('signupCity').value.trim();
@@ -1424,7 +1406,6 @@
             const detailAddress = document.getElementById('signupDetailAddress').value.trim();
             const mapLink = document.getElementById('signupMapLink').value.trim();
 
-            // Validasi
             let isValid = true;
 
             if (!fullName) { showMessage('⚠️ Nama lengkap harus diisi!', 'error');
@@ -1595,7 +1576,7 @@
         console.log('📌 Tema:', currentTheme);
         console.log('📡 Backend: Google Apps Script API');
         console.log('📡 API URL:', API_URL);
-        console.log('✅ API Functions: apiMasuk(), apiDaftarPengguna(), apiGetUsers(), syncUserToSpreadsheet()');
+        console.log('✅ API Functions: apiMasuk(), apiDaftarPengguna(), apiGetUsers(), syncActionToSpreadsheet()');
     </script>
 </body>
 </html>
