@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard Admin - TeslaSmart</title>
+    
+    <!-- ===== PWA META TAGS ===== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d1117" id="themeColorMeta">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SALINK">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- ================================================================ -->
+    <!-- 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS                       -->
+    <!-- ================================================================ -->
+    <script>
+        // ================================================================
+        // 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS
+        // ================================================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
+
+        /**
+         * 📥 Ambil semua produk dari Google Sheets
+         */
+        async function apiGetProducts() {
+            try {
+                const response = await fetch(API_URL + '?action=get_products&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_products', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get products:', error);
+                return JSON.parse(localStorage.getItem('salink_products') || '[]');
+            }
+        }
+
+        /**
+         * 📤 Tambah produk ke Google Sheets
+         */
+        async function apiAddProduct(productData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add_product',
+                        product: productData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Add product result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Add product error:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 📤 Update produk di Google Sheets
+         */
+        async function apiUpdateProduct(productId, productData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update_product',
+                        product_id: productId,
+                        product: productData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Update product result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Update product error:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 📤 Hapus produk dari Google Sheets
+         */
+        async function apiDeleteProduct(productId) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'delete_product',
+                        product_id: productId,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Delete product result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Delete product error:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 🔄 Sinkronisasi semua produk ke Google Sheets
+         */
+        async function syncAllProductsToSpreadsheet(productsData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'sync_products',
+                        products: productsData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Sync products result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Sync products error:', error);
+                return false;
+            }
+        }
+
+        console.log('✅ API Module Loaded - Google Spreadsheets Connected');
+        console.log('📡 API URL:', API_URL);
+    </script>
+    
+    <style>
+        /* ================================================================ */
+        /* THEME VARIABLES - LIGHT & DARK MODE                              */
+        /* ================================================================ */
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: rgba(22, 27, 34, 0.92);
+            --bg-input: rgba(22, 27, 34, 0.6);
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --border-color: #30363d;
+            --shadow-color: rgba(0,0,0,0.4);
+            --accent-blue: #58a6ff;
+            --accent-blue-dark: #1f6feb;
+            --accent-blue-gradient: linear-gradient(135deg, #58a6ff, #1f6feb);
+            --accent-green: #25D366;
+            --accent-red: #f85149;
+            --accent-gold: #f0d080;
+            --toggle-bg: #30363d;
+            --toggle-thumb: #58a6ff;
+            --header-bg: rgba(22, 27, 34, 0.95);
+            --footer-bg: rgba(13, 17, 23, 0.95);
+            --modal-bg: rgba(22, 27, 34, 0.98);
+            --input-border: #30363d;
+            --input-focus: #58a6ff;
+            --header-height: 60px;
+            --footer-height: 65px;
+            --danger: #f85149;
+            --success: #3fb950;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #e8edf2;
+            --bg-card: rgba(255, 255, 255, 0.92);
+            --bg-input: rgba(0,0,0,0.04);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a4a6a;
+            --text-muted: #6a6a8a;
+            --border-color: #d0d7de;
+            --shadow-color: rgba(0,0,0,0.08);
+            --accent-blue: #4facfe;
+            --accent-blue-dark: #00c6fb;
+            --accent-blue-gradient: linear-gradient(135deg, #4facfe, #00c6fb);
+            --accent-green: #25D366;
+            --accent-red: #e31837;
+            --accent-gold: #8d6b4b;
+            --toggle-bg: #d0d7de;
+            --toggle-thumb: #4facfe;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --footer-bg: rgba(255, 255, 255, 0.95);
+            --modal-bg: rgba(255, 255, 255, 0.98);
+            --input-border: #dce1e8;
+            --input-focus: #4facfe;
+            --danger: #e31837;
+            --success: #2ea44f;
+        }
+
+        /* ================================================================ */
+        /* BASE STYLES                                                       */
+        /* ================================================================ */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 3px; }
+
+        /* ================================================================ */
+        /* TOGGLE SWITCH                                                    */
+        /* ================================================================ */
+        .theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--toggle-bg);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .theme-toggle.active { background: rgba(88, 166, 255, 0.3); }
+        .theme-toggle .toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--toggle-thumb);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(88, 166, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+        }
+        .theme-toggle.active .toggle-thumb { left: 22px; }
+        .theme-toggle .toggle-thumb i { color: #fff; }
+
+        /* ================================================================ */
+        /* HEADER                                                           */
+        /* ================================================================ */
+        .app-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: var(--header-height);
+            background: var(--header-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 12px;
+            z-index: 1000;
+            box-shadow: 0 2px 20px var(--shadow-color);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+        .app-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .app-title .bell-icon { font-size: 1.2rem; color: var(--accent-blue); }
+        .app-title span { font-size: 1rem; }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .back-btn:hover { border-color: var(--accent-blue); transform: scale(1.05); }
+        .back-btn:active { transform: scale(0.95); }
+        .back-btn i { font-size: 1rem; }
+
+        .btn-toko {
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-toko:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+
+        /* ================================================================ */
+        /* CONTAINER                                                        */
+        /* ================================================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: calc(var(--header-height) + 20px);
+        }
+
+        /* ================================================================ */
+        /* CARD                                                             */
+        /* ================================================================ */
+        .card {
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow-color);
+        }
+        .card:hover { transform: translateY(-2px); }
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+        .card-title .badge-count {
+            background: var(--accent-blue);
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* ================================================================ */
+        /* TABS                                                             */
+        /* ================================================================ */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .tab-btn.active {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border-color: var(--accent-blue);
+        }
+        .tab-btn:hover:not(.active) {
+            background: var(--bg-card);
+            border-color: var(--accent-blue);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ================================================================ */
+        /* FORM                                                             */
+        /* ================================================================ */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .form-group .label-desc {
+            font-size: 12px;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .form-input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px 0;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 400;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+        .checkbox-group label:hover {
+            border-color: var(--accent-blue);
+        }
+        .checkbox-group input[type="checkbox"] {
+            accent-color: var(--accent-blue);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .checkbox-group label.checked {
+            border-color: var(--accent-blue);
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        /* ================================================================ */
+        /* BUTTONS                                                          */
+        /* ================================================================ */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.3);
+        }
+        .btn-success {
+            background: var(--accent-green);
+            color: #fff;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+        .btn-danger {
+            background: var(--accent-red);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(248, 81, 73, 0.3);
+        }
+        .btn-warning {
+            background: #d29922;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--accent-blue);
+        }
+
+        /* ================================================================ */
+        /* TABLE                                                            */
+        /* ================================================================ */
+        .table-wrapper { overflow-x: auto; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+        }
+        .table td {
+            padding: 14px 16px;
+            font-size: 13px;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .table tr:hover td {
+            background: var(--bg-input);
+        }
+        .table .product-thumb {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .table .action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .table .action-btns .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.ada {
+            background: var(--accent-green);
+            color: #fff;
+        }
+        .status-badge.habis {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        /* ================================================================ */
+        /* EMPTY STATE                                                      */
+        /* ================================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .empty-state p { opacity: 0.7; }
+
+        /* ================================================================ */
+        /* PREVIEW                                                          */
+        /* ================================================================ */
+        .preview-card {
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            background: var(--bg-input);
+            border: 2px dashed var(--border-color);
+        }
+        .preview-card .preview-image {
+            width: 100%;
+            max-width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 0 auto 12px;
+        }
+        .preview-card .preview-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .preview-card .preview-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-red);
+            margin: 4px 0;
+        }
+        .preview-card .preview-original {
+            font-size: 14px;
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+        .preview-card .preview-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            background: var(--accent-red);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 0;
+        }
+
+        /* ================================================================ */
+        /* IMAGE PREVIEW GRID                                               */
+        /* ================================================================ */
+        .image-preview-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .image-preview-grid .img-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+        .image-preview-grid .img-item .remove-img {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-preview-grid .img-item .remove-img:hover { transform: scale(1.1); }
+
+        /* ================================================================ */
+        /* TOAST                                                            */
+        /* ================================================================ */
+        .toast-container {
+            position: fixed;
+            bottom: calc(var(--footer-height) + 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            max-width: 400px;
+            width: 90%;
+        }
+        .toast {
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: fadeIn 0.4s ease;
+            margin-bottom: 8px;
+            transition: background 0.3s ease;
+        }
+        .toast .toast-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+        }
+        .toast .toast-content { flex: 1; }
+        .toast .toast-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .toast .toast-message {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px;
+            transition: all 0.3s;
+        }
+        .toast .toast-close:hover { color: var(--text-primary); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ================================================================ */
+        /* RESPONSIVE                                                       */
+        /* ================================================================ */
+        @media (max-width: 768px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .container { padding: 12px; padding-top: calc(var(--header-height) + 12px); }
+            .card { padding: 16px; }
+            .tabs { gap: 4px; }
+            .tab-btn { padding: 8px 16px; font-size: 12px; }
+            .checkbox-group label { font-size: 12px; padding: 4px 10px; }
+            .table th, .table td { padding: 10px 12px; font-size: 12px; }
+            .header-right { gap: 4px; }
+            .btn-toko { font-size: 11px; padding: 4px 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 8px; padding-top: calc(var(--header-height) + 8px); }
+            .card { padding: 12px; }
+            .tab-btn { padding: 6px 12px; font-size: 11px; }
+            .btn { padding: 8px 14px; font-size: 12px; }
+            .image-preview-grid .img-item { width: 60px; height: 60px; }
+            .table th, .table td { padding: 6px 8px; font-size: 11px; }
+            .preview-card .preview-image { max-width: 150px; height: 150px; }
+            .btn-toko { font-size: 10px; padding: 3px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================================================================ -->
+    <!-- HEADER                                                            -->
+    <!-- ================================================================ -->
+    <header class="app-bar">
+        <a href="dashboard.html" class="app-title">
+            <i class="fas fa-bell bell-icon"></i>
+            <span>SALINK</span>
+        </a>
+        <div class="header-right">
+            <div class="theme-toggle" id="themeToggle">
+                <div class="toggle-thumb" id="toggleThumb">
+                    <i class="fas fa-moon" id="toggleIcon"></i>
+                </div>
+            </div>
+            <span id="productCount" style="font-size:13px; font-weight:600; color:var(--text-secondary);">0 Produk</span>
+            <!-- ===== TOMBOL LIHAT TOKO - TETAP ADA ===== -->
+            <a href="toko.html" class="btn-toko" target="_blank">
+                <i class="fas fa-store"></i> Lihat Toko
+            </a>
+            <a href="dashboard.html" class="back-btn" title="Kembali ke Dashboard">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- ================================================================ -->
+    <!-- CONTAINER                                                         -->
+    <!-- ================================================================ -->
+    <div class="container">
+        <!-- ========== TABS ========== -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('form')">📝 Tambah Produk</button>
+            <button class="tab-btn" onclick="switchTab('list')">📋 Daftar Produk</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙️ Pengaturan Toko</button>
+            <button class="tab-btn" onclick="switchTab('sync')">🔄 Sinkronisasi</button>
+        </div>
+
+        <!-- ========== TAB 1: FORM ========== -->
+        <div class="tab-content active" id="tab-form">
+            <div class="card">
+                <div class="card-title">
+                    📝 Form Input Produk
+                    <span class="badge-count" id="formProductCount">0 Produk</span>
+                </div>
+
+                <!-- ===== FORM ===== -->
+                <form id="productForm" onsubmit="saveProduct(event)">
+                    <!-- Row 1: Kategori & ID -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📂 Kategori <span style="color:var(--accent-red);">*</span></label>
+                            <select class="form-select" id="category" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="Sembako">🛒 Sembako</option>
+                                <option value="Pakaian">👕 Pakaian</option>
+                                <option value="Makanan">🍜 Makanan</option>
+                                <option value="Jasa">🔧 Jasa</option>
+                                <option value="Produk Digital">🖥️ Produk Digital</option>
+                                <option value="Elektronik">📱 Elektronik</option>
+                                <option value="Pulsa">📞 Pulsa/Quota</option>
+                                <option value="Properti">🏠 Properti</option>
+                                <option value="Kendaraan">🚗 Kendaraan</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🔑 ID/Kode Unik <span style="color:var(--accent-red);">*</span></label>
+                            <input type="text" class="form-input" id="productId" placeholder="ID Unik (contoh: PROD-001)" required>
+                            <small style="opacity:0.6; font-size:11px; color:var(--text-muted);">Bisa diisi manual atau otomatis</small>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Status & Nama Produk -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📦 Status Stok <span style="color:var(--accent-red);">*</span></label>
+                            <select class="form-select" id="status" required>
+                                <option value="Ada">✅ Ada</option>
+                                <option value="Habis">❌ Habis</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🏷️ Nama Produk <span style="color:var(--accent-red);">*</span></label>
+                            <input type="text" class="form-input" id="productName" placeholder="Nama Produk" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Badge & Platform -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>🏷️ Badge/Label <span style="color:var(--accent-red);">*</span></label>
+                            <select class="form-select" id="badge" required>
+                                <option value="Promo">Promo</option>
+                                <option value="Flash Sale">Flash Sale</option>
+                                <option value="Best">Best</option>
+                                <option value="Rental">Rental</option>
+                                <option value="Pro">Pro</option>
+                                <option value="Edu">Edu</option>
+                                <option value="Jasa">Jasa</option>
+                                <option value="New">New</option>
+                                <option value="Hot">Hot</option>
+                                <option value="Best Seller">Best Seller</option>
+                                <option value="Super Deal">Super Deal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📱 Platform <span style="color:var(--accent-red);">*</span></label>
+                            <select class="form-select" id="platform" required>
+                                <option value="🛒">🛒 Tokopedia</option>
+                                <option value="🎵">🎵 TikTok Shop</option>
+                                <option value="📱">📱 Shopee</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Harga & Diskon -->
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label>💰 Harga Jual (Rp) <span style="color:var(--accent-red);">*</span></label>
+                            <input type="number" class="form-input" id="price" placeholder="0" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>💲 Harga Asli (Rp)</label>
+                            <input type="number" class="form-input" id="originalPrice" placeholder="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>🏷️ Diskon</label>
+                            <select class="form-select" id="discountType">
+                                <option value="persen">% Persen</option>
+                                <option value="rp">Rp Rupiah</option>
+                            </select>
+                            <input type="number" class="form-input" id="discountValue" placeholder="0" min="0" style="margin-top:6px;">
+                        </div>
+                    </div>
+
+                    <!-- Row 5: Berat -->
+                    <div class="form-group">
+                        <label>⚖️ Berat (Gram)</label>
+                        <div class="checkbox-group" id="weightOptions">
+                            <label><input type="checkbox" value="100"> 100 gr</label>
+                            <label><input type="checkbox" value="200"> 200 gr</label>
+                            <label><input type="checkbox" value="300"> 300 gr</label>
+                            <label><input type="checkbox" value="400"> 400 gr</label>
+                            <label><input type="checkbox" value="500"> 500 gr</label>
+                            <label><input type="checkbox" value="1000"> 1 Kg</label>
+                            <label><input type="checkbox" value="1500"> 1,5 Kg</label>
+                            <label><input type="checkbox" value="2000"> 2 Kg</label>
+                            <label><input type="checkbox" value="2500"> 2,5 Kg</label>
+                            <label><input type="checkbox" value="3000"> 3 Kg</label>
+                            <label><input type="checkbox" value="3500"> 3,5 Kg</label>
+                            <label><input type="checkbox" value="4000"> 4 Kg</label>
+                            <label><input type="checkbox" value="4500"> 4,5 Kg</label>
+                            <label><input type="checkbox" value="5000"> 5 Kg</label>
+                            <label><input type="checkbox" value="custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="weightCustom" placeholder="Masukkan berat custom (contoh: 750)" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 6: Size -->
+                    <div class="form-group">
+                        <label>📏 Size/Ukuran <span class="label-desc">(Khusus Pakaian & Sepatu)</span></label>
+                        <div class="checkbox-group" id="sizeOptions">
+                            <label><input type="checkbox" value="S"> S</label>
+                            <label><input type="checkbox" value="M"> M</label>
+                            <label><input type="checkbox" value="L"> L</label>
+                            <label><input type="checkbox" value="XL"> XL</label>
+                            <label><input type="checkbox" value="XXL"> XXL</label>
+                            <label><input type="checkbox" value="XXXL"> XXXL</label>
+                            <label><input type="checkbox" value="37"> 37</label>
+                            <label><input type="checkbox" value="38"> 38</label>
+                            <label><input type="checkbox" value="39"> 39</label>
+                            <label><input type="checkbox" value="40"> 40</label>
+                            <label><input type="checkbox" value="41"> 41</label>
+                            <label><input type="checkbox" value="42"> 42</label>
+                            <label><input type="checkbox" value="43"> 43</label>
+                            <label><input type="checkbox" value="44"> 44</label>
+                            <label><input type="checkbox" value="45"> 45</label>
+                            <label><input type="checkbox" value="custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="sizeCustom" placeholder="Masukkan ukuran custom (contoh: 46, 2XL, dll)" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 7: Warna -->
+                    <div class="form-group">
+                        <label>🎨 Warna</label>
+                        <div class="checkbox-group" id="colorOptions">
+                            <label><input type="checkbox" value="Putih"> Putih</label>
+                            <label><input type="checkbox" value="Hitam"> Hitam</label>
+                            <label><input type="checkbox" value="Merah"> Merah</label>
+                            <label><input type="checkbox" value="Hijau"> Hijau</label>
+                            <label><input type="checkbox" value="Biru"> Biru</label>
+                            <label><input type="checkbox" value="Kuning"> Kuning</label>
+                            <label><input type="checkbox" value="Pink"> Pink</label>
+                            <label><input type="checkbox" value="Ungu"> Ungu</label>
+                            <label><input type="checkbox" value="Coklat"> Coklat</label>
+                            <label><input type="checkbox" value="Krem"> Krem</label>
+                            <label><input type="checkbox" value="Gold"> Gold</label>
+                            <label><input type="checkbox" value="Silver"> Silver</label>
+                            <label><input type="checkbox" value="Custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="colorCustom" placeholder="Masukkan warna custom" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 8: Type (Opsional) -->
+                    <div class="form-group">
+                        <label>📌 Type Opsional <span class="label-desc">(Khusus Trophy/Piala)</span></label>
+                        <div class="checkbox-group" id="typeOptions">
+                            <label><input type="checkbox" value="Hadiah Juara 1"> Hadiah Juara 1</label>
+                            <label><input type="checkbox" value="Hadiah Juara 2"> Hadiah Juara 2</label>
+                            <label><input type="checkbox" value="Hadiah Juara 3"> Hadiah Juara 3</label>
+                            <label><input type="checkbox" value="Best Player (Patung)"> Best Player (Patung)</label>
+                            <label><input type="checkbox" value="Top Score (Sepatu)"> Top Score (Sepatu)</label>
+                            <label><input type="checkbox" value="Best Keeper (Sarung Tangan)"> Best Keeper (Sarung Tangan)</label>
+                            <label><input type="checkbox" value="Medali"> Medali</label>
+                            <label><input type="checkbox" value="Sertifikat"> Sertifikat</label>
+                            <label><input type="checkbox" value="Custom"> Custom</label>
+                        </div>
+                        <input type="text" class="form-input" id="typeCustom" placeholder="Masukkan type custom" style="margin-top:6px; display:none;">
+                    </div>
+
+                    <!-- Row 9: Pengiriman -->
+                    <div class="form-group">
+                        <label>🚚 Opsi Pengiriman <span style="color:var(--accent-red);">*</span></label>
+                        <div class="checkbox-group" id="shippingOptions">
+                            <label><input type="checkbox" value="Ambil Sendiri"> Ambil Sendiri</label>
+                            <label><input type="checkbox" value="Diantar Kurir"> Diantar Kurir</label>
+                            <label><input type="checkbox" value="Grab/Gojek"> Grab/Gojek</label>
+                            <label><input type="checkbox" value="Digital (Email/Download)"> Digital (Email/Download)</label>
+                        </div>
+                    </div>
+
+                    <!-- Row 10: Upload Foto -->
+                    <div class="form-group">
+                        <label>📸 Upload Foto Produk <span style="color:var(--accent-red);">*</span> <span class="label-desc">(Bisa upload lebih dari 20 foto)</span></label>
+                        <input type="file" class="form-input" id="productImages" accept="image/*" multiple>
+                        <div class="image-preview-grid" id="imagePreviewGrid"></div>
+                        <small style="opacity:0.6; font-size:11px; color:var(--text-muted);">Upload minimal 1 foto. Format: JPG, PNG, WEBP</small>
+                    </div>
+
+                    <!-- Row 11: Deskripsi -->
+                    <div class="form-group">
+                        <label>📝 Deskripsi Produk <span style="color:var(--accent-red);">*</span> <span class="label-desc">(Maksimal 5000 karakter)</span></label>
+                        <textarea class="form-textarea" id="description" placeholder="Deskripsi lengkap produk..." maxlength="5000" required></textarea>
+                        <small style="opacity:0.6; font-size:11px; color:var(--text-muted);" id="charCount">0 / 5000 karakter</small>
+                    </div>
+
+                    <!-- Row 12: No WhatsApp -->
+                    <div class="form-group">
+                        <label>📱 No WhatsApp Admin <span style="color:var(--accent-red);">*</span></label>
+                        <input type="tel" class="form-input" id="adminWA" placeholder="6285218483129" required>
+                        <small style="opacity:0.6; font-size:11px; color:var(--text-muted);">Format: 6285218483129 (tanpa +)</small>
+                    </div>
+
+                    <!-- Button Group -->
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success">💾 Simpan Produk</button>
+                        <button type="reset" class="btn btn-secondary" onclick="resetForm()">🔄 Reset Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ===== PREVIEW LIVE ===== -->
+            <div class="card">
+                <div class="card-title">👁️ Preview Live Produk</div>
+                <div class="preview-card" id="livePreview">
+                    <img src="" alt="Preview" class="preview-image" id="previewImage" style="display:none;">
+                    <div class="preview-badge" id="previewBadge">Promo</div>
+                    <div class="preview-name" id="previewName">Nama Produk</div>
+                    <div class="preview-original" id="previewOriginal">Rp 100.000</div>
+                    <div class="preview-price" id="previewPrice">Rp 75.000</div>
+                    <div style="font-size:12px; opacity:0.6; margin-top:8px; color:var(--text-muted);" id="previewStatus">✅ Ada</div>
+                    <div style="font-size:12px; opacity:0.6; color:var(--text-muted);" id="previewCategory">📂 Kategori</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TAB 2: LIST PRODUK ========== -->
+        <div class="tab-content" id="tab-list">
+            <div class="card">
+                <div class="card-title">
+                    📋 Daftar Produk
+                    <span class="badge-count" id="listProductCount">0 Produk</span>
+                </div>
+
+                <div class="btn-group" style="margin-bottom:16px;">
+                    <button class="btn btn-primary" onclick="exportData('json')">📤 Export JSON</button>
+                    <button class="btn btn-primary" onclick="exportData('csv')">📤 Export CSV</button>
+                    <button class="btn btn-warning" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
+                    <input type="file" id="importFile" accept=".json,.csv" style="display:none;" onchange="importData(event)">
+                    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Hapus Semua</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Foto</th>
+                                <th>ID</th>
+                                <th>Nama Produk</th>
+                                <th>Kategori</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyState" class="empty-state">
+                    <div class="empty-icon">📦</div>
+                    <h3>Belum Ada Produk</h3>
+                    <p>Mulai tambahkan produk pertama Anda!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== TAB 3: SETTINGS ========== -->
+        <div class="tab-content" id="tab-settings">
+            <div class="card">
+                <div class="card-title">⚙️ Pengaturan Toko</div>
+
+                <form id="settingsForm" onsubmit="saveSettings(event)">
+                    <div class="form-group">
+                        <label>🖼️ Upload Logo Toko</label>
+                        <input type="file" class="form-input" id="storeLogo" accept="image/*" onchange="previewLogo(event)">
+                        <div style="margin-top:8px;">
+                            <img id="logoPreview" src="" alt="Logo Preview" style="max-width:100px; max-height:100px; border-radius:12px; display:none;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🏪 Nama Toko <span style="color:var(--accent-red);">*</span></label>
+                        <input type="text" class="form-input" id="storeName" placeholder="Nama Toko" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📍 Alamat Lengkap Toko <span style="color:var(--accent-red);">*</span></label>
+                        <textarea class="form-textarea" id="storeAddress" placeholder="Alamat lengkap toko" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🗺️ Link Google Maps</label>
+                        <input type="text" class="form-input" id="storeMap" placeholder="Masukkan link embed Google Maps">
+                        <small style="opacity:0.6; font-size:11px; color:var(--text-muted);">Masukkan link embed dari Google Maps</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📱 No WhatsApp Admin <span style="color:var(--accent-red);">*</span></label>
+                        <input type="tel" class="form-input" id="settingsWA" placeholder="6285218483129" required>
+                        <small style="opacity:0.6; font-size:11px; color:var(--text-muted);">Format: 6285218483129 (tanpa +)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🎵 Link TikTok Shop</label>
+                        <input type="url" class="form-input" id="tiktokLink" placeholder="https://www.tiktok.com/@...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>🛒 Link Shopee / Tokopedia / Lazada / Bukalapak</label>
+                        <input type="url" class="form-input" id="shopeeLink" placeholder="https://shopee.co.id/...">
+                        <small style="opacity:0.6; font-size:11px; color:var(--text-muted);">Link akan otomatis mengisi tombol Shopee di toko</small>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success">💾 Simpan Pengaturan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========== TAB 4: SINKRONISASI ========== -->
+        <div class="tab-content" id="tab-sync">
+            <div class="card">
+                <div class="card-title">🔄 Sinkronisasi Google Spreadsheet</div>
+                
+                <div style="margin-bottom:16px; padding:16px; background:var(--bg-input); border-radius:12px; border:1px solid var(--border-color);">
+                    <p style="font-size:13px; color:var(--text-secondary);">
+                        <i class="fas fa-info-circle" style="color:var(--accent-blue);"></i>
+                        Sinkronisasi akan menyimpan semua data produk ke Google Spreadsheet.
+                        Data akan otomatis terbaca oleh file <strong>toko.html</strong> dan <strong>dashboard.html</strong>.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label>📊 Status Sinkronisasi</label>
+                    <div style="padding:12px 16px; background:var(--bg-input); border-radius:12px; border:1px solid var(--border-color);">
+                        <span id="syncStatus" style="color:var(--accent-green);">✅ Siap</span>
+                        <span id="lastSyncTime" style="font-size:12px; color:var(--text-muted); margin-left:12px;"></span>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="syncToSpreadsheet()" id="syncBtn">
+                        <i class="fas fa-cloud-upload-alt"></i> Sinkronkan ke Spreadsheet
+                    </button>
+                    <button class="btn btn-secondary" onclick="syncFromSpreadsheet()" id="syncFromBtn">
+                        <i class="fas fa-cloud-download-alt"></i> Ambil dari Spreadsheet
+                    </button>
+                    <button class="btn btn-success" onclick="syncToToko()">
+                        <i class="fas fa-sync"></i> Sinkronkan ke Toko
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportAllData()">
+                        <i class="fas fa-download"></i> Export Semua Data
+                    </button>
+                </div>
+
+                <div id="syncLog" style="margin-top:12px; padding:12px; background:var(--bg-input); border-radius:12px; max-height:200px; overflow-y:auto; font-size:12px; color:var(--text-secondary); border:1px solid var(--border-color); display:none;">
+                    <div id="syncLogContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TOAST CONTAINER                                                  -->
+    <!-- ================================================================ -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ================================================================ -->
+    <!-- JAVASCRIPT                                                        -->
+    <!-- ================================================================ -->
+    <script>
+        // ================================================================
+        // STATE
+        // ================================================================
+        let products = [];
+        let editingId = null;
+        let imageFiles = [];
+        let currentTheme = 'dark';
+        let toastTimeout = null;
+        let isSyncing = false;
+
+        // ================================================================
+        // LOAD THEME
+        // ================================================================
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('salink_theme');
+            if (savedTheme === 'light') {
+                currentTheme = 'light';
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.getElementById('themeToggle').classList.add('active');
+                document.getElementById('toggleIcon').className = 'fas fa-sun';
+                const metaThemeColor = document.getElementById('themeColorMeta');
+                if (metaThemeColor) metaThemeColor.content = '#f0f4f8';
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeToggle = document.getElementById('themeToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const metaThemeColor = document.getElementById('themeColorMeta');
+            
+            if (currentTheme === 'dark') {
+                currentTheme = 'light';
+                html.setAttribute('data-theme', 'light');
+                themeToggle.classList.add('active');
+                toggleIcon.className = 'fas fa-sun';
+                if (metaThemeColor) metaThemeColor.content = '#f0f4f8';
+                localStorage.setItem('salink_theme', 'light');
+            } else {
+                currentTheme = 'dark';
+                html.removeAttribute('data-theme');
+                themeToggle.classList.remove('active');
+                toggleIcon.className = 'fas fa-moon';
+                if (metaThemeColor) metaThemeColor.content = '#0d1117';
+                localStorage.setItem('salink_theme', 'dark');
+            }
+        }
+
+        // ================================================================
+        // TOAST SYSTEM
+        // ================================================================
+        function showToast(title, message, icon = 'fa-info-circle') {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            clearTimeout(toastTimeout);
+            
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="fas ${icon}"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close"><i class="fas fa-times"></i></button>
+            `;
+            
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.remove();
+            });
+            
+            container.appendChild(toast);
+            
+            toastTimeout = setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // ================================================================
+        // LOAD & SAVE DATA
+        // ================================================================
+        function loadProducts() {
+            const stored = localStorage.getItem('teslasmart_products');
+            if (stored) {
+                try {
+                    products = JSON.parse(stored);
+                } catch (e) {
+                    products = [];
+                }
+            }
+            // Fallback data if empty
+            if (products.length === 0) {
+                products = getDefaultProducts();
+                saveProducts();
+            }
+            updateUI();
+        }
+
+        function saveProducts() {
+            localStorage.setItem('teslasmart_products', JSON.stringify(products));
+            updateUI();
+            // Update last sync time
+            document.getElementById('lastSyncTime').textContent = 'Terakhir sync: ' + new Date().toLocaleString('id-ID');
+        }
+
+        function getDefaultProducts() {
+            return [
+                {
+                    id: "PROD-001",
+                    name: "Kelapa Tua & Muda",
+                    category: "Sembako",
+                    status: "Ada",
+                    badge: "Promo",
+                    platform: "🛒",
+                    price: 8500,
+                    originalPrice: 10000,
+                    discountType: "persen",
+                    discountValue: 0,
+                    weight: [100, 200, 300, 400, 500, 1000, 1500, 2000, 2500, 3000],
+                    size: [],
+                    color: [],
+                    type: [],
+                    shipping: ["Ambil Sendiri", "Diantar Kurir", "Grab/Gojek"],
+                    images: ["https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgM83TQFoSunDOxuJnI0oyEy_KJGZaHCw8tI1TXsSAuSnPwGUDI3XxulMtKZoyU3BmwnP7RxAZPTi8NESf0DIMy8FIlVjGobPDikVuuzTHF5xpivl3dn3Ig24QmIePG4p0z8wiiAopdRnsN7F2DCqeK98hWPn1NOFD4_Pp45BkcluKiJ2r9xPXFBRgkDjc/s1280/1000868264.jpg"],
+                    description: "Kami Menjual Kelapa Tua Berkhasiat dan Kelapa Muda Segar (Deweugan) Berkualitas."
+                }
+            ];
+        }
+
+        function loadSettings() {
+            const stored = localStorage.getItem('teslasmart_settings');
+            if (stored) {
+                try {
+                    const settings = JSON.parse(stored);
+                    document.getElementById('storeName').value = settings.storeName || '';
+                    document.getElementById('storeAddress').value = settings.storeAddress || '';
+                    document.getElementById('storeMap').value = settings.storeMap || '';
+                    document.getElementById('settingsWA').value = settings.adminWA || '6285218483129';
+                    document.getElementById('tiktokLink').value = settings.tiktokLink || '';
+                    document.getElementById('shopeeLink').value = settings.shopeeLink || '';
+                    if (settings.logo) {
+                        document.getElementById('logoPreview').src = settings.logo;
+                        document.getElementById('logoPreview').style.display = 'block';
+                    }
+                } catch (e) {}
+            }
+        }
+
+        function saveSettingsForm() {
+            const settings = {
+                storeName: document.getElementById('storeName').value,
+                storeAddress: document.getElementById('storeAddress').value,
+                storeMap: document.getElementById('storeMap').value,
+                adminWA: document.getElementById('settingsWA').value,
+                tiktokLink: document.getElementById('tiktokLink').value,
+                shopeeLink: document.getElementById('shopeeLink').value,
+                logo: document.getElementById('logoPreview').src || ''
+            };
+            localStorage.setItem('teslasmart_settings', JSON.stringify(settings));
+            document.getElementById('adminWA').value = settings.adminWA;
+            return settings;
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            saveSettingsForm();
+            showToast('✅ Berhasil', 'Pengaturan berhasil disimpan!', 'fa-check-circle');
+        }
+
+        // ================================================================
+        // UI UPDATE
+        // ================================================================
+        function updateUI() {
+            const count = products.length;
+            document.getElementById('productCount').textContent = count + ' Produk';
+            document.getElementById('formProductCount').textContent = count + ' Produk';
+            document.getElementById('listProductCount').textContent = count + ' Produk';
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('productTableBody');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (products.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            tbody.innerHTML = products.map((p, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>
+                        <img src="${p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/50'}" 
+                             alt="${p.name}" class="product-thumb">
+                    </td>
+                    <td><strong>${p.id}</strong></td>
+                    <td>${p.name}</td>
+                    <td>${p.category}</td>
+                    <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+                    <td><span class="status-badge ${p.status === 'Ada' ? 'ada' : 'habis'}">${p.status}</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn btn-primary" onclick="editProduct('${p.id}')">✏️</button>
+                            <button class="btn btn-danger" onclick="deleteProduct('${p.id}')">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ================================================================
+        // FORM OPERATIONS
+        // ================================================================
+        function setupAutoID() {
+            const idInput = document.getElementById('productId');
+            if (!idInput.value) {
+                const count = products.length + 1;
+                idInput.value = 'PROD-' + String(count).padStart(3, '0');
+            }
+        }
+
+        function setupDescriptionCounter() {
+            const desc = document.getElementById('description');
+            desc.addEventListener('input', function() {
+                const count = this.value.length;
+                document.getElementById('charCount').textContent = `${count} / 5000 karakter`;
+            });
+        }
+
+        function setupCustomInputs() {
+            // Weight custom
+            document.querySelectorAll('#weightOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('weightCustom');
+                    if (this.value === 'custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+
+            // Size custom
+            document.querySelectorAll('#sizeOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('sizeCustom');
+                    if (this.value === 'custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+
+            // Color custom
+            document.querySelectorAll('#colorOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('colorCustom');
+                    if (this.value === 'Custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'Custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+
+            // Type custom
+            document.querySelectorAll('#typeOptions input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const customInput = document.getElementById('typeCustom');
+                    if (this.value === 'Custom' && this.checked) {
+                        customInput.style.display = 'block';
+                    } else if (this.value === 'Custom' && !this.checked) {
+                        customInput.style.display = 'none';
+                        customInput.value = '';
+                    }
+                });
+            });
+        }
+
+        function setupPreviewListeners() {
+            const fields = ['productName', 'price', 'originalPrice', 'category', 'status', 'badge'];
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updatePreview);
+                    el.addEventListener('change', updatePreview);
+                }
+            });
+
+            document.getElementById('productImages').addEventListener('change', function(e) {
+                const files = e.target.files;
+                const grid = document.getElementById('imagePreviewGrid');
+                grid.innerHTML = '';
+                imageFiles = [];
+
+                Array.from(files).forEach((file, index) => {
+                    if (index < 20) {
+                        imageFiles.push(file);
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            const div = document.createElement('div');
+                            div.style.position = 'relative';
+                            div.style.display = 'inline-block';
+                            div.innerHTML = `
+                                <img src="${ev.target.result}" class="img-item">
+                                <button class="remove-img" onclick="removeImage(${index})">×</button>
+                            `;
+                            grid.appendChild(div);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                if (imageFiles.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewImage').src = e.target.result;
+                        document.getElementById('previewImage').style.display = 'block';
+                    };
+                    reader.readAsDataURL(imageFiles[0]);
+                }
+                updatePreview();
+            });
+
+            document.getElementById('description').addEventListener('input', updatePreview);
+        }
+
+        function removeImage(index) {
+            imageFiles.splice(index, 1);
+            const grid = document.getElementById('imagePreviewGrid');
+            grid.innerHTML = '';
+            imageFiles.forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" class="img-item">
+                        <button class="remove-img" onclick="removeImage(${i})">×</button>
+                    `;
+                    grid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            if (imageFiles.length === 0) {
+                document.getElementById('previewImage').style.display = 'none';
+            }
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const name = document.getElementById('productName').value || 'Nama Produk';
+            const price = parseInt(document.getElementById('price').value) || 0;
+            const originalPrice = parseInt(document.getElementById('originalPrice').value) || 0;
+            const category = document.getElementById('category').value || 'Kategori';
+            const status = document.getElementById('status').value || 'Ada';
+            const badge = document.getElementById('badge').value || 'Promo';
+
+            document.getElementById('previewName').textContent = name;
+            document.getElementById('previewPrice').textContent = 'Rp ' + price.toLocaleString('id-ID');
+            document.getElementById('previewOriginal').textContent = originalPrice > 0 ? 'Rp ' + originalPrice.toLocaleString('id-ID') : '';
+            document.getElementById('previewCategory').textContent = '📂 ' + category;
+            document.getElementById('previewStatus').textContent = status === 'Ada' ? '✅ Ada' : '❌ Habis';
+            document.getElementById('previewBadge').textContent = badge;
+            document.getElementById('previewBadge').style.display = 'inline-block';
+        }
+
+        // ================================================================
+        // SAVE PRODUCT - DENGAN SYNC KE SPREADSHEET
+        // ================================================================
+        function saveProduct(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('productId').value.trim();
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('category').value;
+            const status = document.getElementById('status').value;
+            const badge = document.getElementById('badge').value;
+            const platform = document.getElementById('platform').value;
+            const price = parseInt(document.getElementById('price').value) || 0;
+            const originalPrice = parseInt(document.getElementById('originalPrice').value) || 0;
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = parseInt(document.getElementById('discountValue').value) || 0;
+            const description = document.getElementById('description').value.trim();
+
+            if (!id || !name || !category || !price || !description) {
+                showToast('⚠️ Perhatian', 'Mohon lengkapi semua field yang wajib diisi!', 'fa-exclamation-triangle');
+                return;
+            }
+
+            if (imageFiles.length === 0 && !editingId) {
+                showToast('⚠️ Perhatian', 'Mohon upload minimal 1 foto produk!', 'fa-exclamation-triangle');
+                return;
+            }
+
+            const getCheckedValues = (containerId) => {
+                const values = [];
+                document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`).forEach(cb => {
+                    if (cb.value !== 'custom' && cb.value !== 'Custom') {
+                        values.push(cb.value);
+                    }
+                });
+                return values;
+            };
+
+            const weight = getCheckedValues('weightOptions');
+            const size = getCheckedValues('sizeOptions');
+            const color = getCheckedValues('colorOptions');
+            const type = getCheckedValues('typeOptions');
+            const shipping = getCheckedValues('shippingOptions');
+
+            const weightCustom = document.getElementById('weightCustom').value.trim();
+            if (weightCustom) weight.push(weightCustom);
+
+            const sizeCustom = document.getElementById('sizeCustom').value.trim();
+            if (sizeCustom) size.push(sizeCustom);
+
+            const colorCustom = document.getElementById('colorCustom').value.trim();
+            if (colorCustom) color.push(colorCustom);
+
+            const typeCustom = document.getElementById('typeCustom').value.trim();
+            if (typeCustom) type.push(typeCustom);
+
+            const imageUrls = [];
+            if (editingId) {
+                const existing = products.find(p => p.id === editingId);
+                if (existing && existing.images) {
+                    imageUrls.push(...existing.images);
+                }
+            }
+
+            const processImages = () => {
+                return new Promise((resolve) => {
+                    if (imageFiles.length === 0) {
+                        resolve(imageUrls);
+                        return;
+                    }
+                    let loaded = 0;
+                    imageFiles.forEach((file) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imageUrls.push(e.target.result);
+                            loaded++;
+                            if (loaded === imageFiles.length) {
+                                resolve(imageUrls);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                });
+            };
+
+            processImages().then(async (finalImages) => {
+                let discount = 0;
+                if (discountType === 'persen' && discountValue > 0) {
+                    discount = discountValue;
+                }
+
+                const productData = {
+                    id,
+                    name,
+                    category,
+                    status,
+                    badge,
+                    platform,
+                    price,
+                    originalPrice,
+                    discount,
+                    discountType,
+                    discountValue,
+                    weight,
+                    size,
+                    color,
+                    type,
+                    shipping,
+                    images: finalImages,
+                    description
+                };
+
+                if (editingId) {
+                    const index = products.findIndex(p => p.id === editingId);
+                    if (index !== -1) {
+                        if (imageFiles.length === 0 && products[index].images) {
+                            productData.images = products[index].images;
+                        }
+                        products[index] = productData;
+                        // 🔥 Update ke Spreadsheet
+                        await apiUpdateProduct(editingId, productData);
+                    }
+                    editingId = null;
+                    showToast('✅ Berhasil', 'Produk berhasil diperbarui!', 'fa-check-circle');
+                } else {
+                    products.push(productData);
+                    // 🔥 Tambah ke Spreadsheet
+                    await apiAddProduct(productData);
+                    showToast('✅ Berhasil', 'Produk berhasil ditambahkan!', 'fa-check-circle');
+                }
+
+                saveProducts();
+                resetForm();
+                setupAutoID();
+                document.getElementById('productImages').value = '';
+                document.getElementById('imagePreviewGrid').innerHTML = '';
+                imageFiles = [];
+            });
+        }
+
+        // ================================================================
+        // EDIT & DELETE PRODUCT - DENGAN SYNC KE SPREADSHEET
+        // ================================================================
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            editingId = id;
+
+            document.getElementById('productId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('category').value = product.category;
+            document.getElementById('status').value = product.status;
+            document.getElementById('badge').value = product.badge;
+            document.getElementById('platform').value = product.platform;
+            document.getElementById('price').value = product.price;
+            document.getElementById('originalPrice').value = product.originalPrice || 0;
+            document.getElementById('discountType').value = product.discountType || 'persen';
+            document.getElementById('discountValue').value = product.discountValue || 0;
+            document.getElementById('description').value = product.description;
+
+            const checkValues = (containerId, values) => {
+                document.querySelectorAll(`#${containerId} input[type="checkbox"]`).forEach(cb => {
+                    if (values.includes(cb.value)) {
+                        cb.checked = true;
+                    }
+                });
+            };
+
+            checkValues('weightOptions', product.weight || []);
+            checkValues('sizeOptions', product.size || []);
+            checkValues('colorOptions', product.color || []);
+            checkValues('typeOptions', product.type || []);
+            checkValues('shippingOptions', product.shipping || []);
+
+            if (product.images && product.images.length > 0) {
+                const grid = document.getElementById('imagePreviewGrid');
+                grid.innerHTML = '';
+                product.images.forEach((img, idx) => {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.innerHTML = `
+                        <img src="${img}" class="img-item">
+                        <button class="remove-img" onclick="removeExistingImage(${idx})">×</button>
+                    `;
+                    grid.appendChild(div);
+                });
+                document.getElementById('previewImage').src = product.images[0];
+                document.getElementById('previewImage').style.display = 'block';
+            }
+
+            updatePreview();
+            switchTab('form');
+            document.querySelector('.btn-success').textContent = '✏️ Update Produk';
+            document.querySelector('.btn-secondary').textContent = '❌ Batal Edit';
+            document.querySelector('.btn-secondary').onclick = function() {
+                resetForm();
+                this.textContent = '🔄 Reset Form';
+                this.onclick = function() { resetForm(); };
+            };
+
+            showToast('✏️ Edit', 'Edit produk: ' + product.name, 'fa-edit');
+        }
+
+        function removeExistingImage(index) {
+            if (!editingId) return;
+            const product = products.find(p => p.id === editingId);
+            if (product && product.images) {
+                product.images.splice(index, 1);
+                saveProducts();
+                const grid = document.getElementById('imagePreviewGrid');
+                grid.innerHTML = '';
+                product.images.forEach((img, idx) => {
+                    const div = document.createElement('div');
+                    div.style.position = 'relative';
+                    div.style.display = 'inline-block';
+                    div.innerHTML = `
+                        <img src="${img}" class="img-item">
+                        <button class="remove-img" onclick="removeExistingImage(${idx})">×</button>
+                    `;
+                    grid.appendChild(div);
+                });
+                if (product.images.length > 0) {
+                    document.getElementById('previewImage').src = product.images[0];
+                    document.getElementById('previewImage').style.display = 'block';
+                } else {
+                    document.getElementById('previewImage').style.display = 'none';
+                }
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('🗑️ Apakah Anda yakin ingin menghapus produk ini?')) return;
+            products = products.filter(p => p.id !== id);
+            saveProducts();
+            // 🔥 Hapus dari Spreadsheet
+            await apiDeleteProduct(id);
+            updateUI();
+            showToast('🗑️ Dihapus', 'Produk berhasil dihapus!', 'fa-trash');
+        }
+
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            editingId = null;
+            document.querySelector('.btn-success').textContent = '💾 Simpan Produk';
+            document.querySelector('.btn-secondary').textContent = '🔄 Reset Form';
+            document.querySelector('.btn-secondary').onclick = function() { resetForm(); };
+            document.getElementById('imagePreviewGrid').innerHTML = '';
+            document.getElementById('previewImage').style.display = 'none';
+            imageFiles = [];
+            document.getElementById('weightCustom').style.display = 'none';
+            document.getElementById('sizeCustom').style.display = 'none';
+            document.getElementById('colorCustom').style.display = 'none';
+            document.getElementById('typeCustom').style.display = 'none';
+            document.getElementById('weightCustom').value = '';
+            document.getElementById('sizeCustom').value = '';
+            document.getElementById('colorCustom').value = '';
+            document.getElementById('typeCustom').value = '';
+            document.getElementById('charCount').textContent = '0 / 5000 karakter';
+            setupAutoID();
+            updatePreview();
+            showToast('🔄 Reset', 'Form telah direset', 'fa-sync');
+        }
+
+        // ================================================================
+        // SYNC KE SPREADSHEET
+        // ================================================================
+        async function syncToSpreadsheet() {
+            if (isSyncing) return;
+            isSyncing = true;
+            
+            const syncBtn = document.getElementById('syncBtn');
+            const syncLog = document.getElementById('syncLog');
+            const syncLogContent = document.getElementById('syncLogContent');
+            
+            syncBtn.disabled = true;
+            syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sinkronisasi...';
+            syncLog.style.display = 'block';
+            syncLogContent.innerHTML = '🔄 Memulai sinkronisasi...\n';
+            
+            try {
+                let synced = 0;
+                for (const p of products) {
+                    const result = await apiAddProduct(p);
+                    if (result) synced++;
+                    syncLogContent.innerHTML += `📤 ${p.id} - ${p.name} ${result ? '✅' : '❌'}\n`;
+                    syncLog.scrollTop = syncLog.scrollHeight;
+                }
+                
+                syncLogContent.innerHTML += `\n✅ Sinkronisasi selesai! ${synced}/${products.length} produk berhasil disinkronkan.\n`;
+                document.getElementById('lastSyncTime').textContent = 'Terakhir sync: ' + new Date().toLocaleString('id-ID');
+                
+                showToast('✅ Berhasil', `${synced} produk berhasil disinkronkan ke Spreadsheet!`, 'fa-check-circle');
+            } catch (error) {
+                syncLogContent.innerHTML += `\n❌ Error: ${error.message}\n`;
+                showToast('❌ Gagal', 'Gagal sinkronisasi: ' + error.message, 'fa-exclamation-triangle');
+            } finally {
+                isSyncing = false;
+                syncBtn.disabled = false;
+                syncBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Sinkronkan ke Spreadsheet';
+            }
+        }
+
+        async function syncFromSpreadsheet() {
+            if (isSyncing) return;
+            isSyncing = true;
+            
+            const syncBtn = document.getElementById('syncFromBtn');
+            const syncLog = document.getElementById('syncLog');
+            const syncLogContent = document.getElementById('syncLogContent');
+            
+            syncBtn.disabled = true;
+            syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengambil...';
+            syncLog.style.display = 'block';
+            syncLogContent.innerHTML = '🔄 Mengambil data dari Spreadsheet...\n';
+            
+            try {
+                const remoteProducts = await apiGetProducts();
+                if (remoteProducts && remoteProducts.length > 0) {
+                    let added = 0;
+                    const localIds = new Set(products.map(p => p.id));
+                    
+                    remoteProducts.forEach(rp => {
+                        if (!localIds.has(rp.id)) {
+                            products.push(rp);
+                            added++;
+                            syncLogContent.innerHTML += `📥 ${rp.id} - ${rp.name} ✅\n`;
+                        }
+                    });
+                    
+                    saveProducts();
+                    updateUI();
+                    syncLogContent.innerHTML += `\n✅ ${added} produk baru berhasil diambil!\n`;
+                    showToast('✅ Berhasil', `${added} produk baru diambil dari Spreadsheet!`, 'fa-check-circle');
+                } else {
+                    syncLogContent.innerHTML += `\n⚠️ Tidak ada data di Spreadsheet.\n`;
+                    showToast('ℹ️ Info', 'Tidak ada data di Spreadsheet', 'fa-info-circle');
+                }
+            } catch (error) {
+                syncLogContent.innerHTML += `\n❌ Error: ${error.message}\n`;
+                showToast('❌ Gagal', 'Gagal mengambil data: ' + error.message, 'fa-exclamation-triangle');
+            } finally {
+                isSyncing = false;
+                syncBtn.disabled = false;
+                syncBtn.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Ambil dari Spreadsheet';
+                syncLog.scrollTop = syncLog.scrollHeight;
+            }
+        }
+
+        // ================================================================
+        // SYNC TO TOKO.HTML
+        // ================================================================
+        function syncToToko() {
+            saveProducts();
+            saveSettingsForm();
+            localStorage.setItem('teslasmart_synced', 'true');
+            localStorage.setItem('teslasmart_last_sync', new Date().toISOString());
+            
+            // 🔥 Juga sync ke Spreadsheet
+            syncToSpreadsheet();
+            
+            showToast('🔄 Sinkron', 'Data berhasil disinkronkan ke Toko dan Spreadsheet!', 'fa-sync');
+        }
+
+        // ================================================================
+        // EXPORT & IMPORT
+        // ================================================================
+        function exportData(format) {
+            if (products.length === 0) {
+                showToast('⚠️ Perhatian', 'Tidak ada data untuk diexport!', 'fa-exclamation-triangle');
+                return;
+            }
+
+            let data, filename, mimeType;
+            if (format === 'json') {
+                data = JSON.stringify(products, null, 2);
+                filename = 'produk_teslasmart.json';
+                mimeType = 'application/json';
+            } else {
+                const headers = ['id', 'name', 'category', 'status', 'badge', 'platform', 'price', 'originalPrice', 'discount', 'description'];
+                const rows = products.map(p => [
+                    p.id, p.name, p.category, p.status, p.badge, p.platform,
+                    p.price, p.originalPrice || 0, p.discount || 0,
+                    `"${p.description.replace(/"/g, '""')}"`
+                ]);
+                data = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+                filename = 'produk_teslasmart.csv';
+                mimeType = 'text/csv';
+            }
+
+            const blob = new Blob([data], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('📤 Export', `Data berhasil diexport sebagai ${format.toUpperCase()}`, 'fa-file-export');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let importedData;
+                    if (file.name.endsWith('.json')) {
+                        importedData = JSON.parse(e.target.result);
+                    } else {
+                        const lines = e.target.result.split('\n');
+                        const headers = lines[0].split(',');
+                        importedData = lines.slice(1).filter(l => l.trim()).map(line => {
+                            const values = line.split(',');
+                            const obj = {};
+                            headers.forEach((h, i) => {
+                                const val = values[i] || '';
+                                if (h === 'price' || h === 'originalPrice' || h === 'discount') {
+                                    obj[h] = parseInt(val) || 0;
+                                } else if (h === 'description') {
+                                    obj[h] = val.replace(/^"|"$/g, '').replace(/""/g, '"');
+                                } else {
+                                    obj[h] = val;
+                                }
+                            });
+                            return obj;
+                        });
+                    }
+
+                    if (!Array.isArray(importedData) || importedData.length === 0) {
+                        showToast('⚠️ Error', 'Data tidak valid atau kosong!', 'fa-exclamation-triangle');
+                        return;
+                    }
+
+                    if (!confirm(`📥 Import ${importedData.length} produk?`)) return;
+
+                    let added = 0;
+                    importedData.forEach(newProduct => {
+                        if (newProduct.id && !products.find(p => p.id === newProduct.id)) {
+                            if (!newProduct.images) newProduct.images = ['https://via.placeholder.com/400'];
+                            if (!newProduct.status) newProduct.status = 'Ada';
+                            if (!newProduct.category) newProduct.category = 'Sembako';
+                            if (!newProduct.badge) newProduct.badge = 'Promo';
+                            if (!newProduct.platform) newProduct.platform = '🛒';
+                            if (!newProduct.shipping) newProduct.shipping = ['Ambil Sendiri', 'Diantar Kurir'];
+                            products.push(newProduct);
+                            added++;
+                        }
+                    });
+
+                    saveProducts();
+                    updateUI();
+                    showToast('📥 Import', `Berhasil import ${added} produk!`, 'fa-file-import');
+                } catch (err) {
+                    showToast('⚠️ Error', 'Gagal import data: ' + err.message, 'fa-exclamation-triangle');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function exportAllData() {
+            const allData = {
+                products: products,
+                settings: JSON.parse(localStorage.getItem('teslasmart_settings') || '{}'),
+                exportedAt: new Date().toISOString()
+            };
+            const data = JSON.stringify(allData, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'teslasmart_full_backup.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📦 Backup', 'Semua data berhasil diexport!', 'fa-database');
+        }
+
+        function clearAllData() {
+            if (!confirm('⚠️ PERINGATAN: Ini akan menghapus SEMUA data produk! Lanjutkan?')) return;
+            if (!confirm('😱 Yakin sekali? Data tidak bisa dikembalikan!')) return;
+            products = [];
+            saveProducts();
+            updateUI();
+            showToast('🗑️ Dihapus', 'Semua data telah dihapus!', 'fa-trash-alt');
+        }
+
+        // ================================================================
+        // UI HELPERS
+        // ================================================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        }
+
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('logoPreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ================================================================
+        // INITIALIZATION
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadProducts();
+            loadSettings();
+            setupAutoID();
+            setupPreviewListeners();
+            setupDescriptionCounter();
+            setupCustomInputs();
+
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+            // Load last sync time
+            const lastSync = localStorage.getItem('teslasmart_last_sync');
+            if (lastSync) {
+                document.getElementById('lastSyncTime').textContent = 'Terakhir sync: ' + new Date(lastSync).toLocaleString('id-ID');
+            }
+
+            console.log('🚀 Dashboard Admin TeslaSmart - INTEGRASI SPREADSHEET');
+            console.log(`📦 Total produk: ${products.length}`);
+            console.log('📡 API URL:', API_URL);
+            console.log('✅ FITUR:');
+            console.log('  - Tambah, Edit, Hapus Produk');
+            console.log('  - Sinkronisasi ke Google Spreadsheet');
+            console.log('  - Export/Import Data');
+            console.log('  - Dark/Light Mode');
+            console.log('  - Mobile Friendly');
+            console.log('  - Tombol "Lihat Toko" TETAP ADA');
+        });
+    </script>
+</body>
+</html>
