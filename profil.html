@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SALINK - Profil Pengguna</title>
+    <title>SALINK - Profil Saya</title>
     
     <!-- ===== PWA META TAGS ===== -->
     <link rel="manifest" href="manifest.json">
@@ -65,15 +65,105 @@
         }
 
         /**
-         * 🔄 Sinkronisasi data profil ke Google Sheets
+         * 📥 Ambil semua notifikasi dari Google Sheets
          */
-        async function syncProfileToSpreadsheet(profileData) {
+        async function apiGetNotifications() {
+            try {
+                const response = await fetch(API_URL + '?action=get_notifications&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_notifications', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get notifications:', error);
+                return JSON.parse(localStorage.getItem('salink_notifications') || '[]');
+            }
+        }
+
+        /**
+         * 📥 Ambil semua undangan dari Google Sheets
+         */
+        async function apiGetInvites() {
+            try {
+                const response = await fetch(API_URL + '?action=get_invites&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_invites', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get invites:', error);
+                return JSON.parse(localStorage.getItem('salink_invites') || '[]');
+            }
+        }
+
+        /**
+         * 📤 Simpan postingan ke Google Sheets
+         */
+        async function apiSavePost(postData) {
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'sync_profile',
+                        action: 'save_post',
+                        post: postData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Post saved to Spreadsheet:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Gagal save post:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 📤 Simpan notifikasi ke Google Sheets
+         */
+        async function apiSaveNotification(notifData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save_notification',
+                        notification: notifData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Notification saved to Spreadsheet:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Gagal save notification:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 📤 Simpan profil ke Google Sheets
+         */
+        async function apiSaveProfile(profileData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save_profile',
                         profile: profileData,
                         timestamp: Date.now()
                     })
@@ -81,10 +171,35 @@
                 
                 if (!response.ok) throw new Error('HTTP error: ' + response.status);
                 const result = await response.json();
-                console.log('📡 Sync profile result:', result);
+                console.log('📡 Profile saved to Spreadsheet:', result);
                 return result.status === 'success';
             } catch (error) {
-                console.error('❌ Sync profile error:', error);
+                console.error('❌ Gagal save profile:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 🔄 Sinkronisasi aksi ke Google Sheets
+         */
+        async function syncActionToSpreadsheet(action, data) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: action,
+                        data: data,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Sync action result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Sync action error:', error);
                 return false;
             }
         }
@@ -127,6 +242,7 @@
             --footer-height: 65px;
             --danger: #f85149;
             --success: #3fb950;
+            --warning: #f0d080;
         }
 
         [data-theme="light"] {
@@ -157,6 +273,7 @@
             --input-focus: #4facfe;
             --danger: #e31837;
             --success: #2ea44f;
+            --warning: #8d6b4b;
         }
 
         /* ================================================================ */
@@ -219,7 +336,7 @@
         .theme-toggle .toggle-thumb i { color: #fff; }
 
         /* ================================================================ */
-        /* HEADER                                                           */
+        /* HEADER - TANPA SEARCH & SIDEBAR                                  */
         /* ================================================================ */
         .app-bar {
             position: fixed;
@@ -431,7 +548,7 @@
         }
 
         /* ================================================================ */
-        /* PROFILE NAVBAR - SEMUA TOMBOL (FOTO, TEMAN, BIODATA, JUAL)       */
+        /* PROFILE NAVBAR - FOTO, TEMAN, BIODATA, JUAL                     */
         /* ================================================================ */
         .profile-nav-grid {
             display: grid;
@@ -1316,7 +1433,7 @@
 <body>
 
     <!-- ================================================================ -->
-    <!-- HEADER                                                            -->
+    <!-- HEADER - TANPA SEARCH & SIDEBAR                                   -->
     <!-- ================================================================ -->
     <header class="app-bar">
         <div class="app-title" onclick="window.location.href='dashboard.html'">
@@ -1368,15 +1485,15 @@
 
         <!-- ===== PROFILE ACTIONS ===== -->
         <div class="profile-actions">
-            <button class="profile-pesan-btn" onclick="openPesanModal()">
+            <a href="#" class="profile-pesan-btn" id="profilePesanBtn">
                 <i class="fas fa-paper-plane"></i> PESAN
-            </button>
+            </a>
             <button class="profile-invite-btn" id="profileInviteBtn">
                 <i class="fas fa-user-plus"></i> INVITE
             </button>
         </div>
 
-        <!-- ===== PROFILE NAVBAR - SEMUA TOMBOL (FOTO, TEMAN, BIODATA, JUAL) ===== -->
+        <!-- ===== PROFILE NAVBAR - SEMUA TOMBOL ===== -->
         <div class="profile-nav-grid">
             <a href="#" class="profile-nav-item" id="profileFotoBtn" onclick="openFotoModal()">
                 <span>🖼️</span>
@@ -1400,7 +1517,7 @@
         <div class="post-section" style="margin-top:12px;">
             <div class="section-title-small">
                 <i class="fas fa-file-alt"></i>
-                <span>Postingan</span>
+                <span>Postingan Saya</span>
             </div>
             <div id="profilePosts"></div>
         </div>
@@ -1516,7 +1633,7 @@
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fas fa-bell"></i>
-                    <span>🔔 Pesan Notifikasi</span>
+                    <span>🔔 Notifikasi</span>
                     <span class="badge-count" id="notifModalBadge">0</span>
                 </div>
                 <button class="modal-close" id="notifModalClose">
@@ -1588,6 +1705,7 @@
         let currentFotoFilter = 'semua';
         let notifications = [];
         let notificationIdCounter = 0;
+        let inviteCount = 0;
 
         // ================================================================
         // LOAD THEME
@@ -1664,11 +1782,9 @@
         async function getUserByUsername(username) {
             if (!username) return null;
             
-            // Coba ambil dari localStorage dulu
             let users = JSON.parse(localStorage.getItem('salink_users') || '[]');
             let user = users.find(u => u.username === username);
             
-            // Jika tidak ditemukan, coba sync dari Spreadsheet
             if (!user) {
                 try {
                     const remoteUsers = await apiGetUsers();
@@ -1682,7 +1798,6 @@
                 }
             }
             
-            // Jika masih tidak ditemukan, buat data default
             if (!user) {
                 const savedUser = localStorage.getItem('salink_user');
                 if (savedUser) {
@@ -1729,30 +1844,14 @@
         // LOAD PROFILE DATA
         // ================================================================
         async function loadProfileData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('username');
-            
-            if (username) {
-                profileUser = await getUserByUsername(username);
-                if (!profileUser) {
-                    const savedUser = localStorage.getItem('salink_user');
-                    if (savedUser) {
-                        try {
-                            profileUser = JSON.parse(savedUser);
-                            showToast('ℹ️ Info', 'Pengguna tidak ditemukan, menampilkan profil Anda', 'fa-info-circle');
-                        } catch (e) {
-                            showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
-                        }
-                    }
-                }
-            } else {
-                const savedUser = localStorage.getItem('salink_user');
-                if (savedUser) {
-                    try {
-                        profileUser = JSON.parse(savedUser);
-                    } catch (e) {
-                        console.error('Gagal parse saved user:', e);
-                    }
+            const savedUser = localStorage.getItem('salink_user');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    profileUser = currentUser;
+                } catch (e) {
+                    currentUser = null;
+                    profileUser = null;
                 }
             }
             
@@ -1782,74 +1881,51 @@
                     mapLink: ''
                 };
             }
-            
-            const savedUser = localStorage.getItem('salink_user');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                } catch (e) {
-                    currentUser = null;
-                }
-            }
-            
-            // 🔥 SYNC profil ke Spreadsheet jika ini adalah profil user sendiri
-            if (currentUser && profileUser && currentUser.username === profileUser.username) {
-                try {
-                    await syncProfileToSpreadsheet(profileUser);
-                    console.log('✅ Profil disinkronkan ke Spreadsheet');
-                } catch (e) {
-                    console.warn('⚠️ Gagal sync profil ke Spreadsheet:', e);
-                }
-            }
         }
 
         // ================================================================
         // LOAD POSTS - DENGAN SYNC DARI SPREADSHEET
         // ================================================================
-        async function loadPosts() {
-            // Coba ambil dari localStorage dulu
-            let loaded = false;
+        async function loadUserPosts() {
             try {
-                const saved = localStorage.getItem('salink_posts');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        posts = parsed;
+                // Coba ambil dari Spreadsheet
+                const remotePosts = await apiGetPosts();
+                if (remotePosts && remotePosts.length > 0) {
+                    posts = remotePosts;
+                    let maxId = 0;
+                    posts.forEach(p => {
+                        const numId = parseInt(p.id.replace('post-', ''));
+                        if (!isNaN(numId) && numId > maxId) maxId = numId;
+                    });
+                    postIdCounter = maxId;
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
+                    console.log('✅ Posts from Spreadsheet: ' + posts.length);
+                } else {
+                    // Fallback ke localStorage
+                    const saved = localStorage.getItem('salink_posts');
+                    if (saved) {
+                        posts = JSON.parse(saved);
                         let maxId = 0;
                         posts.forEach(p => {
                             const numId = parseInt(p.id.replace('post-', ''));
                             if (!isNaN(numId) && numId > maxId) maxId = numId;
                         });
                         postIdCounter = maxId;
-                        loaded = true;
+                        console.log('✅ Posts from localStorage: ' + posts.length);
                     }
                 }
             } catch (e) {
-                console.warn('Gagal memuat posts dari localStorage:', e);
-            }
-            
-            // Jika belum ada data, sync dari Spreadsheet
-            if (!loaded || posts.length === 0) {
-                try {
-                    const remotePosts = await apiGetPosts();
-                    if (remotePosts && remotePosts.length > 0) {
-                        posts = remotePosts;
-                        let maxId = 0;
-                        posts.forEach(p => {
-                            const numId = parseInt(p.id.replace('post-', ''));
-                            if (!isNaN(numId) && numId > maxId) maxId = numId;
-                        });
-                        postIdCounter = maxId;
-                        localStorage.setItem('salink_posts', JSON.stringify(posts));
-                        loaded = true;
-                        console.log('✅ Posts disinkronkan dari Spreadsheet:', posts.length);
-                    }
-                } catch (e) {
-                    console.warn('⚠️ Gagal sync posts dari Spreadsheet:', e);
+                console.warn('⚠️ Gagal load posts:', e);
+                const saved = localStorage.getItem('salink_posts');
+                if (saved) {
+                    posts = JSON.parse(saved);
                 }
             }
             
-            return loaded;
+            // Render posts
+            const userPosts = posts.filter(p => p.userId === profileUser?.username);
+            renderProfilePosts(userPosts);
+            document.getElementById('profileStatPosts').textContent = userPosts.length;
         }
 
         // ================================================================
@@ -1858,23 +1934,6 @@
         function savePosts() {
             try {
                 localStorage.setItem('salink_posts', JSON.stringify(posts));
-                
-                // 🔥 SYNC ke Spreadsheet
-                posts.forEach(async (post) => {
-                    try {
-                        await fetch(API_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                action: 'save_post',
-                                post: post,
-                                timestamp: Date.now()
-                            })
-                        });
-                    } catch (e) {
-                        console.warn('⚠️ Gagal sync post ke Spreadsheet:', e);
-                    }
-                });
             } catch (e) {
                 console.warn('Gagal menyimpan posts:', e);
             }
@@ -1915,6 +1974,17 @@
         }
 
         // ================================================================
+        // SAVE FRIENDS
+        // ================================================================
+        function saveFriends() {
+            try {
+                localStorage.setItem('salink_friends', JSON.stringify(friends));
+            } catch (e) {
+                console.warn('Gagal menyimpan friends:', e);
+            }
+        }
+
+        // ================================================================
         // LOAD NOTIFICATIONS
         // ================================================================
         function loadNotifications() {
@@ -1935,6 +2005,38 @@
                 generateSampleNotifications();
             }
             return true;
+        }
+
+        // ================================================================
+        // LOAD INVITES
+        // ================================================================
+        async function loadInvites() {
+            try {
+                const invites = await apiGetInvites();
+                if (invites && invites.length > 0) {
+                    localStorage.setItem('salink_invites', JSON.stringify(invites));
+                    const pendingInvites = invites.filter(i => i.to === currentUser?.username && i.status === 'pending');
+                    inviteCount = pendingInvites.length;
+                    updateInviteBadge();
+                    console.log('✅ Invites: ' + invites.length + ' data');
+                }
+            } catch (e) {
+                console.warn('⚠️ Gagal load invites:', e);
+                const saved = localStorage.getItem('salink_invites');
+                if (saved) {
+                    const invites = JSON.parse(saved);
+                    const pendingInvites = invites.filter(i => i.to === currentUser?.username && i.status === 'pending');
+                    inviteCount = pendingInvites.length;
+                    updateInviteBadge();
+                }
+            }
+        }
+
+        // ================================================================
+        // UPDATE INVITE BADGE
+        // ================================================================
+        function updateInviteBadge() {
+            // Tidak ada badge invite di profil, tapi kita simpan state
         }
 
         // ================================================================
@@ -2002,7 +2104,7 @@
                 body.innerHTML = `
                     <div style="text-align:center;padding:30px 0;color:var(--text-muted);">
                         <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada pesan notifikasi</p>
+                        <p>Belum ada notifikasi</p>
                     </div>
                 `;
                 return;
@@ -2070,7 +2172,7 @@
         }
 
         // ================================================================
-        // OPEN PESAN MODAL
+        // OPEN PESAN MODAL - SAMA DENGAN NOTIF
         // ================================================================
         function openPesanModal() {
             renderNotifications();
@@ -2081,6 +2183,17 @@
         function closeNotifModal() {
             document.getElementById('notifModal').classList.remove('active');
             document.body.style.overflow = '';
+        }
+
+        // ================================================================
+        // BUKA HALAMAN PESAN-MASUK.HTML
+        // ================================================================
+        function openPesanPage() {
+            if (profileUser?.username) {
+                window.open(`pesan-masuk.html?to=${profileUser.username}&name=${encodeURIComponent(profileUser.fullName)}`, '_blank');
+            } else {
+                showToast('⚠️ Error', 'Pengguna tidak ditemukan', 'fa-exclamation-triangle');
+            }
         }
 
         // ================================================================
@@ -2110,6 +2223,16 @@
             document.getElementById('profileStatFollowing').textContent = followingCount;
             
             renderProfilePosts(userPosts);
+            
+            // Update tombol PESAN
+            const pesanBtn = document.getElementById('profilePesanBtn');
+            if (pesanBtn) {
+                pesanBtn.href = `pesan-masuk.html?to=${profileUser.username}&name=${encodeURIComponent(profileUser.fullName)}`;
+                pesanBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openPesanPage();
+                });
+            }
         }
 
         // ================================================================
@@ -2157,11 +2280,12 @@
             const container = document.getElementById('profilePosts');
             container.innerHTML = '';
             
-            if (userPosts.length === 0) {
+            if (!userPosts || userPosts.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-file-alt"></i>
                         <p>Belum ada postingan</p>
+                        <p style="font-size:0.7rem;margin-top:4px;">Mulai buat postingan pertama Anda!</p>
                     </div>
                 `;
                 return;
@@ -2195,6 +2319,16 @@
                             <h4>${post.userFullName} ${specialBadge}</h4>
                             <small>${new Date(post.timestamp).toLocaleString('id-ID', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' })}</small>
                         </div>
+                        ${post.userId === currentUser?.username ? `
+                            <button class="post-menu-toggle" data-post-id="${post.id}">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="post-menu-dropdown" id="postMenu-${post.id}">
+                                <button class="menu-item edit-post" data-post-id="${post.id}">
+                                    <i class="fas fa-edit"></i> Edit Postingan
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="post-content">
                         ${post.text ? `<div class="post-text">${post.text}</div>` : ''}
@@ -2226,6 +2360,12 @@
                             <i class="fas fa-share-alt"></i>
                             <span>Bagikan</span>
                         </div>
+                        ${post.userId === currentUser?.username ? `
+                            <div class="post-action delete" data-post-id="${post.id}">
+                                <i class="fas fa-trash"></i>
+                                <span>Hapus</span>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="comments-section" id="comments-${post.id}">
                         ${post.comments ? post.comments.map(comment => {
@@ -2311,6 +2451,8 @@
                         post.likes.splice(index, 1);
                     } else {
                         post.likes.push(currentUser.username);
+                        // 🔥 SYNC KE SPREADSHEET
+                        syncActionToSpreadsheet('like_post', { postId: postId, user: currentUser.username });
                     }
                     savePosts();
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
@@ -2360,6 +2502,9 @@
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
                     input.value = '';
                     showToast('✅ Berhasil', 'Komentar ditambahkan!', 'fa-check-circle');
+                    
+                    // 🔥 SYNC KE SPREADSHEET
+                    syncActionToSpreadsheet('add_comment', { postId: postId, comment: comment });
                 });
             });
             
@@ -2405,6 +2550,9 @@
                     savePosts();
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
                     showToast('✅ Berhasil', 'Balasan ditambahkan!', 'fa-check-circle');
+                    
+                    // 🔥 SYNC KE SPREADSHEET
+                    syncActionToSpreadsheet('add_reply', { postId: postId, commentId: commentId, reply: reply });
                 });
             });
             
@@ -2429,6 +2577,57 @@
                             showToast('📋 Disalin', 'Link: ' + url, 'fa-copy');
                         });
                     }
+                });
+            });
+            
+            // DELETE POST
+            document.querySelectorAll('.post-action.delete').forEach(el => {
+                el.addEventListener('click', function() {
+                    if (!currentUser) return;
+                    const postId = this.dataset.postId;
+                    if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
+                        const post = posts.find(p => p.id === postId);
+                        if (post) {
+                            // 🔥 SYNC KE SPREADSHEET
+                            syncActionToSpreadsheet('delete_post', { postId: postId });
+                        }
+                        posts = posts.filter(p => p.id !== postId);
+                        savePosts();
+                        renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
+                        showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
+                    }
+                });
+            });
+            
+            // POST MENU TOGGLE
+            document.querySelectorAll('.post-menu-toggle').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const postId = this.dataset.postId;
+                    const menu = document.getElementById(`postMenu-${postId}`);
+                    if (menu) {
+                        menu.classList.toggle('active');
+                    }
+                });
+            });
+            
+            // EDIT POST
+            document.querySelectorAll('.edit-post').forEach(el => {
+                el.addEventListener('click', function() {
+                    const postId = this.dataset.postId;
+                    const post = posts.find(p => p.id === postId);
+                    if (!post) return;
+                    const newText = prompt('Edit postingan:', post.text);
+                    if (newText !== null) {
+                        post.text = newText;
+                        savePosts();
+                        renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
+                        showToast('✅ Diperbarui', 'Postingan berhasil diedit', 'fa-check-circle');
+                        // 🔥 SYNC KE SPREADSHEET
+                        syncActionToSpreadsheet('edit_post', { postId: postId, newText: newText });
+                    }
+                    const menu = document.getElementById(`postMenu-${postId}`);
+                    if (menu) menu.classList.remove('active');
                 });
             });
         }
@@ -2456,8 +2655,7 @@
             const grid = document.getElementById('fotoGrid');
             grid.innerHTML = '';
             
-            // Ambil semua postingan dari user yang memiliki media
-            const userPosts = posts.filter(p => p.userId === profileUser.username && (p.mediaType === 'image' || p.mediaType === 'video'));
+            const userPosts = posts.filter(p => p.userId === profileUser?.username && (p.mediaType === 'image' || p.mediaType === 'video'));
             
             let filteredPosts = userPosts;
             if (filter === 'foto') {
@@ -2494,7 +2692,6 @@
                     mediaHtml = `<video controls class="foto-media video" onclick="this.paused ? this.play() : this.pause()"><source src="${post.mediaData}"></video>`;
                 }
                 
-                // Komentar terbatas untuk ditampilkan di grid
                 const recentComments = post.comments ? post.comments.slice(-2) : [];
                 
                 item.innerHTML = `
@@ -2537,7 +2734,6 @@
                 grid.appendChild(item);
             });
             
-            // Attach event listeners untuk foto actions
             attachFotoListeners();
         }
 
@@ -2549,7 +2745,6 @@
         }
 
         function attachFotoListeners() {
-            // LIKE di foto modal
             document.querySelectorAll('.foto-action.liked, .foto-action[data-post-id]').forEach(el => {
                 el.addEventListener('click', function(e) {
                     const postId = this.dataset.postId;
@@ -2574,7 +2769,6 @@
                 });
             });
             
-            // HAPUS di foto modal
             document.querySelectorAll('.delete-foto').forEach(el => {
                 el.addEventListener('click', function(e) {
                     const postId = this.dataset.postId;
@@ -2592,10 +2786,12 @@
                     renderFotoPosts(currentFotoFilter);
                     renderProfilePosts(posts.filter(p => p.userId === profileUser.username));
                     showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
+                    
+                    // 🔥 SYNC KE SPREADSHEET
+                    syncActionToSpreadsheet('delete_post', { postId: postId });
                 });
             });
             
-            // KOMENTAR di foto modal
             document.querySelectorAll('.foto-add-comment button').forEach(el => {
                 el.addEventListener('click', function() {
                     if (!currentUser) {
@@ -2630,7 +2826,6 @@
                 });
             });
             
-            // ENTER untuk komentar foto
             document.querySelectorAll('.foto-add-comment input').forEach(el => {
                 el.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -2665,7 +2860,7 @@
         }
 
         // ================================================================
-        // FILTER FOTO BUTTONS
+        // SETUP FOTO FILTERS
         // ================================================================
         function setupFotoFilters() {
             document.querySelectorAll('.filter-foto-btn').forEach(btn => {
@@ -2933,7 +3128,7 @@
         // ================================================================
         // INVITE
         // ================================================================
-        function sendInvite() {
+        async function sendInvite() {
             if (!currentUser) {
                 showToast('🔒 Login Diperlukan', 'Silakan masuk untuk mengirim undangan', 'fa-lock');
                 return;
@@ -2944,26 +3139,51 @@
                 return;
             }
             
-            // 🔥 SYNC invite ke Spreadsheet
-            try {
-                fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save_invite',
-                        invite: {
-                            from: currentUser.username,
-                            to: profileUser.username,
-                            status: 'pending',
-                            timestamp: Date.now()
-                        }
-                    })
-                });
-            } catch (e) {
-                console.warn('⚠️ Gagal sync invite:', e);
+            // Cek apakah sudah pernah diinvite
+            const invites = JSON.parse(localStorage.getItem('salink_invites') || '[]');
+            const existing = invites.find(i => i.from === currentUser.username && i.to === profileUser.username);
+            
+            if (existing) {
+                showToast('ℹ️ Info', `Anda sudah mengundang ${profileUser.fullName}`, 'fa-info-circle');
+                return;
             }
             
-            showToast('✅ Terkirim', `Undangan berteman dikirim ke ${profileUser.fullName}!`, 'fa-user-plus');
+            // 🔥 SYNC ke Spreadsheet
+            const newInvite = {
+                id: 'invite-' + Date.now(),
+                from: currentUser.username,
+                fromName: currentUser.fullName,
+                to: profileUser.username,
+                toName: profileUser.fullName,
+                status: 'pending',
+                timestamp: Date.now()
+            };
+            
+            invites.push(newInvite);
+            localStorage.setItem('salink_invites', JSON.stringify(invites));
+            
+            await syncActionToSpreadsheet('send_invite', newInvite);
+            
+            // 🔥 Tambahkan notifikasi ke penerima
+            const notifData = {
+                id: ++notificationIdCounter,
+                type: 'invite',
+                title: '📨 Permintaan Berteman',
+                message: `${currentUser.fullName} ingin berteman dengan Anda`,
+                sender: currentUser.fullName,
+                senderUsername: currentUser.username,
+                link: '#',
+                postId: null,
+                timestamp: Date.now(),
+                read: false,
+                soundKey: 'notifikasi'
+            };
+            notifications.unshift(notifData);
+            saveNotifications();
+            updateNotifBadge();
+            await apiSaveNotification(notifData);
+            
+            showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${profileUser.fullName}!`, 'fa-user-plus');
         }
 
         // ================================================================
@@ -2972,32 +3192,21 @@
         document.addEventListener('DOMContentLoaded', async function() {
             loadTheme();
             await loadProfileData();
-            await loadPosts();
+            await loadUserPosts();
             loadFriends();
             loadNotifications();
+            await loadInvites();
             
             renderProfile();
             setupFotoFilters();
             
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
             
-            // ===== NAVBAR BUTTONS =====
             document.getElementById('profileTemanBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 openTemanModal();
             });
             
-            document.getElementById('profileBiodataBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                openBiodataModal();
-            });
-            
-            document.getElementById('profileJualBtn').addEventListener('click', function(e) {
-                // Sudah menggunakan target="_blank" ke jual.html
-                // Biarkan default behavior
-            });
-            
-            // ===== MODAL CLOSE =====
             document.getElementById('temanModalClose').addEventListener('click', closeTemanModal);
             document.getElementById('temanModal').addEventListener('click', function(e) {
                 if (e.target === this) closeTemanModal();
@@ -3033,7 +3242,6 @@
                 if (e.target === this) closeFotoModal();
             });
             
-            // ===== STATS CLICK =====
             document.getElementById('statPosts').addEventListener('click', function() {
                 openPostinganModal();
             });
@@ -3046,22 +3254,25 @@
                 openMengikutiModal();
             });
             
-            // ===== INVITE BUTTON =====
+            // Tombol INVITE
             document.getElementById('profileInviteBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 sendInvite();
             });
             
-            console.log('👤 Profile User Page Loaded - INTEGRASI SPREADSHEET');
-            console.log(`📌 Profile: ${profileUser?.fullName || 'Unknown'}`);
+            console.log('👤 Profil Saya - INTEGRASI SPREADSHEET');
+            console.log(`📌 User: ${profileUser?.fullName || 'Unknown'}`);
             console.log(`📝 Posts: ${posts.filter(p => p.userId === profileUser?.username).length}`);
             console.log(`👥 Friends: ${friends.length}`);
             console.log('📡 API URL:', API_URL);
-            console.log('✅ Mode READ-ONLY - Like & Komentar aktif');
+            console.log('✅ Mode Profil Pribadi - Like & Komentar aktif');
             console.log('✅ Navbar: Foto, Teman, Biodata, Jual - SEMUA TAMPIL');
-            console.log('✅ Modal FOTO dengan filter Semua, Foto, Video');
-            console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
-            console.log('✅ Sinkronisasi data ke Spreadsheet aktif');
+            console.log('✅ Modal FOTO - Menampilkan foto/video milik sendiri');
+            console.log('✅ Filter: Semua, Foto, Video');
+            console.log('✅ Like, Komentar, Hapus (jika pemilik) aktif');
+            console.log('✅ Tombol PESAN -> buka pesan-masuk.html');
+            console.log('✅ Tombol INVITE -> kirim undangan berteman');
+            console.log('✅ Semua aksi disinkronkan ke Spreadsheet');
         });
     </script>
 </body>
