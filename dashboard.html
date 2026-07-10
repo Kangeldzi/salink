@@ -19,7 +19,6 @@
            THEME VARIABLES - LIGHT & DARK MODE
            ================================================================ */
         :root {
-            /* DARK MODE (default) */
             --bg-primary: #0d1117;
             --bg-secondary: #161b22;
             --bg-card: rgba(22, 27, 34, 0.92);
@@ -45,14 +44,13 @@
             --modal-bg: rgba(22, 27, 34, 0.98);
             --input-border: #30363d;
             --input-focus: #58a6ff;
-            --neumorph-shadow: 8px 8px 16px #0a0604, -8px -8px 16px #2a1a0e;
             --header-height: 60px;
             --footer-height: 65px;
             --danger: #f85149;
             --success: #3fb950;
+            --warning: #f0d080;
         }
 
-        /* ===== LIGHT MODE ===== */
         [data-theme="light"] {
             --bg-primary: #f0f4f8;
             --bg-secondary: #e8edf2;
@@ -79,14 +77,11 @@
             --modal-bg: rgba(255, 255, 255, 0.98);
             --input-border: #dce1e8;
             --input-focus: #4facfe;
-            --neumorph-shadow: 8px 8px 16px #d0c8be, -8px -8px 16px #ffffff;
             --danger: #e31837;
             --success: #2ea44f;
+            --warning: #8d6b4b;
         }
 
-        /* ================================================================
-           BASE STYLES
-           ================================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -1943,22 +1938,22 @@
         <!-- Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statActive">12</span>
+                <span class="stat-number" id="statActive">0</span>
                 <span class="stat-label">Laporan Aktif</span>
                 <i class="fas fa-exclamation-triangle stat-icon"></i>
             </div>
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statCompleted">48</span>
+                <span class="stat-number" id="statCompleted">0</span>
                 <span class="stat-label">Selesai Ditangani</span>
                 <i class="fas fa-check-circle stat-icon"></i>
             </div>
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statTeams">5</span>
+                <span class="stat-number" id="statTeams">0</span>
                 <span class="stat-label">Tim Siaga</span>
                 <i class="fas fa-users stat-icon"></i>
             </div>
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statResponse">93%</span>
+                <span class="stat-number" id="statResponse">0%</span>
                 <span class="stat-label">Tingkat Respons</span>
                 <i class="fas fa-chart-line stat-icon"></i>
             </div>
@@ -2092,21 +2087,21 @@
                 <div class="pie-chart">
                     <div class="pie-chart-center">
                         <span class="total-label">Total</span>
-                        <span class="total-number" id="totalReports">156</span>
+                        <span class="total-number" id="totalReports">0</span>
                     </div>
                 </div>
                 <div class="chart-legend">
                     <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color fire"></div>
-                        <span>Kebakaran (45%)</span>
+                        <span>Kebakaran (0%)</span>
                     </div>
                     <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color theft"></div>
-                        <span>Pencurian (30%)</span>
+                        <span>Pencurian (0%)</span>
                     </div>
                     <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color disaster"></div>
-                        <span>Bencana (25%)</span>
+                        <span>Bencana (0%)</span>
                     </div>
                 </div>
             </div>
@@ -2653,6 +2648,46 @@
         }
 
         /**
+         * 📥 Ambil semua notifikasi dari Google Sheets
+         */
+        async function apiGetNotifications() {
+            try {
+                const response = await fetch(API_URL + '?action=get_notifications&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_notifications', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get notifications:', error);
+                return JSON.parse(localStorage.getItem('salink_notifications') || '[]');
+            }
+        }
+
+        /**
+         * 📥 Ambil semua undangan dari Google Sheets
+         */
+        async function apiGetInvites() {
+            try {
+                const response = await fetch(API_URL + '?action=get_invites&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_invites', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get invites:', error);
+                return JSON.parse(localStorage.getItem('salink_invites') || '[]');
+            }
+        }
+
+        /**
          * 📤 Simpan postingan ke Google Sheets
          */
         async function apiSavePost(postData) {
@@ -2773,6 +2808,31 @@
                 return result.status === 'success';
             } catch (error) {
                 console.error('❌ Gagal save message:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 🔄 Sinkronisasi aksi ke Google Sheets
+         */
+        async function syncActionToSpreadsheet(action, data) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: action,
+                        data: data,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Sync action result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Sync action error:', error);
                 return false;
             }
         }
@@ -3649,7 +3709,7 @@
         }
 
         // ================================================================
-        // INVITE FUNCTIONS
+        // INVITE FUNCTIONS - DIPERBAIKI
         // ================================================================
         
         function updateInviteBadge() {
@@ -3672,13 +3732,22 @@
                 return;
             }
             
+            // Ambil daftar user yang bisa diinvite
+            const users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            const availableUsers = users.filter(u => u.username !== currentUser.username);
+            
+            // Ambil undangan yang sudah dikirim
+            const invites = JSON.parse(localStorage.getItem('salink_invites') || '[]');
+            const sentInvites = invites.filter(i => i.from === currentUser.username);
+            const sentUsernames = sentInvites.map(i => i.to);
+            
             document.getElementById('inviteModalBody').innerHTML = `
                 <div class="invite-search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="inviteSearchInput" placeholder="🔍 Cari nama pengguna...">
+                    <input type="text" id="inviteSearchInput" placeholder="🔍 Cari nama pengguna..." autocomplete="off">
                 </div>
                 <div id="inviteUserList">
-                    ${renderInviteUsers('')}
+                    ${renderInviteUsers('', availableUsers, sentUsernames)}
                 </div>
             `;
             
@@ -3688,28 +3757,18 @@
             const searchInput = document.getElementById('inviteSearchInput');
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
-                    document.getElementById('inviteUserList').innerHTML = renderInviteUsers(this.value.trim());
+                    const query = this.value.trim().toLowerCase();
+                    const filtered = availableUsers.filter(u => 
+                        u.fullName.toLowerCase().includes(query) || 
+                        u.username.toLowerCase().includes(query)
+                    );
+                    document.getElementById('inviteUserList').innerHTML = renderInviteUsers(query, filtered, sentUsernames);
                 });
             }
         }
 
-        function renderInviteUsers(query) {
-            const users = [
-                { name: 'Bpk. Ahmad', username: 'ahmad', region: 'Jakarta Pusat', gender: 'male', status: 'Online' },
-                { name: 'Sdri. Rina', username: 'rina', region: 'Jakarta Selatan', gender: 'female', status: 'Offline' },
-                { name: 'Bpk. Joko', username: 'joko', region: 'Jakarta Timur', gender: 'male', status: 'Online' },
-                { name: 'Sdri. Dewi', username: 'dewi', region: 'Jakarta Barat', gender: 'female', status: 'Online' },
-                { name: 'Bpk. Budi', username: 'budi', region: 'Jakarta Utara', gender: 'male', status: 'Offline' },
-                { name: 'Sdri. Siti', username: 'siti', region: 'Bandung', gender: 'female', status: 'Online' }
-            ];
-            
-            const filtered = query ? users.filter(u => 
-                u.name.toLowerCase().includes(query.toLowerCase()) ||
-                u.region.toLowerCase().includes(query.toLowerCase()) ||
-                u.username.toLowerCase().includes(query.toLowerCase())
-            ) : users;
-            
-            if (filtered.length === 0) {
+        function renderInviteUsers(query, users, sentUsernames) {
+            if (!users || users.length === 0) {
                 return `<div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.75rem;">
                     <i class="fas fa-search" style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:0.3;"></i>
                     <p>Tidak ditemukan pengguna</p>
@@ -3717,28 +3776,33 @@
             }
             
             let html = '';
-            filtered.forEach(user => {
+            users.forEach(user => {
                 const avatarIcon = user.gender === 'female' ? 'fa-female' : 'fa-male';
+                const isSent = sentUsernames.includes(user.username);
                 const statusColor = user.status === 'Online' ? '#3fb950' : '#888';
+                
                 html += `
                     <div class="invite-user-item">
                         <div class="invite-user-avatar" onclick="openProfileUser('${user.username}')">
-                            <i class="fas ${avatarIcon}"></i>
+                            ${user.profilePicture ? `<img src="${user.profilePicture}">` : `<i class="fas ${avatarIcon}"></i>`}
                         </div>
                         <div class="invite-user-info">
-                            <div class="invite-user-name" onclick="openProfileUser('${user.username}')" style="cursor:pointer;color:var(--accent-blue);">${user.name}</div>
-                            <div class="invite-user-desc"><i class="fas fa-map-marker-alt"></i> ${user.region} • <span style="color:${statusColor};">${user.status}</span></div>
+                            <div class="invite-user-name" onclick="openProfileUser('${user.username}')" style="cursor:pointer;color:var(--accent-blue);">${user.fullName}</div>
+                            <div class="invite-user-desc"><i class="fas fa-map-marker-alt"></i> ${user.city || 'Lokasi tidak diketahui'} • <span style="color:${statusColor};">${user.status || 'Offline'}</span></div>
                         </div>
-                        <button onclick="sendInvite('${user.name}', '${user.username}')" style="background:var(--accent-blue-gradient);color:#fff;border:none;padding:4px 14px;border-radius:16px;cursor:pointer;font-size:0.65rem;font-weight:600;">
-                            <i class="fas fa-user-plus"></i> Invite
-                        </button>
+                        ${isSent ? 
+                            `<span style="background:var(--bg-input);padding:4px 12px;border-radius:12px;font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-check"></i> Terkirim</span>` :
+                            `<button onclick="sendInvite('${user.fullName}', '${user.username}')" style="background:var(--accent-blue-gradient);color:#fff;border:none;padding:4px 14px;border-radius:16px;cursor:pointer;font-size:0.65rem;font-weight:600;">
+                                <i class="fas fa-user-plus"></i> Invite
+                            </button>`
+                        }
                     </div>
                 `;
             });
             return html;
         }
 
-        function sendInvite(userName, userUsername) {
+        async function sendInvite(userName, userUsername) {
             if (isPreviewMode) {
                 showPreviewOverlay();
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk mengundang', 'fa-lock');
@@ -3747,17 +3811,44 @@
             
             if (!currentUser) return;
             
-            if (userName !== currentUser.fullName) {
+            if (userName !== currentUser.fullName && userUsername !== currentUser.username) {
+                // Cek apakah sudah pernah diinvite
+                const invites = JSON.parse(localStorage.getItem('salink_invites') || '[]');
+                const existing = invites.find(i => i.from === currentUser.username && i.to === userUsername);
+                
+                if (existing) {
+                    showToast('ℹ️ Info', `Anda sudah mengundang ${userName}`, 'fa-info-circle');
+                    return;
+                }
+                
                 inviteCount++;
                 updateInviteBadge();
-                addNotification('invite', '📨 Undangan Terkirim', `Anda mengundang ${userName} untuk berteman`, currentUser.fullName, '#', null, 'notifikasi');
+                
+                // Simpan ke localStorage
+                const newInvite = {
+                    id: 'invite-' + Date.now(),
+                    from: currentUser.username,
+                    fromName: currentUser.fullName,
+                    to: userUsername,
+                    toName: userName,
+                    status: 'pending',
+                    timestamp: Date.now()
+                };
+                invites.push(newInvite);
+                localStorage.setItem('salink_invites', JSON.stringify(invites));
+                
+                // 🔥 SYNC KE SPREADSHEET
+                await syncActionToSpreadsheet('send_invite', newInvite);
+                
+                // 🔥 Tambahkan notifikasi ke penerima
+                addNotification('invite', '📨 Undangan Berteman', `${currentUser.fullName} ingin berteman dengan Anda`, currentUser.fullName, '#', null, 'notifikasi');
+                
                 showToast('✅ Terkirim', `Undangan telah dikirim ke ${userName}!`, 'fa-user-plus');
+                closeInviteModal();
+                renderInviteList();
             } else {
                 showToast('⚠️ Error', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
             }
-            
-            document.getElementById('inviteModal').classList.remove('active');
-            document.body.style.overflow = '';
         }
 
         function closeInviteModal() {
@@ -3769,7 +3860,7 @@
         // PROFILE INVITE
         // ================================================================
         
-        function sendProfileInvite() {
+        async function sendProfileInvite() {
             if (isPreviewMode) {
                 showPreviewOverlay();
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk mengirim undangan', 'fa-lock');
@@ -3781,19 +3872,43 @@
                 return;
             }
             
-            if (currentUser && document.getElementById('profileName').textContent === currentUser.fullName) {
-                showToast('⚠️ Info', 'Anda tidak dapat mengundang diri sendiri!', 'fa-exclamation-triangle');
-                return;
-            }
+            const targetName = document.getElementById('profileName')?.textContent || '';
+            const targetUsername = document.getElementById('profileUsername')?.textContent?.replace('@', '') || '';
             
-            const ownerName = document.getElementById('profileName').textContent;
-            if (ownerName && ownerName !== 'Nama Pengguna') {
+            if (targetName && targetName !== 'Nama Pengguna' && targetUsername !== currentUser.username) {
+                // Cek apakah sudah pernah diinvite
+                const invites = JSON.parse(localStorage.getItem('salink_invites') || '[]');
+                const existing = invites.find(i => i.from === currentUser.username && i.to === targetUsername);
+                
+                if (existing) {
+                    showToast('ℹ️ Info', `Anda sudah mengundang ${targetName}`, 'fa-info-circle');
+                    return;
+                }
+                
                 inviteCount++;
                 updateInviteBadge();
+                
+                const newInvite = {
+                    id: 'invite-' + Date.now(),
+                    from: currentUser.username,
+                    fromName: currentUser.fullName,
+                    to: targetUsername,
+                    toName: targetName,
+                    status: 'pending',
+                    timestamp: Date.now()
+                };
+                invites.push(newInvite);
+                localStorage.setItem('salink_invites', JSON.stringify(invites));
+                
+                // 🔥 SYNC KE SPREADSHEET
+                await syncActionToSpreadsheet('send_invite', newInvite);
+                
+                // 🔥 Tambahkan notifikasi ke penerima
                 addNotification('invite', '📨 Permintaan Berteman', `${currentUser.fullName} ingin berteman dengan Anda`, currentUser.fullName, '#', null, 'notifikasi');
-                showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${ownerName}!`, 'fa-user-plus');
+                
+                showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${targetName}!`, 'fa-user-plus');
             } else {
-                showToast('⚠️ Error', 'Profil tidak ditemukan', 'fa-exclamation-triangle');
+                showToast('⚠️ Error', 'Tidak bisa mengundang diri sendiri!', 'fa-exclamation-triangle');
             }
         }
 
@@ -4582,9 +4697,24 @@
             document.getElementById('profileStatPosts').textContent = userPosts.length;
         }
 
+        // ===== RENDER POSTS - DIPERBAIKI =====
         function renderPosts() {
             const feed = document.getElementById('postFeed');
+            if (!feed) return;
+            
             feed.innerHTML = '';
+            
+            if (!posts || posts.length === 0) {
+                feed.innerHTML = `
+                    <div style="text-align:center;padding:30px 0;color:var(--text-muted);">
+                        <i class="fas fa-file-alt" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        <p>Belum ada postingan</p>
+                        <p style="font-size:0.7rem;margin-top:4px;">Mulai buat postingan pertama Anda!</p>
+                    </div>
+                `;
+                return;
+            }
+            
             const sortedPosts = [...posts].sort((a, b) => b.timestamp - a.timestamp);
             const displayPosts = sortedPosts.slice(0, 20);
             
@@ -5001,176 +5131,16 @@
         }
 
         // ================================================================
-        // EMERGENCY BUTTON HANDLER - DENGAN SYNC KE SPREADSHEET
-        // ================================================================
-        
-        function handleEmergencyButtonClick(e) {
-            const btn = e.currentTarget;
-            const soundKey = btn.dataset.sound;
-            
-            if (btn.classList.contains('has-notification')) {
-                if (emergencyAudio) {
-                    emergencyAudio.pause();
-                    emergencyAudio.currentTime = 0;
-                    emergencyAudio = null;
-                }
-                
-                if (isEmergencyActive) {
-                    document.getElementById('emergencyOverlay').classList.remove('active');
-                    document.body.style.overflow = '';
-                    isEmergencyActive = false;
-                }
-                
-                btn.classList.remove('has-notification');
-                btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                convertHologramToPost();
-                return;
-            }
-            
-            if (currentlyPlaying === btn) {
-                const audio = audioObjects[soundKey];
-                if (audio) {
-                    audio.pause();
-                    audio.currentTime = 0;
-                }
-                btn.classList.remove('playing');
-                btn.querySelector('.play-status').textContent = '▶ Tap untuk Alarm';
-                currentlyPlaying = null;
-                return;
-            }
-            
-            playAlarm(btn, soundKey);
-        }
-
-        function triggerEmergencyFromGrid(type, title, sender, location) {
-            // 🔥 SYNC KE SPREADSHEET
-            apiSaveEmergency({
-                type: type,
-                title: title,
-                sender: sender,
-                location: location,
-                timestamp: Date.now()
-            });
-            
-            addToHologram(type, sender, location, '');
-            showFloatingNotification(
-                'emergency',
-                `🚨 ${title}`,
-                `${sender} melaporkan ${title.toLowerCase()}`,
-                location || '',
-                'Lihat',
-                () => {
-                    document.getElementById('hologramDisplay').scrollIntoView({ behavior: 'smooth' });
-                    hideFloatingNotification();
-                }
-            );
-            showEmergencyOverlay(type, title, sender, location);
-            addNotification(
-                type,
-                `📢 ${title}`,
-                `${sender} melaporkan ${title.toLowerCase()} di ${location || 'lokasi tidak diketahui'}`,
-                sender,
-                '#',
-                null,
-                notifTypeMap[type] || 'notifikasi'
-            );
-        }
-
-        // ================================================================
-        // SIDEBAR TOGGLE
-        // ================================================================
-        
-        function toggleSidebar() {
-            if (isSidebarOpen) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        }
-
-        function openSidebar() {
-            document.getElementById('sidebar').classList.add('active');
-            document.getElementById('sidebarOverlay').classList.add('active');
-            isSidebarOpen = true;
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('sidebarOverlay').classList.remove('active');
-            isSidebarOpen = false;
-            document.body.style.overflow = '';
-        }
-
-        // ================================================================
-        // SHOW HOME PAGE
-        // ================================================================
-        
-        function showHomePage() {
-            document.getElementById('profilePage').classList.remove('active');
-            document.getElementById('backHomeBtn').classList.remove('active');
-            document.getElementById('profileNavbar').classList.remove('active');
-            document.getElementById('mainContent').style.display = 'block';
-            
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-            document.getElementById('homeNavLink').classList.add('active');
-            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
-            document.getElementById('bottomHomeNav').classList.add('active');
-            
-            closeSidebar();
-        }
-
-        function openProfilePage() {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat profil', 'fa-lock');
-                return;
-            }
-            
-            if (!currentUser) {
-                window.location.href = LOGIN_URL;
-                return;
-            }
-            
-            document.getElementById('mainContent').style.display = 'none';
-            document.getElementById('profilePage').classList.add('active');
-            document.getElementById('backHomeBtn').classList.add('active');
-            document.getElementById('profileNavbar').classList.add('active');
-            
-            if (currentUser.profilePicture) {
-                document.getElementById('profileAvatarLarge').innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
-            } else {
-                document.getElementById('profileAvatarLarge').innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
-            }
-            
-            document.getElementById('profileName').textContent = currentUser.fullName || 'Nama Pengguna';
-            document.getElementById('profileUsername').textContent = `@${currentUser.username || 'username'}`;
-            document.getElementById('profileBio').textContent = currentUser.bio || 'Bergabung di SALINK untuk keamanan bersama';
-            
-            const userPosts = posts.filter(p => p.userId === currentUser.username);
-            document.getElementById('profileStatPosts').textContent = userPosts.length;
-            document.getElementById('profileStatFollowers').textContent = friends.length > 0 ? friends.length : '0';
-            document.getElementById('profileStatFollowing').textContent = '0';
-            
-            if (document.getElementById('postReportedBy')) {
-                document.getElementById('postReportedBy').value = currentUser.fullName || 'User';
-            }
-            
-            renderProfilePosts(userPosts);
-            
-            document.querySelectorAll('.nav-item-bottom').forEach(item => item.classList.remove('active'));
-            document.getElementById('bottomProfileNav').classList.add('active');
-        }
-
-        // ================================================================
-        // PROFILE POSTS (RENDER)
+        // PROFILE POSTS (RENDER) - DIPERBAIKI
         // ================================================================
         
         function renderProfilePosts(userPosts) {
             const container = document.getElementById('profilePosts');
+            if (!container) return;
+            
             container.innerHTML = '';
             
-            if (userPosts.length === 0) {
+            if (!userPosts || userPosts.length === 0) {
                 container.innerHTML = `
                     <div style="text-align:center;padding:20px 0;color:var(--text-muted);font-size:0.75rem;">
                         <i class="fas fa-file-alt" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
@@ -6712,7 +6682,7 @@
         ];
 
         // ================================================================
-        // 🔥 SYNC DARI SPREADSHEET KE DASHBOARD
+        // 🔥 SYNC DARI SPREADSHEET KE DASHBOARD - DIPERBAIKI
         // ================================================================
         
         async function loadAllDataFromSpreadsheet() {
@@ -6732,57 +6702,86 @@
             try {
                 console.log('🔄 Memuat semua data dari Google Spreadsheet...');
                 
-                // Sync Users
+                // 1. Sync Users
                 const users = await apiGetUsers();
                 if (users) {
                     localStorage.setItem('salink_users', JSON.stringify(users));
                     console.log('✅ Users: ' + users.length + ' data');
                 }
                 
-                // Sync Posts
+                // 2. Sync Posts - PERBAIKAN UTAMA
                 const postsData = await apiGetPosts();
-                if (postsData) {
-                    localStorage.setItem('salink_posts', JSON.stringify(postsData));
+                if (postsData && postsData.length > 0) {
                     posts = postsData;
-                    renderPosts();
-                    updateStats();
-                    console.log('✅ Posts: ' + postsData.length + ' data');
+                    localStorage.setItem('salink_posts', JSON.stringify(posts));
+                    console.log('✅ Posts: ' + posts.length + ' data');
+                } else {
+                    const saved = localStorage.getItem('salink_posts');
+                    if (saved) {
+                        posts = JSON.parse(saved);
+                        console.log('✅ Posts from localStorage: ' + posts.length + ' data');
+                    }
                 }
                 
-                // Sync Messages
+                // 3. Render Posts - PASTIKAN DIPANGGIL
+                renderPosts();
+                updateStats();
+                updateBadge();
+                
+                // 4. Render Profile Posts jika di halaman profil
+                if (currentUser && document.getElementById('profilePage').classList.contains('active')) {
+                    renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
+                }
+                
+                // 5. Sync Messages
                 const messages = await apiGetMessages();
                 if (messages) {
                     localStorage.setItem('salink_messages', JSON.stringify(messages));
                     console.log('✅ Messages: ' + messages.length + ' data');
                 }
                 
-                // Sync Products
+                // 6. Sync Products
                 const products = await apiGetProducts();
                 if (products) {
                     localStorage.setItem('salink_products', JSON.stringify(products));
                     console.log('✅ Products: ' + products.length + ' data');
                 }
                 
-                // Sync Notifications
-                try {
-                    const response = await fetch(API_URL + '?action=get_notifications&timestamp=' + Date.now());
-                    if (response.ok) {
-                        const result = await response.json();
-                        if (result.status === 'success' && result.data) {
-                            notifications = result.data;
-                            let maxId = 0;
-                            notifications.forEach(n => {
-                                const numId = parseInt(n.id);
-                                if (!isNaN(numId) && numId > maxId) maxId = numId;
-                            });
-                            notificationIdCounter = maxId;
-                            localStorage.setItem('salink_notifications', JSON.stringify(notifications));
-                            updateNotifBadge();
-                            console.log('✅ Notifications: ' + notifications.length + ' data');
-                        }
-                    }
-                } catch (e) {
-                    console.warn('⚠️ Gagal sync notifications:', e);
+                // 7. Sync Notifications - PERBAIKAN
+                const notifs = await apiGetNotifications();
+                if (notifs && notifs.length > 0) {
+                    notifications = notifs;
+                    let maxId = 0;
+                    notifications.forEach(n => {
+                        const numId = parseInt(n.id);
+                        if (!isNaN(numId) && numId > maxId) maxId = numId;
+                    });
+                    notificationIdCounter = maxId;
+                    localStorage.setItem('salink_notifications', JSON.stringify(notifications));
+                    updateNotifBadge();
+                    console.log('✅ Notifications: ' + notifications.length + ' data');
+                }
+                
+                // 8. Sync Invites - PERBAIKAN
+                const invites = await apiGetInvites();
+                if (invites) {
+                    localStorage.setItem('salink_invites', JSON.stringify(invites));
+                    const pendingInvites = invites.filter(i => i.to === currentUser?.username && i.status === 'pending');
+                    inviteCount = pendingInvites.length;
+                    updateInviteBadge();
+                    console.log('✅ Invites: ' + invites.length + ' data');
+                }
+                
+                // 9. Perbarui hologram dengan data terbaru
+                const latestEmergency = posts.filter(p => p.isSpecial).sort((a, b) => b.timestamp - a.timestamp);
+                if (latestEmergency.length > 0) {
+                    const emergency = latestEmergency[0];
+                    addToHologram(
+                        emergency.specialData?.type || 'fire',
+                        emergency.userFullName,
+                        emergency.specialData?.location || 'Lokasi tidak diketahui',
+                        emergency.specialData?.address || ''
+                    );
                 }
                 
                 showToast('✅ Sinkronisasi', 'Semua data berhasil dimuat dari Spreadsheet!', 'fa-check-circle');
@@ -6815,7 +6814,77 @@
         }
 
         // ================================================================
-        // INITIALIZE
+        // UPDATE STATS
+        // ================================================================
+        function updateStats() {
+            const total = posts.length;
+            document.getElementById('statActive').textContent = total;
+            document.getElementById('statCompleted').textContent = Math.max(0, total - 3);
+            document.getElementById('statTeams').textContent = Math.min(10, Math.floor(total / 2));
+            document.getElementById('statResponse').textContent = total > 0 ? '93%' : '0%';
+            document.getElementById('totalReports').textContent = total;
+            
+            // Update pie chart
+            const fire = posts.filter(p => p.isSpecial && p.specialData?.type === 'fire').length;
+            const theft = posts.filter(p => p.isSpecial && p.specialData?.type === 'theft').length;
+            const disaster = posts.filter(p => p.isSpecial && p.specialData?.type === 'disaster').length;
+            const totalSpecial = fire + theft + disaster || 1;
+            const pFire = Math.round(fire / totalSpecial * 100);
+            const pTheft = Math.round(theft / totalSpecial * 100);
+            const pDisaster = 100 - pFire - pTheft;
+            document.querySelector('.pie-chart').style.background = `conic-gradient(var(--accent-red) 0% ${pFire}%, var(--accent-gold) ${pFire}% ${pFire + pTheft}%, #4fc3f7 ${pFire + pTheft}% 100%)`;
+            document.querySelectorAll('.pie-legend-item')[0].innerHTML = `<div class="pie-legend-color fire"></div><span>Kebakaran (${pFire}%)</span>`;
+            document.querySelectorAll('.pie-legend-item')[1].innerHTML = `<div class="pie-legend-color theft"></div><span>Pencurian (${pTheft}%)</span>`;
+            document.querySelectorAll('.pie-legend-item')[2].innerHTML = `<div class="pie-legend-color disaster"></div><span>Bencana (${pDisaster}%)</span>`;
+            
+            // Bar chart
+            renderBarChart(fire, theft, disaster);
+        }
+
+        function renderBarChart(fire, theft, disaster) {
+            const max = Math.max(fire, theft, disaster, 1);
+            const chart = document.getElementById('barChart');
+            chart.innerHTML = '';
+            const data = [
+                { label: 'Kebakaran', value: fire, color: 'var(--accent-red)' },
+                { label: 'Pencurian', value: theft, color: 'var(--accent-gold)' },
+                { label: 'Bencana', value: disaster, color: '#4fc3f7' }
+            ];
+            data.forEach(d => {
+                const height = (d.value / max * 100) || 5;
+                const item = document.createElement('div');
+                item.className = 'bar-item';
+                item.style.cssText = 'display:flex;flex-direction:column;align-items:center;flex:1;height:100%;justify-content:flex-end;';
+                item.innerHTML = `
+                    <div class="bar-value" style="font-size:0.5rem;color:var(--text-secondary);margin-bottom:2px;">${d.value}</div>
+                    <div class="bar" style="width:70%;border-radius:4px 4px 0 0;min-height:4px;height:${height}%;background:${d.color};"></div>
+                    <div class="bar-label" style="font-size:0.5rem;color:var(--text-muted);margin-top:4px;">${d.label}</div>
+                `;
+                chart.appendChild(item);
+            });
+        }
+
+        // ================================================================
+        // VIEW ALL REPORTS
+        // ================================================================
+        function renderAllReports() {
+            const body = document.getElementById('allReportsModalBody');
+            body.innerHTML = '';
+            reports.forEach(r => {
+                const div = document.createElement('div');
+                div.className = 'report-list-item';
+                div.innerHTML = `
+                    <div class="alert-icon icon-${r.type}"><i class="fas ${r.icon}"></i></div>
+                    <div class="report-info"><div class="report-title">${r.title}</div><div class="report-desc">${r.desc}</div></div>
+                    <div class="report-time">${r.time}</div>
+                `;
+                div.addEventListener('click', () => openDetailModal(r));
+                body.appendChild(div);
+            });
+        }
+
+        // ================================================================
+        // INITIALIZE - DIPERBAIKI
         // ================================================================
         
         loadTheme();
