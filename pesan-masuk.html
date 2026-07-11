@@ -1284,6 +1284,7 @@
         let originalMessageText = '';
         let selectedRecipient = null;
         let isSyncing = false;
+        let allUsers = [];
 
         // ================================================================
         // LOAD THEME
@@ -1407,6 +1408,7 @@
                 users.push(currentUser);
             }
             
+            allUsers = users;
             return users;
         }
 
@@ -1485,6 +1487,9 @@
                 }
             }
 
+            // Load users
+            await getAllUsers();
+
             // Generate sample messages jika belum ada
             if (messages.length === 0) {
                 generateSampleMessages();
@@ -1492,9 +1497,13 @@
 
             renderMessages();
             
-            // Cek parameter URL untuk reply
+            // Cek parameter URL untuk reply atau compose langsung
             const urlParams = new URLSearchParams(window.location.search);
             const replyTo = urlParams.get('reply');
+            const toUser = urlParams.get('to');
+            const toName = urlParams.get('name');
+            const subject = urlParams.get('subject');
+            
             if (replyTo) {
                 const msg = messages.find(m => m.id === replyTo);
                 if (msg) {
@@ -1502,13 +1511,9 @@
                         openComposeModal(msg.from, msg.fromName, `RE: ${msg.subject || 'Balasan'}`);
                     }, 500);
                 }
-            }
-            
-            const toUser = urlParams.get('to');
-            const toName = urlParams.get('name');
-            if (toUser) {
+            } else if (toUser) {
                 setTimeout(() => {
-                    openComposeModal(toUser, toName || toUser, '');
+                    openComposeModal(toUser, toName || toUser, subject || '');
                 }, 500);
             }
         }
@@ -2030,19 +2035,22 @@
             document.getElementById('userSuggestions').classList.remove('active');
             
             if (toUser) {
-                getAllUsers().then(users => {
-                    const user = users.find(u => u.username === toUser);
-                    if (user) {
-                        selectRecipient(user);
+                const user = allUsers.find(u => u.username === toUser);
+                if (user) {
+                    selectRecipient(user);
+                } else {
+                    const userByName = allUsers.find(u => u.fullName === toName);
+                    if (userByName) {
+                        selectRecipient(userByName);
                     } else {
-                        const userByName = users.find(u => u.fullName === toName);
-                        if (userByName) {
-                            selectRecipient(userByName);
-                        } else {
-                            document.getElementById('composeSearchInput').value = toName || toUser;
+                        document.getElementById('composeSearchInput').value = toName || toUser;
+                        // Cari dari localStorage
+                        const fallbackUser = JSON.parse(localStorage.getItem('salink_users') || '[]').find(u => u.username === toUser);
+                        if (fallbackUser) {
+                            selectRecipient(fallbackUser);
                         }
                     }
-                });
+                }
             }
             
             // Focus ke input pertama
@@ -2151,12 +2159,6 @@
         function setupComposeListeners() {
             const searchInput = document.getElementById('composeSearchInput');
             const suggestions = document.getElementById('userSuggestions');
-            let allUsers = [];
-            
-            // Load users untuk suggestions
-            getAllUsers().then(users => {
-                allUsers = users;
-            });
             
             searchInput.addEventListener('input', function() {
                 const query = this.value.trim();
@@ -2264,6 +2266,12 @@
             document.getElementById('composeBtn').addEventListener('click', function() {
                 openComposeModal();
             });
+
+            // ================================================================
+            // EXPOSE FUNCTIONS GLOBAL
+            // ================================================================
+            window.openComposeModal = openComposeModal;
+            window.openProfileUser = openProfileUser;
 
             console.log('📨 Pesan Masuk - SALINK');
             console.log(`👤 User: ${currentUser?.fullName || 'Guest'}`);
