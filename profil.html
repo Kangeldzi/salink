@@ -89,31 +89,6 @@
             }
         }
 
-        /**
-         * 📤 Kirim notifikasi ke Google Sheets
-         */
-        async function apiSendNotification(notifData) {
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save_notification',
-                        notification: notifData,
-                        timestamp: Date.now()
-                    })
-                });
-                
-                if (!response.ok) throw new Error('HTTP error: ' + response.status);
-                const result = await response.json();
-                console.log('📡 Send notification result:', result);
-                return result.status === 'success';
-            } catch (error) {
-                console.error('❌ Send notification error:', error);
-                return false;
-            }
-        }
-
         console.log('✅ API Module Loaded - Google Spreadsheets Connected');
         console.log('📡 API URL:', API_URL);
     </script>
@@ -152,7 +127,6 @@
             --footer-height: 65px;
             --danger: #f85149;
             --success: #3fb950;
-            --warning: #f0d080;
         }
 
         [data-theme="light"] {
@@ -183,7 +157,6 @@
             --input-focus: #4facfe;
             --danger: #e31837;
             --success: #2ea44f;
-            --warning: #8d6b4b;
         }
 
         /* ================================================================ */
@@ -211,7 +184,6 @@
         @keyframes modalIn { from { transform: scale(0.8) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes zoomOut { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         /* ================================================================ */
         /* TOGGLE SWITCH                                                    */
@@ -247,7 +219,7 @@
         .theme-toggle .toggle-thumb i { color: #fff; }
 
         /* ================================================================ */
-        /* HEADER - TANPA SEARCH & SIDEBAR                                  */
+        /* HEADER                                                           */
         /* ================================================================ */
         .app-bar {
             position: fixed;
@@ -459,7 +431,7 @@
         }
 
         /* ================================================================ */
-        /* PROFILE NAVBAR - FOTO, TEMAN, BIODATA, JUAL                     */
+        /* PROFILE NAVBAR - SEMUA TOMBOL (FOTO, TEMAN, BIODATA, JUAL)       */
         /* ================================================================ */
         .profile-nav-grid {
             display: grid;
@@ -1344,7 +1316,7 @@
 <body>
 
     <!-- ================================================================ -->
-    <!-- HEADER - TANPA SEARCH & SIDEBAR                                  -->
+    <!-- HEADER                                                            -->
     <!-- ================================================================ -->
     <header class="app-bar">
         <div class="app-title" onclick="window.location.href='dashboard.html'">
@@ -1396,7 +1368,7 @@
 
         <!-- ===== PROFILE ACTIONS ===== -->
         <div class="profile-actions">
-            <button class="profile-pesan-btn" id="profilePesanBtn">
+            <button class="profile-pesan-btn" onclick="openPesanModal()">
                 <i class="fas fa-paper-plane"></i> PESAN
             </button>
             <button class="profile-invite-btn" id="profileInviteBtn">
@@ -1404,7 +1376,7 @@
             </button>
         </div>
 
-        <!-- ===== PROFILE NAVBAR - FOTO, TEMAN, BIODATA, JUAL ===== -->
+        <!-- ===== PROFILE NAVBAR - SEMUA TOMBOL (FOTO, TEMAN, BIODATA, JUAL) ===== -->
         <div class="profile-nav-grid">
             <a href="#" class="profile-nav-item" id="profileFotoBtn" onclick="openFotoModal()">
                 <span>🖼️</span>
@@ -1544,7 +1516,7 @@
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fas fa-bell"></i>
-                    <span>🔔 Notifikasi</span>
+                    <span>🔔 Pesan Notifikasi</span>
                     <span class="badge-count" id="notifModalBadge">0</span>
                 </div>
                 <button class="modal-close" id="notifModalClose">
@@ -1692,9 +1664,11 @@
         async function getUserByUsername(username) {
             if (!username) return null;
             
+            // Coba ambil dari localStorage dulu
             let users = JSON.parse(localStorage.getItem('salink_users') || '[]');
             let user = users.find(u => u.username === username);
             
+            // Jika tidak ditemukan, coba sync dari Spreadsheet
             if (!user) {
                 try {
                     const remoteUsers = await apiGetUsers();
@@ -1704,10 +1678,11 @@
                         user = users.find(u => u.username === username);
                     }
                 } catch (e) {
-                    console.warn('⚠️ Gagal sync users:', e);
+                    console.warn('⚠️ Gagal sync users dari Spreadsheet:', e);
                 }
             }
             
+            // Jika masih tidak ditemukan, buat data default
             if (!user) {
                 const savedUser = localStorage.getItem('salink_user');
                 if (savedUser) {
@@ -1816,12 +1791,23 @@
                     currentUser = null;
                 }
             }
+            
+            // 🔥 SYNC profil ke Spreadsheet jika ini adalah profil user sendiri
+            if (currentUser && profileUser && currentUser.username === profileUser.username) {
+                try {
+                    await syncProfileToSpreadsheet(profileUser);
+                    console.log('✅ Profil disinkronkan ke Spreadsheet');
+                } catch (e) {
+                    console.warn('⚠️ Gagal sync profil ke Spreadsheet:', e);
+                }
+            }
         }
 
         // ================================================================
         // LOAD POSTS - DENGAN SYNC DARI SPREADSHEET
         // ================================================================
         async function loadPosts() {
+            // Coba ambil dari localStorage dulu
             let loaded = false;
             try {
                 const saved = localStorage.getItem('salink_posts');
@@ -1839,9 +1825,10 @@
                     }
                 }
             } catch (e) {
-                console.warn('Gagal memuat posts:', e);
+                console.warn('Gagal memuat posts dari localStorage:', e);
             }
             
+            // Jika belum ada data, sync dari Spreadsheet
             if (!loaded || posts.length === 0) {
                 try {
                     const remotePosts = await apiGetPosts();
@@ -1858,9 +1845,10 @@
                         console.log('✅ Posts disinkronkan dari Spreadsheet:', posts.length);
                     }
                 } catch (e) {
-                    console.warn('⚠️ Gagal sync posts:', e);
+                    console.warn('⚠️ Gagal sync posts dari Spreadsheet:', e);
                 }
             }
+            
             return loaded;
         }
 
@@ -1870,6 +1858,8 @@
         function savePosts() {
             try {
                 localStorage.setItem('salink_posts', JSON.stringify(posts));
+                
+                // 🔥 SYNC ke Spreadsheet
                 posts.forEach(async (post) => {
                     try {
                         await fetch(API_URL, {
@@ -1882,7 +1872,7 @@
                             })
                         });
                     } catch (e) {
-                        console.warn('⚠️ Gagal sync post:', e);
+                        console.warn('⚠️ Gagal sync post ke Spreadsheet:', e);
                     }
                 });
             } catch (e) {
@@ -1959,23 +1949,19 @@
         }
 
         // ================================================================
-        // GENERATE SAMPLE NOTIFICATIONS - LENGKAP DENGAN EMERGENCY
+        // GENERATE SAMPLE NOTIFICATIONS
         // ================================================================
         function generateSampleNotifications() {
             const now = Date.now();
             const notifTypes = [
-                { type: 'fire', title: '🔥 KEBAKARAN', msg: 'Bpk. Ahmad melaporkan kebakaran di Jl. Sudirman', sender: 'Bpk. Ahmad', username: 'ahmad' },
-                { type: 'death', title: '💀 KEMATIAN', msg: 'Sdri. Rina melaporkan kematian di Jl. Thamrin', sender: 'Sdri. Rina', username: 'rina' },
-                { type: 'theft', title: '💎 PENCURIAN', msg: 'Bpk. Joko melaporkan pencurian di Jl. Gatot Subroto', sender: 'Bpk. Joko', username: 'joko' },
-                { type: 'disaster', title: '🌪️ BENCANA', msg: 'Sdri. Dewi melaporkan bencana di Jl. Bukit Duri', sender: 'Sdri. Dewi', username: 'dewi' },
-                { type: 'inbox', title: '📩 Pesan Masuk', msg: 'Bpk. Budi mengirim pesan darurat', sender: 'Bpk. Budi', username: 'budi' },
-                { type: 'invite', title: '📨 Undangan', msg: 'Sdri. Siti mengundang Anda berteman', sender: 'Sdri. Siti', username: 'siti' },
-                { type: 'comment', title: '💬 Balasan Komentar', msg: 'Bpk. Ahmad membalas komentar Anda', sender: 'Bpk. Ahmad', username: 'ahmad' },
-                { type: 'profile', title: '👤 Pengikut Baru', msg: 'Sdri. Rina mengikuti Anda', sender: 'Sdri. Rina', username: 'rina' }
+                { type: 'inbox', title: '📩 Pesan Masuk', msg: 'Bpk. Ahmad mengirim pesan darurat', sender: 'Bpk. Ahmad', username: 'ahmad' },
+                { type: 'invite', title: '📨 Undangan', msg: 'Sdri. Rina mengundang Anda berteman', sender: 'Sdri. Rina', username: 'rina' },
+                { type: 'comment', title: '💬 Balasan Komentar', msg: 'Bpk. Joko membalas komentar Anda', sender: 'Bpk. Joko', username: 'joko' },
+                { type: 'profile', title: '👤 Pengikut Baru', msg: 'Sdri. Dewi mengikuti Anda', sender: 'Sdri. Dewi', username: 'dewi' }
             ];
             
             notifTypes.forEach((nt, index) => {
-                const timeOffset = index * 3 * 60000;
+                const timeOffset = index * 5 * 60000;
                 notifications.push({
                     id: ++notificationIdCounter,
                     type: nt.type,
@@ -1986,7 +1972,7 @@
                     link: '#',
                     postId: null,
                     timestamp: now - timeOffset,
-                    read: index > 4,
+                    read: index > 1,
                     soundKey: 'notifikasi'
                 });
             });
@@ -2006,19 +1992,17 @@
         }
 
         // ================================================================
-        // RENDER NOTIFICATIONS - LENGKAP DENGAN EMERGENCY
+        // RENDER NOTIFICATIONS
         // ================================================================
         function renderNotifications() {
             const body = document.getElementById('notifModalBody');
             body.innerHTML = '';
             
-            notifications.sort((a, b) => b.timestamp - a.timestamp);
-            
             if (notifications.length === 0) {
                 body.innerHTML = `
                     <div style="text-align:center;padding:30px 0;color:var(--text-muted);">
                         <i class="fas fa-bell-slash" style="font-size:2.5rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
-                        <p>Belum ada notifikasi</p>
+                        <p>Belum ada pesan notifikasi</p>
                     </div>
                 `;
                 return;
@@ -2026,58 +2010,36 @@
             
             notifications.forEach(notif => {
                 const item = document.createElement('div');
-                
-                let borderColor = 'var(--accent-blue)';
-                let iconBg = 'rgba(88,166,255,0.15)';
-                let iconColor = 'var(--accent-blue)';
-                let emoji = '📢';
-                
-                if (notif.type === 'fire') {
-                    borderColor = 'var(--accent-red)';
-                    iconBg = 'rgba(248,81,73,0.15)';
-                    iconColor = 'var(--accent-red)';
-                    emoji = '🔥';
-                } else if (notif.type === 'death') {
-                    borderColor = '#c792ea';
-                    iconBg = 'rgba(199,146,234,0.15)';
-                    iconColor = '#c792ea';
-                    emoji = '💀';
-                } else if (notif.type === 'theft') {
-                    borderColor = 'var(--accent-gold)';
-                    iconBg = 'rgba(240,208,128,0.15)';
-                    iconColor = 'var(--accent-gold)';
-                    emoji = '💎';
-                } else if (notif.type === 'disaster') {
-                    borderColor = '#4fc3f7';
-                    iconBg = 'rgba(79,195,247,0.15)';
-                    iconColor = '#4fc3f7';
-                    emoji = '🌪️';
-                } else if (notif.type === 'invite') {
-                    borderColor = 'var(--accent-green)';
-                    iconBg = 'rgba(37,211,102,0.15)';
-                    iconColor = 'var(--accent-green)';
-                    emoji = '📨';
-                }
-                
                 item.style.cssText = `
-                    background: ${notif.read ? 'var(--bg-input)' : 'rgba(88,166,255,0.05)'};
+                    background: ${notif.read ? 'var(--bg-input)' : 'rgba(88,166,255,0.08)'};
                     border-radius: 10px;
                     padding: 12px 14px;
                     margin-bottom: 8px;
-                    border-left: 3px solid ${borderColor};
+                    border-left: 3px solid ${notif.read ? 'var(--border-color)' : 'var(--accent-blue)'};
                     cursor: pointer;
                     transition: all 0.3s;
-                    border: 1px solid ${notif.read ? 'var(--border-color)' : borderColor};
                 `;
                 
+                const iconMap = {
+                    'inbox': 'fa-inbox',
+                    'invite': 'fa-user-plus',
+                    'comment': 'fa-comment',
+                    'profile': 'fa-eye',
+                    'post': 'fa-file-alt',
+                    'fire': 'fa-fire',
+                    'death': 'fa-skull',
+                    'theft': 'fa-gem',
+                    'disaster': 'fa-house-damage'
+                };
+                
                 const senderHtml = notif.sender && notif.sender !== 'Sistem' ? 
-                    `<a href="#" onclick="event.preventDefault(); openProfileUser('${notif.senderUsername || notif.sender}');" style="color:var(--accent-blue);text-decoration:none;cursor:pointer;font-weight:500;">${notif.sender}</a>` : 
+                    `<a href="#" onclick="event.preventDefault(); openProfileUser('${notif.senderUsername || notif.sender}');" style="color:var(--accent-blue);text-decoration:none;cursor:pointer;">${notif.sender}</a>` : 
                     notif.sender;
                 
                 item.innerHTML = `
                     <div style="display:flex;align-items:center;gap:10px;">
-                        <div style="width:32px;height:32px;border-radius:50%;background:${iconBg};display:flex;align-items:center;justify-content:center;color:${iconColor};font-size:1rem;">
-                            ${emoji}
+                        <div style="width:32px;height:32px;border-radius:50%;background:rgba(88,166,255,0.15);display:flex;align-items:center;justify-content:center;color:var(--accent-blue);">
+                            <i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i>
                         </div>
                         <div style="flex:1;min-width:0;">
                             <div style="font-size:0.8rem;font-weight:500;color:var(--text-primary);">${notif.title}</div>
@@ -2086,7 +2048,7 @@
                                 ${getTimeAgo(notif.timestamp)} • ${senderHtml}
                             </div>
                         </div>
-                        ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:${borderColor};flex-shrink:0;animation:pulse 1.5s ease-in-out infinite;"></div>` : ''}
+                        ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;"></div>` : ''}
                     </div>
                 `;
                 
@@ -2096,13 +2058,10 @@
                     updateNotifBadge();
                     renderNotifications();
                     
-                    // 🔥 Jika notifikasi emergency, buka profile user pengirim
-                    if (notif.type === 'fire' || notif.type === 'death' || notif.type === 'theft' || notif.type === 'disaster') {
-                        if (notif.senderUsername && notif.senderUsername !== 'sistem') {
-                            window.location.href = `profile-user.html?username=${encodeURIComponent(notif.senderUsername)}`;
-                        }
+                    if (notif.type === 'inbox' || notif.type === 'post' || notif.type === 'comment') {
+                        document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' });
                     } else if (notif.sender && notif.sender !== 'Sistem') {
-                        window.location.href = `profile-user.html?username=${encodeURIComponent(notif.senderUsername || notif.sender)}`;
+                        openProfileUser(notif.senderUsername || notif.sender);
                     }
                 });
                 
@@ -2111,7 +2070,7 @@
         }
 
         // ================================================================
-        // OPEN PESAN MODAL - SAMA DENGAN NOTIF
+        // OPEN PESAN MODAL
         // ================================================================
         function openPesanModal() {
             renderNotifications();
@@ -2333,6 +2292,7 @@
         // ATTACH POST LISTENERS
         // ================================================================
         function attachPostListeners() {
+            // LIKE
             document.querySelectorAll('.post-action.liked, .post-action[data-post-id]').forEach(el => {
                 el.addEventListener('click', function(e) {
                     const postId = this.dataset.postId;
@@ -2357,6 +2317,7 @@
                 });
             });
             
+            // COMMENT TOGGLE
             document.querySelectorAll('.comment-toggle').forEach(el => {
                 el.addEventListener('click', function() {
                     const postId = this.dataset.postId;
@@ -2367,6 +2328,7 @@
                 });
             });
             
+            // SEND COMMENT
             document.querySelectorAll('.send-comment').forEach(el => {
                 el.addEventListener('click', function() {
                     if (!currentUser) {
@@ -2401,6 +2363,7 @@
                 });
             });
             
+            // COMMENT INPUT ENTER
             document.querySelectorAll('.comment-input').forEach(el => {
                 el.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -2410,6 +2373,7 @@
                 });
             });
             
+            // REPLY COMMENT
             document.querySelectorAll('.reply-comment-action').forEach(el => {
                 el.addEventListener('click', function() {
                     if (!currentUser) {
@@ -2444,6 +2408,7 @@
                 });
             });
             
+            // SHARE
             document.querySelectorAll('.post-action.share').forEach(el => {
                 el.addEventListener('click', function() {
                     const postId = this.dataset.postId;
@@ -2491,6 +2456,7 @@
             const grid = document.getElementById('fotoGrid');
             grid.innerHTML = '';
             
+            // Ambil semua postingan dari user yang memiliki media
             const userPosts = posts.filter(p => p.userId === profileUser.username && (p.mediaType === 'image' || p.mediaType === 'video'));
             
             let filteredPosts = userPosts;
@@ -2519,6 +2485,7 @@
                 
                 const isLiked = currentUser && post.likes && post.likes.includes(currentUser.username);
                 const isOwner = currentUser && post.userId === currentUser.username;
+                const mediaClass = post.mediaType === 'video' ? 'video' : '';
                 
                 let mediaHtml = '';
                 if (post.mediaType === 'image') {
@@ -2527,6 +2494,7 @@
                     mediaHtml = `<video controls class="foto-media video" onclick="this.paused ? this.play() : this.pause()"><source src="${post.mediaData}"></video>`;
                 }
                 
+                // Komentar terbatas untuk ditampilkan di grid
                 const recentComments = post.comments ? post.comments.slice(-2) : [];
                 
                 item.innerHTML = `
@@ -2569,6 +2537,7 @@
                 grid.appendChild(item);
             });
             
+            // Attach event listeners untuk foto actions
             attachFotoListeners();
         }
 
@@ -2580,6 +2549,7 @@
         }
 
         function attachFotoListeners() {
+            // LIKE di foto modal
             document.querySelectorAll('.foto-action.liked, .foto-action[data-post-id]').forEach(el => {
                 el.addEventListener('click', function(e) {
                     const postId = this.dataset.postId;
@@ -2604,6 +2574,7 @@
                 });
             });
             
+            // HAPUS di foto modal
             document.querySelectorAll('.delete-foto').forEach(el => {
                 el.addEventListener('click', function(e) {
                     const postId = this.dataset.postId;
@@ -2624,6 +2595,7 @@
                 });
             });
             
+            // KOMENTAR di foto modal
             document.querySelectorAll('.foto-add-comment button').forEach(el => {
                 el.addEventListener('click', function() {
                     if (!currentUser) {
@@ -2658,6 +2630,7 @@
                 });
             });
             
+            // ENTER untuk komentar foto
             document.querySelectorAll('.foto-add-comment input').forEach(el => {
                 el.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
@@ -2971,15 +2944,24 @@
                 return;
             }
             
-            // 🔥 Kirim notifikasi ke Spreadsheet
-            apiSendNotification({
-                type: 'invite',
-                title: '📨 Undangan Berteman',
-                message: `${currentUser.fullName} mengirim undangan berteman kepada Anda`,
-                sender: currentUser.fullName,
-                senderUsername: currentUser.username,
-                target: profileUser.username
-            });
+            // 🔥 SYNC invite ke Spreadsheet
+            try {
+                fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save_invite',
+                        invite: {
+                            from: currentUser.username,
+                            to: profileUser.username,
+                            status: 'pending',
+                            timestamp: Date.now()
+                        }
+                    })
+                });
+            } catch (e) {
+                console.warn('⚠️ Gagal sync invite:', e);
+            }
             
             showToast('✅ Terkirim', `Undangan berteman dikirim ke ${profileUser.fullName}!`, 'fa-user-plus');
         }
@@ -2999,12 +2981,7 @@
             
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
             
-            // 🔥 TOMBOL PESAN - BUKA MODAL NOTIFIKASI (SAMA DENGAN NOTIF)
-            document.getElementById('profilePesanBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                openPesanModal();
-            });
-            
+            // ===== NAVBAR BUTTONS =====
             document.getElementById('profileTemanBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 openTemanModal();
@@ -3015,6 +2992,12 @@
                 openBiodataModal();
             });
             
+            document.getElementById('profileJualBtn').addEventListener('click', function(e) {
+                // Sudah menggunakan target="_blank" ke jual.html
+                // Biarkan default behavior
+            });
+            
+            // ===== MODAL CLOSE =====
             document.getElementById('temanModalClose').addEventListener('click', closeTemanModal);
             document.getElementById('temanModal').addEventListener('click', function(e) {
                 if (e.target === this) closeTemanModal();
@@ -3050,6 +3033,7 @@
                 if (e.target === this) closeFotoModal();
             });
             
+            // ===== STATS CLICK =====
             document.getElementById('statPosts').addEventListener('click', function() {
                 openPostinganModal();
             });
@@ -3062,6 +3046,7 @@
                 openMengikutiModal();
             });
             
+            // ===== INVITE BUTTON =====
             document.getElementById('profileInviteBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 sendInvite();
@@ -3074,10 +3059,9 @@
             console.log('📡 API URL:', API_URL);
             console.log('✅ Mode READ-ONLY - Like & Komentar aktif');
             console.log('✅ Navbar: Foto, Teman, Biodata, Jual - SEMUA TAMPIL');
-            console.log('✅ Tombol PESAN → BUKA MODAL NOTIFIKASI (sama dengan tombol Notif)');
-            console.log('✅ Modal NOTIFIKASI lengkap dengan Emergency (🔥💀💎🌪️)');
-            console.log('✅ Klik notifikasi → buka profile-user.html');
-            console.log('✅ Sinkronisasi ke Google Spreadsheet aktif');
+            console.log('✅ Modal FOTO dengan filter Semua, Foto, Video');
+            console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
+            console.log('✅ Sinkronisasi data ke Spreadsheet aktif');
         });
     </script>
 </body>
