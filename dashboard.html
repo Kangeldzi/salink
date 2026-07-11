@@ -1858,6 +1858,291 @@
         }
 
         /* ================================================================
+           MODAL PESAN MASUK - SAMA SEPERTI pesan-masuk.html
+           ================================================================ */
+        .pesan-modal .modal-content { max-width: 600px; max-height: 90vh; }
+        .pesan-modal .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .pesan-modal .message-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+        .pesan-modal .message-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px var(--shadow-color);
+            border-color: var(--accent-blue);
+        }
+        .pesan-modal .message-item.unread {
+            border-left: 3px solid var(--accent-blue);
+            background: rgba(88, 166, 255, 0.04);
+        }
+        .pesan-modal .message-item.own-message {
+            border-left: 3px solid var(--accent-green);
+            background: rgba(37, 211, 102, 0.04);
+        }
+        .pesan-modal .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-blue-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid var(--accent-blue);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pesan-modal .message-avatar:hover { transform: scale(1.05); }
+        .pesan-modal .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .pesan-modal .message-avatar i { font-size: 0.9rem; }
+        .pesan-modal .message-content { flex: 1; min-width: 0; }
+        .pesan-modal .message-sender {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+        .pesan-modal .message-sender .sender-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pesan-modal .message-sender .sender-name:hover { color: var(--accent-blue); }
+        .pesan-modal .message-sender .sender-username { font-size: 0.6rem; color: var(--text-muted); }
+        .pesan-modal .message-sender .sender-badge {
+            font-size: 0.5rem;
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: var(--accent-green);
+            color: #fff;
+        }
+        .pesan-modal .message-subject {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .pesan-modal .message-preview {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .pesan-modal .message-time {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+        .pesan-modal .message-unread-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            flex-shrink: 0;
+            animation: pulse 1.5s ease-in-out infinite;
+            margin-left: 4px;
+        }
+        .pesan-modal .message-item.read .message-unread-dot { display: none; }
+        .pesan-modal .message-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .pesan-modal .message-actions button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 4px 6px;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+        .pesan-modal .message-actions button:hover { background: var(--bg-input); }
+        .pesan-modal .message-actions .delete-btn:hover { color: var(--danger); }
+        .pesan-modal .message-actions .edit-btn:hover { color: var(--accent-blue); }
+        .pesan-modal .message-actions button { opacity: 0; }
+        .pesan-modal .message-item:hover .message-actions button { opacity: 1; }
+        .pesan-modal .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .pesan-modal .empty-state i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+        .pesan-modal .empty-state h3 {
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .pesan-modal .empty-state p {
+            font-size: 0.75rem;
+        }
+        .pesan-modal .empty-state .btn-primary {
+            margin-top: 12px;
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pesan-modal .empty-state .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3); }
+        .pesan-modal .btn-compose {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .pesan-modal .btn-compose:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3); }
+        .pesan-modal .pesan-compose-area {
+            background: var(--bg-input);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+        .pesan-modal .pesan-compose-area.active { display: block; }
+        .pesan-modal .pesan-compose-area .form-group { margin-bottom: 8px; }
+        .pesan-modal .pesan-compose-area .form-group label {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 2px;
+        }
+        .pesan-modal .pesan-compose-area .form-group .form-control {
+            width: 100%;
+            padding: 6px 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        .pesan-modal .pesan-compose-area .form-group .form-control:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+        .pesan-modal .pesan-compose-area .form-group textarea.form-control {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .pesan-modal .pesan-compose-area .btn-send-compose {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pesan-modal .pesan-compose-area .btn-send-compose:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3); }
+        .pesan-modal .pesan-compose-area .btn-send-compose:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .pesan-modal .pesan-compose-area .selected-user-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            border: 1px solid var(--accent-blue);
+            border-radius: 16px;
+            padding: 2px 12px;
+            font-size: 0.7rem;
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+        .pesan-modal .pesan-compose-area .selected-user-display .remove-user {
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+        .pesan-modal .pesan-compose-area .selected-user-display .remove-user:hover { color: var(--danger); }
+        .pesan-modal .pesan-compose-area .search-users {
+            position: relative;
+        }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-height: 120px;
+            overflow-y: auto;
+            display: none;
+            z-index: 10;
+        }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions.active { display: block; }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions .suggestion-item {
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions .suggestion-item:hover { background: var(--bg-input); }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions .suggestion-item .suggestion-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-blue-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.6rem;
+            flex-shrink: 0;
+        }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions .suggestion-item .suggestion-name {
+            font-size: 0.7rem;
+            color: var(--text-primary);
+        }
+        .pesan-modal .pesan-compose-area .search-users .user-suggestions .suggestion-item .suggestion-username {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+        }
+
+        /* ================================================================
            RESPONSIVE
            ================================================================ */
         @media (max-width: 480px) {
@@ -1923,6 +2208,12 @@
             .modal-content .modal-body-scroll { max-height: calc(85vh - 120px); }
             #fotoGrid { grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 6px; }
             .filter-grid { grid-template-columns: 1fr; }
+            .pesan-modal .message-item { padding: 10px 12px; gap: 8px; }
+            .pesan-modal .message-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
+            .pesan-modal .message-sender .sender-name { font-size: 0.7rem; }
+            .pesan-modal .message-subject { font-size: 0.65rem; }
+            .pesan-modal .message-preview { font-size: 0.55rem; }
+            .pesan-modal .message-actions button { opacity: 0.7; font-size: 0.6rem; padding: 2px 4px; }
         }
 
         @media (max-width: 380px) {
@@ -2758,7 +3049,7 @@
         </div>
     </div>
 
-    <!-- Notification Modal -->
+    <!-- Notification Modal - TETAP ADA UNTUK LIST NOTIFIKASI -->
     <div class="modal-overlay" id="notifModal">
         <div class="modal-content" style="max-width:480px;">
             <div class="modal-header">
@@ -2774,6 +3065,63 @@
             <div class="modal-body" id="notifModalBody"></div>
             <div class="modal-footer">
                 <button class="btn-close-modal" onclick="closeNotifModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- MODAL PESAN MASUK - SAMA SEPERTI pesan-masuk.html                -->
+    <!-- ================================================================ -->
+    <div class="modal-overlay pesan-modal" id="pesanModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fas fa-inbox"></i>
+                    <span>Pesan Masuk</span>
+                    <span class="badge-count" id="pesanCount">0</span>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <button class="btn-compose" id="pesanComposeBtn" title="Tulis Pesan Baru">
+                        <i class="fas fa-pen"></i> Tulis
+                    </button>
+                    <button class="modal-close" id="pesanModalClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" id="pesanModalBody" style="max-height:65vh;overflow-y:auto;">
+                <!-- Compose Area -->
+                <div class="pesan-compose-area" id="pesanComposeArea">
+                    <div class="form-group">
+                        <label>Kepada</label>
+                        <div class="search-users">
+                            <input type="text" class="form-control" id="pesanSearchInput" placeholder="Cari nama atau username..." autocomplete="off">
+                            <div class="user-suggestions" id="pesanSuggestions"></div>
+                        </div>
+                        <div id="pesanSelectedUser"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Subjek</label>
+                        <input type="text" class="form-control" id="pesanSubject" placeholder="Masukkan subjek pesan...">
+                    </div>
+                    <div class="form-group">
+                        <label>Pesan</label>
+                        <textarea class="form-control" id="pesanMessage" placeholder="Tulis pesan Anda di sini..." rows="3"></textarea>
+                    </div>
+                    <div style="display:flex;gap:8px;justify-content:flex-end;">
+                        <button class="btn-send-compose" id="pesanSendBtn" disabled>
+                            <i class="fas fa-paper-plane"></i> Kirim
+                        </button>
+                        <button class="btn-send-compose" id="pesanCancelCompose" style="background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border-color);">
+                            Batal
+                        </button>
+                    </div>
+                </div>
+                <!-- Message List -->
+                <div class="message-list" id="pesanMessageList"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closePesanModal()">Tutup</button>
             </div>
         </div>
     </div>
@@ -2889,6 +3237,27 @@
         const LOGIN_URL = 'login.html';
         const MODE_PREVIEW = 'preview';
         const MODE_FULL = 'full';
+        
+        // ================================================================
+        // 🔔 NADA DERING REGULER UNTUK SEMUA NOTIFIKASI
+        // ================================================================
+        const REGULAR_SOUND = "https://cdn.jsdelivr.net/gh/Kangeldzi/salink@main/Music/smsblackber_4a537f155087133.mp3";
+        const regularSoundAudio = new Audio(REGULAR_SOUND);
+        regularSoundAudio.volume = 0.7;
+        regularSoundAudio.preload = 'auto';
+
+        function playRegularNotificationSound() {
+            try {
+                regularSoundAudio.currentTime = 0;
+                regularSoundAudio.play().catch(() => {
+                    // Fallback: reload audio jika gagal
+                    regularSoundAudio.load();
+                    setTimeout(() => regularSoundAudio.play().catch(() => {}), 200);
+                });
+            } catch (e) {
+                console.warn('Gagal memutar suara notifikasi:', e);
+            }
+        }
 
         let isPreviewMode = true;
         let currentUser = null;
@@ -2916,6 +3285,12 @@
         let currentFotoFilter = 'semua';
         let allUsers = [];
         let filteredUsers = [];
+        
+        // ===== PESAN STATE =====
+        let pesanMessages = [];
+        let pesanMessageIdCounter = 0;
+        let pesanSelectedRecipient = null;
+        let isPesanComposeOpen = false;
 
         // ================================================================
         // THEME TOGGLE
@@ -3276,6 +3651,7 @@
                 const audio = audioObjects[key];
                 audio.load();
             });
+            regularSoundAudio.load();
         }
 
         function playAlarm(button, soundKey) {
@@ -3514,7 +3890,7 @@
         }
 
         // ================================================================
-        // FUNGSI UNTUK TOMBOL PESAN - BUKA MODAL NOTIF
+        // FUNGSI UNTUK TOMBOL PESAN - BUKA MODAL PESAN (BUKAN NOTIF)
         // ================================================================
         
         function openPesanModal() {
@@ -3529,16 +3905,17 @@
                 return;
             }
             
-            renderNotifications();
-            document.getElementById('notifModal').classList.add('active');
+            // ✅ BUKA MODAL PESAN (bukan notifikasi)
+            renderPesanModal();
+            document.getElementById('pesanModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         // ================================================================
-        // FUNGSI BUKA HALAMAN PESAN - UNTUK TOMBOL PESAN DI PROFIL
+        // FUNGSI BUKA MODAL PESAN DENGAN PENERIMA OTOMATIS
         // ================================================================
         
-        function openMessagePage(toUser, toName) {
+        function openMessageCompose(toUser, toName, subject) {
             if (isPreviewMode) {
                 showPreviewOverlay();
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk mengirim pesan', 'fa-lock');
@@ -3550,11 +3927,599 @@
                 return;
             }
             
-            let url = 'pesan-masuk.html';
+            // ✅ BUKA MODAL PESAN dengan penerima otomatis
+            renderPesanModal(toUser, toName, subject);
+            document.getElementById('pesanModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================================================================
+        // CLOSE MODAL PESAN
+        // ================================================================
+        
+        function closePesanModal() {
+            document.getElementById('pesanModal').classList.remove('active');
+            document.body.style.overflow = '';
+            isPesanComposeOpen = false;
+            document.getElementById('pesanComposeArea').classList.remove('active');
+        }
+
+        // ================================================================
+        // RENDER MODAL PESAN - SAMA SEPERTI pesan-masuk.html
+        // ================================================================
+        
+        function renderPesanModal(toUser, toName, subject) {
+            const body = document.getElementById('pesanModalBody');
+            const listContainer = document.getElementById('pesanMessageList');
+            
+            // Reset compose area
+            document.getElementById('pesanComposeArea').classList.remove('active');
+            document.getElementById('pesanSelectedUser').innerHTML = '';
+            document.getElementById('pesanSearchInput').value = '';
+            document.getElementById('pesanSubject').value = '';
+            document.getElementById('pesanMessage').value = '';
+            document.getElementById('pesanSendBtn').disabled = true;
+            pesanSelectedRecipient = null;
+            
+            // Load messages untuk user ini
+            loadPesanMessages();
+            
+            // Jika ada penerima otomatis, buka compose
             if (toUser) {
-                url += `?to=${encodeURIComponent(toUser)}&name=${encodeURIComponent(toName || toUser)}`;
+                // Cari user di allUsers
+                const user = allUsers.find(u => u.username === toUser);
+                if (user) {
+                    selectPesanRecipient(user);
+                } else {
+                    // Coba cari dari localStorage
+                    const fallbackUser = JSON.parse(localStorage.getItem('salink_users') || '[]').find(u => u.username === toUser);
+                    if (fallbackUser) {
+                        selectPesanRecipient(fallbackUser);
+                    } else {
+                        document.getElementById('pesanSearchInput').value = toName || toUser;
+                    }
+                }
+                if (subject) {
+                    document.getElementById('pesanSubject').value = subject;
+                }
+                // Buka compose area
+                document.getElementById('pesanComposeArea').classList.add('active');
+                isPesanComposeOpen = true;
+                setTimeout(() => {
+                    document.getElementById('pesanMessage').focus();
+                }, 300);
             }
-            window.open(url, '_blank');
+            
+            // Render daftar pesan
+            renderPesanMessages();
+            
+            // Update count
+            document.getElementById('pesanCount').textContent = pesanMessages.length;
+        }
+
+        // ================================================================
+        // LOAD PESAN MESSAGES
+        // ================================================================
+        
+        function loadPesanMessages() {
+            try {
+                const saved = localStorage.getItem('salink_messages');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        pesanMessages = parsed;
+                        let maxId = 0;
+                        pesanMessages.forEach(m => {
+                            const numId = parseInt(m.id.replace('msg-', ''));
+                            if (!isNaN(numId) && numId > maxId) maxId = numId;
+                        });
+                        pesanMessageIdCounter = maxId;
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn('Gagal memuat pesan:', e);
+            }
+            
+            // Generate sample jika kosong
+            if (pesanMessages.length === 0 && currentUser) {
+                generateSamplePesanMessages();
+            }
+        }
+
+        // ================================================================
+        // GENERATE SAMPLE PESAN MESSAGES
+        // ================================================================
+        
+        function generateSamplePesanMessages() {
+            const now = Date.now();
+            const sampleSenders = [
+                { name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male' },
+                { name: 'Sdri. Rina', username: 'rina', gender: 'female' },
+                { name: 'Bpk. Joko', username: 'joko', gender: 'male' }
+            ];
+
+            const sampleSubjects = [
+                'Pertanyaan tentang lokasi darurat',
+                'Informasi penting terkini',
+                'Permintaan bantuan'
+            ];
+
+            const sampleMessages = [
+                'Mohon informasikan lokasi titik aman terdekat di sekitar Jalan Sudirman.',
+                'Saya ingin melaporkan bahwa kondisi di daerah saya sudah mulai membaik.',
+                'Apakah ada informasi terbaru mengenai penanganan darurat?'
+            ];
+
+            sampleSenders.forEach((sender, index) => {
+                const timeOffset = (index + 1) * 30 * 60000;
+                const isRead = index > 1;
+                
+                pesanMessages.push({
+                    id: 'msg-' + (++pesanMessageIdCounter),
+                    from: sender.username,
+                    fromName: sender.name,
+                    fromGender: sender.gender,
+                    to: currentUser.username,
+                    subject: sampleSubjects[index % sampleSubjects.length],
+                    message: sampleMessages[index % sampleMessages.length],
+                    timestamp: now - timeOffset,
+                    read: isRead,
+                    isOwn: false
+                });
+            });
+
+            // Tambahkan pesan dari user sendiri
+            if (currentUser) {
+                pesanMessages.push({
+                    id: 'msg-' + (++pesanMessageIdCounter),
+                    from: currentUser.username,
+                    fromName: currentUser.fullName,
+                    fromGender: currentUser.gender,
+                    to: 'ahmad',
+                    subject: 'Konfirmasi Bantuan',
+                    message: 'Baik, saya akan segera mengirimkan tim bantuan ke lokasi Anda.',
+                    timestamp: now - 15 * 60000,
+                    read: true,
+                    isOwn: true
+                });
+            }
+
+            savePesanMessages();
+        }
+
+        // ================================================================
+        // SAVE PESAN MESSAGES
+        // ================================================================
+        
+        function savePesanMessages() {
+            try {
+                localStorage.setItem('salink_messages', JSON.stringify(pesanMessages));
+                syncMessagesToSpreadsheet(pesanMessages);
+            } catch (e) {
+                console.warn('Gagal menyimpan pesan:', e);
+            }
+        }
+
+        // ================================================================
+        // RENDER PESAN MESSAGES
+        // ================================================================
+        
+        function renderPesanMessages() {
+            const list = document.getElementById('pesanMessageList');
+            list.innerHTML = '';
+
+            // Filter pesan untuk user yang sedang login
+            const userMessages = pesanMessages.filter(m => 
+                m.to === currentUser?.username || m.from === currentUser?.username
+            );
+            
+            userMessages.sort((a, b) => b.timestamp - a.timestamp);
+
+            if (userMessages.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Belum ada pesan</h3>
+                        <p>Mulai kirim pesan ke pengguna lain</p>
+                        <button class="btn-primary" id="pesanEmptyComposeBtn">
+                            <i class="fas fa-pen"></i> Tulis Pesan
+                        </button>
+                    </div>
+                `;
+                document.getElementById('pesanEmptyComposeBtn')?.addEventListener('click', () => {
+                    document.getElementById('pesanComposeArea').classList.toggle('active');
+                    isPesanComposeOpen = !isPesanComposeOpen;
+                    if (isPesanComposeOpen) {
+                        setTimeout(() => document.getElementById('pesanSearchInput').focus(), 300);
+                    }
+                });
+                return;
+            }
+
+            userMessages.forEach(msg => {
+                const isOwn = msg.from === currentUser?.username;
+                const displayName = isOwn ? currentUser?.fullName : msg.fromName;
+                const displayUsername = isOwn ? currentUser?.username : msg.from;
+                const isRead = msg.read || isOwn;
+
+                const item = document.createElement('div');
+                item.className = `message-item ${isRead ? 'read' : 'unread'} ${isOwn ? 'own-message' : ''}`;
+                item.dataset.id = msg.id;
+
+                const avatarIcon = isOwn 
+                    ? (currentUser?.gender === 'female' ? 'fa-female' : 'fa-male')
+                    : (msg.fromGender === 'female' ? 'fa-female' : 'fa-male');
+                const profilePic = isOwn ? currentUser?.profilePicture : null;
+
+                item.innerHTML = `
+                    <div class="message-avatar" onclick="event.stopPropagation(); openProfileUser('${displayUsername}')">
+                        ${profilePic ? `<img src="${profilePic}" alt="${displayName}">` : `<i class="fas ${avatarIcon}"></i>`}
+                    </div>
+                    <div class="message-content">
+                        <div class="message-sender">
+                            <span class="sender-name" onclick="event.stopPropagation(); openProfileUser('${displayUsername}')">${displayName}</span>
+                            <span class="sender-username">@${displayUsername}</span>
+                            ${isOwn ? '<span class="sender-badge">Anda</span>' : ''}
+                        </div>
+                        <div class="message-subject">${msg.subject || 'Tanpa Subjek'}</div>
+                        <div class="message-preview">${msg.message.substring(0, 60)}${msg.message.length > 60 ? '...' : ''}</div>
+                    </div>
+                    <div class="message-time">${getTimeAgo(msg.timestamp)}</div>
+                    ${!isRead ? '<div class="message-unread-dot"></div>' : ''}
+                    <div class="message-actions">
+                        ${isOwn ? `
+                            <button class="edit-btn" onclick="event.stopPropagation(); openPesanEditMessage('${msg.id}')" title="Edit pesan">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        ` : ''}
+                        <button class="delete-btn" onclick="event.stopPropagation(); deletePesanMessage('${msg.id}')" title="Hapus pesan">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                item.addEventListener('click', () => {
+                    openPesanDetailMessage(msg.id);
+                });
+
+                list.appendChild(item);
+            });
+        }
+
+        // ================================================================
+        // GET TIME AGO
+        // ================================================================
+        
+        function getTimeAgo(timestamp) {
+            const diff = Date.now() - timestamp;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            const weeks = Math.floor(days / 7);
+            const months = Math.floor(days / 30);
+            const years = Math.floor(days / 365);
+            
+            if (seconds < 60) return 'Baru saja';
+            if (minutes < 60) return `${minutes} menit lalu`;
+            if (minutes < 120) return '1 jam lalu';
+            if (hours < 24) return `${hours} jam lalu`;
+            if (days < 7) return `${days} hari lalu`;
+            if (weeks < 4) return `${weeks} minggu lalu`;
+            if (months < 12) return `${months} bulan lalu`;
+            return `${years} tahun lalu`;
+        }
+
+        // ================================================================
+        // PESAN DETAIL MESSAGE
+        // ================================================================
+        
+        function openPesanDetailMessage(messageId) {
+            const msg = pesanMessages.find(m => m.id === messageId);
+            if (!msg) return;
+
+            // Tandai sebagai sudah dibaca
+            if (!msg.read && msg.to === currentUser?.username) {
+                msg.read = true;
+                savePesanMessages();
+                renderPesanMessages();
+            }
+
+            const isOwn = msg.from === currentUser?.username;
+            const displayName = isOwn ? currentUser?.fullName : msg.fromName;
+            const displayUsername = isOwn ? currentUser?.username : msg.from;
+            const avatarIcon = isOwn 
+                ? (currentUser?.gender === 'female' ? 'fa-female' : 'fa-male')
+                : (msg.fromGender === 'female' ? 'fa-female' : 'fa-male');
+            const profilePic = isOwn ? currentUser?.profilePicture : null;
+
+            // Tampilkan detail dengan alert/confirm sederhana
+            const detailMessage = `
+📩 **${msg.subject || 'Tanpa Subjek'}**
+
+👤 Dari: ${displayName} (@${displayUsername})
+📅 ${new Date(msg.timestamp).toLocaleString('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+})}
+
+📝 Pesan:
+${msg.message}
+
+${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk membalas pesan ini.'}
+            `;
+
+            const action = confirm(detailMessage + '\n\nPilih aksi:\n[OK] = Balas / Edit\n[Cancel] = Tutup');
+            
+            if (action) {
+                if (isOwn) {
+                    // Edit pesan
+                    const newText = prompt('Edit pesan:', msg.message);
+                    if (newText !== null && newText.trim() !== '') {
+                        msg.message = newText.trim();
+                        savePesanMessages();
+                        renderPesanMessages();
+                        showToast('✅ Berhasil', 'Pesan berhasil diedit!', 'fa-check-circle');
+                    }
+                } else {
+                    // Balas pesan
+                    const subject = prompt('Subjek balasan:', `RE: ${msg.subject || 'Balasan'}`);
+                    if (subject !== null) {
+                        openMessageCompose(displayUsername, displayName, subject);
+                    }
+                }
+            }
+        }
+
+        // ================================================================
+        // PESAN EDIT MESSAGE
+        // ================================================================
+        
+        function openPesanEditMessage(messageId) {
+            const msg = pesanMessages.find(m => m.id === messageId);
+            if (!msg) return;
+            if (msg.from !== currentUser?.username) {
+                showToast('⚠️ Error', 'Anda tidak dapat mengedit pesan orang lain', 'fa-exclamation-triangle');
+                return;
+            }
+
+            const newText = prompt('Edit pesan:', msg.message);
+            if (newText !== null && newText.trim() !== '') {
+                msg.message = newText.trim();
+                savePesanMessages();
+                renderPesanMessages();
+                showToast('✅ Berhasil', 'Pesan berhasil diedit!', 'fa-check-circle');
+            }
+        }
+
+        // ================================================================
+        // PESAN DELETE MESSAGE
+        // ================================================================
+        
+        function deletePesanMessage(messageId) {
+            const msg = pesanMessages.find(m => m.id === messageId);
+            if (!msg) return;
+
+            if (confirm('Apakah Anda yakin ingin menghapus pesan ini?')) {
+                pesanMessages = pesanMessages.filter(m => m.id !== messageId);
+                savePesanMessages();
+                renderPesanMessages();
+                showToast('🗑️ Dihapus', 'Pesan berhasil dihapus', 'fa-trash');
+            }
+        }
+
+        // ================================================================
+        // PESAN COMPOSE - SELECT RECIPIENT
+        // ================================================================
+        
+        function selectPesanRecipient(user) {
+            pesanSelectedRecipient = user;
+            document.getElementById('pesanSearchInput').value = '';
+            document.getElementById('pesanSuggestions').classList.remove('active');
+            
+            const container = document.getElementById('pesanSelectedUser');
+            container.innerHTML = `
+                <div class="selected-user-display">
+                    <span>${user.fullName} (@${user.username})</span>
+                    <span class="remove-user" onclick="removePesanRecipient()">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+            `;
+            
+            validatePesanCompose();
+        }
+
+        function removePesanRecipient() {
+            pesanSelectedRecipient = null;
+            document.getElementById('pesanSelectedUser').innerHTML = '';
+            document.getElementById('pesanSearchInput').value = '';
+            document.getElementById('pesanSendBtn').disabled = true;
+            document.getElementById('pesanSearchInput').focus();
+        }
+
+        function validatePesanCompose() {
+            const subject = document.getElementById('pesanSubject').value.trim();
+            const message = document.getElementById('pesanMessage').value.trim();
+            const isValid = pesanSelectedRecipient !== null && subject !== '' && message !== '';
+            document.getElementById('pesanSendBtn').disabled = !isValid;
+        }
+
+        // ================================================================
+        // PESAN SEND MESSAGE
+        // ================================================================
+        
+        async function sendPesanMessage() {
+            if (!pesanSelectedRecipient || !currentUser) return;
+            
+            const subject = document.getElementById('pesanSubject').value.trim();
+            const message = document.getElementById('pesanMessage').value.trim();
+            
+            if (!subject || !message) {
+                showToast('⚠️ Error', 'Subjek dan pesan harus diisi', 'fa-exclamation-triangle');
+                return;
+            }
+            
+            const newMessage = {
+                id: 'msg-' + (++pesanMessageIdCounter),
+                from: currentUser.username,
+                fromName: currentUser.fullName,
+                fromGender: currentUser.gender,
+                to: pesanSelectedRecipient.username,
+                subject: subject,
+                message: message,
+                timestamp: Date.now(),
+                read: false,
+                isOwn: true
+            };
+            
+            pesanMessages.push(newMessage);
+            savePesanMessages();
+            renderPesanMessages();
+            
+            // 🔔 Bunyi notifikasi reguler
+            playRegularNotificationSound();
+            
+            // 🔥 Kirim ke Spreadsheet via API
+            try {
+                await apiSendMessage(newMessage);
+                showToast('✅ Berhasil', `Pesan terkirim ke ${pesanSelectedRecipient.fullName} (disimpan ke Spreadsheet)`, 'fa-paper-plane');
+            } catch (error) {
+                console.warn('⚠️ Gagal sync ke Spreadsheet:', error);
+                showToast('✅ Berhasil', `Pesan terkirim ke ${pesanSelectedRecipient.fullName} (offline mode)`, 'fa-paper-plane');
+            }
+            
+            // Reset compose area
+            document.getElementById('pesanSubject').value = '';
+            document.getElementById('pesanMessage').value = '';
+            document.getElementById('pesanSendBtn').disabled = true;
+            document.getElementById('pesanSelectedUser').innerHTML = '';
+            pesanSelectedRecipient = null;
+            document.getElementById('pesanComposeArea').classList.remove('active');
+            isPesanComposeOpen = false;
+        }
+
+        // ================================================================
+        // PESAN COMPOSE EVENT LISTENERS
+        // ================================================================
+        
+        function setupPesanComposeListeners() {
+            const searchInput = document.getElementById('pesanSearchInput');
+            const suggestions = document.getElementById('pesanSuggestions');
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length < 2) {
+                    suggestions.classList.remove('active');
+                    return;
+                }
+                
+                // Filter users
+                const results = allUsers.filter(u => {
+                    if (u.username === currentUser?.username) return false;
+                    const q = query.toLowerCase();
+                    return u.fullName.toLowerCase().includes(q) || 
+                           u.username.toLowerCase().includes(q);
+                });
+                
+                if (results.length === 0) {
+                    suggestions.innerHTML = `
+                        <div style="padding:8px 12px;color:var(--text-muted);font-size:0.7rem;">
+                            <i class="fas fa-search"></i> Tidak ditemukan
+                        </div>
+                    `;
+                    suggestions.classList.add('active');
+                    return;
+                }
+                
+                suggestions.innerHTML = results.map(user => `
+                    <div class="suggestion-item" data-username="${user.username}">
+                        <div class="suggestion-avatar">
+                            ${user.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>'}
+                        </div>
+                        <div>
+                            <div class="suggestion-name">${user.fullName}</div>
+                            <div class="suggestion-username">@${user.username}</div>
+                        </div>
+                    </div>
+                `).join('');
+                suggestions.classList.add('active');
+                
+                suggestions.querySelectorAll('.suggestion-item').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const username = this.dataset.username;
+                        const user = allUsers.find(u => u.username === username);
+                        if (user) {
+                            selectPesanRecipient(user);
+                        }
+                    });
+                });
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    suggestions.classList.remove('active');
+                }, 300);
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim().length >= 2) {
+                    suggestions.classList.add('active');
+                }
+            });
+            
+            document.getElementById('pesanSubject').addEventListener('input', validatePesanCompose);
+            document.getElementById('pesanMessage').addEventListener('input', validatePesanCompose);
+            
+            document.getElementById('pesanSendBtn').addEventListener('click', sendPesanMessage);
+            
+            document.getElementById('pesanCancelCompose').addEventListener('click', function() {
+                document.getElementById('pesanComposeArea').classList.remove('active');
+                isPesanComposeOpen = false;
+                document.getElementById('pesanSelectedUser').innerHTML = '';
+                document.getElementById('pesanSearchInput').value = '';
+                document.getElementById('pesanSubject').value = '';
+                document.getElementById('pesanMessage').value = '';
+                document.getElementById('pesanSendBtn').disabled = true;
+                pesanSelectedRecipient = null;
+            });
+            
+            // Enter key untuk kirim (Ctrl+Enter)
+            document.getElementById('pesanMessage').addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!document.getElementById('pesanSendBtn').disabled) {
+                        sendPesanMessage();
+                    }
+                }
+            });
+            
+            // Tombol compose
+            document.getElementById('pesanComposeBtn').addEventListener('click', function() {
+                document.getElementById('pesanComposeArea').classList.toggle('active');
+                isPesanComposeOpen = !isPesanComposeOpen;
+                if (isPesanComposeOpen) {
+                    setTimeout(() => document.getElementById('pesanSearchInput').focus(), 300);
+                } else {
+                    document.getElementById('pesanSelectedUser').innerHTML = '';
+                    document.getElementById('pesanSearchInput').value = '';
+                    document.getElementById('pesanSubject').value = '';
+                    document.getElementById('pesanMessage').value = '';
+                    document.getElementById('pesanSendBtn').disabled = true;
+                    pesanSelectedRecipient = null;
+                }
+            });
+            
+            // Close modal
+            document.getElementById('pesanModalClose').addEventListener('click', closePesanModal);
+            document.getElementById('pesanModal').addEventListener('click', function(e) {
+                if (e.target === this) closePesanModal();
+            });
         }
 
         // ================================================================
@@ -3584,8 +4549,13 @@
             // === SYNC KE GOOGLE SPREADSHEET ===
             syncToSpreadsheet(notification, 'save_notification');
             
-            if (!(sender && currentUser && sender === currentUser.fullName)) {
+            // 🔔 PLAY SOUND - REGULER atau EMERGENCY
+            if (type === 'fire' || type === 'death' || type === 'theft' || type === 'disaster') {
+                // Emergency sound
                 playNotificationSound(soundKey);
+            } else {
+                // Reguler sound - untuk SEMUA notifikasi reguler
+                playRegularNotificationSound();
             }
             
             if (type === 'fire' || type === 'death' || type === 'theft' || type === 'disaster') {
@@ -4106,26 +5076,6 @@
         // HELPER FUNCTIONS
         // ================================================================
         
-        function getTimeAgo(timestamp) {
-            const diff = Date.now() - timestamp;
-            const seconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-            const weeks = Math.floor(days / 7);
-            const months = Math.floor(days / 30);
-            const years = Math.floor(days / 365);
-            
-            if (seconds < 60) return 'Baru saja';
-            if (minutes < 60) return `${minutes} menit yang lalu`;
-            if (minutes < 120) return '1 jam yang lalu';
-            if (hours < 24) return `${hours} jam yang lalu`;
-            if (days < 7) return `${days} hari yang lalu`;
-            if (weeks < 4) return `${weeks} minggu yang lalu`;
-            if (months < 12) return `${months} bulan yang lalu`;
-            return `${years} tahun yang lalu`;
-        }
-
         function renderAlerts(alerts) {
             const list = document.getElementById('alertList');
             list.innerHTML = '';
@@ -4627,7 +5577,8 @@
                     // === SYNC EMERGENCY KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ type: specialData.type, sender: currentUser.fullName, location: specialData.location, address: specialData.address }, 'save_emergency');
                 } else {
-                    playNotificationSound('notifikasi');
+                    // 🔔 Notifikasi reguler - bunyikan suara reguler
+                    playRegularNotificationSound();
                     addNotification('post', '📝 Postingan Baru', `${currentUser.fullName} membuat postingan baru`, currentUser.fullName, '#', postId, 'notifikasi');
                 }
                 
@@ -5033,6 +5984,8 @@
                     }
                     
                     if (post.userId !== currentUser.username) {
+                        // 🔔 Notifikasi komentar - bunyikan suara reguler
+                        playRegularNotificationSound();
                         addNotification('comment', '💬 Komentar Baru', `${currentUser.fullName} mengomentari postingan Anda: "${text}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
                     
@@ -5091,6 +6044,8 @@
                     }
                     
                     if (comment.userId !== currentUser.username) {
+                        // 🔔 Notifikasi balasan - bunyikan suara reguler
+                        playRegularNotificationSound();
                         addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas komentar Anda: "${replyText}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
                     showToast('✅ Berhasil', 'Balasan ditambahkan!', 'fa-check-circle');
@@ -5624,6 +6579,8 @@
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
                     
                     if (post.userId !== currentUser.username) {
+                        // 🔔 Notifikasi komentar - bunyikan suara reguler
+                        playRegularNotificationSound();
                         addNotification('comment', '💬 Komentar Baru', `${currentUser.fullName} mengomentari postingan Anda: "${text}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
                     
@@ -5680,6 +6637,8 @@
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
                     
                     if (comment.userId !== currentUser.username) {
+                        // 🔔 Notifikasi balasan - bunyikan suara reguler
+                        playRegularNotificationSound();
                         addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas komentar Anda: "${replyText}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
                     showToast('✅ Berhasil', 'Balasan ditambahkan!', 'fa-check-circle');
@@ -6253,6 +7212,36 @@
             
             // Update filter stats
             updateFilterStats();
+            
+            // Update allUsers untuk pesan
+            getAllUsers().then(users => {
+                allUsers = users;
+            });
+        }
+
+        // ================================================================
+        // GET ALL USERS
+        // ================================================================
+        
+        async function getAllUsers() {
+            let users = JSON.parse(localStorage.getItem('salink_users') || '[]');
+            
+            try {
+                const remoteUsers = await apiGetUsers();
+                if (remoteUsers && remoteUsers.length > 0) {
+                    users = remoteUsers;
+                    localStorage.setItem('salink_users', JSON.stringify(users));
+                }
+            } catch (e) {
+                console.warn('⚠️ Gagal sync users:', e);
+            }
+            
+            if (currentUser && !users.find(u => u.username === currentUser.username)) {
+                users.push(currentUser);
+            }
+            
+            allUsers = users;
+            return users;
         }
 
         // ================================================================
@@ -6355,17 +7344,14 @@
             
             document.getElementById('filterResetBtn').addEventListener('click', resetFilter);
             
-            // Auto-filter on enter key
             document.getElementById('filterAddress').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     document.getElementById('filterApplyBtn').click();
                 }
             });
             
-            // Auto-update on select change
             ['filterCountry', 'filterProvince', 'filterCity', 'filterDistrict', 'filterVillage'].forEach(id => {
                 document.getElementById(id).addEventListener('change', function() {
-                    // Auto update setelah 500ms
                     clearTimeout(this._filterTimeout);
                     this._filterTimeout = setTimeout(() => {
                         updateFilterStats();
@@ -7030,6 +8016,11 @@
             }
         }
         
+        // Load users
+        getAllUsers().then(users => {
+            allUsers = users;
+        });
+        
         const hasSavedPosts = loadPostsFromLocalStorage();
         
         generateSampleFriends();
@@ -7052,6 +8043,7 @@
         updateBadge();
         setupFotoFilters();
         setupFilterListeners();
+        setupPesanComposeListeners();
         
         if (!hasSavedPosts || posts.length === 0) {
             const now = Date.now();
@@ -7649,25 +8641,9 @@
         // EXPOSE FUNCTIONS GLOBAL UNTUK DIPANGGIL DARI FILE LAIN
         // ================================================================
         window.openProfileUser = openProfileUser;
-        window.openMessagePage = openMessagePage;
+        window.openMessageCompose = openMessageCompose;
         window.openPesanModal = openPesanModal;
-        window.openMessageCompose = function(toUser, toName, subject) {
-            if (isPreviewMode) {
-                showPreviewOverlay();
-                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengirim pesan', 'fa-lock');
-                return;
-            }
-            if (!currentUser) {
-                window.location.href = LOGIN_URL;
-                return;
-            }
-            let url = 'pesan-masuk.html';
-            if (toUser) {
-                url += `?to=${encodeURIComponent(toUser)}&name=${encodeURIComponent(toName || toUser)}`;
-                if (subject) url += `&subject=${encodeURIComponent(subject)}`;
-            }
-            window.open(url, '_blank');
-        };
+        window.closePesanModal = closePesanModal;
         
         // ================================================================
         // LOG
@@ -7688,7 +8664,7 @@
         console.log('🌓 Dark/Light Mode: Active');
         console.log('✅ Emergency buttons: Click to stop alarm/notification');
         console.log('✅ Settings & Biodata modals: Scrollable');
-        console.log('✅ Tombol PESAN: Membuka Modal Notifikasi (sama dengan NOTIF)');
+        console.log('✅ Tombol PESAN: Membuka Modal PESAN (sama seperti pesan-masuk.html)');
         console.log('✅ Modal FOTO: Dengan filter Semua, Foto, Video');
         console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
         console.log('📊 Google Spreadsheet Integration: ACTIVE');
@@ -7698,6 +8674,13 @@
         console.log('   - Filter berdasarkan: Negara, Provinsi, Kabupaten/Kota, Kecamatan, Kelurahan/Desa, Alamat');
         console.log('   - Data otomatis terkumpul per kelompok wilayah');
         console.log('   - Statistik otomatis update sesuai filter');
+        console.log('🔔 NADA DERING REGULER: ACTIVE');
+        console.log('   - Suara: smsblackber_4a537f155087133.mp3');
+        console.log('   - Untuk semua notifikasi reguler (Pesan Masuk, Postingan, Undangan, Komentar, dll)');
+        console.log('📨 MODAL PESAN: ACTIVE (sama seperti pesan-masuk.html)');
+        console.log('   - Fitur: Tulis, Balas, Edit, Hapus, Kirim');
+        console.log('   - Penerima otomatis dari profil');
+        console.log('   - Sinkronisasi ke Spreadsheet');
     </script>
 </body>
 </html>
