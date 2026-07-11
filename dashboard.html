@@ -15,6 +15,154 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- ================================================================ -->
+    <!-- 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS                       -->
+    <!-- ================================================================ -->
+    <script>
+        // ================================================================
+        // 🔥 API CONFIGURATION - GOOGLE SPREADSHEETS
+        // ================================================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
+
+        /**
+         * 📥 Ambil semua user dari Google Sheets
+         */
+        async function apiGetUsers() {
+            try {
+                const response = await fetch(API_URL + '?action=get_users&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_users', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get users:', error);
+                return JSON.parse(localStorage.getItem('salink_users') || '[]');
+            }
+        }
+
+        /**
+         * 📥 Ambil semua pesan dari Google Sheets
+         */
+        async function apiGetMessages() {
+            try {
+                const response = await fetch(API_URL + '?action=get_messages&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_messages', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get messages:', error);
+                return JSON.parse(localStorage.getItem('salink_messages') || '[]');
+            }
+        }
+
+        /**
+         * 📤 Kirim pesan ke Google Sheets
+         */
+        async function apiSendMessage(messageData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'send_message',
+                        message: messageData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Send message result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Send message error:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 🔄 Sinkronisasi pesan ke Google Sheets
+         */
+        async function syncMessagesToSpreadsheet(messagesData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'sync_messages',
+                        messages: messagesData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Sync messages result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Sync messages error:', error);
+                return false;
+            }
+        }
+
+        /**
+         * 📥 Ambil semua postingan dari Google Sheets
+         */
+        async function apiGetPosts() {
+            try {
+                const response = await fetch(API_URL + '?action=get_posts&timestamp=' + Date.now());
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data) {
+                    localStorage.setItem('salink_posts', JSON.stringify(result.data));
+                    return result.data;
+                }
+                return null;
+            } catch (error) {
+                console.error('❌ Gagal get posts:', error);
+                return JSON.parse(localStorage.getItem('salink_posts') || '[]');
+            }
+        }
+
+        /**
+         * 📤 Kirim postingan ke Google Sheets
+         */
+        async function apiSavePost(postData) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save_post',
+                        post: postData,
+                        timestamp: Date.now()
+                    })
+                });
+                
+                if (!response.ok) throw new Error('HTTP error: ' + response.status);
+                const result = await response.json();
+                console.log('📡 Save post result:', result);
+                return result.status === 'success';
+            } catch (error) {
+                console.error('❌ Save post error:', error);
+                return false;
+            }
+        }
+
+        console.log('✅ API Module Loaded - Google Spreadsheets Connected');
+        console.log('📡 API URL:', API_URL);
+    </script>
+    
     <style>
         /* ================================================================
            THEME VARIABLES - LIGHT & DARK MODE
@@ -1130,6 +1278,116 @@
         .chart-period-info { text-align: center; margin-top: 10px; font-size: 0.6rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 8px; }
 
         /* ================================================================
+           FILTER WILAYAH - PER-GROUP
+           ================================================================ */
+        .filter-section {
+            margin-top: 16px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: background 0.3s ease;
+        }
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .filter-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-title i { color: var(--accent-blue); }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .filter-group label {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 4px 8px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.65rem;
+            transition: all 0.3s;
+        }
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+        .filter-group select option {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .filter-actions button {
+            padding: 4px 14px;
+            border-radius: 16px;
+            border: none;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-actions .btn-filter {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+        }
+        .filter-actions .btn-filter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+        }
+        .filter-actions .btn-reset {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        .filter-actions .btn-reset:hover {
+            border-color: var(--accent-blue);
+        }
+        .filter-stats {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .filter-stats strong { color: var(--accent-blue); }
+
+        /* ================================================================
            SOCIAL LINKS
            ================================================================ */
         .social-links {
@@ -1664,6 +1922,7 @@
             .page-title { font-size: 1.1rem; }
             .modal-content .modal-body-scroll { max-height: calc(85vh - 120px); }
             #fotoGrid { grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 6px; }
+            .filter-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 380px) {
@@ -1684,6 +1943,7 @@
             .theme-toggle { width: 36px; height: 20px; }
             .theme-toggle .toggle-thumb { width: 14px; height: 14px; font-size: 0.45rem; }
             .theme-toggle.active .toggle-thumb { left: 18px; }
+            .filter-grid { grid-template-columns: 1fr; }
         }
 
         .post-type-selector { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
@@ -1707,7 +1967,9 @@
 </head>
 <body>
 
-    <!-- ===== FLOATING NOTIFICATION ===== -->
+    <!-- ================================================================ -->
+    <!-- FLOATING NOTIFICATION                                            -->
+    <!-- ================================================================ -->
     <div class="floating-notification" id="floatingNotification">
         <div class="notif-icon" id="floatingIcon">
             <i class="fas fa-bell"></i>
@@ -1723,7 +1985,9 @@
         </button>
     </div>
 
-    <!-- ===== EMERGENCY OVERLAY ===== -->
+    <!-- ================================================================ -->
+    <!-- EMERGENCY OVERLAY                                                -->
+    <!-- ================================================================ -->
     <div class="emergency-overlay" id="emergencyOverlay">
         <div class="emergency-icon fire" id="emergencyIcon">🔥</div>
         <div class="emergency-title" id="emergencyTitle">KEBAKARAN</div>
@@ -1736,14 +2000,18 @@
         </div>
     </div>
 
-    <!-- ===== PREVIEW MODE BADGE ===== -->
+    <!-- ================================================================ -->
+    <!-- PREVIEW MODE BADGE                                               -->
+    <!-- ================================================================ -->
     <div class="preview-badge" id="previewBadge">
         <i class="fas fa-eye"></i>
         <span>Mode Preview - Anda melihat dashboard dalam mode baca. </span>
         <span class="login-link" id="badgeLoginLink">Masuk untuk berinteraksi</span>
     </div>
 
-    <!-- ===== HEADER ===== -->
+    <!-- ================================================================ -->
+    <!-- HEADER                                                            -->
+    <!-- ================================================================ -->
     <header class="app-bar">
         <div class="app-title" id="appTitle">
             <i class="fas fa-bell bell-icon"></i>
@@ -1766,10 +2034,14 @@
         </div>
     </header>
 
-    <!-- ===== SIDEBAR OVERLAY ===== -->
+    <!-- ================================================================ -->
+    <!-- SIDEBAR OVERLAY                                                  -->
+    <!-- ================================================================ -->
     <div class="sidebar-overlay-bg" id="sidebarOverlay"></div>
 
-    <!-- ===== SIDEBAR ===== -->
+    <!-- ================================================================ -->
+    <!-- SIDEBAR                                                           -->
+    <!-- ================================================================ -->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-close" id="sidebarClose">
             <i class="fas fa-times"></i>
@@ -1846,7 +2118,9 @@
         </ul>
     </div>
 
-    <!-- ===== PREVIEW OVERLAY ===== -->
+    <!-- ================================================================ -->
+    <!-- PREVIEW OVERLAY                                                  -->
+    <!-- ================================================================ -->
     <div class="preview-overlay" id="previewOverlay">
         <div class="preview-overlay-content">
             <div class="overlay-icon">
@@ -1865,7 +2139,9 @@
         </div>
     </div>
 
-    <!-- ===== SEARCH MODAL ===== -->
+    <!-- ================================================================ -->
+    <!-- SEARCH MODAL                                                     -->
+    <!-- ================================================================ -->
     <div class="search-modal" id="searchModal">
         <div class="search-header">
             <input type="text" class="search-input" id="searchInput" placeholder="Cari pengguna, postingan, atau laporan...">
@@ -1876,7 +2152,9 @@
         <div class="search-results" id="searchResults"></div>
     </div>
 
-    <!-- ===== MAIN CONTENT ===== -->
+    <!-- ================================================================ -->
+    <!-- MAIN CONTENT                                                     -->
+    <!-- ================================================================ -->
     <main class="main-content" id="mainContent">
         <div class="page-title">
             <div class="title-left">
@@ -1888,22 +2166,22 @@
         <!-- Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statActive">12</span>
+                <span class="stat-number" id="statActive">0</span>
                 <span class="stat-label">Laporan Aktif</span>
                 <i class="fas fa-exclamation-triangle stat-icon"></i>
             </div>
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statCompleted">48</span>
+                <span class="stat-number" id="statCompleted">0</span>
                 <span class="stat-label">Selesai Ditangani</span>
                 <i class="fas fa-check-circle stat-icon"></i>
             </div>
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statTeams">5</span>
+                <span class="stat-number" id="statTeams">0</span>
                 <span class="stat-label">Tim Siaga</span>
                 <i class="fas fa-users stat-icon"></i>
             </div>
             <div class="stat-card" data-action="login">
-                <span class="stat-number" id="statResponse">93%</span>
+                <span class="stat-number" id="statResponse">0%</span>
                 <span class="stat-label">Tingkat Respons</span>
                 <i class="fas fa-chart-line stat-icon"></i>
             </div>
@@ -2016,6 +2294,102 @@
             <div class="alert-list" id="alertList"></div>
         </div>
         
+        <!-- ================================================================ -->
+        <!-- FILTER WILAYAH - PER-GROUP                                      -->
+        <!-- ================================================================ -->
+        <div class="filter-section" id="filterSection">
+            <div class="filter-header">
+                <div class="filter-title">
+                    <i class="fas fa-filter"></i>
+                    <span>🔍 Filter Wilayah</span>
+                </div>
+                <span style="font-size:0.6rem;color:var(--text-muted);">Data per kelompok wilayah</span>
+            </div>
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>🇮🇩 Negara</label>
+                    <select id="filterCountry">
+                        <option value="">Semua Negara</option>
+                        <option value="Indonesia">Indonesia</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="Singapura">Singapura</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>📍 Provinsi</label>
+                    <select id="filterProvince">
+                        <option value="">Semua Provinsi</option>
+                        <option value="DKI Jakarta">DKI Jakarta</option>
+                        <option value="Jawa Barat">Jawa Barat</option>
+                        <option value="Jawa Tengah">Jawa Tengah</option>
+                        <option value="Jawa Timur">Jawa Timur</option>
+                        <option value="Banten">Banten</option>
+                        <option value="Sumatera Utara">Sumatera Utara</option>
+                        <option value="Sumatera Selatan">Sumatera Selatan</option>
+                        <option value="Kalimantan Timur">Kalimantan Timur</option>
+                        <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                        <option value="Bali">Bali</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>🏙️ Kabupaten/Kota</label>
+                    <select id="filterCity">
+                        <option value="">Semua Kota</option>
+                        <option value="Jakarta Selatan">Jakarta Selatan</option>
+                        <option value="Jakarta Pusat">Jakarta Pusat</option>
+                        <option value="Jakarta Timur">Jakarta Timur</option>
+                        <option value="Jakarta Barat">Jakarta Barat</option>
+                        <option value="Jakarta Utara">Jakarta Utara</option>
+                        <option value="Bandung">Bandung</option>
+                        <option value="Surabaya">Surabaya</option>
+                        <option value="Medan">Medan</option>
+                        <option value="Palembang">Palembang</option>
+                        <option value="Makassar">Makassar</option>
+                        <option value="Denpasar">Denpasar</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>🏘️ Kecamatan</label>
+                    <select id="filterDistrict">
+                        <option value="">Semua Kecamatan</option>
+                        <option value="Tebet">Tebet</option>
+                        <option value="Menteng">Menteng</option>
+                        <option value="Gambir">Gambir</option>
+                        <option value="Senayan">Senayan</option>
+                        <option value="Kebayoran Baru">Kebayoran Baru</option>
+                        <option value="Cilandak">Cilandak</option>
+                        <option value="Pasar Minggu">Pasar Minggu</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>🏡 Kelurahan/Desa</label>
+                    <select id="filterVillage">
+                        <option value="">Semua Kelurahan</option>
+                        <option value="Bukit Duri">Bukit Duri</option>
+                        <option value="Manggarai">Manggarai</option>
+                        <option value="Gondangdia">Gondangdia</option>
+                        <option value="Cikini">Cikini</option>
+                        <option value="Senen">Senen</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>📌 Alamat Lengkap</label>
+                    <input type="text" id="filterAddress" placeholder="Cari alamat...">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn-filter" id="filterApplyBtn">
+                    <i class="fas fa-search"></i> Cari
+                </button>
+                <button class="btn-reset" id="filterResetBtn">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+            <div class="filter-stats" id="filterStats">
+                <span>📊 Menampilkan data dari <strong id="filterTotalUsers">0</strong> pengguna di wilayah terpilih</span>
+            </div>
+        </div>
+        
         <!-- Statistics Section -->
         <div class="statistics-section">
             <div class="statistics-header">
@@ -2031,21 +2405,21 @@
                 <div class="pie-chart">
                     <div class="pie-chart-center">
                         <span class="total-label">Total</span>
-                        <span class="total-number" id="totalReports">156</span>
+                        <span class="total-number" id="totalReports">0</span>
                     </div>
                 </div>
                 <div class="chart-legend">
                     <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color fire"></div>
-                        <span>Kebakaran (45%)</span>
+                        <span>Kebakaran (0%)</span>
                     </div>
                     <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color theft"></div>
-                        <span>Pencurian (30%)</span>
+                        <span>Pencurian (0%)</span>
                     </div>
                     <div class="pie-legend-item" data-action="login">
                         <div class="pie-legend-color disaster"></div>
-                        <span>Bencana (25%)</span>
+                        <span>Bencana (0%)</span>
                     </div>
                 </div>
             </div>
@@ -2087,7 +2461,7 @@
             </div>
             
             <div class="chart-period-info">
-                <span id="chartPeriodInfo">📊 Data: Minggu Ini (1-7 Juni 2026)</span>
+                <span id="chartPeriodInfo">📊 Data: Berdasarkan Filter Wilayah</span>
             </div>
         </div>
 
@@ -2126,7 +2500,9 @@
         </div>
     </main>
 
-    <!-- ===== PROFILE PAGE ===== -->
+    <!-- ================================================================ -->
+    <!-- PROFILE PAGE                                                     -->
+    <!-- ================================================================ -->
     <div class="main-content profile-page" id="profilePage">
         <div class="profile-header">
             <div class="profile-avatar-large" id="profileAvatarLarge" onclick="openProfileUser(currentUser?.username)">
@@ -2253,7 +2629,9 @@
         </button>
     </div>
 
-    <!-- ===== BOTTOM NAVIGATION ===== -->
+    <!-- ================================================================ -->
+    <!-- BOTTOM NAVIGATION                                                -->
+    <!-- ================================================================ -->
     <nav class="bottom-nav">
         <a href="#" class="nav-item-bottom active" id="bottomHomeNav" data-action="login">
             <i class="fas fa-home"></i>
@@ -2279,7 +2657,9 @@
         </a>
     </nav>
 
-    <!-- ===== MODALS ===== -->
+    <!-- ================================================================ -->
+    <!-- MODALS                                                           -->
+    <!-- ================================================================ -->
     
     <!-- Detail Modal -->
     <div class="modal-overlay" id="detailModal">
@@ -2498,36 +2878,14 @@
     </div>
 
     <!-- ================================================================ -->
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT                                                        -->
     <!-- ================================================================ -->
     
     <script>
         // ================================================================
-        // GOOGLE SPREADSHEET INTEGRATION - HANYA TAMBAHKAN INI
-        // ================================================================
-        const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbzTGcN2FcOsC_rx01tUSvdw_trm2gKpJqUMyJSbYNonDYSqP5yn2ChYVc3ubWqaAyZC8A/exec';
-
-        async function syncToSpreadsheet(data, action) {
-            try {
-                await fetch(SPREADSHEET_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action, data, timestamp: new Date().toISOString() })
-                });
-                console.log(`📤 Data ${action} dikirim ke Spreadsheet`);
-                return true;
-            } catch (error) {
-                console.error('❌ Gagal sinkron:', error);
-                return false;
-            }
-        }
-
-        // ================================================================
-        // KODE ASLI DASHBOARD - TIDAK DIUBAH, HANYA DITAMBAHKAN SYNC
+        // KONFIGURASI & STATE
         // ================================================================
         
-        // ===== KONFIGURASI & STATE =====
         const LOGIN_URL = 'login.html';
         const MODE_PREVIEW = 'preview';
         const MODE_FULL = 'full';
@@ -2556,10 +2914,13 @@
         let floatingData = null;
         let isFloatingDismissed = false;
         let currentFotoFilter = 'semua';
+        let allUsers = [];
+        let filteredUsers = [];
 
         // ================================================================
         // THEME TOGGLE
         // ================================================================
+        
         let currentTheme = 'dark';
 
         function toggleTheme() {
@@ -2599,13 +2960,18 @@
         }
 
         // ================================================================
-        // PWA - SERVICE WORKER & INSTALL
+        // PWA - SERVICE WORKER & INSTALL - SUPPORT ALL BROWSER
         // ================================================================
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(registration => console.log('✅ Service Worker registered'))
-                    .catch(error => console.log('❌ Service Worker registration failed:', error));
+                    .then(registration => {
+                        console.log('✅ Service Worker registered successfully');
+                    })
+                    .catch(error => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
             });
         }
 
@@ -2674,6 +3040,7 @@
         // ================================================================
         // FLOATING NOTIFICATION SYSTEM
         // ================================================================
+        
         function showFloatingNotification(type, title, message, subtitle, actionText, actionCallback, isInstall = false) {
             const floating = document.getElementById('floatingNotification');
             const icon = document.getElementById('floatingIcon');
@@ -2889,6 +3256,7 @@
         // ================================================================
         // AUDIO FUNCTIONS
         // ================================================================
+        
         function createAudioElements() {
             const audioObjects = {};
             Object.keys(soundMap).forEach((key, index) => {
@@ -2979,6 +3347,7 @@
         // ================================================================
         // EMERGENCY OVERLAY
         // ================================================================
+        
         function showEmergencyOverlay(type, title, sender, location) {
             if (isEmergencyActive) return;
             isEmergencyActive = true;
@@ -3066,6 +3435,7 @@
         // ================================================================
         // PREVIEW MODE
         // ================================================================
+        
         function showPreviewOverlay() {
             document.getElementById('previewOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -3081,8 +3451,9 @@
         }
 
         // ================================================================
-        // PROFILE USER OPEN
+        // PROFILE USER OPEN - FIXED: HANYA KIRIM USERNAME
         // ================================================================
+        
         function openProfileUser(username) {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -3105,6 +3476,7 @@
         // ================================================================
         // TOAST SYSTEM
         // ================================================================
+        
         function showToast(title, message, icon = 'fa-info-circle') {
             document.querySelectorAll('.toast').forEach(t => t.remove());
             clearTimeout(toastTimeout);
@@ -3144,6 +3516,7 @@
         // ================================================================
         // FUNGSI UNTUK TOMBOL PESAN - BUKA MODAL NOTIF
         // ================================================================
+        
         function openPesanModal() {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -3162,8 +3535,32 @@
         }
 
         // ================================================================
+        // FUNGSI BUKA HALAMAN PESAN - UNTUK TOMBOL PESAN DI PROFIL
+        // ================================================================
+        
+        function openMessagePage(toUser, toName) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengirim pesan', 'fa-lock');
+                return;
+            }
+            
+            if (!currentUser) {
+                window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            let url = 'pesan-masuk.html';
+            if (toUser) {
+                url += `?to=${encodeURIComponent(toUser)}&name=${encodeURIComponent(toName || toUser)}`;
+            }
+            window.open(url, '_blank');
+        }
+
+        // ================================================================
         // NOTIFICATION FUNCTIONS
         // ================================================================
+        
         function addNotification(type, title, message, sender, link, postId, soundKey = 'notifikasi') {
             if (isPreviewMode) return null;
             if (sender && currentUser && sender === currentUser.fullName) return null;
@@ -3383,6 +3780,7 @@
         // ================================================================
         // INVITE FUNCTIONS
         // ================================================================
+        
         function updateInviteBadge() {
             document.getElementById('inviteBadge').textContent = inviteCount > 0 ? inviteCount : '0';
             document.getElementById('inviteBadge').classList.toggle('show', inviteCount > 0);
@@ -3502,6 +3900,7 @@
         // ================================================================
         // PROFILE INVITE
         // ================================================================
+        
         function sendProfileInvite() {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -3536,6 +3935,7 @@
         // ================================================================
         // FRIENDS FUNCTIONS
         // ================================================================
+        
         function generateSampleFriends() {
             const sampleFriends = [
                 { name: 'Bpk. Ahmad', username: 'ahmad', gender: 'male', status: 'Online' },
@@ -3621,6 +4021,7 @@
         // ================================================================
         // BIODATA FUNCTIONS
         // ================================================================
+        
         function renderBiodata() {
             if (!currentUser) {
                 document.getElementById('biodataModalBody').innerHTML = `
@@ -3704,6 +4105,7 @@
         // ================================================================
         // HELPER FUNCTIONS
         // ================================================================
+        
         function getTimeAgo(timestamp) {
             const diff = Date.now() - timestamp;
             const seconds = Math.floor(diff / 1000);
@@ -3850,6 +4252,7 @@
         // ================================================================
         // HISTORY POSTINGAN
         // ================================================================
+        
         function openHistoryPostinganModal() {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -3900,6 +4303,7 @@
         // ================================================================
         // SETTINGS MODAL
         // ================================================================
+        
         function openSettingsModal() {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -4141,6 +4545,7 @@
         // ================================================================
         // POST FUNCTIONS
         // ================================================================
+        
         function createPost(text, mediaFile, isSpecial, specialData, postType) {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -4175,7 +4580,14 @@
                     comments: [],
                     isSpecial: isSpecial || false,
                     specialData: specialData || null,
-                    postType: postType || 'biasa'
+                    postType: postType || 'biasa',
+                    // Data wilayah untuk filter
+                    country: currentUser.country || '',
+                    province: currentUser.province || '',
+                    city: currentUser.city || '',
+                    district: currentUser.district || '',
+                    village: currentUser.village || '',
+                    address: currentUser.address || ''
                 };
                 posts.push(postData);
                 savePostsToLocalStorage();
@@ -4185,9 +4597,11 @@
                 }
                 updateBadge();
                 updateProfileStats();
+                updateFilterStats();
                 
                 // === SYNC KE GOOGLE SPREADSHEET ===
                 syncToSpreadsheet(postData, 'save_post');
+                apiSavePost(postData);
                 
                 if (isSpecial && specialData) {
                     const notifSound = notifTypeMap[specialData.type] || 'notifikasi';
@@ -4502,6 +4916,7 @@
                             renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
                         }
                         updateBadge();
+                        updateFilterStats();
                         showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
                     }
                 });
@@ -4729,6 +5144,7 @@
         // ================================================================
         // EMERGENCY BUTTON HANDLER
         // ================================================================
+        
         function handleEmergencyButtonClick(e) {
             const btn = e.currentTarget;
             const soundKey = btn.dataset.sound;
@@ -4797,6 +5213,7 @@
         // ================================================================
         // SIDEBAR TOGGLE
         // ================================================================
+        
         function toggleSidebar() {
             if (isSidebarOpen) {
                 closeSidebar();
@@ -4822,6 +5239,7 @@
         // ================================================================
         // SHOW HOME PAGE
         // ================================================================
+        
         function showHomePage() {
             document.getElementById('profilePage').classList.remove('active');
             document.getElementById('backHomeBtn').classList.remove('active');
@@ -4881,6 +5299,7 @@
         // ================================================================
         // PROFILE POSTS (RENDER)
         // ================================================================
+        
         function renderProfilePosts(userPosts) {
             const container = document.getElementById('profilePosts');
             container.innerHTML = '';
@@ -5092,6 +5511,7 @@
                         renderPosts();
                         renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
                         updateBadge();
+                        updateFilterStats();
                         showToast('🗑️ Dihapus', 'Postingan berhasil dihapus', 'fa-trash');
                     }
                 });
@@ -5311,6 +5731,7 @@
         // ================================================================
         // POSTINGAN, PENGIKUT, MENGIKUTI MODAL
         // ================================================================
+        
         function openPostinganModal() {
             if (!currentUser) {
                 showToast('⚠️ Info', 'Silakan masuk terlebih dahulu', 'fa-exclamation-triangle');
@@ -5453,6 +5874,7 @@
         // ================================================================
         // HOLOGRAM FUNCTIONS
         // ================================================================
+        
         function addToHologram(type, sender, location, address) {
             const hologramContent = document.getElementById('hologramContent');
             const typeNames = {
@@ -5602,6 +6024,7 @@
         // ================================================================
         // PROFILE POST INPUT SETUP
         // ================================================================
+        
         function setupProfilePostInput() {
             if (!document.getElementById('profilePostInput')) return;
             
@@ -5750,6 +6173,7 @@
         // ================================================================
         // UPDATE UI FUNCTIONS
         // ================================================================
+        
         function updateUserUI() {
             if (!currentUser) {
                 document.getElementById('sidebarUserName').textContent = 'Guest';
@@ -5826,11 +6250,134 @@
             if (document.getElementById('postReportedBy') && currentUser) {
                 document.getElementById('postReportedBy').value = currentUser.fullName || 'User';
             }
+            
+            // Update filter stats
+            updateFilterStats();
+        }
+
+        // ================================================================
+        // FILTER WILAYAH - PER-GROUP FUNCTIONS
+        // ================================================================
+        
+        function updateFilterStats() {
+            const country = document.getElementById('filterCountry').value;
+            const province = document.getElementById('filterProvince').value;
+            const city = document.getElementById('filterCity').value;
+            const district = document.getElementById('filterDistrict').value;
+            const village = document.getElementById('filterVillage').value;
+            const address = document.getElementById('filterAddress').value.toLowerCase().trim();
+            
+            // Filter posts berdasarkan wilayah
+            let filteredPosts = [...posts];
+            
+            if (country) {
+                filteredPosts = filteredPosts.filter(p => p.country === country);
+            }
+            if (province) {
+                filteredPosts = filteredPosts.filter(p => p.province === province);
+            }
+            if (city) {
+                filteredPosts = filteredPosts.filter(p => p.city === city);
+            }
+            if (district) {
+                filteredPosts = filteredPosts.filter(p => p.district === district);
+            }
+            if (village) {
+                filteredPosts = filteredPosts.filter(p => p.village === village);
+            }
+            if (address) {
+                filteredPosts = filteredPosts.filter(p => 
+                    (p.address && p.address.toLowerCase().includes(address)) ||
+                    (p.text && p.text.toLowerCase().includes(address))
+                );
+            }
+            
+            // Hitung jumlah user unik di wilayah terpilih
+            const uniqueUsers = new Set();
+            filteredPosts.forEach(p => {
+                if (p.userId) uniqueUsers.add(p.userId);
+            });
+            
+            document.getElementById('filterTotalUsers').textContent = uniqueUsers.size || 0;
+            
+            // Update statistik berdasarkan filter
+            const total = filteredPosts.length;
+            document.getElementById('totalReports').textContent = total;
+            document.getElementById('statActive').textContent = total;
+            document.getElementById('statCompleted').textContent = Math.max(0, total - 3);
+            document.getElementById('statTeams').textContent = Math.min(10, Math.floor(total / 2) + 1);
+            document.getElementById('statResponse').textContent = total > 0 ? '93%' : '0%';
+            
+            // Update pie chart
+            const fire = filteredPosts.filter(p => p.isSpecial && p.specialData?.type === 'fire').length;
+            const theft = filteredPosts.filter(p => p.isSpecial && p.specialData?.type === 'theft').length;
+            const disaster = filteredPosts.filter(p => p.isSpecial && p.specialData?.type === 'disaster').length;
+            const totalSpecial = fire + theft + disaster || 1;
+            const pFire = Math.round(fire / totalSpecial * 100);
+            const pTheft = Math.round(theft / totalSpecial * 100);
+            const pDisaster = 100 - pFire - pTheft;
+            
+            document.querySelector('.pie-chart').style.background = `conic-gradient(var(--accent-red) 0% ${pFire}%, var(--accent-gold) ${pFire}% ${pFire + pTheft}%, #4fc3f7 ${pFire + pTheft}% 100%)`;
+            document.querySelectorAll('.pie-legend-item')[0].innerHTML = `<div class="pie-legend-color fire"></div><span>Kebakaran (${pFire}%)</span>`;
+            document.querySelectorAll('.pie-legend-item')[1].innerHTML = `<div class="pie-legend-color theft"></div><span>Pencurian (${pTheft}%)</span>`;
+            document.querySelectorAll('.pie-legend-item')[2].innerHTML = `<div class="pie-legend-color disaster"></div><span>Bencana (${pDisaster}%)</span>`;
+            
+            // Update bar chart
+            renderBarChart(fire, theft, disaster);
+            
+            // Update chart period info
+            let locationText = '';
+            if (country) locationText += ` ${country}`;
+            if (province) locationText += ` › ${province}`;
+            if (city) locationText += ` › ${city}`;
+            if (district) locationText += ` › ${district}`;
+            if (village) locationText += ` › ${village}`;
+            if (address) locationText += ` › "${address}"`;
+            document.getElementById('chartPeriodInfo').textContent = `📊 Data: ${locationText || 'Semua Wilayah'} (${total} laporan)`;
+        }
+
+        function resetFilter() {
+            document.getElementById('filterCountry').value = '';
+            document.getElementById('filterProvince').value = '';
+            document.getElementById('filterCity').value = '';
+            document.getElementById('filterDistrict').value = '';
+            document.getElementById('filterVillage').value = '';
+            document.getElementById('filterAddress').value = '';
+            updateFilterStats();
+            showToast('🔄 Reset', 'Filter wilayah telah direset', 'fa-undo');
+        }
+
+        function setupFilterListeners() {
+            document.getElementById('filterApplyBtn').addEventListener('click', function() {
+                updateFilterStats();
+                showToast('🔍 Filter', 'Data diperbarui sesuai filter wilayah', 'fa-search');
+            });
+            
+            document.getElementById('filterResetBtn').addEventListener('click', resetFilter);
+            
+            // Auto-filter on enter key
+            document.getElementById('filterAddress').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('filterApplyBtn').click();
+                }
+            });
+            
+            // Auto-update on select change
+            ['filterCountry', 'filterProvince', 'filterCity', 'filterDistrict', 'filterVillage'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    // Auto update setelah 500ms
+                    clearTimeout(this._filterTimeout);
+                    this._filterTimeout = setTimeout(() => {
+                        updateFilterStats();
+                    }, 300);
+                });
+            });
         }
 
         // ================================================================
         // FOTO MODAL FUNCTIONS
         // ================================================================
+        
         function openFotoModal() {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -6087,6 +6634,7 @@
         // ================================================================
         // CHART FUNCTIONS
         // ================================================================
+        
         function switchChart(type) {
             document.querySelectorAll('.chart-nav-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.chart === type);
@@ -6103,33 +6651,26 @@
             }
         }
 
-        function renderBarChart() {
-            const data = {
-                fire: [12, 18, 8, 15, 10, 20, 14],
-                theft: [6, 10, 4, 8, 5, 12, 9],
-                disaster: [3, 5, 2, 4, 3, 7, 5],
-                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
-            };
-            
-            const maxValue = Math.max(...data.fire, ...data.theft, ...data.disaster);
+        function renderBarChart(fire = 0, theft = 0, disaster = 0) {
+            const max = Math.max(fire, theft, disaster, 1);
             const chart = document.getElementById('barChart');
             chart.innerHTML = '';
             
-            data.labels.forEach((label, index) => {
-                const fireHeight = maxValue > 0 ? (data.fire[index] / maxValue * 100) : 0;
-                const theftHeight = maxValue > 0 ? (data.theft[index] / maxValue * 100) : 0;
-                const disasterHeight = maxValue > 0 ? (data.disaster[index] / maxValue * 100) : 0;
-                
+            const data = [
+                { label: 'Kebakaran', value: fire, color: 'var(--accent-red)' },
+                { label: 'Pencurian', value: theft, color: 'var(--accent-gold)' },
+                { label: 'Bencana', value: disaster, color: '#4fc3f7' }
+            ];
+            
+            data.forEach(d => {
+                const height = (d.value / max * 100) || 5;
                 const item = document.createElement('div');
                 item.className = 'bar-item';
+                item.style.cssText = 'display:flex;flex-direction:column;align-items:center;flex:1;height:100%;justify-content:flex-end;';
                 item.innerHTML = `
-                    <div class="bar-value">${data.fire[index]}</div>
-                    <div class="bar fire" style="height:${fireHeight}%;"></div>
-                    <div class="bar-value">${data.theft[index]}</div>
-                    <div class="bar theft" style="height:${theftHeight}%;"></div>
-                    <div class="bar-value">${data.disaster[index]}</div>
-                    <div class="bar disaster" style="height:${disasterHeight}%;"></div>
-                    <div class="bar-label">${label}</div>
+                    <div class="bar-value" style="font-size:0.5rem;color:var(--text-secondary);margin-bottom:2px;">${d.value}</div>
+                    <div class="bar" style="width:70%;border-radius:4px 4px 0 0;min-height:4px;height:${height}%;background:${d.color};"></div>
+                    <div class="bar-label" style="font-size:0.5rem;color:var(--text-muted);margin-top:4px;">${d.label}</div>
                 `;
                 chart.appendChild(item);
             });
@@ -6214,6 +6755,7 @@
         // ================================================================
         // MODE SWITCH
         // ================================================================
+        
         function switchToFullMode() {
             isPreviewMode = false;
             document.getElementById('previewBadge').classList.remove('active');
@@ -6271,6 +6813,7 @@
         // ================================================================
         // CONFIRMATION FUNCTIONS
         // ================================================================
+        
         function showConfirmation(contactName, contactNumber) {
             if (isPreviewMode) {
                 showPreviewOverlay();
@@ -6294,6 +6837,7 @@
         // ================================================================
         // SEARCH FUNCTIONS
         // ================================================================
+        
         function performSearch(query) {
             const results = document.getElementById('searchResults');
             results.innerHTML = '';
@@ -6319,6 +6863,7 @@
         // ================================================================
         // REPORTS DATA
         // ================================================================
+        
         const reports = [
             {
                 id: 1,
@@ -6433,8 +6978,29 @@
         ];
 
         // ================================================================
+        // SYNC TO SPREADSHEET - WRAPPER
+        // ================================================================
+        
+        async function syncToSpreadsheet(data, action) {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, data, timestamp: new Date().toISOString() })
+                });
+                console.log(`📤 Data ${action} dikirim ke Spreadsheet`);
+                return true;
+            } catch (error) {
+                console.error('❌ Gagal sinkron:', error);
+                return false;
+            }
+        }
+
+        // ================================================================
         // INITIALIZE
         // ================================================================
+        
         loadTheme();
         
         const urlParams = new URLSearchParams(window.location.search);
@@ -6485,6 +7051,7 @@
         renderAlerts(reports);
         updateBadge();
         setupFotoFilters();
+        setupFilterListeners();
         
         if (!hasSavedPosts || posts.length === 0) {
             const now = Date.now();
@@ -6524,7 +7091,13 @@
                     ],
                     isSpecial: false,
                     specialData: null,
-                    postType: 'biasa'
+                    postType: 'biasa',
+                    country: 'Indonesia',
+                    province: 'DKI Jakarta',
+                    city: 'Jakarta Selatan',
+                    district: 'Tebet',
+                    village: 'Bukit Duri',
+                    address: 'Jl. Sudirman No. 45'
                 },
                 {
                     id: 'post-sample2',
@@ -6540,7 +7113,13 @@
                     comments: [],
                     isSpecial: false,
                     specialData: null,
-                    postType: 'biasa'
+                    postType: 'biasa',
+                    country: 'Indonesia',
+                    province: 'DKI Jakarta',
+                    city: 'Jakarta Pusat',
+                    district: 'Menteng',
+                    village: 'Gondangdia',
+                    address: 'Jl. Thamrin No. 12'
                 },
                 {
                     id: 'post-sample3',
@@ -6567,7 +7146,13 @@
                     ],
                     isSpecial: false,
                     specialData: null,
-                    postType: 'biasa'
+                    postType: 'biasa',
+                    country: 'Indonesia',
+                    province: 'DKI Jakarta',
+                    city: 'Jakarta Selatan',
+                    district: 'Tebet',
+                    village: 'Bukit Duri',
+                    address: 'Jl. Bukit Duri No. 7'
                 }
             ];
             postIdCounter = 3;
@@ -6576,6 +7161,7 @@
         
         renderPosts();
         setupProfilePostInput();
+        updateFilterStats();
         
         setTimeout(() => {
             if (!isPreviewMode && !window.matchMedia('(display-mode: standalone)').matches) {
@@ -6611,6 +7197,7 @@
         // ================================================================
         // EVENT LISTENERS
         // ================================================================
+        
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
         
         document.getElementById('profileSidebarToggle').addEventListener('click', toggleSidebar);
@@ -7059,6 +7646,30 @@
         switchChart('pie');
         
         // ================================================================
+        // EXPOSE FUNCTIONS GLOBAL UNTUK DIPANGGIL DARI FILE LAIN
+        // ================================================================
+        window.openProfileUser = openProfileUser;
+        window.openMessagePage = openMessagePage;
+        window.openPesanModal = openPesanModal;
+        window.openMessageCompose = function(toUser, toName, subject) {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk mengirim pesan', 'fa-lock');
+                return;
+            }
+            if (!currentUser) {
+                window.location.href = LOGIN_URL;
+                return;
+            }
+            let url = 'pesan-masuk.html';
+            if (toUser) {
+                url += `?to=${encodeURIComponent(toUser)}&name=${encodeURIComponent(toName || toUser)}`;
+                if (subject) url += `&subject=${encodeURIComponent(subject)}`;
+            }
+            window.open(url, '_blank');
+        };
+        
+        // ================================================================
         // LOG
         // ================================================================
         console.log('🚀 SALINK Dashboard - Emergency Alert System with PWA');
@@ -7081,8 +7692,12 @@
         console.log('✅ Modal FOTO: Dengan filter Semua, Foto, Video');
         console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
         console.log('📊 Google Spreadsheet Integration: ACTIVE');
-        console.log(`📊 Spreadsheet URL: ${SPREADSHEET_URL}`);
+        console.log(`📊 Spreadsheet URL: ${API_URL}`);
         console.log('✅ Semua data akan tersimpan ke Google Spreadsheets (User, Post, Notif, Emergency, Invite)');
+        console.log('📍 FILTER WILAYAH PER-GROUP: ACTIVE');
+        console.log('   - Filter berdasarkan: Negara, Provinsi, Kabupaten/Kota, Kecamatan, Kelurahan/Desa, Alamat');
+        console.log('   - Data otomatis terkumpul per kelompok wilayah');
+        console.log('   - Statistik otomatis update sesuai filter');
     </script>
 </body>
 </html>
