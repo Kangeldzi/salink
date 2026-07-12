@@ -1858,7 +1858,7 @@
         }
 
         /* ================================================================
-           MODAL PESAN MASUK - SAMA SEPERTI pesan-masuk.html
+           MODAL PESAN MASUK - MODERN (TERPISAH DARI NOTIF)
            ================================================================ */
         .pesan-modal .modal-content { max-width: 600px; max-height: 90vh; }
         .pesan-modal .message-list {
@@ -2822,8 +2822,9 @@
             </div>
         </div>
 
-        <!-- Tombol PESAN + INVITE - PESAN SEKARANG BUKA MODAL NOTIF -->
+        <!-- Tombol PESAN + INVITE - PESAN SEKARANG BUKA MODAL PESAN (BUKAN NOTIF) -->
         <div class="profile-actions">
+            <!-- ✅ TOMBOL PESAN → BUKA MODAL PESAN (bukan notifikasi) -->
             <button class="profile-pesan-btn" onclick="openPesanModal()">
                 <i class="fas fa-paper-plane"></i> PESAN
             </button>
@@ -2937,6 +2938,7 @@
             <span>Invite</span>
             <span class="badge" id="inviteBadge">0</span>
         </a>
+        <!-- ✅ TOMBOL NOTIF → BUKA MODAL NOTIFIKASI -->
         <a href="#" class="nav-item-bottom" id="bottomNotifNav" data-action="login">
             <i class="fas fa-bell"></i>
             <span>Notif</span>
@@ -3049,13 +3051,15 @@
         </div>
     </div>
 
-    <!-- Notification Modal - TETAP ADA UNTUK LIST NOTIFIKASI -->
+    <!-- ================================================================ -->
+    <!-- MODAL NOTIFIKASI - KHUSUS DAFTAR NOTIFIKASI                      -->
+    <!-- ================================================================ -->
     <div class="modal-overlay" id="notifModal">
         <div class="modal-content" style="max-width:480px;">
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fas fa-bell"></i>
-                    <span>🔔 Pesan Notifikasi</span>
+                    <span>🔔 Daftar Notifikasi</span>
                     <span class="badge-count" id="notifModalBadge">0</span>
                 </div>
                 <button class="modal-close" id="notifModalClose">
@@ -3070,14 +3074,14 @@
     </div>
 
     <!-- ================================================================ -->
-    <!-- MODAL PESAN MASUK - SAMA SEPERTI pesan-masuk.html                -->
+    <!-- MODAL PESAN MASUK - MODERN (TERPISAH DARI NOTIF)                -->
     <!-- ================================================================ -->
     <div class="modal-overlay pesan-modal" id="pesanModal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">
                     <i class="fas fa-inbox"></i>
-                    <span>Pesan Masuk</span>
+                    <span>📩 Pesan Masuk</span>
                     <span class="badge-count" id="pesanCount">0</span>
                 </div>
                 <div style="display:flex;gap:6px;align-items:center;">
@@ -3250,7 +3254,6 @@
             try {
                 regularSoundAudio.currentTime = 0;
                 regularSoundAudio.play().catch(() => {
-                    // Fallback: reload audio jika gagal
                     regularSoundAudio.load();
                     setTimeout(() => regularSoundAudio.play().catch(() => {}), 200);
                 });
@@ -3335,7 +3338,7 @@
         }
 
         // ================================================================
-        // PWA - SERVICE WORKER & INSTALL - SUPPORT ALL BROWSER
+        // PWA - SERVICE WORKER & INSTALL
         // ================================================================
         
         if ('serviceWorker' in navigator) {
@@ -3827,7 +3830,7 @@
         }
 
         // ================================================================
-        // PROFILE USER OPEN - FIXED: HANYA KIRIM USERNAME
+        // PROFILE USER OPEN
         // ================================================================
         
         function openProfileUser(username) {
@@ -3912,6 +3915,28 @@
         }
 
         // ================================================================
+        // FUNGSI UNTUK TOMBOL NOTIF - BUKA MODAL NOTIFIKASI
+        // ================================================================
+        
+        function openNotifModal() {
+            if (isPreviewMode) {
+                showPreviewOverlay();
+                showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat notifikasi', 'fa-lock');
+                return;
+            }
+            
+            if (!currentUser) {
+                window.location.href = LOGIN_URL;
+                return;
+            }
+            
+            // ✅ BUKA MODAL NOTIFIKASI
+            renderNotifications();
+            document.getElementById('notifModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ================================================================
         // FUNGSI BUKA MODAL PESAN DENGAN PENERIMA OTOMATIS
         // ================================================================
         
@@ -3966,12 +3991,10 @@
             
             // Jika ada penerima otomatis, buka compose
             if (toUser) {
-                // Cari user di allUsers
                 const user = allUsers.find(u => u.username === toUser);
                 if (user) {
                     selectPesanRecipient(user);
                 } else {
-                    // Coba cari dari localStorage
                     const fallbackUser = JSON.parse(localStorage.getItem('salink_users') || '[]').find(u => u.username === toUser);
                     if (fallbackUser) {
                         selectPesanRecipient(fallbackUser);
@@ -3982,7 +4005,6 @@
                 if (subject) {
                     document.getElementById('pesanSubject').value = subject;
                 }
-                // Buka compose area
                 document.getElementById('pesanComposeArea').classList.add('active');
                 isPesanComposeOpen = true;
                 setTimeout(() => {
@@ -4021,7 +4043,6 @@
                 console.warn('Gagal memuat pesan:', e);
             }
             
-            // Generate sample jika kosong
             if (pesanMessages.length === 0 && currentUser) {
                 generateSamplePesanMessages();
             }
@@ -4069,7 +4090,6 @@
                 });
             });
 
-            // Tambahkan pesan dari user sendiri
             if (currentUser) {
                 pesanMessages.push({
                     id: 'msg-' + (++pesanMessageIdCounter),
@@ -4109,7 +4129,6 @@
             const list = document.getElementById('pesanMessageList');
             list.innerHTML = '';
 
-            // Filter pesan untuk user yang sedang login
             const userMessages = pesanMessages.filter(m => 
                 m.to === currentUser?.username || m.from === currentUser?.username
             );
@@ -4219,7 +4238,6 @@
             const msg = pesanMessages.find(m => m.id === messageId);
             if (!msg) return;
 
-            // Tandai sebagai sudah dibaca
             if (!msg.read && msg.to === currentUser?.username) {
                 msg.read = true;
                 savePesanMessages();
@@ -4229,12 +4247,7 @@
             const isOwn = msg.from === currentUser?.username;
             const displayName = isOwn ? currentUser?.fullName : msg.fromName;
             const displayUsername = isOwn ? currentUser?.username : msg.from;
-            const avatarIcon = isOwn 
-                ? (currentUser?.gender === 'female' ? 'fa-female' : 'fa-male')
-                : (msg.fromGender === 'female' ? 'fa-female' : 'fa-male');
-            const profilePic = isOwn ? currentUser?.profilePicture : null;
 
-            // Tampilkan detail dengan alert/confirm sederhana
             const detailMessage = `
 📩 **${msg.subject || 'Tanpa Subjek'}**
 
@@ -4258,7 +4271,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             
             if (action) {
                 if (isOwn) {
-                    // Edit pesan
                     const newText = prompt('Edit pesan:', msg.message);
                     if (newText !== null && newText.trim() !== '') {
                         msg.message = newText.trim();
@@ -4267,7 +4279,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         showToast('✅ Berhasil', 'Pesan berhasil diedit!', 'fa-check-circle');
                     }
                 } else {
-                    // Balas pesan
                     const subject = prompt('Subjek balasan:', `RE: ${msg.subject || 'Balasan'}`);
                     if (subject !== null) {
                         openMessageCompose(displayUsername, displayName, subject);
@@ -4382,10 +4393,8 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             savePesanMessages();
             renderPesanMessages();
             
-            // 🔔 Bunyi notifikasi reguler
             playRegularNotificationSound();
             
-            // 🔥 Kirim ke Spreadsheet via API
             try {
                 await apiSendMessage(newMessage);
                 showToast('✅ Berhasil', `Pesan terkirim ke ${pesanSelectedRecipient.fullName} (disimpan ke Spreadsheet)`, 'fa-paper-plane');
@@ -4394,7 +4403,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 showToast('✅ Berhasil', `Pesan terkirim ke ${pesanSelectedRecipient.fullName} (offline mode)`, 'fa-paper-plane');
             }
             
-            // Reset compose area
             document.getElementById('pesanSubject').value = '';
             document.getElementById('pesanMessage').value = '';
             document.getElementById('pesanSendBtn').disabled = true;
@@ -4419,7 +4427,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     return;
                 }
                 
-                // Filter users
                 const results = allUsers.filter(u => {
                     if (u.username === currentUser?.username) return false;
                     const q = query.toLowerCase();
@@ -4489,7 +4496,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 pesanSelectedRecipient = null;
             });
             
-            // Enter key untuk kirim (Ctrl+Enter)
             document.getElementById('pesanMessage').addEventListener('keydown', function(e) {
                 if (e.ctrlKey && e.key === 'Enter') {
                     e.preventDefault();
@@ -4499,7 +4505,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 }
             });
             
-            // Tombol compose
             document.getElementById('pesanComposeBtn').addEventListener('click', function() {
                 document.getElementById('pesanComposeArea').classList.toggle('active');
                 isPesanComposeOpen = !isPesanComposeOpen;
@@ -4515,7 +4520,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 }
             });
             
-            // Close modal
             document.getElementById('pesanModalClose').addEventListener('click', closePesanModal);
             document.getElementById('pesanModal').addEventListener('click', function(e) {
                 if (e.target === this) closePesanModal();
@@ -4546,15 +4550,11 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             notifications.unshift(notification);
             updateNotifBadge();
             
-            // === SYNC KE GOOGLE SPREADSHEET ===
             syncToSpreadsheet(notification, 'save_notification');
             
-            // 🔔 PLAY SOUND - REGULER atau EMERGENCY
             if (type === 'fire' || type === 'death' || type === 'theft' || type === 'disaster') {
-                // Emergency sound
                 playNotificationSound(soundKey);
             } else {
-                // Reguler sound - untuk SEMUA notifikasi reguler
                 playRegularNotificationSound();
             }
             
@@ -4572,7 +4572,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     }
                 );
                 
-                // === SYNC EMERGENCY KE GOOGLE SPREADSHEET ===
                 syncToSpreadsheet({ type, title: label, sender, location: message.split('di ')[1] || '' }, 'save_emergency');
                 
                 setTimeout(() => {
@@ -4851,7 +4850,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 updateInviteBadge();
                 const inviteData = { from: currentUser.fullName, to: userName, username: userUsername, status: 'pending' };
                 addNotification('invite', '📨 Undangan Terkirim', `Anda mengundang ${userName} untuk berteman`, currentUser.fullName, '#', null, 'notifikasi');
-                // === SYNC INVITE KE GOOGLE SPREADSHEET ===
                 syncToSpreadsheet(inviteData, 'save_invite');
                 showToast('✅ Terkirim', `Undangan telah dikirim ke ${userName}!`, 'fa-user-plus');
             } else {
@@ -4894,7 +4892,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 updateInviteBadge();
                 const inviteData = { from: currentUser.fullName, to: ownerName, status: 'pending' };
                 addNotification('invite', '📨 Permintaan Berteman', `${currentUser.fullName} ingin berteman dengan Anda`, currentUser.fullName, '#', null, 'notifikasi');
-                // === SYNC INVITE KE GOOGLE SPREADSHEET ===
                 syncToSpreadsheet(inviteData, 'save_invite');
                 showToast('✅ Terkirim', `Permintaan berteman dikirim ke ${ownerName}!`, 'fa-user-plus');
             } else {
@@ -5378,7 +5375,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             document.getElementById('settingsModal').classList.add('active');
             document.body.style.overflow = 'hidden';
             
-            // Setup upload button
             const settingsUploadBtn = document.getElementById('settingsUploadBtn');
             const settingsProfilePictureInput = document.getElementById('settingsProfilePictureInput');
             const settingsProfilePicture = document.getElementById('settingsProfilePicture');
@@ -5457,7 +5453,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         localStorage.setItem('salink_users', JSON.stringify(users));
                     }
                     
-                    // === SYNC KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet(currentUser, 'save_user');
                     
                     updateUserUI();
@@ -5531,7 +5526,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     isSpecial: isSpecial || false,
                     specialData: specialData || null,
                     postType: postType || 'biasa',
-                    // Data wilayah untuk filter
                     country: currentUser.country || '',
                     province: currentUser.province || '',
                     city: currentUser.city || '',
@@ -5549,7 +5543,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 updateProfileStats();
                 updateFilterStats();
                 
-                // === SYNC KE GOOGLE SPREADSHEET ===
                 syncToSpreadsheet(postData, 'save_post');
                 apiSavePost(postData);
                 
@@ -5574,10 +5567,8 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     addToHologram(specialData.type, currentUser.fullName, specialData.location, specialData.address);
                     updateEmergencyStats(specialData.type);
                     
-                    // === SYNC EMERGENCY KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ type: specialData.type, sender: currentUser.fullName, location: specialData.location, address: specialData.address }, 'save_emergency');
                 } else {
-                    // 🔔 Notifikasi reguler - bunyikan suara reguler
                     playRegularNotificationSound();
                     addNotification('post', '📝 Postingan Baru', `${currentUser.fullName} membuat postingan baru`, currentUser.fullName, '#', postId, 'notifikasi');
                 }
@@ -5838,7 +5829,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         }
                     }
                     savePostsToLocalStorage();
-                    // === SYNC LIKE KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, userId: currentUser.username, action: index > -1 ? 'unlike' : 'like' }, 'save_post');
                     renderPosts();
                     if (document.getElementById('profilePage').classList.contains('active')) {
@@ -5860,7 +5850,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         const deletedPost = posts.find(p => p.id === postId);
                         posts = posts.filter(p => p.id !== postId);
                         savePostsToLocalStorage();
-                        // === SYNC DELETE KE GOOGLE SPREADSHEET ===
                         syncToSpreadsheet({ postId, action: 'delete' }, 'save_post');
                         renderPosts();
                         if (document.getElementById('profilePage').classList.contains('active')) {
@@ -5921,7 +5910,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     if (newText !== null) {
                         post.text = newText;
                         savePostsToLocalStorage();
-                        // === SYNC EDIT KE GOOGLE SPREADSHEET ===
                         syncToSpreadsheet({ postId, newText, action: 'edit' }, 'save_post');
                         renderPosts();
                         if (document.getElementById('profilePage').classList.contains('active')) {
@@ -5976,7 +5964,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     };
                     post.comments.push(comment);
                     savePostsToLocalStorage();
-                    // === SYNC COMMENT KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, comment, action: 'add_comment' }, 'save_post');
                     renderPosts();
                     if (document.getElementById('profilePage').classList.contains('active')) {
@@ -5984,7 +5971,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     }
                     
                     if (post.userId !== currentUser.username) {
-                        // 🔔 Notifikasi komentar - bunyikan suara reguler
                         playRegularNotificationSound();
                         addNotification('comment', '💬 Komentar Baru', `${currentUser.fullName} mengomentari postingan Anda: "${text}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
@@ -6036,7 +6022,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     };
                     comment.replies.push(reply);
                     savePostsToLocalStorage();
-                    // === SYNC REPLY KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, commentId, reply, action: 'add_reply' }, 'save_post');
                     renderPosts();
                     if (document.getElementById('profilePage').classList.contains('active')) {
@@ -6044,7 +6029,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     }
                     
                     if (comment.userId !== currentUser.username) {
-                        // 🔔 Notifikasi balasan - bunyikan suara reguler
                         playRegularNotificationSound();
                         addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas komentar Anda: "${replyText}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
@@ -6077,7 +6061,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         post.comments = post.comments.filter(c => c.id !== commentId);
                     }
                     savePostsToLocalStorage();
-                    // === SYNC DELETE COMMENT KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, commentId, replyId, action: 'delete_comment' }, 'save_post');
                     renderPosts();
                     if (document.getElementById('profilePage').classList.contains('active')) {
@@ -6161,7 +6144,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 null,
                 notifTypeMap[type] || 'notifikasi'
             );
-            // === SYNC EMERGENCY KE GOOGLE SPREADSHEET ===
             syncToSpreadsheet({ type, title, sender, location, timestamp: new Date().toISOString() }, 'save_emergency');
         }
 
@@ -6442,7 +6424,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         }
                     }
                     savePostsToLocalStorage();
-                    // === SYNC LIKE KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, userId: currentUser.username, action: index > -1 ? 'unlike' : 'like' }, 'save_post');
                     renderPosts();
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
@@ -6461,7 +6442,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     if (confirm('Apakah Anda yakin ingin menghapus postingan ini?')) {
                         posts = posts.filter(p => p.id !== postId);
                         savePostsToLocalStorage();
-                        // === SYNC DELETE KE GOOGLE SPREADSHEET ===
                         syncToSpreadsheet({ postId, action: 'delete' }, 'save_post');
                         renderPosts();
                         renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
@@ -6520,7 +6500,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     if (newText !== null) {
                         post.text = newText;
                         savePostsToLocalStorage();
-                        // === SYNC EDIT KE GOOGLE SPREADSHEET ===
                         syncToSpreadsheet({ postId, newText, action: 'edit' }, 'save_post');
                         renderPosts();
                         renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
@@ -6573,13 +6552,11 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     };
                     post.comments.push(comment);
                     savePostsToLocalStorage();
-                    // === SYNC COMMENT KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, comment, action: 'add_comment' }, 'save_post');
                     renderPosts();
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
                     
                     if (post.userId !== currentUser.username) {
-                        // 🔔 Notifikasi komentar - bunyikan suara reguler
                         playRegularNotificationSound();
                         addNotification('comment', '💬 Komentar Baru', `${currentUser.fullName} mengomentari postingan Anda: "${text}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
@@ -6631,13 +6608,11 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     };
                     comment.replies.push(reply);
                     savePostsToLocalStorage();
-                    // === SYNC REPLY KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, commentId, reply, action: 'add_reply' }, 'save_post');
                     renderPosts();
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
                     
                     if (comment.userId !== currentUser.username) {
-                        // 🔔 Notifikasi balasan - bunyikan suara reguler
                         playRegularNotificationSound();
                         addNotification('comment', '💬 Balasan Komentar', `${currentUser.fullName} membalas komentar Anda: "${replyText}"`, currentUser.fullName, '#', postId, 'notifikasi');
                     }
@@ -6670,7 +6645,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         post.comments = post.comments.filter(c => c.id !== commentId);
                     }
                     savePostsToLocalStorage();
-                    // === SYNC DELETE COMMENT KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, commentId, replyId, action: 'delete_comment' }, 'save_post');
                     renderPosts();
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
@@ -6896,7 +6870,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 playNotificationSound(soundKey);
             }
             
-            // === SYNC KE GOOGLE SPREADSHEET ===
             syncToSpreadsheet({ type, sender, location, address, timestamp: new Date().toISOString() }, 'save_emergency');
         }
 
@@ -7210,13 +7183,7 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 document.getElementById('postReportedBy').value = currentUser.fullName || 'User';
             }
             
-            // Update filter stats
             updateFilterStats();
-            
-            // Update allUsers untuk pesan
-            getAllUsers().then(users => {
-                allUsers = users;
-            });
         }
 
         // ================================================================
@@ -7256,7 +7223,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             const village = document.getElementById('filterVillage').value;
             const address = document.getElementById('filterAddress').value.toLowerCase().trim();
             
-            // Filter posts berdasarkan wilayah
             let filteredPosts = [...posts];
             
             if (country) {
@@ -7281,7 +7247,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 );
             }
             
-            // Hitung jumlah user unik di wilayah terpilih
             const uniqueUsers = new Set();
             filteredPosts.forEach(p => {
                 if (p.userId) uniqueUsers.add(p.userId);
@@ -7289,7 +7254,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             
             document.getElementById('filterTotalUsers').textContent = uniqueUsers.size || 0;
             
-            // Update statistik berdasarkan filter
             const total = filteredPosts.length;
             document.getElementById('totalReports').textContent = total;
             document.getElementById('statActive').textContent = total;
@@ -7297,7 +7261,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             document.getElementById('statTeams').textContent = Math.min(10, Math.floor(total / 2) + 1);
             document.getElementById('statResponse').textContent = total > 0 ? '93%' : '0%';
             
-            // Update pie chart
             const fire = filteredPosts.filter(p => p.isSpecial && p.specialData?.type === 'fire').length;
             const theft = filteredPosts.filter(p => p.isSpecial && p.specialData?.type === 'theft').length;
             const disaster = filteredPosts.filter(p => p.isSpecial && p.specialData?.type === 'disaster').length;
@@ -7311,10 +7274,8 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             document.querySelectorAll('.pie-legend-item')[1].innerHTML = `<div class="pie-legend-color theft"></div><span>Pencurian (${pTheft}%)</span>`;
             document.querySelectorAll('.pie-legend-item')[2].innerHTML = `<div class="pie-legend-color disaster"></div><span>Bencana (${pDisaster}%)</span>`;
             
-            // Update bar chart
             renderBarChart(fire, theft, disaster);
             
-            // Update chart period info
             let locationText = '';
             if (country) locationText += ` ${country}`;
             if (province) locationText += ` › ${province}`;
@@ -7500,7 +7461,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                         post.likes.push(currentUser.username);
                     }
                     savePostsToLocalStorage();
-                    // === SYNC LIKE KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, userId: currentUser.username, action: index > -1 ? 'unlike' : 'like' }, 'save_post');
                     renderFotoPosts(currentFotoFilter);
                 });
@@ -7520,7 +7480,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     
                     posts = posts.filter(p => p.id !== postId);
                     savePostsToLocalStorage();
-                    // === SYNC DELETE KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, action: 'delete' }, 'save_post');
                     renderFotoPosts(currentFotoFilter);
                     renderProfilePosts(posts.filter(p => p.userId === currentUser.username));
@@ -7556,7 +7515,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                     };
                     post.comments.push(comment);
                     savePostsToLocalStorage();
-                    // === SYNC COMMENT KE GOOGLE SPREADSHEET ===
                     syncToSpreadsheet({ postId, comment, action: 'add_comment' }, 'save_post');
                     renderFotoPosts(currentFotoFilter);
                     input.value = '';
@@ -8033,7 +7991,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             isPreviewMode = false;
             switchToFullMode();
             updateUserUI();
-            // === SYNC USER KE GOOGLE SPREADSHEET ===
             syncToSpreadsheet(currentUser, 'save_user');
         }
         
@@ -8266,6 +8223,7 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             openInviteModal();
         });
         
+        // ✅ TOMBOL NOTIF → BUKA MODAL NOTIFIKASI
         document.getElementById('bottomNotifNav').addEventListener('click', function(e) {
             e.preventDefault();
             if (isPreviewMode) {
@@ -8273,9 +8231,7 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat notifikasi', 'fa-lock');
                 return;
             }
-            renderNotifications();
-            document.getElementById('notifModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            openNotifModal();
         });
         
         document.getElementById('bottomProfileNav').addEventListener('click', function(e) {
@@ -8433,6 +8389,7 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             if (e.target === this) closeInviteModal();
         });
         
+        // ✅ TOMBOL CLOSE MODAL NOTIF
         document.getElementById('notifModalClose').addEventListener('click', closeNotifModal);
         document.getElementById('notifModal').addEventListener('click', function(e) {
             if (e.target === this) closeNotifModal();
@@ -8504,7 +8461,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 const randomSender = senders[Math.floor(Math.random() * senders.length)];
                 const randomLocation = locations[Math.floor(Math.random() * locations.length)];
                 addToHologram(randomType, randomSender, randomLocation, '');
-                // === SYNC KE GOOGLE SPREADSHEET ===
                 syncToSpreadsheet({ type: randomType, sender: randomSender, location: randomLocation, action: 'hologram' }, 'save_emergency');
             }
         });
@@ -8643,7 +8599,9 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
         window.openProfileUser = openProfileUser;
         window.openMessageCompose = openMessageCompose;
         window.openPesanModal = openPesanModal;
+        window.openNotifModal = openNotifModal;
         window.closePesanModal = closePesanModal;
+        window.closeNotifModal = closeNotifModal;
         
         // ================================================================
         // LOG
@@ -8664,7 +8622,8 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
         console.log('🌓 Dark/Light Mode: Active');
         console.log('✅ Emergency buttons: Click to stop alarm/notification');
         console.log('✅ Settings & Biodata modals: Scrollable');
-        console.log('✅ Tombol PESAN: Membuka Modal PESAN (sama seperti pesan-masuk.html)');
+        console.log('✅ TOMBOL PESAN: Buka Modal PESAN (Daftar Pesan Masuk)');
+        console.log('✅ TOMBOL NOTIF: Buka Modal NOTIF (Daftar Notifikasi)');
         console.log('✅ Modal FOTO: Dengan filter Semua, Foto, Video');
         console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
         console.log('📊 Google Spreadsheet Integration: ACTIVE');
@@ -8683,4 +8642,4 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
         console.log('   - Sinkronisasi ke Spreadsheet');
     </script>
 </body>
-</html>yang 
+</html>
