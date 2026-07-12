@@ -134,7 +134,6 @@
             --text-secondary: #8b949e;
             --text-muted: #6e7681;
             --border-color: #30363d;
-            --border-light: rgba(255,255,255,0.06);
             --shadow-color: rgba(0,0,0,0.4);
             --shadow-light: rgba(0,0,0,0.2);
             --accent-blue: #58a6ff;
@@ -143,15 +142,12 @@
             --accent-green: #25D366;
             --accent-red: #f85149;
             --accent-gold: #f0d080;
-            --card-border: rgba(255,255,255,0.06);
             --toggle-bg: #30363d;
             --toggle-thumb: #58a6ff;
             --header-bg: rgba(22, 27, 34, 0.95);
             --footer-bg: rgba(13, 17, 23, 0.95);
             --modal-bg: rgba(22, 27, 34, 0.98);
             --input-border: #30363d;
-            --input-focus: #58a6ff;
-            --neumorph-shadow: 8px 8px 16px #0a0604, -8px -8px 16px #2a1a0e;
             --header-height: 60px;
             --footer-height: 65px;
             --danger: #f85149;
@@ -167,7 +163,6 @@
             --text-secondary: #4a4a6a;
             --text-muted: #6a6a8a;
             --border-color: #d0d7de;
-            --border-light: rgba(0,0,0,0.06);
             --shadow-color: rgba(0,0,0,0.08);
             --shadow-light: rgba(0,0,0,0.04);
             --accent-blue: #4facfe;
@@ -176,15 +171,12 @@
             --accent-green: #25D366;
             --accent-red: #e31837;
             --accent-gold: #8d6b4b;
-            --card-border: rgba(0,0,0,0.04);
             --toggle-bg: #d0d7de;
             --toggle-thumb: #4facfe;
             --header-bg: rgba(255, 255, 255, 0.95);
             --footer-bg: rgba(255, 255, 255, 0.95);
             --modal-bg: rgba(255, 255, 255, 0.98);
             --input-border: #dce1e8;
-            --input-focus: #4facfe;
-            --neumorph-shadow: 8px 8px 16px #d0c8be, -8px -8px 16px #ffffff;
             --danger: #e31837;
             --success: #2ea44f;
         }
@@ -199,7 +191,6 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            position: relative;
             overflow-x: hidden;
             transition: background 0.3s ease, color 0.3s ease;
         }
@@ -232,6 +223,7 @@
         @keyframes floatingNotifIn { 0% { transform: translateY(-100px) scale(0.8); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
         @keyframes floatingNotifOut { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-100px) scale(0.8); opacity: 0; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+        @keyframes notifSlideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
         /* ================================================================
            TOGGLE SWITCH
@@ -278,7 +270,6 @@
             margin: 0 auto;
             background: var(--bg-card);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--accent-blue);
             border-radius: 12px;
             padding: 12px 14px;
@@ -349,7 +340,6 @@
             height: var(--header-height);
             background: var(--header-bg);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -363,17 +353,8 @@
         .app-title .bell-icon { font-size: 1.2rem; color: var(--accent-blue); animation: shiver 2s ease-in-out infinite; }
         .app-title span { font-size: 1rem; }
         
-        .header-center {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .header-center { display: flex; align-items: center; gap: 8px; }
+        .header-right { display: flex; align-items: center; gap: 6px; }
 
         .user-btn {
             width: 36px;
@@ -387,7 +368,6 @@
             color: var(--text-primary);
             cursor: pointer;
             flex-shrink: 0;
-            position: relative;
             transition: all 0.3s;
             overflow: hidden;
         }
@@ -424,7 +404,6 @@
             right: 0;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             padding: 6px 16px;
             text-align: center;
             z-index: 999;
@@ -449,7 +428,6 @@
             height: var(--footer-height);
             background: var(--footer-bg);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -585,7 +563,6 @@
             font-size: 1.1rem;
             box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
             overflow: hidden;
-            position: relative;
             border: 2px solid var(--accent-blue);
             flex-shrink: 0;
         }
@@ -706,7 +683,6 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             z-index: 1500;
             display: none;
             align-items: center;
@@ -776,7 +752,6 @@
         .stat-card {
             background: var(--bg-card);
             backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
             border-radius: 12px;
             padding: 12px 14px;
             border: 1px solid var(--border-color);
@@ -807,7 +782,6 @@
             box-shadow: 0 0 30px rgba(88, 166, 255, 0.05), inset 0 0 30px rgba(88, 166, 255, 0.02);
             animation: hologram-pulse 3s infinite;
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -864,7 +838,7 @@
         .alert-location { font-size: 0.65rem; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; color: var(--text-secondary); }
         .alert-coords { font-size: 0.6rem; font-family: monospace; color: var(--accent-blue); margin-bottom: 4px; opacity: 0.7; }
         .alert-time { font-size: 0.6rem; color: var(--text-muted); margin-top: 3px; text-align: right; }
-        .mini-map { width: 100%; height: 45px; background: var(--bg-input); border-radius: 6px; margin: 3px 0; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--accent-blue); font-size: 0.6rem; border: 1px solid var(--border-color); text-decoration: none; }
+        .mini-map { width: 100%; height: 45px; background: var(--bg-input); border-radius: 6px; margin: 3px 0; display: flex; align-items: center; justify-content: center; color: var(--accent-blue); font-size: 0.6rem; border: 1px solid var(--border-color); text-decoration: none; }
 
         /* ================================================================
            EMERGENCY BUTTONS
@@ -877,7 +851,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
             color: var(--text-primary);
             font-weight: 500;
             position: relative;
@@ -908,7 +881,6 @@
             border-radius: 18px;
             background: var(--bg-card);
             backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
             box-shadow: 0 4px 15px var(--shadow-light);
             transition: all 0.4s;
             border: 1px solid transparent;
@@ -935,7 +907,6 @@
             margin-top: 16px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 16px;
             border: 1px solid var(--border-color);
@@ -1155,7 +1126,6 @@
         .alert-card {
             background: var(--bg-card);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 12px 14px;
             display: flex;
@@ -1195,7 +1165,6 @@
             margin-top: 20px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 18px;
             border: 1px solid var(--border-color);
@@ -1212,7 +1181,7 @@
         .chart-container { margin-top: 10px; }
         .pie-chart-container { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         .pie-chart { width: 180px; height: 180px; border-radius: 50%; position: relative; background: conic-gradient(var(--accent-red) 0% 45%, var(--accent-gold) 45% 75%, #4fc3f7 75% 100%); box-shadow: 0 0 30px rgba(88, 166, 255, 0.1); }
-        .pie-chart-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%; background: var(--bg-card); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid var(--accent-blue); }
+        .pie-chart-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%; background: var(--bg-card); backdrop-filter: blur(5px); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid var(--accent-blue); }
         .pie-chart-center .total-label { font-size: 0.55rem; color: var(--text-secondary); }
         .pie-chart-center .total-number { font-size: 1.1rem; font-weight: 700; color: var(--accent-blue); }
         .bar-chart-container { display: none; width: 100%; }
@@ -1241,7 +1210,6 @@
             margin-top: 16px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
             padding: 14px;
             border: 1px solid var(--border-color);
@@ -1390,7 +1358,6 @@
         .app-footer {
             background: var(--bg-card);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             padding: 14px 16px;
             text-align: center;
             border-top: 1px solid var(--border-color);
@@ -1400,6 +1367,43 @@
         }
         .app-footer a { color: var(--accent-blue); text-decoration: none; font-size: 9px; transition: all 0.3s; }
         .app-footer a:hover { color: var(--accent-blue); opacity: 0.8; }
+
+        /* ================================================================
+           NOTIFIKASI INTERAKTIF - EFEK KLIK
+           ================================================================ */
+        .notif-interactive {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .notif-interactive:hover {
+            transform: translateX(4px);
+            border-color: var(--accent-blue) !important;
+        }
+        .notif-interactive:active {
+            transform: scale(0.98);
+        }
+        .notif-emergency {
+            border-left: 3px solid var(--accent-red) !important;
+            background: rgba(248, 81, 73, 0.08) !important;
+        }
+        .notif-emergency:hover {
+            background: rgba(248, 81, 73, 0.15) !important;
+            border-color: var(--accent-red) !important;
+        }
+        .notif-profile {
+            border-left: 3px solid var(--accent-blue) !important;
+            background: rgba(88, 166, 255, 0.05) !important;
+        }
+        .notif-profile:hover {
+            background: rgba(88, 166, 255, 0.1) !important;
+        }
+        .notif-post {
+            border-left: 3px solid var(--accent-green) !important;
+            background: rgba(37, 211, 102, 0.05) !important;
+        }
+        .notif-post:hover {
+            background: rgba(37, 211, 102, 0.1) !important;
+        }
 
         /* ================================================================
            MODALS
@@ -1412,7 +1416,6 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             z-index: 2000;
             display: none;
             align-items: center;
@@ -1607,7 +1610,6 @@
             bottom: 0;
             background: var(--bg-primary);
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
             z-index: 1500;
             display: none;
             flex-direction: column;
@@ -1688,7 +1690,7 @@
         .bio-data-item .bio-value.password { font-family: monospace; letter-spacing: 2px; }
 
         .back-home-btn {
-            position: fixed; bottom: calc(var(--footer-height) + 16px); right: 16px; padding: 8px 14px; background: var(--bg-card); color: var(--accent-blue); border: 1px solid var(--border-color); border-radius: 20px; cursor: pointer; font-size: 0.65rem; transition: all 0.3s; z-index: 100; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 4px 15px var(--shadow-color); display: none;
+            position: fixed; bottom: calc(var(--footer-height) + 16px); right: 16px; padding: 8px 14px; background: var(--bg-card); color: var(--accent-blue); border: 1px solid var(--border-color); border-radius: 20px; cursor: pointer; font-size: 0.65rem; transition: all 0.3s; z-index: 100; backdrop-filter: blur(10px); box-shadow: 0 4px 15px var(--shadow-color); display: none;
         }
         .back-home-btn:hover { background: var(--bg-card); border-color: var(--accent-blue); transform: translateY(-2px); }
         .back-home-btn.active { display: flex; align-items: center; gap: 6px; }
@@ -2674,9 +2676,7 @@
             <div class="alert-list" id="alertList"></div>
         </div>
         
-        <!-- ================================================================ -->
-        <!-- FILTER WILAYAH - PER-GROUP                                      -->
-        <!-- ================================================================ -->
+        <!-- Filter Wilayah -->
         <div class="filter-section" id="filterSection">
             <div class="filter-header">
                 <div class="filter-title">
@@ -2911,9 +2911,7 @@
             </div>
         </div>
 
-        <!-- ================================================================ -->
-        <!-- TOMBOL PESAN - MEMBUKA MODAL PESAN MASUK                         -->
-        <!-- ================================================================ -->
+        <!-- Tombol PESAN - MEMBUKA MODAL PESAN MASUK -->
         <div class="profile-actions">
             <button class="profile-pesan-btn" onclick="openPesanModal()">
                 <i class="fas fa-paper-plane"></i> PESAN
@@ -3369,7 +3367,6 @@
         let currentlyPlaying = null;
         let isHologramPost = false;
         let hologramPostData = null;
-        let alertTimeout = null;
         let isSidebarOpen = false;
         let emergencyAudio = null;
         let isEmergencyActive = false;
@@ -3387,7 +3384,6 @@
         let pesanMessageIdCounter = 0;
         let pesanSelectedRecipient = null;
         let isPesanComposeOpen = false;
-        let pesanFilteredList = [];
 
         // ================================================================
         // THEME TOGGLE
@@ -4006,10 +4002,8 @@
             notifications.unshift(notification);
             updateNotifBadge();
             
-            // === SYNC KE GOOGLE SPREADSHEET ===
             syncToSpreadsheet(notification, 'save_notification');
             
-            // 🔔 PLAY SOUND - REGULER atau EMERGENCY
             if (type === 'fire' || type === 'death' || type === 'theft' || type === 'disaster') {
                 playNotificationSound(soundKey);
             } else {
@@ -4121,6 +4115,17 @@
             
             notifications.forEach(notif => {
                 const item = document.createElement('div');
+                let notifClass = 'notif-interactive';
+                
+                if (notif.type === 'fire' || notif.type === 'death' || notif.type === 'theft' || notif.type === 'disaster') {
+                    notifClass += ' notif-emergency';
+                } else if (notif.type === 'profile' || notif.type === 'invite') {
+                    notifClass += ' notif-profile';
+                } else if (notif.type === 'post' || notif.type === 'comment') {
+                    notifClass += ' notif-post';
+                }
+                
+                item.className = notifClass;
                 item.style.cssText = `
                     background: ${notif.read ? 'var(--bg-input)' : 'rgba(88,166,255,0.08)'};
                     border-radius: 10px;
@@ -4129,6 +4134,7 @@
                     border-left: 3px solid ${notif.read ? 'var(--border-color)' : 'var(--accent-blue)'};
                     cursor: pointer;
                     transition: all 0.3s;
+                    animation: notifSlideIn 0.3s ease;
                 `;
                 
                 const iconMap = {
@@ -4162,32 +4168,94 @@
                                 ${notif.soundKey && notif.soundKey !== 'notifikasi' ? ` • 🔔 ${notif.soundKey.toUpperCase()}` : ''}
                             </div>
                         </div>
-                        ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;"></div>` : ''}
+                        ${!notif.read ? `<div style="width:8px;height:8px;border-radius:50%;background:var(--accent-blue);flex-shrink:0;animation:pulse 1.5s ease-in-out infinite;"></div>` : ''}
                     </div>
                 `;
                 
+                // 🔥 EVENT KLIK NOTIFIKASI - INTERAKTIF
                 item.addEventListener('click', () => {
                     if (isPreviewMode) {
                         showPreviewOverlay();
                         showToast('🔒 Mode Preview', 'Silakan masuk untuk melihat notifikasi', 'fa-lock');
                         return;
                     }
+                    
                     notif.read = true;
                     updateNotifBadge();
                     renderNotifications();
                     
-                    if (notif.type === 'inbox' || notif.type === 'post' || notif.type === 'comment') {
-                        document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
-                    } else if (notif.type === 'profile' || notif.type === 'invite') {
-                        if (!document.getElementById('profilePage').classList.contains('active')) {
-                            openProfilePage();
+                    // 🔥 LOGIKA INTERAKSI BERDASARKAN JENIS NOTIFIKASI
+                    if (notif.type === 'inbox') {
+                        // Buka modal pesan
+                        closeNotifModal();
+                        setTimeout(() => {
+                            openPesanModal();
+                            // Jika ada sender, cari dan tampilkan pesan dari sender
+                            if (notif.senderUsername) {
+                                setTimeout(() => {
+                                    const searchInput = document.getElementById('pesanSearchList');
+                                    if (searchInput) {
+                                        searchInput.value = notif.senderUsername;
+                                        filterPesanList(notif.senderUsername);
+                                    }
+                                }, 500);
+                            }
+                        }, 300);
+                    } else if (notif.type === 'post' || notif.type === 'comment') {
+                        // Buka postingan
+                        closeNotifModal();
+                        if (notif.postId) {
+                            setTimeout(() => {
+                                document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
+                                const postEl = document.getElementById(`post-${notif.postId}`);
+                                if (postEl) {
+                                    postEl.style.borderColor = 'var(--accent-blue)';
+                                    postEl.style.boxShadow = '0 0 20px rgba(88,166,255,0.3)';
+                                    postEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    setTimeout(() => {
+                                        postEl.style.borderColor = '';
+                                        postEl.style.boxShadow = '';
+                                    }, 3000);
+                                }
+                            }, 300);
+                        } else {
+                            // Jika tidak ada postId, buka section postingan
+                            setTimeout(() => {
+                                document.getElementById('postSection').scrollIntoView({ behavior: 'smooth' });
+                            }, 300);
                         }
-                    } else if (notif.type === 'chart') {
-                        document.querySelector('.statistics-section').scrollIntoView({ behavior: 'smooth' });
+                    } else if (notif.type === 'profile' || notif.type === 'invite') {
+                        // Buka profil user
+                        if (notif.senderUsername) {
+                            closeNotifModal();
+                            setTimeout(() => openProfileUser(notif.senderUsername), 300);
+                        }
                     } else if (notif.type === 'fire' || notif.type === 'death' || notif.type === 'theft' || notif.type === 'disaster') {
-                        document.getElementById('hologramDisplay').scrollIntoView({ behavior: 'smooth' });
+                        // Emergency - buka hologram dan overlay
+                        closeNotifModal();
+                        setTimeout(() => {
+                            document.getElementById('hologramDisplay').scrollIntoView({ behavior: 'smooth' });
+                            const label = notifLabelMap[notif.type] || 'KEBAKARAN';
+                            const location = notif.message ? notif.message.split('di ')[1] || '' : '';
+                            if (notif.sender) {
+                                showEmergencyOverlay(notif.type, label, notif.sender, location);
+                            }
+                            // Tambahkan ke hologram
+                            addToHologram(notif.type, notif.sender || 'Sistem', location || 'Lokasi tidak diketahui', '');
+                        }, 300);
+                    } else if (notif.type === 'chart') {
+                        // Buka statistik
+                        closeNotifModal();
+                        setTimeout(() => {
+                            document.querySelector('.statistics-section').scrollIntoView({ behavior: 'smooth' });
+                            document.querySelector('.chart-nav-btn[data-chart="pie"]')?.click();
+                        }, 300);
                     } else if (notif.sender && notif.sender !== 'Sistem') {
-                        openProfileUser(notif.senderUsername || notif.sender);
+                        // Default: buka profil pengirim
+                        closeNotifModal();
+                        setTimeout(() => openProfileUser(notif.senderUsername || notif.sender), 300);
+                    } else {
+                        closeNotifModal();
                     }
                 });
                 
@@ -4243,10 +4311,12 @@
             }
             
             loadPesanMessages();
-            renderPesanList();
+            renderPesanList('');
             document.getElementById('pesanModal').classList.add('active');
             document.body.style.overflow = 'hidden';
-            document.getElementById('pesanCount').textContent = pesanMessages.filter(m => m.to === currentUser.username || m.from === currentUser.username).length;
+            document.getElementById('pesanCount').textContent = pesanMessages.filter(m => 
+                m.to === currentUser.username || m.from === currentUser.username
+            ).length;
         }
 
         // ===== TUTUP MODAL PESAN =====
@@ -4277,12 +4347,13 @@
             }
             
             loadPesanMessages();
-            renderPesanList();
+            renderPesanList('');
             document.getElementById('pesanModal').classList.add('active');
             document.body.style.overflow = 'hidden';
-            document.getElementById('pesanCount').textContent = pesanMessages.filter(m => m.to === currentUser.username || m.from === currentUser.username).length;
+            document.getElementById('pesanCount').textContent = pesanMessages.filter(m => 
+                m.to === currentUser.username || m.from === currentUser.username
+            ).length;
             
-            // Buka compose dengan penerima otomatis
             setTimeout(() => {
                 if (toUser) {
                     const user = allUsers.find(u => u.username === toUser);
@@ -4507,7 +4578,6 @@
                     </div>
                 `;
 
-                // Hover effect untuk tombol aksi
                 item.querySelectorAll('.message-actions button').forEach(btn => {
                     btn.addEventListener('mouseenter', function() {
                         this.style.background = 'var(--bg-input)';
@@ -4661,6 +4731,29 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             });
         }
 
+        // ===== VALIDASI COMPOSE - AKTIF OTOMATIS =====
+        function validatePesanCompose() {
+            const subject = document.getElementById('pesanSubject').value.trim();
+            const message = document.getElementById('pesanMessage').value.trim();
+            const recipient = pesanSelectedRecipient !== null;
+            const isValid = recipient && subject !== '' && message !== '';
+            const btn = document.getElementById('pesanSendBtn');
+            
+            btn.disabled = !isValid;
+            
+            if (isValid) {
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+                btn.style.background = 'var(--accent-blue-gradient)';
+                btn.style.transform = 'scale(1)';
+            } else {
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+                btn.style.background = 'var(--bg-input)';
+                btn.style.transform = 'scale(1)';
+            }
+        }
+
         // ===== SELECT RECIPIENT =====
         function selectPesanRecipient(user) {
             pesanSelectedRecipient = user;
@@ -4678,6 +4771,9 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             `;
             
             validatePesanCompose();
+            setTimeout(() => {
+                document.getElementById('pesanSubject').focus();
+            }, 100);
         }
 
         // ===== REMOVE RECIPIENT =====
@@ -4686,15 +4782,8 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             document.getElementById('pesanSelectedUser').innerHTML = '';
             document.getElementById('pesanSearchInput').value = '';
             document.getElementById('pesanSendBtn').disabled = true;
+            validatePesanCompose();
             document.getElementById('pesanSearchInput').focus();
-        }
-
-        // ===== VALIDATE COMPOSE =====
-        function validatePesanCompose() {
-            const subject = document.getElementById('pesanSubject').value.trim();
-            const message = document.getElementById('pesanMessage').value.trim();
-            const isValid = pesanSelectedRecipient !== null && subject !== '' && message !== '';
-            document.getElementById('pesanSendBtn').disabled = !isValid;
         }
 
         // ===== SEND PESAN =====
@@ -4736,7 +4825,6 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
                 showToast('✅ Berhasil', `Pesan terkirim ke ${pesanSelectedRecipient.fullName} (offline mode)`, 'fa-paper-plane');
             }
             
-            // Reset compose
             document.getElementById('pesanSubject').value = '';
             document.getElementById('pesanMessage').value = '';
             document.getElementById('pesanSendBtn').disabled = true;
@@ -7204,7 +7292,7 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
             if (currentUser.profilePicture) {
                 document.getElementById('hologramProfile').innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile">`;
             } else {
-                document.getElementById('hologramProfile').innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male></i>';
+                document.getElementById('hologramProfile').innerHTML = currentUser.gender === 'female' ? '<i class="fas fa-female"></i>' : '<i class="fas fa-male"></i>';
             }
             
             if (currentUser.profilePicture) {
@@ -8646,18 +8734,20 @@ ${isOwn ? '\n✏️ Anda dapat mengedit pesan ini.' : '\n💬 Klik "Balas" untuk
         console.log('📨 TOMBOL PESAN: Khusus membuka Modal Daftar Pesan Masuk');
         console.log('✅ Modal PESAN: Tampilan modern seperti aplikasi HP');
         console.log('✅ Fitur Modal PESAN: Tulis, Edit, Hapus, Kirim, Search, Balas');
+        console.log('📨 NOTIFIKASI INTERAKTIF: Bisa diklik ke halaman sesuai');
+        console.log('   - Inbox → Buka modal pesan');
+        console.log('   - Post/Comment → Buka postingan');
+        console.log('   - Profile/Invite → Buka profil user');
+        console.log('   - Emergency → Buka hologram & overlay');
+        console.log('   - Chart → Buka statistik');
         console.log('✅ Modal FOTO: Dengan filter Semua, Foto, Video');
         console.log('✅ Like, Komentar, Hapus aktif di modal Foto');
         console.log('📊 Google Spreadsheet Integration: ACTIVE');
         console.log(`📊 Spreadsheet URL: ${API_URL}`);
-        console.log('✅ Semua data akan tersimpan ke Google Spreadsheets (User, Post, Notif, Emergency, Invite)');
+        console.log('✅ Semua data akan tersimpan ke Google Spreadsheets');
         console.log('📍 FILTER WILAYAH PER-GROUP: ACTIVE');
-        console.log('   - Filter berdasarkan: Negara, Provinsi, Kabupaten/Kota, Kecamatan, Kelurahan/Desa, Alamat');
-        console.log('   - Data otomatis terkumpul per kelompok wilayah');
-        console.log('   - Statistik otomatis update sesuai filter');
         console.log('🔔 NADA DERING REGULER: ACTIVE');
         console.log('   - Suara: smsblackber_4a537f155087133.mp3');
-        console.log('   - Untuk semua notifikasi reguler (Pesan Masuk, Postingan, Undangan, Komentar, dll)');
     </script>
 </body>
 </html>
